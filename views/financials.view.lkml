@@ -9,8 +9,27 @@ view: financials {
 
 
   measure: amount {
+    label: "Amount"
+    description: "Total financial amount"
     type: sum
-    sql: ${TABLE}.amount ;;
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.amount__fl ;;
+  }
+
+  measure: adr {
+    label: "ADR"
+    description: "Average daily rate: amount / reservation_night"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${amount} / ${reservations.reservation_night} ;;
+  }
+
+  measure: revpar {
+    label: "RevPar"
+    description: "Revenue per available room: amount / capacity"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${amount} / ${capacities_rolled.capacity_measure} ;;
   }
 
   dimension: cashatbooking {
@@ -38,7 +57,6 @@ view: financials {
   }
 
   dimension_group: night {
-#     view_label: "Dates"
     group_label: "Stay Night"
     description: "An occupied night at a Kasa"
     type: time
@@ -48,10 +66,7 @@ view: financials {
       day_of_week,
       date,
       week,
-      month,
-      quarter,
-      year,
-      raw
+      month
     ]
     sql: ${TABLE}.night ;;
   }
@@ -85,8 +100,5 @@ view: financials {
     sql: ${TABLE}.updatedat ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: []
-  }
+
 }

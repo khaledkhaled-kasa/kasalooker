@@ -26,24 +26,30 @@ explore: reservations {
     relationship: many_to_one
     sql_on: ${complexes._id} = ${units.complex} ;;
   }
-#   join: capacities {
-#     type:  inner
-#     relationship: many_to_one
-#     sql_on: ${financials.night_date} = ${capacities.night_date} ;;
-#   }
-#   join: capacities_rolled {
-#     type:  inner
-#     relationship: many_to_one
-#     sql_on: ${financials.night_date} = ${capacities_rolled.night_date} ;;
-#   }
-
-}
-
-explore: capacities {
-  from:  capacities
-  join: complexes {
+  join: capacities_rolled {
     type:  inner
-    relationship:  many_to_one
-    sql_on: ${capacities.complex} = ${complexes._id} ;;
+    relationship: many_to_one
+    sql_on:
+        ${financials.night_date} = ${capacities_rolled.night}
+      {% if complexes.title._is_selected or complexes.title._is_filtered %}
+        and
+        ${complexes._id} = ${capacities_rolled.complex}
+      {% endif %}
+    ;;
   }
+
 }
+
+# explore: guests {
+#   from: guests
+#   join: reservations {
+#     type:  inner
+#     relationship: one_to_one
+#     sql_on: ${reservations.guest} = ${guests._id} ;;
+#   }
+#   join: financials {
+#     type:  inner
+#     relationship: one_to_many
+#     sql_on: ${reservations._id} = ${financials.reservation} ;;
+#   }
+# }

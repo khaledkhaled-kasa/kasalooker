@@ -12,11 +12,6 @@ view: reservations {
     sql: ${TABLE}.additionalguests ;;
   }
 
-  dimension: apis {
-    hidden: yes
-    sql: ${TABLE}.apis ;;
-  }
-
   dimension_group: bookingdate {
     type: time
     timeframes: [
@@ -67,20 +62,10 @@ view: reservations {
 
   dimension: checkindate {
     type: string
-    sql: ${TABLE}.checkindate ;;
-  }
-
-  dimension: checkindatelocal {
-    type: string
     sql: ${TABLE}.checkindatelocal ;;
   }
 
   dimension: checkoutdate {
-    type: string
-    sql: ${TABLE}.checkoutdate ;;
-  }
-
-  dimension: checkoutdatelocal {
     type: string
     sql: ${TABLE}.checkoutdatelocal ;;
   }
@@ -91,6 +76,7 @@ view: reservations {
   }
 
   dimension_group: createdat {
+    hidden:  yes
     type: time
     timeframes: [
       raw,
@@ -273,10 +259,6 @@ view: reservations {
     sql: ${TABLE}.updatedat ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: [nickname, listingname]
-  }
   measure: reservation_night {
     view_label: "Metrics"
     type:  count_distinct
@@ -288,8 +270,16 @@ view: reservations {
     type: count_distinct
     sql: ${confirmationcode} ;;
     drill_fields: [reservation_details*]
-#     link: {}
   }
+
+  measure: occupancy {
+    type: number
+    value_format: "0.00%"
+    sql:  ${reservation_night} / ${capacities_rolled.capacity_measure} ;;
+    drill_fields: [financials.night_date, reservation_details*]
+
+  }
+
   set:reservation_details {
     fields: [confirmationcode, status, source, checkindate, checkoutdate]
   }

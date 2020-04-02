@@ -2,11 +2,6 @@ view: capacities {
   sql_table_name: `bigquery-analytics-272822.mongo.capacities`
     ;;
 
-  dimension: __v {
-    type: number
-    sql: ${TABLE}.__v ;;
-  }
-
   dimension: _id {
     type: string
     sql: ${TABLE}._id ;;
