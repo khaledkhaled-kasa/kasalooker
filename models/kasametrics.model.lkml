@@ -8,7 +8,7 @@ datagroup: kasametrics_default_datagroup {
 }
 
 persist_with: kasametrics_default_datagroup
-
+label: "Kasa Metrics"
 explore: reservations {
   from: reservations
   join: financials {
