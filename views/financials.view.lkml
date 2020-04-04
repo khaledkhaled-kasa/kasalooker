@@ -2,13 +2,8 @@ view: financials {
   sql_table_name: `bigquery-analytics-272822.mongo.financials`
     ;;
 
-  dimension: _id {
-    type: string
-    sql: ${TABLE}._id ;;
-  }
-
-
   measure: amount {
+    view_label: "Metrics"
     label: "Amount"
     description: "Total financial amount"
     type: sum
@@ -17,6 +12,7 @@ view: financials {
   }
 
   measure: adr {
+    view_label: "Metrics"
     label: "ADR"
     description: "Average daily rate: amount / reservation_night"
     type: number
@@ -25,6 +21,7 @@ view: financials {
   }
 
   measure: revpar {
+    view_label: "Metrics"
     label: "RevPar"
     description: "Revenue per available room: amount / capacity"
     type: number
@@ -42,33 +39,24 @@ view: financials {
     sql: ${TABLE}.casheventual ;;
   }
 
-  dimension_group: createdat {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.createdat ;;
-  }
-
   dimension_group: night {
+    view_label: "Date Dimensions"
     group_label: "Stay Night"
     description: "An occupied night at a Kasa"
     type: time
     timeframes: [
-      month_name,
-      week_of_year,
-      day_of_week,
       date,
       week,
-      month
+      month,
+      day_of_week
     ]
     sql: ${TABLE}.night ;;
+  }
+
+  dimension: weekend {
+    view_label: "Date Dimensions"
+    type:  yesno
+    sql:  ${night_day_of_week} in ('Saturday', 'Sunday') ;;
   }
 
   dimension: reservation {
@@ -85,20 +73,5 @@ view: financials {
     type: string
     sql: ${TABLE}.type ;;
   }
-
-  dimension_group: updatedat {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.updatedat ;;
-  }
-
 
 }

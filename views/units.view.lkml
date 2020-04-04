@@ -2,66 +2,10 @@ view: units {
   sql_table_name: `bigquery-analytics-272822.mongo.units`
     ;;
 
-  dimension: __v {
-    type: number
-    sql: ${TABLE}.__v ;;
-  }
-
   dimension: _id {
+    hidden:  yes
     type: string
     sql: ${TABLE}._id ;;
-  }
-
-  dimension_group: _sdc_batched {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}._sdc_batched_at ;;
-  }
-
-  dimension_group: _sdc_extracted {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}._sdc_extracted_at ;;
-  }
-
-  dimension_group: _sdc_received {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}._sdc_received_at ;;
-  }
-
-  dimension: _sdc_sequence {
-    type: number
-    sql: ${TABLE}._sdc_sequence ;;
-  }
-
-  dimension: _sdc_table_version {
-    type: number
-    sql: ${TABLE}._sdc_table_version ;;
   }
 
   dimension: accomodates {
@@ -147,20 +91,6 @@ view: units {
   dimension: complex {
     type: string
     sql: ${TABLE}.complex ;;
-  }
-
-  dimension_group: createdat {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.createdat ;;
   }
 
   dimension: defaultcheckin {
@@ -313,20 +243,6 @@ view: units {
     sql: ${TABLE}.title ;;
   }
 
-  dimension_group: updatedat {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.updatedat ;;
-  }
-
   dimension: wifi {
     hidden: yes
     sql: ${TABLE}.wifi ;;
@@ -363,361 +279,361 @@ view: units__rooms__value {
   }
 }
 
-view: units__rooms__value__beds__value {
-  dimension: _id {
-    type: string
-    sql: ${TABLE}._id ;;
-  }
-
-  dimension: quantity {
-    type: number
-    sql: ${TABLE}.quantity ;;
-  }
-
-  dimension: type {
-    type: string
-    sql: ${TABLE}.type ;;
-  }
-}
-
-view: units__photos {
-  dimension: value {
-    type: string
-    sql: ${TABLE}.value ;;
-  }
-}
-
-view: units__checkindetails {
-  dimension: buildingcode {
-    type: number
-    sql: ${TABLE}.buildingcode ;;
-  }
-
-  dimension: buildingcode__st {
-    type: string
-    sql: ${TABLE}.buildingcode__st ;;
-  }
-
-  dimension: isremote {
-    type: yesno
-    sql: ${TABLE}.isremote ;;
-  }
-
-  dimension: lockboxcode {
-    type: string
-    sql: ${TABLE}.lockboxcode ;;
-  }
-
-  dimension: lockboxcode__it {
-    type: number
-    sql: ${TABLE}.lockboxcode__it ;;
-  }
-
-  dimension: lockboxnumber {
-    type: string
-    sql: ${TABLE}.lockboxnumber ;;
-  }
-
-  dimension: lockboxnumber__it {
-    type: number
-    sql: ${TABLE}.lockboxnumber__it ;;
-  }
-
-  dimension: mailboxnumber {
-    type: string
-    sql: ${TABLE}.mailboxnumber ;;
-  }
-
-  dimension: parkingnumber {
-    type: string
-    sql: ${TABLE}.parkingnumber ;;
-  }
-
-  dimension: parkingtagnumber {
-    type: string
-    sql: ${TABLE}.parkingtagnumber ;;
-  }
-
-  dimension: wifipassword {
-    type: string
-    sql: ${TABLE}.wifipassword ;;
-  }
-
-  dimension: wifiusername {
-    type: string
-    sql: ${TABLE}.wifiusername ;;
-  }
-}
-
-view: units__keycafe {
-  drill_fields: [id]
-
-  dimension: id {
-    primary_key: yes
-    type: string
-    sql: ${TABLE}.id ;;
-  }
-
-  dimension: active {
-    type: yesno
-    sql: ${TABLE}.active ;;
-  }
-}
-
-view: units__callbox__value {
-  dimension: code {
-    type: string
-    sql: ${TABLE}.code ;;
-  }
-
-  dimension: enabled {
-    type: yesno
-    sql: ${TABLE}.enabled ;;
-  }
-
-  dimension: entry {
-    type: string
-    sql: ${TABLE}.entry ;;
-  }
-
-  dimension: phonenumber {
-    type: string
-    sql: ${TABLE}.phonenumber ;;
-  }
-
-  dimension: type {
-    type: string
-    sql: ${TABLE}.type ;;
-  }
-}
-
-view: units__wifi {
-  dimension: password {
-    type: string
-    sql: ${TABLE}.password ;;
-  }
-
-  dimension: ssid {
-    type: string
-    sql: ${TABLE}.ssid ;;
-  }
-}
-
-view: units__maps__facilitymap {
-  dimension: bytes {
-    type: number
-    sql: ${TABLE}.bytes ;;
-  }
-
-  dimension: height {
-    type: number
-    sql: ${TABLE}.height ;;
-  }
-
-  dimension: publicid {
-    type: string
-    sql: ${TABLE}.publicid ;;
-  }
-
-  dimension: url {
-    type: string
-    sql: ${TABLE}.url ;;
-  }
-
-  dimension: version {
-    type: string
-    sql: ${TABLE}.version ;;
-  }
-
-  dimension: width {
-    type: number
-    sql: ${TABLE}.width ;;
-  }
-}
-
-view: units__tags {
-  dimension: value {
-    type: string
-    sql: ${TABLE}.value ;;
-  }
-}
-
-view: units__amenities {
-  dimension: value {
-    type: string
-    sql: ${TABLE}.value ;;
-  }
-}
-
-view: units__backupsmartlockcodes {
-  dimension: value {
-    type: string
-    sql: ${TABLE}.value ;;
-  }
-}
-
-view: units__propertyheroimage {
-  dimension: bytes {
-    type: number
-    sql: ${TABLE}.bytes ;;
-  }
-
-  dimension: height {
-    type: number
-    sql: ${TABLE}.height ;;
-  }
-
-  dimension: publicid {
-    type: string
-    sql: ${TABLE}.publicid ;;
-  }
-
-  dimension: url {
-    type: string
-    sql: ${TABLE}.url ;;
-  }
-
-  dimension: version {
-    type: string
-    sql: ${TABLE}.version ;;
-  }
-
-  dimension: width {
-    type: number
-    sql: ${TABLE}.width ;;
-  }
-}
-
-view: units__availability {
-  dimension: enddate {
-    type: string
-    sql: ${TABLE}.enddate ;;
-  }
-
-  dimension: startdate {
-    type: string
-    sql: ${TABLE}.startdate ;;
-  }
-}
-
-view: units__address {
-  dimension: city {
-    type: string
-    sql: ${TABLE}.city ;;
-  }
-
-  dimension: country {
-    type: string
-    map_layer_name: countries
-    sql: ${TABLE}.country ;;
-  }
-
-  dimension: lat {
-    type: number
-    sql: ${TABLE}.lat ;;
-  }
-
-  dimension: lon {
-    type: number
-    sql: ${TABLE}.lon ;;
-  }
-
-  dimension: state {
-    type: string
-    sql: ${TABLE}.state ;;
-  }
-
-  dimension: street {
-    type: string
-    sql: ${TABLE}.street ;;
-  }
-
-  dimension: zip {
-    type: zipcode
-    sql: ${TABLE}.zip ;;
-  }
-}
-
-view: units__housekeepers {
-  dimension: value {
-    type: string
-    sql: ${TABLE}.value ;;
-  }
-}
-
-view: units__externalrefs {
-  dimension: airbnbid {
-    type: number
-    value_format_name: id
-    sql: ${TABLE}.airbnbid ;;
-  }
-
-  dimension: guesty_id {
-    type: string
-    sql: ${TABLE}.guesty_id ;;
-  }
-
-  dimension: nexiaid {
-    type: number
-    value_format_name: id
-    sql: ${TABLE}.nexiaid ;;
-  }
-
-  dimension: nexiaid__st {
-    type: string
-    sql: ${TABLE}.nexiaid__st ;;
-  }
-
-  dimension: rentalsunitedid {
-    type: number
-    value_format_name: id
-    sql: ${TABLE}.rentalsunitedid ;;
-  }
-}
-
-view: units__facilities__value {
-  dimension: ref {
-    type: string
-    sql: ${TABLE}.ref ;;
-  }
-
-  dimension: type {
-    type: string
-    sql: ${TABLE}.type ;;
-  }
-}
-
-view: units__rooms {
-  dimension: value {
-    hidden: yes
-    sql: ${TABLE}.value ;;
-  }
-}
-
-view: units__rooms__value__beds {
-  dimension: value {
-    hidden: yes
-    sql: ${TABLE}.value ;;
-  }
-}
-
-view: units__callbox {
-  dimension: value {
-    hidden: yes
-    sql: ${TABLE}.value ;;
-  }
-}
-
-view: units__maps {
-  dimension: facilitymap {
-    hidden: yes
-    sql: ${TABLE}.facilitymap ;;
-  }
-}
-
-view: units__facilities {
-  dimension: value {
-    hidden: yes
-    sql: ${TABLE}.value ;;
-  }
-}
+# view: units__rooms__value__beds__value {
+#   dimension: _id {
+#     type: string
+#     sql: ${TABLE}._id ;;
+#   }
+#
+#   dimension: quantity {
+#     type: number
+#     sql: ${TABLE}.quantity ;;
+#   }
+#
+#   dimension: type {
+#     type: string
+#     sql: ${TABLE}.type ;;
+#   }
+# }
+#
+# view: units__photos {
+#   dimension: value {
+#     type: string
+#     sql: ${TABLE}.value ;;
+#   }
+# }
+#
+# view: units__checkindetails {
+#   dimension: buildingcode {
+#     type: number
+#     sql: ${TABLE}.buildingcode ;;
+#   }
+#
+#   dimension: buildingcode__st {
+#     type: string
+#     sql: ${TABLE}.buildingcode__st ;;
+#   }
+#
+#   dimension: isremote {
+#     type: yesno
+#     sql: ${TABLE}.isremote ;;
+#   }
+#
+#   dimension: lockboxcode {
+#     type: string
+#     sql: ${TABLE}.lockboxcode ;;
+#   }
+#
+#   dimension: lockboxcode__it {
+#     type: number
+#     sql: ${TABLE}.lockboxcode__it ;;
+#   }
+#
+#   dimension: lockboxnumber {
+#     type: string
+#     sql: ${TABLE}.lockboxnumber ;;
+#   }
+#
+#   dimension: lockboxnumber__it {
+#     type: number
+#     sql: ${TABLE}.lockboxnumber__it ;;
+#   }
+#
+#   dimension: mailboxnumber {
+#     type: string
+#     sql: ${TABLE}.mailboxnumber ;;
+#   }
+#
+#   dimension: parkingnumber {
+#     type: string
+#     sql: ${TABLE}.parkingnumber ;;
+#   }
+#
+#   dimension: parkingtagnumber {
+#     type: string
+#     sql: ${TABLE}.parkingtagnumber ;;
+#   }
+#
+#   dimension: wifipassword {
+#     type: string
+#     sql: ${TABLE}.wifipassword ;;
+#   }
+#
+#   dimension: wifiusername {
+#     type: string
+#     sql: ${TABLE}.wifiusername ;;
+#   }
+# }
+#
+# view: units__keycafe {
+#   drill_fields: [id]
+#
+#   dimension: id {
+#     primary_key: yes
+#     type: string
+#     sql: ${TABLE}.id ;;
+#   }
+#
+#   dimension: active {
+#     type: yesno
+#     sql: ${TABLE}.active ;;
+#   }
+# }
+#
+# view: units__callbox__value {
+#   dimension: code {
+#     type: string
+#     sql: ${TABLE}.code ;;
+#   }
+#
+#   dimension: enabled {
+#     type: yesno
+#     sql: ${TABLE}.enabled ;;
+#   }
+#
+#   dimension: entry {
+#     type: string
+#     sql: ${TABLE}.entry ;;
+#   }
+#
+#   dimension: phonenumber {
+#     type: string
+#     sql: ${TABLE}.phonenumber ;;
+#   }
+#
+#   dimension: type {
+#     type: string
+#     sql: ${TABLE}.type ;;
+#   }
+# }
+#
+# view: units__wifi {
+#   dimension: password {
+#     type: string
+#     sql: ${TABLE}.password ;;
+#   }
+#
+#   dimension: ssid {
+#     type: string
+#     sql: ${TABLE}.ssid ;;
+#   }
+# }
+#
+# view: units__maps__facilitymap {
+#   dimension: bytes {
+#     type: number
+#     sql: ${TABLE}.bytes ;;
+#   }
+#
+#   dimension: height {
+#     type: number
+#     sql: ${TABLE}.height ;;
+#   }
+#
+#   dimension: publicid {
+#     type: string
+#     sql: ${TABLE}.publicid ;;
+#   }
+#
+#   dimension: url {
+#     type: string
+#     sql: ${TABLE}.url ;;
+#   }
+#
+#   dimension: version {
+#     type: string
+#     sql: ${TABLE}.version ;;
+#   }
+#
+#   dimension: width {
+#     type: number
+#     sql: ${TABLE}.width ;;
+#   }
+# }
+#
+# view: units__tags {
+#   dimension: value {
+#     type: string
+#     sql: ${TABLE}.value ;;
+#   }
+# }
+#
+# view: units__amenities {
+#   dimension: value {
+#     type: string
+#     sql: ${TABLE}.value ;;
+#   }
+# }
+#
+# view: units__backupsmartlockcodes {
+#   dimension: value {
+#     type: string
+#     sql: ${TABLE}.value ;;
+#   }
+# }
+#
+# view: units__propertyheroimage {
+#   dimension: bytes {
+#     type: number
+#     sql: ${TABLE}.bytes ;;
+#   }
+#
+#   dimension: height {
+#     type: number
+#     sql: ${TABLE}.height ;;
+#   }
+#
+#   dimension: publicid {
+#     type: string
+#     sql: ${TABLE}.publicid ;;
+#   }
+#
+#   dimension: url {
+#     type: string
+#     sql: ${TABLE}.url ;;
+#   }
+#
+#   dimension: version {
+#     type: string
+#     sql: ${TABLE}.version ;;
+#   }
+#
+#   dimension: width {
+#     type: number
+#     sql: ${TABLE}.width ;;
+#   }
+# }
+#
+# view: units__availability {
+#   dimension: enddate {
+#     type: string
+#     sql: ${TABLE}.enddate ;;
+#   }
+#
+#   dimension: startdate {
+#     type: string
+#     sql: ${TABLE}.startdate ;;
+#   }
+# }
+#
+# view: units__address {
+#   dimension: city {
+#     type: string
+#     sql: ${TABLE}.city ;;
+#   }
+#
+#   dimension: country {
+#     type: string
+#     map_layer_name: countries
+#     sql: ${TABLE}.country ;;
+#   }
+#
+#   dimension: lat {
+#     type: number
+#     sql: ${TABLE}.lat ;;
+#   }
+#
+#   dimension: lon {
+#     type: number
+#     sql: ${TABLE}.lon ;;
+#   }
+#
+#   dimension: state {
+#     type: string
+#     sql: ${TABLE}.state ;;
+#   }
+#
+#   dimension: street {
+#     type: string
+#     sql: ${TABLE}.street ;;
+#   }
+#
+#   dimension: zip {
+#     type: zipcode
+#     sql: ${TABLE}.zip ;;
+#   }
+# }
+#
+# view: units__housekeepers {
+#   dimension: value {
+#     type: string
+#     sql: ${TABLE}.value ;;
+#   }
+# }
+#
+# view: units__externalrefs {
+#   dimension: airbnbid {
+#     type: number
+#     value_format_name: id
+#     sql: ${TABLE}.airbnbid ;;
+#   }
+#
+#   dimension: guesty_id {
+#     type: string
+#     sql: ${TABLE}.guesty_id ;;
+#   }
+#
+#   dimension: nexiaid {
+#     type: number
+#     value_format_name: id
+#     sql: ${TABLE}.nexiaid ;;
+#   }
+#
+#   dimension: nexiaid__st {
+#     type: string
+#     sql: ${TABLE}.nexiaid__st ;;
+#   }
+#
+#   dimension: rentalsunitedid {
+#     type: number
+#     value_format_name: id
+#     sql: ${TABLE}.rentalsunitedid ;;
+#   }
+# }
+#
+# view: units__facilities__value {
+#   dimension: ref {
+#     type: string
+#     sql: ${TABLE}.ref ;;
+#   }
+#
+#   dimension: type {
+#     type: string
+#     sql: ${TABLE}.type ;;
+#   }
+# }
+#
+# view: units__rooms {
+#   dimension: value {
+#     hidden: yes
+#     sql: ${TABLE}.value ;;
+#   }
+# }
+#
+# view: units__rooms__value__beds {
+#   dimension: value {
+#     hidden: yes
+#     sql: ${TABLE}.value ;;
+#   }
+# }
+#
+# view: units__callbox {
+#   dimension: value {
+#     hidden: yes
+#     sql: ${TABLE}.value ;;
+#   }
+# }
+#
+# view: units__maps {
+#   dimension: facilitymap {
+#     hidden: yes
+#     sql: ${TABLE}.facilitymap ;;
+#   }
+# }
+#
+# view: units__facilities {
+#   dimension: value {
+#     hidden: yes
+#     sql: ${TABLE}.value ;;
+#   }
+# }

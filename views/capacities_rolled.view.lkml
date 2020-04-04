@@ -22,20 +22,26 @@ derived_table: {
 ;;
 }
 dimension: night {
+  hidden:  yes
   sql: ${TABLE}.night ;;
   primary_key: yes
   type: date
 }
 
 dimension: complex {
+  hidden:  yes
   sql: ${TABLE}.complex;;
 }
 dimension: capacity {
+  hidden:  yes
   type: number
   sql: ${TABLE}.capacity ;;
 }
 
 measure: capacity_measure  {
+  view_label: "Metrics"
+  label: "Capacity"
+  description: "Number of available room nights bookable"
   type: sum
   sql: ${capacity} ;;
 }

@@ -1,8 +1,10 @@
 view: complexes {
+  label: "zBuildings"
   sql_table_name: `bigquery-analytics-272822.mongo.complexes`
     ;;
 
   dimension: _id {
+    hidden:  yes
     type: string
     sql: ${TABLE}._id ;;
   }
@@ -17,20 +19,6 @@ view: complexes {
     sql: ${TABLE}.contacts ;;
   }
 
-  dimension_group: createdat {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.createdat ;;
-  }
-
   dimension: externaltitle {
     hidden: yes
     sql: ${TABLE}.externaltitle ;;
@@ -42,6 +30,7 @@ view: complexes {
   }
 
   dimension: internaltitle {
+    hidden:  yes
     type: string
     sql: ${TABLE}.internaltitle ;;
   }
@@ -67,22 +56,10 @@ view: complexes {
   }
 
   dimension: title {
+    view_label: "Core Dimensions"
+    label: "Building Title"
     type: string
     sql: ${TABLE}.title ;;
-  }
-
-  dimension_group: updatedat {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.updatedat ;;
   }
 
   measure: count {

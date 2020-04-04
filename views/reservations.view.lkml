@@ -3,6 +3,7 @@ view: reservations {
     ;;
 
   dimension: _id {
+    hidden: yes
     type: string
     sql: ${TABLE}._id ;;
   }
@@ -13,6 +14,7 @@ view: reservations {
   }
 
   dimension_group: bookingdate {
+    view_label: "Date Dimensions"
     type: time
     timeframes: [
       raw,
@@ -37,6 +39,7 @@ view: reservations {
   }
 
   dimension_group: cancellationdate {
+    view_label: "Date Dimensions"
     type: time
     timeframes: [
       raw,
@@ -103,11 +106,6 @@ view: reservations {
   dimension: guest {
     type: string
     sql: ${TABLE}.guest ;;
-  }
-
-  dimension: guestid {
-    type: string
-    sql: ${TABLE}.guestid ;;
   }
 
   dimension: guestscount {
@@ -236,6 +234,7 @@ view: reservations {
   }
 
   dimension: timezone {
+    hidden: yes
     type: string
     sql: ${TABLE}.timezone ;;
   }
@@ -261,18 +260,33 @@ view: reservations {
 
   measure: reservation_night {
     view_label: "Metrics"
+    label: "Num ReservationNights"
+    description: "Reservation night stay"
     type:  count_distinct
     sql: CONCAT(${confirmationcode}, '-', ${financials.night_date});;
+    filters: [financial_night_part_of_res: "yes"]
     drill_fields: [financials.night_date, reservation_details*]
   }
 
+  dimension: financial_night_part_of_res {
+    hidden: yes
+    type:  yesno
+    sql: format_date('%Y-%m-%d', ${financials.night_date}) < ${checkoutdate} ;;
+  }
+
   measure: num_reservations {
+    view_label: "Metrics"
+    label: "Num Reservations"
+    description: "Number of unique reservations"
     type: count_distinct
     sql: ${confirmationcode} ;;
     drill_fields: [reservation_details*]
   }
 
   measure: occupancy {
+    view_label: "Metrics"
+    label: "Occupancy"
+    description: "Number of reservation nights / capacity"
     type: number
     value_format: "0.00%"
     sql:  ${reservation_night} / ${capacities_rolled.capacity_measure} ;;
@@ -285,162 +299,156 @@ view: reservations {
   }
 }
 
-view: reservations__notes__value {
-  dimension: _id {
-    type: string
-    sql: ${TABLE}._id ;;
-  }
-
-  dimension: kind {
-    type: string
-    sql: ${TABLE}.kind ;;
-  }
-
-  dimension: value {
-    type: string
-    sql: ${TABLE}.value ;;
-  }
-}
-
-view: reservations__earlycheckin {
-  dimension: approvedtime {
-    type: number
-    sql: ${TABLE}.approvedtime ;;
-  }
-
-  dimension: requestedtime {
-    type: number
-    sql: ${TABLE}.requestedtime ;;
-  }
-
-  dimension: requestnote {
-    type: string
-    sql: ${TABLE}.requestnote ;;
-  }
-
-  dimension: status {
-    type: string
-    sql: ${TABLE}.status ;;
-  }
-}
-
-view: reservations__keycafeaccess {
-  dimension: accesscode {
-    type: string
-    sql: ${TABLE}.accesscode ;;
-  }
-
-  dimension: accessid {
-    type: string
-    sql: ${TABLE}.accessid ;;
-  }
-}
-
-view: reservations__petfeescard {
-  dimension_group: submittedat {
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.submittedat ;;
-  }
-
-  dimension: wasprovided {
-    type: yesno
-    sql: ${TABLE}.wasprovided ;;
-  }
-}
-
-view: reservations__apis {
-  dimension: guesty_reservation {
-    type: string
-    sql: ${TABLE}.guesty_reservation ;;
-  }
-}
-
-view: reservations__additionalguests__value {
-  dimension: _id {
-    type: string
-    sql: ${TABLE}._id ;;
-  }
-
-  dimension: email {
-    type: string
-    sql: ${TABLE}.email ;;
-  }
-
-  dimension: name {
-    type: string
-    sql: ${TABLE}.name ;;
-  }
-}
-
-view: reservations__cards__value__usefor {
-  dimension: value {
-    type: string
-    sql: ${TABLE}.value ;;
-  }
-}
-
-view: reservations__cards__value {
-  dimension: _id {
-    type: string
-    sql: ${TABLE}._id ;;
-  }
-
-  dimension: card {
-    type: string
-    sql: ${TABLE}.card ;;
-  }
-
-  dimension: usefor {
-    hidden: yes
-    sql: ${TABLE}.usefor ;;
-  }
-}
-
-view: reservations__chargelogs {
-  dimension: value {
-    type: string
-    sql: ${TABLE}.value ;;
-  }
-}
-
-view: reservations__externalrefs {
-  dimension: guesty_id {
-    type: string
-    sql: ${TABLE}.guesty_id ;;
-  }
-
-  dimension: stripecardid {
-    type: string
-    sql: ${TABLE}.stripecardid ;;
-  }
-}
-
-view: reservations__notes {
-  dimension: value {
-    hidden: yes
-    sql: ${TABLE}.value ;;
-  }
-}
-
-view: reservations__additionalguests {
-  dimension: value {
-    hidden: yes
-    sql: ${TABLE}.value ;;
-  }
-}
-
-view: reservations__cards {
-  dimension: value {
-    hidden: yes
-    sql: ${TABLE}.value ;;
-  }
-}
+# view: reservations__notes__value {
+#   dimension: _id {
+#     type: string
+#     sql: ${TABLE}._id ;;
+#   }
+#
+#   dimension: kind {
+#     type: string
+#     sql: ${TABLE}.kind ;;
+#   }
+#
+#   dimension: value {
+#     type: string
+#     sql: ${TABLE}.value ;;
+#   }
+# }
+#
+# view: reservations__earlycheckin {
+#   dimension: approvedtime {
+#     type: number
+#     sql: ${TABLE}.approvedtime ;;
+#   }
+#
+#   dimension: requestedtime {
+#     type: number
+#     sql: ${TABLE}.requestedtime ;;
+#   }
+#
+#   dimension: requestnote {
+#     type: string
+#     sql: ${TABLE}.requestnote ;;
+#   }
+#
+#   dimension: status {
+#     type: string
+#     sql: ${TABLE}.status ;;
+#   }
+# }
+#
+# view: reservations__keycafeaccess {
+#   dimension: accesscode {
+#     type: string
+#     sql: ${TABLE}.accesscode ;;
+#   }
+#
+#   dimension: accessid {
+#     type: string
+#     sql: ${TABLE}.accessid ;;
+#   }
+# }
+#
+# view: reservations__petfeescard {
+#   dimension_group: submittedat {
+#     type: time
+#     timeframes: [
+#       raw,
+#       time,
+#       date,
+#       week,
+#       month,
+#       quarter,
+#       year
+#     ]
+#     sql: ${TABLE}.submittedat ;;
+#   }
+#
+#   dimension: wasprovided {
+#     type: yesno
+#     sql: ${TABLE}.wasprovided ;;
+#   }
+# }
+#
+#
+# view: reservations__additionalguests__value {
+#   dimension: _id {
+#     type: string
+#     sql: ${TABLE}._id ;;
+#   }
+#
+#   dimension: email {
+#     type: string
+#     sql: ${TABLE}.email ;;
+#   }
+#
+#   dimension: name {
+#     type: string
+#     sql: ${TABLE}.name ;;
+#   }
+# }
+#
+# view: reservations__cards__value__usefor {
+#   dimension: value {
+#     type: string
+#     sql: ${TABLE}.value ;;
+#   }
+# }
+#
+# view: reservations__cards__value {
+#   dimension: _id {
+#     type: string
+#     sql: ${TABLE}._id ;;
+#   }
+#
+#   dimension: card {
+#     type: string
+#     sql: ${TABLE}.card ;;
+#   }
+#
+#   dimension: usefor {
+#     hidden: yes
+#     sql: ${TABLE}.usefor ;;
+#   }
+# }
+#
+# view: reservations__chargelogs {
+#   dimension: value {
+#     type: string
+#     sql: ${TABLE}.value ;;
+#   }
+# }
+#
+# view: reservations__externalrefs {
+#   dimension: guesty_id {
+#     type: string
+#     sql: ${TABLE}.guesty_id ;;
+#   }
+#
+#   dimension: stripecardid {
+#     type: string
+#     sql: ${TABLE}.stripecardid ;;
+#   }
+# }
+#
+# view: reservations__notes {
+#   dimension: value {
+#     hidden: yes
+#     sql: ${TABLE}.value ;;
+#   }
+# }
+#
+# view: reservations__additionalguests {
+#   dimension: value {
+#     hidden: yes
+#     sql: ${TABLE}.value ;;
+#   }
+# }
+#
+# view: reservations__cards {
+#   dimension: value {
+#     hidden: yes
+#     sql: ${TABLE}.value ;;
+#   }
+# }
