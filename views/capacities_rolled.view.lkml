@@ -44,5 +44,6 @@ measure: capacity_measure  {
   description: "Number of available room nights bookable"
   type: sum
   sql: ${capacity} ;;
+  drill_fields: [night, complexe.title, capacity]
 }
 }
