@@ -22,12 +22,14 @@ derived_table: {
 ;;
 }
 dimension: night {
+  hidden: yes
   sql: ${TABLE}.night ;;
   primary_key: yes
   type: date
 }
 
 dimension: complex {
+  hidden:  yes
   sql: ${TABLE}.complex;;
 }
 dimension: capacity {
