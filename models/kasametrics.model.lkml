@@ -37,6 +37,11 @@ explore: reservations {
       {% endif %}
     ;;
   }
+  join: guests {
+    type:  inner
+    relationship: one_to_one
+    sql_on:  ${reservations.guest} = ${guests._id} ;;
+  }
 }
 
 # explore: reservationsRev {
@@ -69,18 +74,4 @@ explore: reservations {
 #     sql_on: ${complexes._id} = ${units.complex} ;;
 #   }
 #
-# }
-
-# explore: guests {
-#   from: guests
-#   join: reservations {
-#     type:  inner
-#     relationship: one_to_one
-#     sql_on: ${reservations.guest} = ${guests._id} ;;
-#   }
-#   join: financials {
-#     type:  inner
-#     relationship: one_to_many
-#     sql_on: ${reservations._id} = ${financials.reservation} ;;
-#   }
 # }

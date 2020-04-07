@@ -291,7 +291,11 @@ view: reservations {
     type: number
     value_format: "0.00%"
     sql:  ${reservation_night} / NULLIF(${capacities_rolled.capacity_measure}, 0) ;;
-    drill_fields: [financials.night_date, reservation_details*]
+#     drill_fields: [financials.night_date, reservation_details*]
+    link: {
+      label: "Drill - Reservation Nights"
+      url: "{{ reservation_night._link }}"
+    }
   }
 
   set:reservation_details {
