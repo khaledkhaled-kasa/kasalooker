@@ -290,7 +290,7 @@ view: reservations {
     description: "Number of reservation nights / capacity"
     type: number
     value_format: "0.00%"
-    sql:  ${reservation_night} / NULLIF(${capacities_rolled.capacity_measure}, 0} ;;
+    sql:  ${reservation_night} / NULLIF(${capacities_rolled.capacity_measure}, 0) ;;
     drill_fields: [financials.night_date, reservation_details*]
   }
 
