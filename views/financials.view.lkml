@@ -17,7 +17,7 @@ view: financials {
     description: "Average daily rate: amount / reservation_night"
     type: number
     value_format: "$#,##0.00"
-    sql: ${amount} / ${reservations.reservation_night} ;;
+    sql: ${amount} / NULLIF(${reservations.reservation_night}, 0) ;;
   }
 
   measure: revpar {
@@ -26,7 +26,7 @@ view: financials {
     description: "Revenue per available room: amount / capacity"
     type: number
     value_format: "$#,##0.00"
-    sql: ${amount} / ${capacities_rolled.capacity_measure} ;;
+    sql: ${amount} / NULLIF(${capacities_rolled.capacity_measure}, 0) ;;
   }
 
   dimension: cashatbooking {
