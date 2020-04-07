@@ -62,6 +62,11 @@ view: complexes {
     sql: ${TABLE}.title ;;
   }
 
+  dimension: city {
+    type:  string
+    sql:  ${TABLE}.address.city ;;
+  }
+
   measure: count {
     type: count
     drill_fields: []
