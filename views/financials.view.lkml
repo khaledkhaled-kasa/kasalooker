@@ -56,7 +56,7 @@ view: financials {
   dimension: weekend {
     view_label: "Date Dimensions"
     type:  yesno
-    sql:  ${night_day_of_week} in ('Saturday', 'Sunday') ;;
+    sql:  ${night_day_of_week} in ('Friday', 'Saturday') ;;
   }
 
   dimension: reservation {
