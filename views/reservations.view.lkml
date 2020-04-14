@@ -28,6 +28,35 @@ view: reservations {
     sql: ${TABLE}.bookingdate ;;
   }
 
+  dimension: lead_time {
+    type:  number
+    sql:  date_diff(CAST(${checkindate} as DATE), CAST(${TABLE}.bookingdate as DATE), DAY) ;;
+  }
+
+  dimension: length_of_stay {
+    type:  number
+    sql:  date_diff(CAST(${checkoutdate} as DATE), CAST(${checkindate} as DATE), DAY) ;;
+  }
+
+  measure: avg_lead_time {
+    view_label: "Metrics"
+    description: "Days between booking and checking in"
+    value_format: "0.0"
+    type:  average
+    sql: ${lead_time};;
+    drill_fields: [reservation_details*]
+  }
+
+  measure: avg_length_of_stay {
+    view_label: "Metrics"
+    description: "Number of days of stay"
+    value_format: "0.0"
+    type:  average
+    sql: ${length_of_stay};;
+    drill_fields: [reservation_details*]
+  }
+
+
   dimension: bringingpets {
     type: yesno
     sql: ${TABLE}.bringingpets ;;
