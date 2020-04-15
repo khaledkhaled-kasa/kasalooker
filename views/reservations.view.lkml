@@ -71,12 +71,10 @@ view: reservations {
     view_label: "Date Dimensions"
     type: time
     timeframes: [
-      raw,
       time,
       date,
       week,
       month,
-      quarter,
       year
     ]
     sql: ${TABLE}.cancellationdate ;;
@@ -93,18 +91,19 @@ view: reservations {
   }
 
   dimension: checkindate {
-    type: string
-    sql: ${TABLE}.checkindatelocal ;;
+    type: date
+    sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
   }
 
   dimension: checkoutdate {
-    type: string
-    sql: ${TABLE}.checkoutdatelocal ;;
+    type: date
+    sql: CAST(${TABLE}.checkoutdatelocal as TIMESTAMP);;
   }
 
   dimension: confirmationcode {
     type: string
     sql: ${TABLE}.confirmationcode ;;
+    drill_fields: [reservation_details*]
   }
 
   dimension_group: createdat {
@@ -328,7 +327,7 @@ view: reservations {
   }
 
   set:reservation_details {
-    fields: [confirmationcode, status, source, checkindate, checkoutdate]
+    fields: [confirmationcode, status, source, checkindate, checkoutdate, bookingdate_date]
   }
 }
 
