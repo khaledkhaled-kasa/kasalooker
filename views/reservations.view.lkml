@@ -47,11 +47,29 @@ view: reservations {
     drill_fields: [reservation_details*]
   }
 
+  measure: median_lead_time {
+    view_label: "Metrics"
+    description: "Days between booking and checking in"
+    value_format: "0.0"
+    type:  median
+    sql: ${lead_time};;
+    drill_fields: [reservation_details*]
+  }
+
   measure: avg_length_of_stay {
     view_label: "Metrics"
     description: "Number of days of stay"
     value_format: "0.0"
     type:  average
+    sql: ${length_of_stay};;
+    drill_fields: [reservation_details*]
+  }
+
+  measure: median_length_of_stay {
+    view_label: "Metrics"
+    description: "Number of days of stay"
+    value_format: "0.0"
+    type:  median
     sql: ${length_of_stay};;
     drill_fields: [reservation_details*]
   }
