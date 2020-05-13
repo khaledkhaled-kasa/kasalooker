@@ -110,6 +110,10 @@ view: guests {
     sql: ${TABLE}.verification ;;
   }
 
+  dimension: is_verified {
+    sql:  ${TABLE}.verification.isverified ;;
+  }
+
   measure: count_guests {
     type: count
     drill_fields: [firstname, lastname]

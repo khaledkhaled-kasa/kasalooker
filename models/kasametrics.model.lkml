@@ -41,7 +41,7 @@ explore: reservations {
     type:  inner
     relationship: one_to_one
     sql_on:  ${reservations.guest} = ${guests._id} ;;
-  }
+}
 }
 
 # explore: reservationsRev {
