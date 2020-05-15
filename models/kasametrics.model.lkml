@@ -42,10 +42,10 @@ explore: reservations {
     relationship: one_to_one
     sql_on:  ${reservations.guest} = ${guests._id} ;;
   }
-  join: airbnb_review_master {
+  join: master {
     type: inner
     relationship:  one_to_one
-    sql_on: ${reservations.confirmationcode} = ${airbnb_review_master.reservation_code} ;;
+    sql_on: ${reservations.confirmationcode} = ${master.reservation_code} ;;
   }
 }
 
