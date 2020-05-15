@@ -315,10 +315,9 @@ view: reservations {
   }
 
   dimension: financial_night_part_of_res {
-    hidden: yes
     type:  yesno
-    sql: format_date('%Y-%m-%d', ${financials.night_date}) < ${TABLE}.checkoutdate and
-    format_date('%Y-%m-%d', ${financials.night_date}) >= ${TABLE}.checkindate;;
+    sql: format_date('%Y-%m-%d', ${financials.night_date}) < ${TABLE}.checkoutdatelocal and
+    format_date('%Y-%m-%d', ${financials.night_date}) >= ${TABLE}.checkindatelocal;;
   }
 
   measure: num_reservations {
