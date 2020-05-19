@@ -41,7 +41,12 @@ explore: reservations {
     type:  inner
     relationship: one_to_one
     sql_on:  ${reservations.guest} = ${guests._id} ;;
-}
+  }
+  join: reviews {
+    type:  inner
+    relationship:  one_to_one
+    sql_on:  ${reviews.reservation} = ${reservations._id} ;;
+  }
 }
 
 # explore: reservationsRev {
