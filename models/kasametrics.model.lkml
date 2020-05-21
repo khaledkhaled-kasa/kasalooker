@@ -52,6 +52,11 @@ explore: reservations {
     relationship:  one_to_one
     sql_on: ${reservations.confirmationcode} = ${master.reservation_code} ;;
   }
+  join: booking_reviews {
+    type: inner
+    relationship: one_to_many
+    sql_on: ${units.propcode} = ${booking_reviews.building} ;;
+  }
 }
 
 # explore: reservationsRev {

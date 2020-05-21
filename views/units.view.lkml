@@ -158,6 +158,11 @@ view: units {
     sql: ${TABLE}.internaltitle ;;
   }
 
+  dimension: propcode {
+    type: string
+    sql: substr(${TABLE}.internaltitle, 1, 3) ;;
+  }
+
   dimension: islisted {
     type: yesno
     sql: ${TABLE}.islisted ;;
