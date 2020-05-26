@@ -1,5 +1,5 @@
-view: master {
-  sql_table_name: `bigquery-analytics-272822.airbnb_review_master.Master`
+view: airbnb_reviews {
+  sql_table_name: `bigquery-analytics-272822.airbnb_review_master.Airbnb_Reviews`
     ;;
 
   dimension: accuracy_comments {
@@ -146,8 +146,14 @@ view: master {
     sql: ${TABLE}.Value_Rating ;;
   }
 
+  measure: overall_quality_score {
+    type: number
+    value_format: "0%"
+    sql: (${overall_rating_avg} - 4.54)/(4.83 - 4.54) ;;
+  }
+
   measure: count {
-    type: count
-    drill_fields: []
+    type: count_distinct
+    sql: ${TABLE}.Reservation_Code ;;
   }
 }

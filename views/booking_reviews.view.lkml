@@ -85,6 +85,12 @@ view: booking_reviews {
     sql: ${TABLE}.Title ;;
   }
 
+  measure: overall_quality_score {
+    type:  number
+    value_format: "0%"
+    sql: (${_5_star_rating_avg} - 4.05) /(4.57-4.05) ;;
+  }
+
   measure: count {
     type: count
     drill_fields: []

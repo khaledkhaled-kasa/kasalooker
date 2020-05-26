@@ -47,15 +47,20 @@ explore: reservations {
     relationship:  one_to_one
     sql_on:  ${reviews.reservation} = ${reservations._id} ;;
   }
-  join: master {
+  join: airbnb_reviews {
     type: inner
     relationship:  one_to_one
-    sql_on: ${reservations.confirmationcode} = ${master.reservation_code} ;;
+    sql_on: ${reservations.confirmationcode} = ${airbnb_reviews.reservation_code} ;;
   }
   join: booking_reviews {
     type: inner
     relationship: one_to_many
     sql_on: ${units.propcode} = ${booking_reviews.building} ;;
+  }
+  join: post_checkout_data {
+    type:  inner
+    relationship: one_to_one
+    sql_on:  ${post_checkout_data.confirmationcode} = ${reservations.confirmationcode} ;;
   }
 }
 
