@@ -53,10 +53,12 @@ view: post_checkout_data {
   #  sql: ${TABLE}.How_often_do_you_plan_to_return_to_this_location_ ;;
   #}
 
-  #dimension: how_would_you_feel_if_you_could_no_longer_stay_at_any_kasa_locations_ {
-  #  type: string
-  #  sql: ${TABLE}.How_would_you_feel_if_you_could_no_longer_stay_at_any_Kasa_locations_ ;;
-  #}
+  measure: disapointed_percentage {
+    type: number
+    value_format: "00%"
+    sql: sum(if(${TABLE}.How_would_you_feel_if_you_could_no_longer_stay_at_any_Kasa_locations_ = "Very disappointed",1,0)) /
+    count(${TABLE}.How_would_you_feel_if_you_could_no_longer_stay_at_any_Kasa_locations_);;
+  }
 
   #dimension_group: month {
   #  type: time
