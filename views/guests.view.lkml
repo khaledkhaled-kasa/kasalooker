@@ -25,7 +25,22 @@ view: guests {
   dimension: country {
     type: string
     map_layer_name: countries
-    sql: ${TABLE}.country ;;
+    sql: ${TABLE}.address.country ;;
+  }
+
+  dimension: state {
+    type: string
+    sql: ${TABLE}.address.state ;;
+  }
+
+  dimension: city {
+    type: string
+    sql: ${TABLE}.address.city ;;
+  }
+
+  dimension: zip {
+    type: string
+    sql: ${TABLE}.address.zip ;;
   }
 
   dimension_group: createdat {
