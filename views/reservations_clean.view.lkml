@@ -335,6 +335,14 @@ view: reservations_clean {
     drill_fields: [reservation_details*]
   }
 
+  measure: OQS {
+    type: number
+    value_format: "0%"
+    sql: ((${airbnb_reviews.overall_quality_score} * ${airbnb_reviews.count}) +  (${post_checkout_data.direct_oqs} * ${post_checkout_data.direct_reviews})
+    + (${post_checkout_data.expedia_oqs} * ${post_checkout_data.expedia_reviews}) + (${post_checkout_data.booking_oqs} * ${post_checkout_data.booking_reviews}))
+    / (${airbnb_reviews.count} + ${post_checkout_data.direct_reviews} + ${post_checkout_data.expedia_reviews} + ${post_checkout_data.booking_reviews});;
+  }
+
   set:reservation_details {
     fields: [confirmationcode, status, source, checkindate, checkoutdate, bookingdate_date]
   }

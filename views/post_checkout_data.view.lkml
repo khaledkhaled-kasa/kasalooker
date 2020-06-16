@@ -163,6 +163,30 @@ view: post_checkout_data {
     sql: (${booking_avg} - 3.07)/(3.97-3.07);;
   }
 
+  measure: direct_reviews {
+    type: count
+    value_format: "0.00"
+    filters: [
+      platform_clean: "Direct"
+    ]
+  }
+
+  measure: booking_reviews {
+    type: count
+    value_format: "0.00"
+    filters: [
+      platform_clean: "Booking.com"
+    ]
+  }
+
+  measure: expedia_reviews {
+    type: count
+    value_format: "0.00"
+    filters: [
+      platform_clean: "Expedia"
+    ]
+  }
+
   dimension: platform {
     type: string
     sql: ${TABLE}.platform ;;
