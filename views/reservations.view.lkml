@@ -346,6 +346,11 @@ view: reservations {
   set:reservation_details {
     fields: [confirmationcode, status, source, checkindate, checkoutdate, bookingdate_date]
   }
+
+  measure: res_count {
+    type: number
+    sql: count(${confirmationcode}) ;;
+  }
 }
 
 # view: reservations__notes__value {

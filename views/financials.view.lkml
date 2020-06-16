@@ -11,6 +11,34 @@ view: financials {
     sql: ${TABLE}.amount__fl ;;
   }
 
+  #measure: cleaning_amount {
+  #  type: number
+  #  value_format: "$#,##0.00"
+  #  sql: sum(if(${TABLE}.type = "cleaning",${TABLE}.amount__fl,0)) ;;
+  #}
+
+  #measure: clean_refund_amount {
+  #  type: number
+  #  value_format: "$#,##0.00"
+  #  sql: sum(if(${TABLE}.type = "CleanRefund",${TABLE}.amount__fl,0)) ;;
+  #}
+
+  #measure: cleaning_transactions {
+  #  type: count
+  #  value_format: "0"
+  #  filters: [
+  #    type: "cleaning"
+  #  ]
+  #}
+
+  #measure: cleaning_refund_transactions {
+  #  type: count
+  #  value_format: "0"
+  #  filters: [
+  #    type: "CleanRefund"
+  #  ]
+  #}
+
   measure: adr {
     view_label: "Metrics"
     label: "ADR"
