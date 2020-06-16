@@ -152,6 +152,34 @@ view: airbnb_reviews {
     sql: (${overall_rating_avg} - 4.54)/(4.83 - 4.54) ;;
   }
 
+  measure: count_5_star {
+    type: count
+    value_format: "0"
+    filters: [
+      overall_rating: "5"
+    ]
+  }
+
+  measure: count_less_than_4_star {
+    type: count
+    value_format: "0"
+    filters: [
+      overall_rating: "<=3"
+    ]
+  }
+
+  measure: percent_5_star {
+    type: number
+    value_format: "0.0%"
+    sql: ${count_5_star} / ${count} ;;
+  }
+
+  measure: percent_less_than_4_star {
+    type: number
+    value_format: "0.0%"
+    sql: ${count_less_than_4_star} / ${count};;
+  }
+
   measure: count {
     type: count_distinct
     sql: ${TABLE}.Reservation_Code ;;
