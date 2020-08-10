@@ -343,14 +343,20 @@ view: reservations {
     }
   }
 
+  measure: bkg_percent {
+    type: percent_of_total
+    sql: ${count} ;;
+  }
+
+  measure: count {
+    type:  count
+    drill_fields: []
+  }
+
   set:reservation_details {
     fields: [confirmationcode, status, source, checkindate, checkoutdate, bookingdate_date]
   }
 
-  measure: res_count {
-    type: number
-    sql: count(${confirmationcode}) ;;
-  }
 }
 
 # view: reservations__notes__value {
