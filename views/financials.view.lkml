@@ -11,33 +11,33 @@ view: financials {
     sql: ${TABLE}.amount__fl ;;
   }
 
-  #measure: cleaning_amount {
-  #  type: number
-  #  value_format: "$#,##0.00"
-  #  sql: sum(if(${TABLE}.type = "cleaning",${TABLE}.amount__fl,0)) ;;
-  #}
+  measure: cleaning_amount {
+   type: number
+   value_format: "$#,##0.00"
+   sql: sum(if(${TABLE}.type = "cleaning",${TABLE}.amount__fl,0)) ;;
+  }
 
-  #measure: clean_refund_amount {
-  #  type: number
-  #  value_format: "$#,##0.00"
-  #  sql: sum(if(${TABLE}.type = "CleanRefund",${TABLE}.amount__fl,0)) ;;
-  #}
+  measure: clean_refund_amount {
+   type: number
+   value_format: "$#,##0.00"
+   sql: sum(if(${TABLE}.type = "CleanRefund",${TABLE}.amount__fl,0)) ;;
+  }
 
-  #measure: cleaning_transactions {
-  #  type: count
-  #  value_format: "0"
-  #  filters: [
-  #    type: "cleaning"
-  #  ]
-  #}
+  measure: cleaning_transactions {
+   type: count
+   value_format: "0"
+   filters: [
+     type: "cleaning"
+   ]
+  }
 
-  #measure: cleaning_refund_transactions {
-  #  type: count
-  #  value_format: "0"
-  #  filters: [
-  #    type: "CleanRefund"
-  #  ]
-  #}
+  measure: cleaning_refund_transactions {
+   type: count
+   value_format: "0"
+   filters: [
+     type: "CleanRefund"
+   ]
+  }
 
   measure: adr {
     view_label: "Metrics"
@@ -89,7 +89,23 @@ view: financials {
 
   dimension: reservation {
     type: string
+    primary_key: yes
     sql: ${TABLE}.reservation ;;
+  }
+
+  dimension_group: transaction {
+    view_label: "Date Dimensions"
+    group_label: "Transaction Date"
+    description: "Date of a given financial transaction"
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      day_of_week
+    ]
+    sql: cast(${TABLE}.transactiondate as TIMESTAMP);;
   }
 
   dimension: transactiondate {

@@ -120,6 +120,7 @@ view: reservations {
 
   dimension: confirmationcode {
     type: string
+    primary_key: yes
     sql: ${TABLE}.confirmationcode ;;
     drill_fields: [reservation_details*]
   }
@@ -343,10 +344,6 @@ view: reservations {
     }
   }
 
-  measure: bkg_percent {
-    type: percent_of_total
-    sql: ${count} ;;
-  }
 
   measure: count {
     type:  count
