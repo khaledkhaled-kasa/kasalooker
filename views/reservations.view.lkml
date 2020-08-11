@@ -113,8 +113,36 @@ view: reservations {
     sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
   }
 
+  dimension_group: reservation_checkin {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
+  }
+
   dimension: checkoutdate {
     type: date
+    sql: CAST(${TABLE}.checkoutdatelocal as TIMESTAMP);;
+  }
+
+  dimension_group: reservation_checkout {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
     sql: CAST(${TABLE}.checkoutdatelocal as TIMESTAMP);;
   }
 
