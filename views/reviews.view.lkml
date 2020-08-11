@@ -33,6 +33,11 @@ view: reviews {
     sql: ${TABLE}.overallratingstandardized ;;
   }
 
+  measure: Rating {
+    type:  average
+    sql: ${TABLE}.overallratingstandardized ;;
+  }
+
   dimension: privatereviewtext {
     type: string
     sql: ${TABLE}.privatereviewtext ;;
