@@ -372,11 +372,12 @@ view: reservations {
     }
   }
 
-
-  measure: count {
-    type:  count
-    drill_fields: []
-  }
+# This isn't correct because it doesn't handle the "status".
+# NumReservations accomplishes what we want here.
+#   measure: count {
+#     type:  count
+#     drill_fields: []
+#   }
 
   set:reservation_details {
     fields: [confirmationcode, status, source, checkindate, checkoutdate, bookingdate_date]
