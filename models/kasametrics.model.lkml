@@ -64,12 +64,12 @@ explore: reservations {
   }
   join: cleaninglogs {
     type: inner
-    relationship: many_to_one
+    relationship: one_to_many
     sql_on: ${cleaninglogs.unit} = ${units._id} ;;
   }
   join: staffs {
     type: inner
-    relationship: many_to_one
+    relationship: one_to_one
     sql_on: ${cleaninglogs.housekeeper} = ${staffs._id} ;;
   }
 }
