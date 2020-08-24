@@ -72,6 +72,16 @@ explore: reservations {
     relationship: one_to_one
     sql_on: ${cleaninglogs.housekeeper} = ${staffs._id} ;;
   }
+  join: breezeway_config {
+    type:  inner
+    relationship: one_to_one
+    sql_on: ${breezeway_config.units_nickname} = ${units.nickname} ;;
+  }
+  join: hk_scorecard {
+    type: inner
+    relationship: one_to_one
+    sql_on: ${reservations.confirmationcode} = ${hk_scorecard.confCode} ;;
+  }
 }
 
 # explore: reservationsRev {
