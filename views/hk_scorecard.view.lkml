@@ -43,23 +43,26 @@ view:hk_scorecard {
         concat(firstname, " ",lastname) as HK, time(clean_tbl.createdat, timezone) as time, date(clean_tbl.createdat, timezone) as date,
         clean_tbl._id,
         case
-          when (time(clean_tbl.createdat, timezone) <= Cast("15:00:00" as TIME) and
-            date(clean_tbl.createdat, timezone) = PARSE_DATE("%Y-%m-%d", checkin)) OR
-            date(clean_tbl.createdat, timezone) = PARSE_DATE("%Y-%m-%d", prev_checkout) then 1
+          --when (time(clean_tbl.createdat, timezone) <= Cast("15:00:00" as TIME) and
+          --  date(clean_tbl.createdat, timezone) = PARSE_DATE("%Y-%m-%d", checkin)) OR
+          when date(clean_tbl.createdat, timezone) = PARSE_DATE("%Y-%m-%d", prev_checkout) and
+             time(clean_tbl.createdat, timezone) <= Cast("15:00:00" as TIME) then 1
           else 0
         End as on_time,
         confCode
       from chrono_checkins
       inner join clean_tbl
         on unit = unit_id
-      left join mongo.staffs
+      inner join mongo.staffs
         on clean_tbl.housekeeper = staffs._id
-      where date(clean_tbl.createdat, timezone) between PARSE_DATE("%Y-%m-%d", prev_checkin) and PARSE_DATE("%Y-%m-%d", checkin)
+      where date(clean_tbl.createdat, timezone) between PARSE_DATE("%Y-%m-%d", prev_checkout) and PARSE_DATE("%Y-%m-%d", checkin)
+      and housekeeper is not null
       ;;
   }
 
-  measure: count {
-    type: count
+  measure: total_cleans {
+    type: number
+    sql: count(${time}) ;;
     drill_fields: [detail*]
   }
 
@@ -167,7 +170,7 @@ view:hk_scorecard {
   }
 
   set: detail {
-    fields: [HK, pct_on_time, count]
+    fields: [HK, pct_on_time, total_cleans]
   }
 
 #   dimension: prev_confCode {
