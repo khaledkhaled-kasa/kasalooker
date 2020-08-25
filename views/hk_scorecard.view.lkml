@@ -131,7 +131,7 @@ view:hk_scorecard {
       quarter,
       year
     ]
-    sql: ${TABLE}.checkin ;;
+    sql: Cast(${TABLE}.checkin  as TIMESTAMP) ;;
   }
 
 #   dimension_group: checkout {
@@ -161,7 +161,7 @@ view:hk_scorecard {
       quarter,
       year
     ]
-    sql: ${TABLE}.prev_checkin ;;
+    sql: Cast(${TABLE}.prev_checkin  as TIMESTAMP) ;;
   }
 
   dimension_group: prev_checkout {
@@ -176,7 +176,7 @@ view:hk_scorecard {
       quarter,
       year
     ]
-    sql: ${TABLE}.prev_checkout ;;
+    sql: Cast(${TABLE}.prev_checkin as TIMESTAMP) ;;
   }
 
   dimension: HK {
