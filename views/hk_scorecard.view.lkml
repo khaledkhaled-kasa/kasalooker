@@ -39,16 +39,26 @@ view:hk_scorecard {
       group by unit_id, checkin, checkout, prev_checkout, prev_checkin, prev_confCode, prev_unit, timezone, confCode
       order by unit_id, checkin
       )
-      Select checkin, unit_id, prev_checkin, prev_unit,
+      Select checkin, unit_id, prev_checkin, prev_unit, prev_checkout,
         concat(firstname, " ",lastname) as HK, time(clean_tbl.createdat, timezone) as time, date(clean_tbl.createdat, timezone) as date,
         clean_tbl._id,
         case
-          --when (time(clean_tbl.createdat, timezone) <= Cast("15:00:00" as TIME) and
-          --  date(clean_tbl.createdat, timezone) = PARSE_DATE("%Y-%m-%d", checkin)) OR
           when date(clean_tbl.createdat, timezone) = PARSE_DATE("%Y-%m-%d", prev_checkout) and
              time(clean_tbl.createdat, timezone) <= Cast("15:00:00" as TIME) then 1
           else 0
         End as on_time,
+        case
+          when date(clean_tbl.createdat, timezone) < PARSE_DATE("%Y-%m-%d", checkin) or
+             (date(clean_tbl.createdat, timezone) = PARSE_DATE("%Y-%m-%d", checkin) and
+             time(clean_tbl.createdat, timezone) <= Cast("15:00:00" as TIME)) then 1
+          else 0
+        End as before_checkin,
+        case
+          when date(clean_tbl.createdat, timezone) = PARSE_DATE("%Y-%m-%d", prev_checkout) and
+             (PARSE_DATE("%Y-%m-%d", prev_checkout) != PARSE_DATE("%Y-%m-%d", checkin)  OR
+              time(clean_tbl.createdat, timezone) <= CAST("15:00:00" as TIME)) then 1
+          else 0
+        End as day_of_checkout,
         confCode
       from chrono_checkins
       inner join clean_tbl
@@ -59,16 +69,54 @@ view:hk_scorecard {
       and housekeeper is not null
       ;;
   }
-
-  measure: total_cleans {
+# The reason we have fewer total than we have in the clean_tbl is because we are
+# manually limiting them with the last Where clause. There may be a slick way of doing this,
+# but I have not yet thought of it. The goal would be to easily tie together the checkins with the
+# "MOST" previous, prev_checkin.
+  measure: counted_cleans {
     type: number
     sql: count(${time}) ;;
     drill_fields: [detail*]
   }
 
+  measure: total_cleanings {
+    type:  number
+    sql: (Select count(*) from cleaninglogs where cleaningstatus = "cleaning");;
+  }
+
+  measure: total_cleans {
+    type:  number
+    sql: (Select count(*) from cleaninglogs where cleaningstatus = "clean");;
+  }
+
   measure: pct_on_time {
     type:  number
-    sql: round(sum(on_time)/count(on_time),2) ;;
+    sql: round(sum(${TABLE}.on_time)/count(${TABLE}.on_time),2) ;;
+  }
+
+  measure: pct_before_checkin{
+    type:  number
+    sql: round(sum(${TABLE}.before_checkin)/count(${TABLE}.before_checkin),2) ;;
+  }
+
+  measure: pct_day_of_checkout{
+    type:  number
+    sql: round(sum(${TABLE}.day_of_checkout)/count(${TABLE}.day_of_checkout),2) ;;
+  }
+
+  dimension: on_time {
+    type: number
+    sql: ${TABLE}.on_time ;;
+  }
+
+  dimension: day_of_checkout {
+    type: number
+    sql: ${TABLE}.day_of_checkout ;;
+  }
+
+  dimension: before_checkin {
+    type: number
+    sql: ${TABLE}.before_checkin ;;
   }
 
   dimension_group: checkin {
@@ -116,20 +164,20 @@ view:hk_scorecard {
     sql: ${TABLE}.prev_checkin ;;
   }
 
-#   dimension_group: prev_checkout {
-#     description: "Local Checkout Time for Reservations"
-#     type: time
-#     timeframes: [
-#       raw,
-#       time,
-#       date,
-#       week,
-#       month,
-#       quarter,
-#       year
-#     ]
-#     sql: ${TABLE}.prev_checkout ;;
-#   }
+  dimension_group: prev_checkout {
+    description: "Local Checkout Time for Reservations"
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.prev_checkout ;;
+  }
 
   dimension: HK {
     type: string
@@ -170,7 +218,7 @@ view:hk_scorecard {
   }
 
   set: detail {
-    fields: [HK, pct_on_time, total_cleans]
+    fields: [HK, pct_on_time, total_cleans, counted_cleans]
   }
 
 #   dimension: prev_confCode {
