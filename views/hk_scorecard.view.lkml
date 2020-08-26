@@ -65,7 +65,7 @@ view:hk_scorecard {
         on unit = unit_id
       inner join mongo.staffs
         on clean_tbl.housekeeper = staffs._id
-      where date(clean_tbl.createdat, timezone) between PARSE_DATE("%Y-%m-%d", prev_checkout) and PARSE_DATE("%Y-%m-%d", checkin)
+      where date(clean_tbl.createdat, timezone) between PARSE_DATE("%Y-%m-%d", prev_checkout) and Date_Sub(PARSE_DATE("%Y-%m-%d", checkout), interval 1 DAY)
       and housekeeper is not null
       ;;
   }
