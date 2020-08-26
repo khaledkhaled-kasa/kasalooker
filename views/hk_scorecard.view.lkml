@@ -41,7 +41,7 @@ view:hk_scorecard {
       )
       Select checkin, unit_id, prev_checkin, prev_unit, prev_checkout,
         concat(firstname, " ",lastname) as HK, time(clean_tbl.createdat, timezone) as time, date(clean_tbl.createdat, timezone) as date,
-        clean_tbl._id,
+        clean_tbl._id, clean_tbl.createdat as date_cleaned,
         case
           when date(clean_tbl.createdat, timezone) = PARSE_DATE("%Y-%m-%d", prev_checkout) and
              time(clean_tbl.createdat, timezone) <= Cast("15:00:00" as TIME) then 1
@@ -120,7 +120,7 @@ view:hk_scorecard {
   }
 
   dimension_group: checkin {
-    description: "Local Checkin Time for Reservations"
+    description: "Local Checkin Date for Reservations"
     type: time
     timeframes: [
       raw,
@@ -150,7 +150,7 @@ view:hk_scorecard {
 #   }
 
   dimension_group: prev_checkin {
-    description: "Local Checkin Time for Reservations"
+    description: "Previous Checkin Date for Reservations"
     type: time
     timeframes: [
       raw,
@@ -165,7 +165,7 @@ view:hk_scorecard {
   }
 
   dimension_group: prev_checkout {
-    description: "Local Checkout Time for Reservations"
+    description: "Local Checkout Date for Reservations"
     type: time
     timeframes: [
       raw,
@@ -177,6 +177,21 @@ view:hk_scorecard {
       year
     ]
     sql: Cast(${TABLE}.prev_checkin as TIMESTAMP) ;;
+  }
+
+  dimension_group: date_cleaned {
+    description: "Date Clean log was created"
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: Cast(${TABLE}.date_cleaned as TIMESTAMP) ;;
   }
 
   dimension: HK {
