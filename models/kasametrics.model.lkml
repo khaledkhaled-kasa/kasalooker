@@ -82,6 +82,17 @@ explore: reservations {
     relationship: one_to_one
     sql_on: ${reservations.confirmationcode} = ${hk_scorecard.confCode} ;;
   }
+  join: hk_cleanings_with_confcode {
+    type: inner
+    relationship: one_to_one
+    sql_on: ${reservations.confirmationcode} = ${hk_cleanings_with_confcode.conf_code} ;;
+  }
+  join: hk_clean_time {
+    type: inner
+    relationship: one_to_one
+    sql_on: ${reservations.confirmationcode} = ${hk_clean_time.conf_code} ;;
+
+  }
 }
 
 # explore: reservationsRev {
