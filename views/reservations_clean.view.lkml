@@ -44,7 +44,7 @@ view: reservations_clean {
     sql:  case
     when ${airbnb_reviews.review_raw} is not NULL then ${airbnb_reviews.review_raw}
     when Cast(${post_checkout_data.review_raw} as Date) is not NULL then Cast(${post_checkout_data.review_raw} as Date)
-    else ${booking_reviews.review_raw}
+    else NULL
     end;;
     #sql: coalesce(${airbnb_reviews.review_raw},CAST(${post_checkout_data.review_raw} as DATE),${booking_reviews.review_raw}) ;;
   }
