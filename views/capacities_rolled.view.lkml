@@ -22,10 +22,17 @@ derived_table: {
 ;;
 }
 dimension: night {
-  hidden: yes
+  hidden: no
   sql: ${TABLE}.night ;;
   primary_key: yes
   type: date
+}
+
+# Test - KK
+dimension: bedroom {
+  hidden: no
+  type: number
+  sql: ${TABLE}.bedroomtype ;;
 }
 
 dimension: complex {
@@ -37,6 +44,7 @@ dimension: capacity {
   type: number
   sql: ${TABLE}.capacity ;;
 }
+
 
 measure: capacity_measure  {
   view_label: "Metrics"
