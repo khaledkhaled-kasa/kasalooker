@@ -21,6 +21,7 @@ datagroup: kasametrics_default_datagroup_v2 {
 persist_with: kasametrics_default_datagroup_v2
 label: "Kasa Metrics V2"
 explore: capacities_rolled {
+  label: "Reservations"
   from: capacities_rolled
   join: complexes {
     type:  inner
