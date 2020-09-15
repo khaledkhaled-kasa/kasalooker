@@ -7,8 +7,7 @@ derived_table: {
 
     SELECT
       TIMESTAMP(capacities.night) AS night, -- KK
-      capacities.bedroomtype as bedroom, -- KK
-
+       -- capacities.bedroomtype as bedroom, -- KK
 
       {% if complexes.title._is_selected %}
         complex,
@@ -18,8 +17,8 @@ derived_table: {
       capacities  AS capacities
     GROUP BY 1
       {% if complexes.title._is_selected %}
-        ,2, -- KK
-        3
+        ,2 -- KK
+        --3
       {% endif %}
 ;;
 }
@@ -27,8 +26,8 @@ derived_table: {
 # KK
 dimension_group: night {
   view_label: "Date Dimensions"
-  group_label: "Stay Night"
-  description: "An occupied night at a Kasa"
+  group_label: "Night"
+  description: "A night at a Kasa"
   type: time
   timeframes: [
     date,
