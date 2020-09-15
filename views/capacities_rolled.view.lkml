@@ -6,7 +6,8 @@ derived_table: {
   sql:
 
     SELECT
-      capacities.night AS night,
+      TIMESTAMP(capacities.night) AS night, -- KK
+      capacities.bedroomtype as bedroom, -- KK
 
 
       {% if complexes.title._is_selected %}
@@ -17,22 +18,40 @@ derived_table: {
       capacities  AS capacities
     GROUP BY 1
       {% if complexes.title._is_selected %}
-        ,2
+        ,2, -- KK
+        3
       {% endif %}
 ;;
 }
+
+# KK
+dimension_group: night {
+  view_label: "Date Dimensions"
+  group_label: "Stay Night"
+  description: "An occupied night at a Kasa"
+  type: time
+  timeframes: [
+    date,
+    week,
+    month,
+    day_of_week
+    ]
+  sql: ${TABLE}.night ;;
+}
+
+# KK
 dimension: night {
-  hidden: no
+  hidden: yes
   sql: ${TABLE}.night ;;
   primary_key: yes
   type: date
 }
 
-# Test - KK
+# KK
 dimension: bedroom {
-  hidden: no
+  hidden: yes
   type: number
-  sql: ${TABLE}.bedroomtype ;;
+  sql: ${TABLE}.bedroom ;;
 }
 
 dimension: complex {
@@ -45,13 +64,12 @@ dimension: capacity {
   sql: ${TABLE}.capacity ;;
 }
 
-
 measure: capacity_measure  {
   view_label: "Metrics"
   label: "Capacity"
   description: "Number of available room nights bookable"
   type: sum
   sql: ${capacity} ;;
-  drill_fields: [night, complexe.title, capacity]
+  #drill_fields: [night, complexes.title, capacity]
 }
 }

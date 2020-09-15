@@ -30,7 +30,7 @@ explore: reservations {
     type:  left_outer
     relationship: many_to_one
     sql_on:
-        ${capacities_rolled.night} = ${financials.night_date}
+        ${capacities_rolled.night_date} = ${financials.night_date}
       {% if complexes.title._is_selected or complexes.title._is_filtered %}
         and
         ${complexes._id} = ${capacities_rolled.complex}

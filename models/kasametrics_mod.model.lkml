@@ -7,7 +7,9 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 # # Select the views that should be a part of this model,
 # # and define the joins that connect them together.
 #
- explore: reservations_mod {
+
+# label: "Kasa Metrics Occupancy Fix"
+#  explore: reservations_mod {
 #   join: orders {
 #     relationship: many_to_one
 #     sql_on: ${orders.id} = ${order_items.order_id} ;;
@@ -18,4 +20,4 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 #     sql_on: ${users.id} = ${orders.user_id} ;;
 #   }
 
-}
+#}

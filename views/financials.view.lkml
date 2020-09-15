@@ -68,6 +68,7 @@ view: financials {
   }
 
   dimension_group: night {
+    hidden:  yes # KK
     view_label: "Date Dimensions"
     group_label: "Stay Night"
     description: "An occupied night at a Kasa"

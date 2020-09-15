@@ -13,12 +13,12 @@ view: reservations_mod {
        ;;
   }
 
-  measure: count {
-    view_label: "Metrics"
-    hidden: yes
-    type: count
-    drill_fields: [detail*]
-  }
+#   measure: count {
+#     view_label: "Metrics"
+#     hidden: yes
+#     type: count
+#     drill_fields: [detail*]
+#   }
 
 
 
@@ -39,8 +39,22 @@ view: reservations_mod {
 #     drill_fields: [financials.night_date, reservation_details*];;
   }
 
-  dimension: night {
-    type: date
+#   dimension: night {
+#     type: date
+#     sql: ${TABLE}.night ;;
+#   }
+
+  dimension_group: night {
+    view_label: "Date Dimensions"
+    group_label: "Stay Night"
+    description: "An occupied night at a Kasa"
+    type: time
+    timeframes: [
+      date,
+      week,
+      month,
+      day_of_week
+    ]
     sql: ${TABLE}.night ;;
   }
 
@@ -93,18 +107,18 @@ view: reservations_mod {
     sql: ${TABLE}.reservation_night ;;
   }
 
-  set: detail {
-    fields: [
-      night,
-      building_title,
-      bedroom_type,
-      capacity,
-      unit_name,
-      confirmationcode,
-      checkindatelocal,
-      checkoutdatelocal,
-      sourcedetail,
-      reservation_night
-    ]
-  }
+#   set: detail {
+#     fields: [
+#       night,
+#       building_title,
+#       bedroom_type,
+#       capacity,
+#       unit_name,
+#       confirmationcode,
+#       checkindatelocal,
+#       checkoutdatelocal,
+#       sourcedetail,
+#       reservation_night
+#     ]
+#   }
 }
