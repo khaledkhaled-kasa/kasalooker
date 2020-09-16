@@ -119,4 +119,11 @@ view: financials {
     sql: ${TABLE}.type ;;
   }
 
+  dimension: types_filtered{
+    description: "This will filter out Channel Fees / ToTs"
+    type: yesno
+    sql: ${TABLE}.type not IN ("channelFee","ToT","ToTInflow,ToTOutflowNonLiability,ToTInflowNonLiabiity");;
+  }
+
+
 }

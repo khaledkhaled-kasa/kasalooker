@@ -59,6 +59,7 @@ view: complexes {
     view_label: "Core Dimensions"
     label: "Building Title"
     type: string
+    primary_key: yes
     sql: ${TABLE}.title ;;
   }
 

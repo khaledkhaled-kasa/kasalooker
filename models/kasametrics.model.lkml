@@ -9,6 +9,41 @@ datagroup: kasametrics_default_datagroup {
 
 persist_with: kasametrics_default_datagroup
 label: "Kasa Metrics"
+# explore: capacities_rolled {
+#   label: "reservations"
+#   from: capacities_rolled
+#   join: complexes {
+#     type:  inner
+#     relationship: many_to_one
+#     sql_on: ${capacities_rolled.complex} = ${complexes._id} ;;
+#   }
+#   join: units {
+#     type:  inner
+#     relationship: one_to_many
+#     sql_on: ${capacities_rolled.complex} = ${units.complex}
+#           and
+#           cast(${capacities_rolled.bedroom} as string) = cast(${units.bedrooms} as string)
+#           ;;
+#   }
+#   join: reservations {
+#     type:  left_outer
+#     relationship: one_to_many
+#     sql_on: ${reservations.unit} = ${units._id}
+#           and
+#           ${capacities_rolled.night} >= ${reservations.checkindate}
+#           and
+#           ${capacities_rolled.night} < ${reservations.checkoutdate};;
+#   }
+#   join: financials {
+#     type:  left_outer
+#     relationship: one_to_many
+#     sql_on:
+#         ${reservations._id} = ${financials.reservation}
+#         and
+#         ${capacities_rolled.night} = ${financials.night_date}
+#     ;;
+#   }
+# BACKUP - KK - 09-16-20
 explore: reservations {
   from: reservations
   join: financials {
@@ -30,7 +65,7 @@ explore: reservations {
     type:  left_outer
     relationship: many_to_one
     sql_on:
-        ${capacities_rolled.night_date} = ${financials.night_date}
+        ${capacities_rolled.night} = ${financials.night_date}
       {% if complexes.title._is_selected or complexes.title._is_filtered %}
         and
         ${complexes._id} = ${capacities_rolled.complex}

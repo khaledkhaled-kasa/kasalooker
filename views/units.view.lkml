@@ -55,6 +55,7 @@ view: units {
 
   dimension: bedrooms {
     type: number
+    primary_key: yes
     sql: ${TABLE}.bedrooms ;;
   }
 
