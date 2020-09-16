@@ -122,7 +122,7 @@ view: financials {
   dimension: types_filtered{
     description: "This will filter out Channel Fees / ToTs"
     type: yesno
-    sql: ${TABLE}.type not IN ("channelFee","ToT","ToTInflow,ToTOutflowNonLiability,ToTInflowNonLiabiity");;
+    sql: ${TABLE}.type is null or ${TABLE}.type not IN ("channelFee","ToT","ToTInflow,ToTOutflowNonLiability,ToTInflowNonLiabiity") ;;
   }
 
 

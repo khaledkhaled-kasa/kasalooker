@@ -301,7 +301,7 @@ view: reservations {
   dimension: status_booked{
     description: "Was this night booked?"
     type: yesno
-    sql: ${TABLE}.status is null or ${TABLE}.status IN ("confirmed","checked_in");;
+    sql: ${TABLE}.status is null or ${TABLE}.status IN ("confirmed","checked_in", "inquiry");;
   }
 
   dimension: suspicious {
