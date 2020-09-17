@@ -12,8 +12,8 @@
     fill_fields: [capacities_rolled.night_month]
     filters:
       capacities_rolled.night_date: 2020/01/01 to 2021/01/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [financials.revpar desc 0, capacities_rolled.night_month]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -54,8 +54,8 @@
     fill_fields: [capacities_rolled.night_month]
     filters:
       capacities_rolled.night_month: 2019/08/01 to 2020/07/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -99,8 +99,8 @@
     fields: [reservations.occupancy]
     filters:
       capacities_rolled.night_date: 2020/06/01 to 2020/07/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     limit: 500
     query_timezone: America/Los_Angeles
     custom_color_enabled: true
@@ -144,8 +144,8 @@
     fill_fields: [capacities_rolled.night_month]
     filters:
       capacities_rolled.night_month: 2019/08/01 to 2020/08/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -189,8 +189,8 @@
     fields: [reservations.occupancy]
     filters:
       capacities_rolled.night_date: 2020/07/01 to 2020/08/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     limit: 500
     query_timezone: America/Los_Angeles
     custom_color_enabled: true
@@ -262,8 +262,8 @@
     fill_fields: [capacities_rolled.night_month]
     filters:
       capacities_rolled.night_month: 2019/08/01 to 2020/08/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -308,8 +308,8 @@
     fill_fields: [capacities_rolled.night_month]
     filters:
       capacities_rolled.night_month: 2019/08/01 to 2020/07/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -361,8 +361,8 @@
     fill_fields: [capacities_rolled.night_month]
     filters:
       capacities_rolled.night_date: 2020/01/01 to 2020/10/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -434,8 +434,8 @@
     fields: [reservations.occupancy]
     filters:
       capacities_rolled.night_date: 2020/08/01 to 2020/09/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     limit: 500
     query_timezone: America/Los_Angeles
     custom_color_enabled: true
@@ -479,8 +479,8 @@
     fill_fields: [capacities_rolled.night_month]
     filters:
       capacities_rolled.night_month: 2020/08/01 to 2020/09/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -525,8 +525,8 @@
     fill_fields: [capacities_rolled.night_month]
     filters:
       capacities_rolled.night_month: 2020/08/01 to 2020/09/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -571,8 +571,8 @@
     fill_fields: [capacities_rolled.night_month]
     filters:
       capacities_rolled.night_month: 2020/01/01 to 2020/09/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -638,8 +638,8 @@
     fields: [reservations.occupancy]
     filters:
       capacities_rolled.night_date: 2020/10/01 to 2020/11/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     limit: 500
     query_timezone: America/Los_Angeles
     custom_color_enabled: true
@@ -683,8 +683,8 @@
     fill_fields: [capacities_rolled.night_month]
     filters:
       capacities_rolled.night_month: 2019/10/01 to 2020/11/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -729,8 +729,8 @@
     fill_fields: [capacities_rolled.night_month]
     filters:
       capacities_rolled.night_month: 2019/10/01 to 2020/11/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -775,8 +775,8 @@
       financials.adr, financials.revpar]
     filters:
       capacities_rolled.night_date: 2020/10/01 to 2020/11/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [financials.revpar desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -821,8 +821,8 @@
     fill_fields: [capacities_rolled.night_month]
     filters:
       capacities_rolled.night_date: 2020/01/01 to 2020/10/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -898,8 +898,8 @@
     fill_fields: [capacities_rolled.night_month]
     filters:
       capacities_rolled.night_date: 2020/01/01 to 2020/10/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [financials.amount desc 0, capacities_rolled.night_month, reservations.source]
     limit: 500
     row_total: right
@@ -973,8 +973,8 @@
       financials.adr, financials.revpar]
     filters:
       capacities_rolled.night_date: 2020/09/01 to 2020/10/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [financials.revpar desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -1017,8 +1017,8 @@
     fields: [reservations.occupancy]
     filters:
       capacities_rolled.night_date: 2020/09/01 to 2020/10/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     limit: 500
     query_timezone: America/Los_Angeles
     custom_color_enabled: true
@@ -1062,8 +1062,8 @@
     fill_fields: [capacities_rolled.night_month]
     filters:
       capacities_rolled.night_month: 2019/09/01 to 2020/10/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -1108,8 +1108,8 @@
     fill_fields: [capacities_rolled.night_month]
     filters:
       capacities_rolled.night_month: 2019/09/01 to 2020/10/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -1155,8 +1155,8 @@
     fill_fields: [capacities_rolled.night_month]
     filters:
       capacities_rolled.night_date: 2020/08/01 to 2020/10/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
       complexes.title: "-Strata,-Tempo,-Parker"
     sorts: [capacities_rolled.night_month 0, variance desc 1]
     limit: 500
@@ -1229,8 +1229,8 @@
     fields: [reservations.occupancy]
     filters:
       capacities_rolled.night_date: 2020/09/06 to 2020/09/13
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     limit: 500
     query_timezone: America/Los_Angeles
     custom_color_enabled: true
@@ -1273,8 +1273,8 @@
     fields: [financials.adr]
     filters:
       capacities_rolled.night_date: 2020/09/06 to 2020/09/13
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     limit: 500
     query_timezone: America/Los_Angeles
     custom_color_enabled: true
@@ -1317,8 +1317,8 @@
     fields: [financials.revpar]
     filters:
       capacities_rolled.night_date: 2020/09/06 to 2020/09/13
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     limit: 500
     query_timezone: America/Los_Angeles
     custom_color_enabled: true
@@ -1361,8 +1361,8 @@
     fields: [reservations.occupancy]
     filters:
       capacities_rolled.night_date: 2019/09/08 to 2019/09/15
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     limit: 500
     query_timezone: America/Los_Angeles
     custom_color_enabled: true
@@ -1405,8 +1405,8 @@
     fields: [financials.adr]
     filters:
       capacities_rolled.night_date: 2019/09/08 to 2019/09/15
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     limit: 500
     query_timezone: America/Los_Angeles
     custom_color_enabled: true
@@ -1449,8 +1449,8 @@
     fields: [financials.revpar]
     filters:
       capacities_rolled.night_date: 2019/09/08 to 2019/09/15
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     limit: 500
     query_timezone: America/Los_Angeles
     custom_color_enabled: true
@@ -1493,8 +1493,8 @@
     fields: [financials.revpar, complexes.title]
     filters:
       capacities_rolled.night_date: 2020/09/06 to 2020/09/13
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [financials.revpar desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -1558,8 +1558,8 @@
     filters:
       reservations.bookingdate_date: before 2020/09/09
       capacities_rolled.night_date: 2020/09/01 to 2020/10/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     limit: 500
     query_timezone: America/Los_Angeles
     custom_color_enabled: true
@@ -1604,8 +1604,8 @@
     filters:
       reservations.bookingdate_date: before 2020/09/09
       capacities_rolled.night_month: 2019/09/01 to 2020/10/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -1651,8 +1651,8 @@
     filters:
       reservations.bookingdate_date: before 2020/09/09
       capacities_rolled.night_month: 2020/09/01 to 2020/10/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -1697,8 +1697,8 @@
     filters:
       reservations.bookingdate_date: before 2020/08/15
       capacities_rolled.night_date: 2020/08/01 to 2020/09/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     limit: 500
     query_timezone: America/Los_Angeles
     custom_color_enabled: true
@@ -1743,8 +1743,8 @@
     filters:
       reservations.bookingdate_date: before 2020/08/15
       capacities_rolled.night_month: 2019/08/01 to 2020/09/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -1790,8 +1790,8 @@
     filters:
       reservations.bookingdate_date: before 2020/08/15
       capacities_rolled.night_month: 2020/08/01 to 2020/09/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -1836,8 +1836,8 @@
     filters:
       reservations.bookingdate_date: before 2020/09/09
       capacities_rolled.night_date: 2020/10/01 to 2020/11/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     limit: 500
     query_timezone: America/Los_Angeles
     custom_color_enabled: true
@@ -1882,8 +1882,8 @@
     filters:
       reservations.bookingdate_date: before 2020/09/09
       capacities_rolled.night_month: 2019/10/01 to 2020/11/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -1929,8 +1929,8 @@
     filters:
       reservations.bookingdate_date: before 2020/09/09
       capacities_rolled.night_month: 2019/10/01 to 2020/11/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -1975,8 +1975,8 @@
     filters:
       reservations.bookingdate_date: before 2020/08/15
       capacities_rolled.night_date: 2020/09/01 to 2020/10/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     limit: 500
     query_timezone: America/Los_Angeles
     custom_color_enabled: true
@@ -2021,8 +2021,8 @@
     filters:
       reservations.bookingdate_date: before 2020/08/15
       capacities_rolled.night_month: 2019/09/01 to 2020/10/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month desc]
     limit: 500
     query_timezone: America/Los_Angeles
@@ -2068,8 +2068,8 @@
     filters:
       reservations.bookingdate_date: before 2020/08/15
       capacities_rolled.night_month: 2019/09/01 to 2020/10/01
-      financials.type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"
-      reservations.status: confirmed,"checked_in"
+      financials.types_filtered: 'Yes'
+      reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month desc]
     limit: 500
     query_timezone: America/Los_Angeles
