@@ -1,6 +1,6 @@
 connection: "bigquery"
 include: "../views/*"
-
+include: "../dashboards/*"
 
 datagroup: kasametrics_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
