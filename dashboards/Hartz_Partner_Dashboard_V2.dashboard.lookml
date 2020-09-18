@@ -1,5 +1,5 @@
-- dashboard: hartz_partner_dashboard__whitley
-  title: Hartz Partner Dashboard - Whitley
+- dashboard: hartz_partner_dashboard__whitley_V2
+  title: Hartz Partner Dashboard - Whitley - V2
   layout: newspaper
   elements:
   - title: September 2020 Occupancy
