@@ -11,6 +11,7 @@ view: financials {
     sql: ${TABLE}.amount__fl ;;
   }
 
+
   measure: cleaning_amount {
    type: number
    value_format: "$#,##0.00"

@@ -13,12 +13,12 @@ explore: capacities_rolled {
   label: "Reservations"
   from: capacities_rolled
   join: complexes {
-    type:  inner
+    type:  left_outer
     relationship: many_to_one
     sql_on: ${capacities_rolled.complex} = ${complexes._id} ;;
   }
   join: units {
-    type:  inner
+    type:  left_outer
     relationship: one_to_many
     sql_on: ${capacities_rolled.complex} = ${units.complex}
     and

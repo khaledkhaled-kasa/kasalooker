@@ -17,6 +17,17 @@ derived_table: {
         ,3
 ;;
 }
+# KK
+#     UNION ALL
+#
+#     SELECT
+#       TIMESTAMP(capacities.night) AS night,
+#         capacities.bedroomtype as bedroom,
+#         null,
+#       capacities.capacity AS capacity
+#     FROM
+#       capacities  AS capacities
+
 # OLD - Backup 09-16-20
 #   derived_table: {
 #     sql:

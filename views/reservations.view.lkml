@@ -288,6 +288,11 @@ view: reservations {
     sql: ${TABLE}.source ;;
   }
 
+  dimension: sourcedetail {
+    type: string
+    sql: ${TABLE}.sourcedetail ;;
+  }
+
   dimension: specialrequest {
     type: string
     sql: ${TABLE}.specialrequest ;;
