@@ -306,6 +306,7 @@ view: reservations {
   dimension: status_booked{
     description: "Was this night booked?"
     type: yesno
+#     sql: ${TABLE}.status is null or ${TABLE}.status IN ("confirmed","checked_in");;
     sql: ${TABLE}.status is null or ${TABLE}.status IN ("confirmed","checked_in", "inquiry", "canceled", "declined");;
   }
 
@@ -350,7 +351,8 @@ view: reservations {
     description: "Reservation night stay"
     type:  count_distinct
     sql: CONCAT(${confirmationcode}, '-', ${financials.night_date});;
-    filters: [financial_night_part_of_res: "yes", status: "-canceled, -declined"]
+    filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
+#     filters: [financial_night_part_of_res: "yes"]
     drill_fields: [financials.night_date, reservation_details*]
   }
 
@@ -366,7 +368,7 @@ view: reservations {
     description: "Number of unique reservations"
     type: count_distinct
     sql: ${confirmationcode} ;;
-    filters: [status: "-canceled, -declined"]
+    filters: [status: "-inquiry, -canceled, -declined"]
     drill_fields: [reservation_details*]
   }
 
