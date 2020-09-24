@@ -350,7 +350,8 @@ view: reservations {
     description: "Reservation night stay"
     type:  count_distinct
     sql: CONCAT(${confirmationcode}, '-', ${financials.night_date});;
-    filters: [financial_night_part_of_res: "yes"]
+#     filters: [financial_night_part_of_res: "yes"]
+    #filters: [financial_night_part_of_res: "yes", status: "-canceled"]
     drill_fields: [financials.night_date, reservation_details*]
   }
 
@@ -366,6 +367,7 @@ view: reservations {
     description: "Number of unique reservations"
     type: count_distinct
     sql: ${confirmationcode} ;;
+    #filters: [status: "-canceled"]
     drill_fields: [reservation_details*]
   }
 

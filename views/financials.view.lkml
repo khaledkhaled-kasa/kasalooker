@@ -9,8 +9,8 @@ view: financials {
     type: sum
     value_format: "$#,##0.00"
     sql: ${TABLE}.amount__fl ;;
+    filters: [reservations.status: "-canceled"]
   }
-
 
   measure: cleaning_amount {
    type: number
@@ -48,6 +48,7 @@ view: financials {
     value_format: "$#,##0.00"
     sql: ${amount} / NULLIF(${reservations.reservation_night}, 0) ;;
   }
+
 
   measure: revpar {
     view_label: "Metrics"
