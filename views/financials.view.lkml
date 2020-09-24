@@ -9,7 +9,7 @@ view: financials {
     type: sum
     value_format: "$#,##0.00"
     sql: ${TABLE}.amount__fl ;;
-    filters: [reservations.status: "-canceled"]
+    filters: [reservations.status: "-canceled, -declined"]
   }
 
   measure: cleaning_amount {
