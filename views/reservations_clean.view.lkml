@@ -325,7 +325,6 @@ view: reservations_clean {
     sql: ${TABLE}.updatedat ;;
   }
 
-
   measure: num_reservations {
     view_label: "Metrics"
     label: "Num Reservations"
@@ -338,9 +337,9 @@ view: reservations_clean {
   measure: OQS {
     type: number
     value_format: "0%"
-    sql: ((${airbnb_reviews.overall_quality_score} * ${airbnb_reviews.count}) +  (${post_checkout_data.direct_oqs} * ${post_checkout_data.direct_reviews})
-    + (${post_checkout_data.expedia_oqs} * ${post_checkout_data.expedia_reviews}) + (${post_checkout_data.booking_oqs} * ${post_checkout_data.booking_reviews}))
-    / (${airbnb_reviews.count} + ${post_checkout_data.direct_reviews} + ${post_checkout_data.expedia_reviews} + ${post_checkout_data.booking_reviews});;
+    sql: (ifnull((${airbnb_reviews.overall_quality_score} * ${airbnb_reviews.count}),0) +  ifnull((${post_checkout_data.direct_oqs} * ${post_checkout_data.direct_reviews}),0)
+    + ifnull((${post_checkout_data.expedia_oqs} * ${post_checkout_data.expedia_reviews}),0) + ifnull((${post_checkout_data.booking_oqs} * ${post_checkout_data.booking_reviews}),0))
+    / (ifnull(${airbnb_reviews.count},0) + ifnull(${post_checkout_data.direct_reviews},0) + ifnull(${post_checkout_data.expedia_reviews},0) + ifnull(${post_checkout_data.booking_reviews},0));;
   }
 
   set:reservation_details {
