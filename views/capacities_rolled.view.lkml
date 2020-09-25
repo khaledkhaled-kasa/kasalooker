@@ -6,28 +6,54 @@ derived_table: {
   sql:
 
     SELECT
-      TIMESTAMP(capacities.night) AS night, -- KK
-       -- capacities.bedroomtype as bedroom, -- KK
-
-      {% if complexes.title._is_selected %}
-        complex,
-      {% endif %}
-      COALESCE(SUM(capacities.capacity ), 0) AS capacity
+      TIMESTAMP(capacities.night) AS night,
+        capacities.bedroomtype as bedroom,
+         complex,
+       COALESCE(SUM(capacities.capacity ), 0) AS capacity
     FROM
       capacities  AS capacities
     GROUP BY 1
-      {% if complexes.title._is_selected %}
-        ,2 -- KK
-        --3
-      {% endif %}
+         ,2
+        ,3
 ;;
 }
-
 # KK
+#     UNION ALL
+#
+#     SELECT
+#       TIMESTAMP(capacities.night) AS night,
+#         capacities.bedroomtype as bedroom,
+#         null,
+#       capacities.capacity AS capacity
+#     FROM
+#       capacities  AS capacities
+
+# OLD - Backup 09-16-20
+#   derived_table: {
+#     sql:
+#
+#     SELECT
+#       TIMESTAMP(capacities.night) AS night,
+#         capacities.bedroomtype as bedroom,
+#
+#       {% if complexes.title._is_selected %}
+#         complex,
+#       {% endif %}
+#       COALESCE(SUM(capacities.capacity), 0) AS capacity
+#     FROM
+#       capacities  AS capacities
+#     GROUP BY 1
+#       {% if complexes.title._is_selected %}
+#         ,2,
+#         3
+#       {% endif %}
+# ;;
+#   }
+
 dimension_group: night {
   view_label: "Date Dimensions"
-  group_label: "Night"
-  description: "A night at a Kasa"
+  group_label: "Occupied / Unoccupied Night"
+  description: "A night at a Kasa (Occupied / Unoccupied)"
   type: time
   timeframes: [
     date,
@@ -38,15 +64,13 @@ dimension_group: night {
   sql: ${TABLE}.night ;;
 }
 
-# KK
+
 dimension: night {
   hidden: yes
   sql: ${TABLE}.night ;;
-  primary_key: yes
   type: date
 }
 
-# KK
 dimension: bedroom {
   hidden: yes
   type: number
@@ -63,12 +87,18 @@ dimension: capacity {
   sql: ${TABLE}.capacity ;;
 }
 
+dimension: primary_key {
+  primary_key: yes
+  hidden: yes
+  sql: CONCAT(${TABLE}.night, ${TABLE}.complex, ${TABLE}.bedroom) ;;
+}
+
 measure: capacity_measure  {
   view_label: "Metrics"
   label: "Capacity"
   description: "Number of available room nights bookable"
   type: sum
   sql: ${capacity} ;;
-  #drill_fields: [night, complexes.title, capacity]
+  drill_fields: [night, complexes.title, bedroom, capacity]
 }
 }

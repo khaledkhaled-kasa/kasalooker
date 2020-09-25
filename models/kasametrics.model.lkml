@@ -1,7 +1,6 @@
 connection: "bigquery"
 include: "../views/*"
 
-
 datagroup: kasametrics_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
   max_cache_age: "1 hour"
@@ -9,6 +8,7 @@ datagroup: kasametrics_default_datagroup {
 
 persist_with: kasametrics_default_datagroup
 label: "Kasa Metrics"
+
 explore: reservations {
   from: reservations
   join: financials {
@@ -30,7 +30,7 @@ explore: reservations {
     type:  left_outer
     relationship: many_to_one
     sql_on:
-        ${capacities_rolled.night_date} = ${financials.night_date}
+        ${capacities_rolled.night} = ${financials.night_date}
       {% if complexes.title._is_selected or complexes.title._is_filtered %}
         and
         ${complexes._id} = ${capacities_rolled.complex}

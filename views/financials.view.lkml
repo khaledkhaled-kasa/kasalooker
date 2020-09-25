@@ -8,19 +8,34 @@ view: financials {
     description: "Total financial amount"
     type: sum
     value_format: "$#,##0.00"
-    sql: ${TABLE}.amount__fl ;;
+    sql: ${amount_revised} ;;
+    filters: [reservations.status: "-inquiry, -canceled, -declined"]
   }
+
+
+  dimension: amount_revised {
+    hidden: yes
+    view_label: "Metrics"
+    label: "Amount Revised"
+    description: "This will correct for unavailable amount__fl values"
+    type: number
+    value_format: "$#,##0.00"
+    sql: CASE WHEN ${TABLE}.amount__fl IS NULL THEN ${TABLE}.amount
+          ELSE ${TABLE}.amount__fl
+          END;;
+  }
+
 
   measure: cleaning_amount {
    type: number
    value_format: "$#,##0.00"
-   sql: sum(if(${TABLE}.type = "cleaning",${TABLE}.amount__fl,0)) ;;
+   sql: sum(if(${TABLE}.type = "cleaning",${amount_revised},0)) ;;
   }
 
   measure: clean_refund_amount {
    type: number
    value_format: "$#,##0.00"
-   sql: sum(if(${TABLE}.type = "CleanRefund",${TABLE}.amount__fl,0)) ;;
+   sql: sum(if(${TABLE}.type = "CleanRefund",${amount_revised},0)) ;;
   }
 
   measure: cleaning_transactions {
@@ -47,6 +62,7 @@ view: financials {
     value_format: "$#,##0.00"
     sql: ${amount} / NULLIF(${reservations.reservation_night}, 0) ;;
   }
+
 
   measure: revpar {
     view_label: "Metrics"
@@ -118,5 +134,12 @@ view: financials {
     type: string
     sql: ${TABLE}.type ;;
   }
+
+  dimension: types_filtered{
+    description: "This will filter out Channel Fees / ToTs"
+    type: yesno
+    sql: ${TABLE}.type is null or ${TABLE}.type not IN ("channelFee","ToT","ToTInflow","ToTOutflowNonLiability","ToTInflowNonLiabiity") ;;
+  }
+
 
 }
