@@ -1,5 +1,5 @@
-view: aircalls_sep26 {
-  sql_table_name: `bigquery-analytics-272822.aircall.aircalls_sep26`
+view: aircalls_september26 {
+  sql_table_name: `bigquery-analytics-272822.aircall.Aircalls_September26`
     ;;
 
   dimension: answered {

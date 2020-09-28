@@ -2,15 +2,29 @@ view: financials {
   sql_table_name: `bigquery-analytics-272822.mongo.financials`
     ;;
 
-  measure: amount {
-    view_label: "Metrics"
-    label: "Amount"
-    description: "Total financial amount"
-    type: sum
-    value_format: "$#,##0.00"
-    sql: ${amount_revised} ;;
-    filters: [reservations.status: "-inquiry, -canceled, -declined"]
-  }
+# This will calculate amount but doesn't adjust for duplicated rows
+  #27-09
+#   measure: amount_aggregated {
+#     view_label: "Metrics"
+#     label: "Amount Aggregated"
+#     description: "Total financial amount (duplicated rows)"
+#     hidden: no
+#     type: sum
+#     value_format: "$#,##0.00"
+#     sql: ${amount_revised} ;;
+#     filters: [reservations.status: "-inquiry, -canceled, -declined"]
+#   }
+#   measure: amount {
+#     view_label: "Metrics"
+#     label: "Amount"
+#     description: "Adjusting Amount for nights"
+#     type: number
+#     value_format: "$#,##0.00"
+#     sql: CASE WHEN ${reservations.reservation_night} = 0 THEN
+#     ${amount_aggregated} / NULLIF(${reservations.reservation_night_old}, 0)
+#     ELSE ${amount_aggregated} / NULLIF(${reservations.reservation_night}, 0)
+#     END ;;
+#   }
 
 
   dimension: amount_revised {
@@ -23,6 +37,17 @@ view: financials {
     sql: CASE WHEN ${TABLE}.amount__fl IS NULL THEN ${TABLE}.amount
           ELSE ${TABLE}.amount__fl
           END;;
+  }
+
+
+  measure: amount {
+    view_label: "Metrics"
+    label: "Amount"
+    description: "Adjusting Amount for nights"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${amount_revised} ;;
+    filters: [reservations.status: "-inquiry, -canceled, -declined"]
   }
 
 
@@ -98,6 +123,7 @@ view: financials {
     sql: ${TABLE}.night ;;
   }
 
+
   dimension: weekend {
     view_label: "Date Dimensions"
     type:  yesno
@@ -138,7 +164,7 @@ view: financials {
   dimension: types_filtered{
     description: "This will filter out Channel Fees / ToTs"
     type: yesno
-    sql: ${TABLE}.type is null or ${TABLE}.type not IN ("channelFee","ToT","ToTInflow","ToTOutflowNonLiability","ToTInflowNonLiabiity") ;;
+    sql: ${TABLE}.type is null or ${TABLE}.type not IN ("channelFee","ToT","ToTInflow","ToTOutflowNonLiability","ToTInflowNonLiability");;
   }
 
 

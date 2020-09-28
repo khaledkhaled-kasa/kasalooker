@@ -9,6 +9,6 @@ datagroup: aircalls_default_datagroup {
 
 persist_with: aircalls_default_datagroup
 label: "Kasa Reviews"
-explore: aircalls_sep26 {
-  from: aircalls_sep26
+explore: aircalls_september26 {
+  from: aircalls_september26
 }

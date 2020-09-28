@@ -34,15 +34,15 @@ explore: capacities_rolled {
     ${capacities_rolled.night} >= ${reservations.checkindate}
     and
     ${capacities_rolled.night} < ${reservations.checkoutdate};;
+
   }
   join: financials {
-    type:  left_outer
+    type: left_outer
     relationship: one_to_many
     sql_on:
         ${reservations._id} = ${financials.reservation}
-        and
-        ${capacities_rolled.night} = ${financials.night_date}
-    ;;
+        and ${capacities_rolled.night_date} = ${financials.night_date};;
+
   }
 
   join: guests {
