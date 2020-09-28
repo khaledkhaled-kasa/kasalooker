@@ -53,11 +53,13 @@ view: units {
     sql: ${TABLE}.bathrooms__fl ;;
   }
 
+
   dimension: bedrooms {
     type: number
     primary_key: yes
-    sql: ${TABLE}.bedrooms ;;
+    sql: ${TABLE}.roomtype.bedroomcount ;;
   }
+
 
   dimension: building {
     type: string
