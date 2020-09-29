@@ -136,4 +136,23 @@ view: aircalls_september26 {
     type: count
     drill_fields: []
   }
+
+
+  measure: num_of_missed_calls {
+    type: count
+    label: "Number of missed calls"
+    filters: {field: answered
+      value: "no"
+    }
+  }
+
+
+  measure: missed_calls_percentage {
+    view_label: "Metrics"
+    label: "% Missed Calls"
+    description: "This will capture the percentage of missed calls"
+    type: number
+    value_format: "0.0%"
+    sql:  ${num_of_missed_calls} / ${count} ;;
+    }
 }

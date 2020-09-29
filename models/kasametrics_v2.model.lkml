@@ -29,11 +29,11 @@ explore: capacities_rolled {
   join: reservations {
     type:  left_outer
     relationship: one_to_many
-    sql_on: ${reservations.unit} = ${units._id}
-    and
-    ${capacities_rolled.night} >= ${reservations.checkindate}
-    and
-    ${capacities_rolled.night} < ${reservations.checkoutdate};;
+    sql_on: ${reservations.unit} = ${units._id};;
+    #and
+    #${capacities_rolled.night} >= ${reservations.checkindate}
+    #and
+    #${capacities_rolled.night} < ${reservations.checkoutdate};;
 
   }
   join: financials {
