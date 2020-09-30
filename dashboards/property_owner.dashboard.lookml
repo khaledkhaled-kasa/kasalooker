@@ -721,9 +721,9 @@
     model: kasametrics_v2
     explore: capacities_rolled
     type: looker_column
-    fields: [capacities_rolled.night_month, reservations.num_reservations, reservations.source]
+    fields: [financials.night_month, reservations.num_reservations, reservations.source]
     pivots: [reservations.source]
-    fill_fields: [capacities_rolled.night_month]
+    fill_fields: [financials.night_month]
     filters:
       reservations.status_booked: 'Yes'
     sorts: [capacities_rolled.night_month desc, reservations.source]
@@ -1409,7 +1409,7 @@
     fields: [reservations.avg_lead_time, reservations.median_lead_time, reservations.bookingdate_month]
     fill_fields: [reservations.bookingdate_month]
     filters:
-      reservations.status_booked: 'Yes'
+      reservations.status: '"checked_in",confirmed'
     limit: 500
     x_axis_gridlines: false
     y_axis_gridlines: true
