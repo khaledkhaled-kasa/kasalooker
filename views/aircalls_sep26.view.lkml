@@ -144,6 +144,9 @@ view: aircalls_september26 {
     filters: {field: answered
       value: "no"
     }
+    filters: {field: missed_call_reason
+      value: "agents_did_not_answer, no_available_agent"
+    }
   }
 
 
@@ -153,6 +156,6 @@ view: aircalls_september26 {
     description: "This will capture the percentage of missed calls"
     type: number
     value_format: "0.0%"
-    sql:  ${num_of_missed_calls} / ${count} ;;
+    sql: ${num_of_missed_calls} / ${count};;
     }
 }

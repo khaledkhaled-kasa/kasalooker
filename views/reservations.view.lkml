@@ -352,9 +352,8 @@ view: reservations {
     description: "Reservation night stay"
     type:  count_distinct
     sql: CONCAT(${confirmationcode}, '-', ${financials.night_date});;
-    #sql: CONCAT(${confirmationcode}, '-', ${capacities_rolled.night_date});;
     filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
-#     filters: [financial_night_part_of_res: "yes"]
+    #sql: CONCAT(${confirmationcode}, '-', ${capacities_rolled.night_date});;
     drill_fields: [financials.night_date, reservation_details*]
   }
 
