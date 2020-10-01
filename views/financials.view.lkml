@@ -2,31 +2,6 @@ view: financials {
   sql_table_name: `bigquery-analytics-272822.mongo.financials`
     ;;
 
-# This will calculate amount but doesn't adjust for duplicated rows
-  #27-09
-#   measure: amount_aggregated {
-#     view_label: "Metrics"
-#     label: "Amount Aggregated"
-#     description: "Total financial amount (duplicated rows)"
-#     hidden: no
-#     type: sum
-#     value_format: "$#,##0.00"
-#     sql: ${amount_revised} ;;
-#     filters: [reservations.status: "-inquiry, -canceled, -declined"]
-#   }
-#   measure: amount {
-#     view_label: "Metrics"
-#     label: "Amount"
-#     description: "Adjusting Amount for nights"
-#     type: number
-#     value_format: "$#,##0.00"
-#     sql: CASE WHEN ${reservations.reservation_night} = 0 THEN
-#     ${amount_aggregated} / NULLIF(${reservations.reservation_night_old}, 0)
-#     ELSE ${amount_aggregated} / NULLIF(${reservations.reservation_night}, 0)
-#     END ;;
-#   }
-
-
   dimension: amount_revised {
     hidden: yes
     view_label: "Metrics"
@@ -39,7 +14,6 @@ view: financials {
           END;;
   }
 
-
   measure: amount {
     view_label: "Metrics"
     label: "Amount"
@@ -49,7 +23,37 @@ view: financials {
     sql: ${amount_revised} ;;
     filters: [reservations.status: "-inquiry, -canceled, -declined"]
   }
-
+# NEW-KK
+  measure: amount_changed_bookings {
+    view_label: "Metrics"
+    label: "Amount_Oustanding"
+    description: "Adjusting Amount for nights"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: CASE WHEN ${reservations.financial_night_part_of_res} = false
+    THEN ${amount_revised}
+    ELSE NULL
+    END;;
+    filters: [reservations.status: "-inquiry, -canceled, -declined"]
+  }
+# NEW-KK
+  measure: total_change_order_amount {
+    view_label: "Metrics"
+    label: "Change Order Amount"
+    description: "Adjusting Amount for nights"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${amount_changed_bookings} / NULLIF(${reservations.reservation_night_no}, 0);;
+  }
+# NEW-KK
+  # measure: total_change_order_amount_repeated {
+  #   view_label: "Metrics"
+  #   label: "Change Order Amount Repeated"
+  #   description: "Adjusting Amount for nights"
+  #   type: max
+  #   value_format: "$#,##0.00"
+  #   sql: ${total_change_order_amount};;
+  # }
 
   measure: cleaning_amount {
    type: number
