@@ -2,6 +2,21 @@ view: aircalls_september26 {
   sql_table_name: `bigquery-analytics-272822.aircall.Aircalls_September26`
     ;;
 
+# Add image
+
+  dimension: looker_image_1 {
+    type: string
+    sql: ${TABLE}.comments;;
+    html: <img src="https://software-advice.imgix.net/managed/products/logos/thumbnail_breezeway_logo.png?auto=format&w=310" /> ;;
+  }
+
+  dimension: looker_image_2 {
+    type: string
+    sql: ${TABLE}.comments;;
+    html: <img src="https://images-na.ssl-images-amazon.com/images/I/71IXI3kBGEL._AC_SX425_.jpg" /> ;;
+  }
+
+
   dimension: answered {
     type: yesno
     sql: ${TABLE}.answered ;;
@@ -144,6 +159,9 @@ view: aircalls_september26 {
     filters: {field: answered
       value: "no"
     }
+    filters: {field: missed_call_reason
+      value: "agents_did_not_answer, no_available_agent"
+    }
   }
 
 
@@ -153,6 +171,6 @@ view: aircalls_september26 {
     description: "This will capture the percentage of missed calls"
     type: number
     value_format: "0.0%"
-    sql:  ${num_of_missed_calls} / ${count} ;;
+    sql: ${num_of_missed_calls} / ${count};;
     }
 }

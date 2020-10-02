@@ -71,6 +71,19 @@ dimension: night {
   type: date
 }
 
+#KK NEW
+  dimension: night_adjusted {
+    hidden: no
+    sql: CASE WHEN ${night} < ${reservations.checkindate} OR ${night} > ${reservations.checkoutdate}
+    THEN ${reservations.checkindate}
+    ELSE ${night}
+    END;;
+    type: date
+  }
+
+#format_date('%Y-%m-%d', ${financials.night_date}) < ${TABLE}.checkoutdatelocal and
+   # format_date('%Y-%m-%d', ${financials.night_date}) >= ${TABLE}.checkindatelocal
+
 dimension: bedroom {
   hidden: yes
   type: number
