@@ -1,20 +1,6 @@
-view: aircalls_september26 {
-  sql_table_name: `bigquery-analytics-272822.aircall.Aircalls_September26`
+view: aircall {
+  sql_table_name: `bigquery-analytics-272822.aircall.Aircall`
     ;;
-
-# Add image
-
-  dimension: looker_image_1 {
-    type: string
-    sql: ${TABLE}.comments;;
-    html: <img src="https://software-advice.imgix.net/managed/products/logos/thumbnail_breezeway_logo.png?auto=format&w=310" /> ;;
-  }
-
-  dimension: looker_image_2 {
-    type: string
-    sql: ${TABLE}.comments;;
-    html: <img src="https://images-na.ssl-images-amazon.com/images/I/71IXI3kBGEL._AC_SX425_.jpg" /> ;;
-  }
 
 
   dimension: answered {
@@ -172,5 +158,19 @@ view: aircalls_september26 {
     type: number
     value_format: "0.0%"
     sql: ${num_of_missed_calls} / ${count};;
-    }
+  }
 }
+
+# # Add image - OLD - NOT NEEDED
+
+#   dimension: looker_image_1 {
+#     type: string
+#     sql: ${TABLE}.comments;;
+#     html: <img src="https://software-advice.imgix.net/managed/products/logos/thumbnail_breezeway_logo.png?auto=format&w=310" /> ;;
+#   }
+
+#   dimension: looker_image_2 {
+#     type: string
+#     sql: ${TABLE}.comments;;
+#     html: <img src="https://images-na.ssl-images-amazon.com/images/I/71IXI3kBGEL._AC_SX425_.jpg" /> ;;
+#   }
