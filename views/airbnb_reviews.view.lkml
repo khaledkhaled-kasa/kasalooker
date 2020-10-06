@@ -149,7 +149,7 @@ view: airbnb_reviews {
   measure: overall_quality_score {
     type: number
     value_format: "0%"
-    sql: (${overall_rating_avg} - 4.54)/(4.83 - 4.54) ;;
+    sql: (${overall_rating_avg} - 4.535)/(4.825 - 4.535) ;;
   }
 
   measure: count_5_star {
