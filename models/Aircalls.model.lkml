@@ -7,8 +7,9 @@ datagroup: aircalls_default_datagroup {
   max_cache_age: "1 hour"
 }
 
+
 persist_with: aircalls_default_datagroup
 label: "Kasa Reviews"
-explore: aircalls_september26 {
-  from: aircalls_september26
+explore: aircall {
+  from: aircall
 }
