@@ -148,7 +148,7 @@ view: post_checkout_data {
   measure: direct_oqs {
     type: number
     value_format: "0%"
-    sql: (${direct_avg} - 3.12)/(4.37-3.12);;
+    sql: (${direct_avg} - 3.115)/(4.365-3.115);;
   }
 
   measure: expedia_oqs {
