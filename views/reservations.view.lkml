@@ -357,19 +357,6 @@ view: reservations {
     drill_fields: [financials.night_date, reservation_details*]
   }
 
-# NEW-KK
-  measure: reservation_night_no {
-    view_label: "Metrics"
-    hidden: no
-    label: "Num ReservationNights Cancelled Bookings"
-    description: "Reservation night stay"
-    type:  count_distinct
-    sql: CONCAT(${confirmationcode}, '-', ${financials.night_date});;
-    filters: [financial_night_part_of_res: "no", status: "-inquiry, -canceled, -declined"]
-    #sql: CONCAT(${confirmationcode}, '-', ${capacities_rolled.night_date});;
-    drill_fields: [financials.night_date, reservation_details*]
-  }
-
   dimension: financial_night_part_of_res {
     type:  yesno
     sql: format_date('%Y-%m-%d', ${financials.night_date}) < ${TABLE}.checkoutdatelocal and

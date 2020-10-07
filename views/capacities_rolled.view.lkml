@@ -17,38 +17,7 @@ derived_table: {
         ,3
 ;;
 }
-# KK
-#     UNION ALL
-#
-#     SELECT
-#       TIMESTAMP(capacities.night) AS night,
-#         capacities.bedroomtype as bedroom,
-#         null,
-#       capacities.capacity AS capacity
-#     FROM
-#       capacities  AS capacities
 
-# OLD - Backup 09-16-20
-#   derived_table: {
-#     sql:
-#
-#     SELECT
-#       TIMESTAMP(capacities.night) AS night,
-#         capacities.bedroomtype as bedroom,
-#
-#       {% if complexes.title._is_selected %}
-#         complex,
-#       {% endif %}
-#       COALESCE(SUM(capacities.capacity), 0) AS capacity
-#     FROM
-#       capacities  AS capacities
-#     GROUP BY 1
-#       {% if complexes.title._is_selected %}
-#         ,2,
-#         3
-#       {% endif %}
-# ;;
-#   }
 
 dimension_group: night {
   view_label: "Date Dimensions"
@@ -71,18 +40,6 @@ dimension: night {
   type: date
 }
 
-#KK NEW
-  dimension: night_adjusted {
-    hidden: no
-    sql: CASE WHEN ${night} < ${reservations.checkindate} OR ${night} > ${reservations.checkoutdate}
-    THEN ${reservations.checkindate}
-    ELSE ${night}
-    END;;
-    type: date
-  }
-
-#format_date('%Y-%m-%d', ${financials.night_date}) < ${TABLE}.checkoutdatelocal and
-   # format_date('%Y-%m-%d', ${financials.night_date}) >= ${TABLE}.checkindatelocal
 
 dimension: bedroom {
   hidden: yes
@@ -115,3 +72,26 @@ measure: capacity_measure  {
   drill_fields: [night, complexes.title, bedroom, capacity]
 }
 }
+
+
+# OLD - Backup 09-16-20
+#   derived_table: {
+#     sql:
+#
+#     SELECT
+#       TIMESTAMP(capacities.night) AS night,
+#         capacities.bedroomtype as bedroom,
+#
+#       {% if complexes.title._is_selected %}
+#         complex,
+#       {% endif %}
+#       COALESCE(SUM(capacities.capacity), 0) AS capacity
+#     FROM
+#       capacities  AS capacities
+#     GROUP BY 1
+#       {% if complexes.title._is_selected %}
+#         ,2,
+#         3
+#       {% endif %}
+# ;;
+#   }
