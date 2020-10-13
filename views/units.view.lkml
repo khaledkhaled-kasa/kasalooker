@@ -13,9 +13,14 @@ view: units {
     sql: ${TABLE}.accomodates ;;
   }
 
-  dimension: address {
-    hidden: yes
-    sql: ${TABLE}.address ;;
+  dimension: address_city {
+    hidden: no
+    sql: ${TABLE}.address.city ;;
+  }
+
+  dimension: address_state {
+    hidden: no
+    sql: ${TABLE}.address.state ;;
   }
 
   dimension: amenities {

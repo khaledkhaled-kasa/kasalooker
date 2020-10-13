@@ -17,6 +17,7 @@ view: financials {
           ON financials.reservation = reservations._id
           WHERE (CAST(financials.night AS DATE) < CAST(reservations.checkindatelocal AS DATE) OR CAST(financials.night AS DATE) >= CAST(reservations.checkoutdatelocal AS DATE))
           AND financials.type NOT IN ("channelFee","ToT","ToTInflow","ToTOutflowNonLiability","ToTInflowNonLiability")
+          AND (isvalid is null or isvalid = true)
           GROUP BY 1,2)t1)t2
 
         ON financials.reservation = t2.reservation_id
@@ -66,7 +67,7 @@ view: financials {
     type: sum
     value_format: "$#,##0.00"
     sql: ${amount_revised} ;;
-    filters: [reservations.financial_night_part_of_res: "Yes", reservations.status: "-inquiry, -canceled, -declined"]
+    filters: [financials.isvalid: "yes", reservations.financial_night_part_of_res: "Yes", reservations.status: "-inquiry, -canceled, -declined"]
   }
 
   measure: amount_outstanding {
@@ -77,7 +78,7 @@ view: financials {
     type: sum
     value_format: "$#,##0.00"
     sql: ${TABLE}.nightly_outstanding_amount;;
-    filters: [reservations.financial_night_part_of_res: "yes", reservations.status: "-inquiry, -canceled, -declined"]
+    filters: [financials.isvalid: "yes", reservations.financial_night_part_of_res: "yes", reservations.status: "-inquiry, -canceled, -declined"]
   }
 
   measure: amount {
@@ -140,6 +141,11 @@ view: financials {
   dimension: cashatbooking {
     type: yesno
     sql: ${TABLE}.cashatbooking ;;
+  }
+
+  dimension: isvalid {
+    type: yesno
+    sql: ${TABLE}.isvalid is null OR ${TABLE}.isvalid = true;;
   }
 
   dimension: casheventual {

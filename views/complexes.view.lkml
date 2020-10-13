@@ -50,6 +50,11 @@ view: complexes {
     sql: ${TABLE}.propertymanager ;;
   }
 
+  dimension: propertyowner {
+    type: string
+    sql: ${TABLE}.propertyowner ;;
+  }
+
   dimension: timezone {
     type: string
     sql: ${TABLE}.timezone ;;
