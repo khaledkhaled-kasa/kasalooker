@@ -21,6 +21,7 @@ view: aircall {
   }
 
   dimension_group: date__tz_offset_incl__ {
+    hidden: yes
     type: time
     label: ""
     timeframes: [
@@ -36,10 +37,26 @@ view: aircall {
     sql: ${TABLE}.date__TZ_offset_incl__ ;;
   }
 
-  dimension: datetime__utc_ {
-    type: string
-    hidden: yes
-    sql: ${TABLE}.datetime__UTC_ ;;
+  # dimension: datetime__utc_ {
+  #   type: string
+  #   hidden: yes
+  #   sql: ${TABLE}.datetime__UTC_ ;;
+  # }
+
+  dimension_group: datetime__utc_ {
+    type: time
+    label: ""
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: cast(${TABLE}.datetime__utc_ as date) ;;
   }
 
   dimension: direction {
@@ -133,13 +150,47 @@ view: aircall {
     sql: ${TABLE}.voicemail ;;
   }
 
-  measure: count {
+  measure: count_all {
+    view_label: "Metrics"
+    description: "All Calls"
     type: count
+    # filters: {
+    #   field: duration__total_
+    #   value: ">0"
+    # }
     drill_fields: []
   }
 
+  measure: count_inbound {
+    view_label: "Metrics"
+    description: "Inbound Calls"
+    type: count
+    filters: {
+    field: direction
+    value: "inbound"
+    }
+    # filters: {
+    #   field: duration__total_
+    #   value: ">0"
+    # }
+  }
+
+  measure: count_outbound {
+    view_label: "Metrics"
+    description: "Outbound Calls"
+    type: count
+    filters: {
+      field: direction
+      value: "outbound"
+    }
+    # filters: {
+    #   field: duration__total_
+    #   value: ">0"
+    # }
+  }
 
   measure: num_of_missed_calls {
+    hidden: yes
     type: count
     label: "Number of missed calls"
     filters: {field: answered
@@ -148,6 +199,13 @@ view: aircall {
     filters: {field: missed_call_reason
       value: "agents_did_not_answer, no_available_agent"
     }
+    filters: {field: direction
+      value: "inbound"
+    }
+    # filters: {
+    #   field: duration__total_
+    #   value: ">0"
+    # }
   }
 
 
@@ -157,20 +215,6 @@ view: aircall {
     description: "This will capture the percentage of missed calls"
     type: number
     value_format: "0.0%"
-    sql: ${num_of_missed_calls} / ${count};;
+    sql: ${num_of_missed_calls} / ${count_inbound};;
   }
 }
-
-# # Add image - OLD - NOT NEEDED
-
-#   dimension: looker_image_1 {
-#     type: string
-#     sql: ${TABLE}.comments;;
-#     html: <img src="https://software-advice.imgix.net/managed/products/logos/thumbnail_breezeway_logo.png?auto=format&w=310" /> ;;
-#   }
-
-#   dimension: looker_image_2 {
-#     type: string
-#     sql: ${TABLE}.comments;;
-#     html: <img src="https://images-na.ssl-images-amazon.com/images/I/71IXI3kBGEL._AC_SX425_.jpg" /> ;;
-#   }
