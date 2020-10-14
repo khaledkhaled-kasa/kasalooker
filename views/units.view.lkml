@@ -23,6 +23,17 @@ view: units {
     sql: ${TABLE}.address.state ;;
   }
 
+  dimension: region {
+    hidden: no
+    sql: CASE
+    WHEN ${TABLE}.address.state IN ("TX") THEN "Texas"
+    WHEN ${TABLE}.address.state IN ("WA","CA","UT","CO","AZ") THEN "West"
+    WHEN ${TABLE}.address.state IN ("FL","DC","PA","CT","NJ","SC","NC","GA","VA","TN") THEN "East"
+    WHEN ${TABLE}.address.state IN ("IL","IA","WI","MO","MN") THEN "Central"
+    ELSE "Other"
+    END ;;
+  }
+
   dimension: amenities {
     hidden: yes
     sql: ${TABLE}.amenities ;;
