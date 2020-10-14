@@ -208,13 +208,34 @@ view: aircall {
     # }
   }
 
+  measure: num_of_accepted_calls {
+    hidden: yes
+    type: count
+    label: "Number of accepted calls"
+    filters: {field: answered
+      value: "yes"
+    }
+    filters: {field: direction
+      value: "inbound"
+    }
+  }
 
   measure: missed_calls_percentage {
     view_label: "Metrics"
     label: "% Missed Calls"
-    description: "This will capture the percentage of missed calls"
+    description: "% Missed Calls (User Didn't Answer + No Avail User)"
     type: number
     value_format: "0.0%"
     sql: ${num_of_missed_calls} / ${count_inbound};;
   }
+
+    measure: accepted_calls_percentage {
+      view_label: "Metrics"
+      label: "% Accepted Calls"
+      description: "% Calls Accepted (not missed or declined)"
+      type: number
+      value_format: "0.0%"
+      sql: ${num_of_accepted_calls} / ${count_inbound};;
+    }
+
 }
