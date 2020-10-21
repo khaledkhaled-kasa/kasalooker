@@ -1,6 +1,31 @@
+# Old reservations 10-21-2020
+
+# view: reservations {
+#   sql_table_name: `bigquery-analytics-272822.mongo.reservations`
+#     ;;
+
 view: reservations {
-  sql_table_name: `bigquery-analytics-272822.mongo.reservations`
-    ;;
+  derived_table: {
+    sql:
+
+select reservations.*, guest_type
+from reservations
+JOIN (
+select guest,
+case when count(*) > 1 then "Repeat"
+else "First Time"
+END guest_type
+from reservations
+group by 1)a
+on reservations.guest = a.guest;;
+}
+
+  dimension: guest_type {
+    hidden: no
+    type: string
+    sql: ${TABLE}.guest_type ;;
+  }
+
 
   dimension: _id {
     hidden: yes

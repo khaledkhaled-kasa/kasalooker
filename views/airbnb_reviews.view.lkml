@@ -13,6 +13,7 @@ view: airbnb_reviews {
     sql: ${TABLE}.Accuracy_Rating ;;
   }
 
+
   dimension: checkin_comments {
     type: string
     sql: ${TABLE}.Checkin_Comments ;;
@@ -23,6 +24,7 @@ view: airbnb_reviews {
     value_format: "0.00"
     sql: ${TABLE}.Checkin_Rating ;;
   }
+
 
   dimension: cleanliness_comments {
     type: string
