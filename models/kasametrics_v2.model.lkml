@@ -98,3 +98,7 @@ explore: capacities_rolled {
 
   }
 }
+
+explore: guest_verification_form {
+  label: "GV Verification"
+}
