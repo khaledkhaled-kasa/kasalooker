@@ -10,6 +10,7 @@ view: breezeway_export {
   }
 
   dimension_group: assigned {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -24,6 +25,7 @@ view: breezeway_export {
   }
 
   dimension_group: assigned_date {
+    label: "Assigned"
     type: time
     timeframes: [
       raw,
@@ -93,7 +95,7 @@ view: breezeway_export {
   }
 
   dimension: done_on_time_ {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}.Done_on_Time_ ;;
   }
@@ -122,6 +124,7 @@ view: breezeway_export {
 
   dimension: estimate_time_to_complete {
     type: string
+    hidden: yes
     sql: ${TABLE}.Estimate_Time_to_Complete ;;
   }
 
@@ -200,10 +203,29 @@ view: breezeway_export {
     sql: ${TABLE}.Tags ;;
   }
 
+
   dimension: time_to_complete {
-    type: string
+    label: "Completion Duration"
+    hidden: no
     sql: ${TABLE}.Time_to_Complete ;;
   }
+
+
+  dimension: completion_time_mins {
+    label: "Completion Time (Minutes)"
+    type: number
+    hidden: no
+    sql: ${TABLE}.Completion_Time__Minutes_ ;;
+  }
+
+  measure: average_completion {
+    label: "Average Completion Time (Hours)"
+    type: average
+    hidden: no
+    value_format: "0.0"
+    sql: ${completion_time_mins} / 60;;
+  }
+
 
   dimension: total_cost {
     type: number
