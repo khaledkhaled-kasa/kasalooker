@@ -276,7 +276,9 @@ view: units {
     type: count
     drill_fields: [nickname]
   }
+
 }
+
 
 view: units__rooms__value {
   drill_fields: [id]

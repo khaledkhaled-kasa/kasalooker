@@ -1,6 +1,15 @@
 view: guest_verification_form {
   derived_table: {
-    sql: WITH reservations AS (select reservations.*, guest_type
+    sql: WITH reservations AS (select reservations.*, guest_type,
+      CASE
+      WHEN reservations.timezone = 'America/Chicago' THEN 'America/Chicago'
+      WHEN reservations.timezone = 'America/Los_Angeles' THEN 'America/Los_Angeles'
+      WHEN reservations.timezone = 'America/San_Jose' THEN 'America/Los_Angeles'
+      WHEN reservations.timezone = 'America/New_York' THEN 'America/New_York'
+      WHEN reservations.timezone = 'America/Phoenix' THEN 'America/Phoenix'
+      WHEN reservations.timezone = 'America/Denver' THEN 'America/Denver'
+      ELSE 'US/Central' ------- This needs to be adjusted?
+      END revised_timezone
       from reservations
       JOIN (
       select guest,
@@ -11,7 +20,11 @@ view: guest_verification_form {
       group by 1)a
       on reservations.guest = a.guest)
 
-      SELECT reservations.*, reservations.status as res_status, units.*, guests.*, reservations_historicals.timestamp
+      SELECT reservations.*, reservations.status as res_status, units.*, guests.*,
+      reservations_historicals.timestamp,
+      reservations.revised_timezone as res_revised_timezone,
+      timestamp(datetime(guests.verification.verifiedat__ts,reservations.revised_timezone)) as revised_verification_success_timezone,
+      timestamp(datetime(reservations_historicals.timestamp,reservations.revised_timezone)) as revised_verification_timezone
       FROM reservations
       JOIN units  ON units._id = reservations.unit
       JOIN guests ON guests._id = reservations.guest
@@ -19,13 +32,6 @@ view: guest_verification_form {
       AND diff.termsAccepted = true
        ;;
   }
-
-  measure: count {
-    type: count
-    hidden: yes
-    drill_fields: [detail*]
-  }
-
 
   dimension: chargelogs {
     type: string
@@ -53,6 +59,58 @@ view: guest_verification_form {
     sql: ${TABLE}.parkingspaceneeded ;;
   }
 
+  dimension: days_to_submit {
+    label: "Number of Days*"
+    description: "Number of days ahead of check-in to submit the GV form"
+    type:  number
+    sql:  date_diff(CAST(${checkindate} as DATE), ${correct_date_date}, DAY) ;;
+  }
+
+  measure: avg_number_of_days {
+    label: "Average Number of Days before Check-in"
+    description: "Average number of days ahead of check-in to submit the GV form"
+    value_format: "0.0"
+    type:  average
+    sql:  ${days_to_submit} ;;
+  }
+
+  # This will calculate the hours by taking into consideration a fixed check-in at 15:00
+  dimension: date_diff {
+    label: "Number of Hours before Check-in*"
+    type: number
+    description: "Number of hours ahead of check-in to submit the GV form"
+    sql: TIMESTAMP_DIFF(TIMESTAMP(${checkindatetime}), TIMESTAMP(${correct_date_time}), HOUR) + 15;;
+  }
+
+  dimension: hour_bins {
+    label: "Hours before Check-in (Bins)*"
+    type: string
+    description: "Distribution of hours ahead of check-in to submit the GV form (6 hours, 12 hours, 24 hours, 48 hours) before checkin"
+    sql: CASE
+    WHEN ${date_diff} < 6 THEN "b1: < 6 hours"
+    WHEN ${date_diff} >= 6 AND ${date_diff} < 12 THEN "b2: 6 - 12 hours"
+    WHEN ${date_diff} >= 12 AND ${date_diff} < 24 THEN "b3: 12 - 24 hours"
+    WHEN ${date_diff} >= 24 AND ${date_diff} < 48 THEN "b4: 24 - 48 hours"
+    WHEN ${date_diff} >= 48 THEN "b5: >= 48 hours"
+    ELSE "b6: Not Submitted"
+    END;;
+  }
+
+
+  measure: avg_number_of_hours {
+    label: "Average Number of Hours"
+    description: "Average number of hours ahead of check-in to submit the GV form"
+    value_format: "0.0"
+    type:  average
+    sql:  ${date_diff} ;;
+  }
+
+  measure: number_of_reservations {
+    label: "Number of Reservations"
+    type:  count_distinct
+    sql: CONCAT(${guest}, '-', ${confirmationcode});;
+  }
+
   dimension: termsaccepted {
     type: string
     sql: ${TABLE}.termsaccepted ;;
@@ -66,22 +124,64 @@ view: guest_verification_form {
 
   dimension: checkindate {
     type: date
+    hidden: yes
+    sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
+  }
+
+  dimension_group: reservation_checkin {
+    type: time
+    label: "Check-in"
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
+  }
+
+  dimension: checkindatetime {
+    type: date_time
+    hidden: yes
     sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
   }
 
   dimension: checkoutdate {
     type: date
+    hidden: yes
     sql: CAST(${TABLE}.checkoutdatelocal as TIMESTAMP);;
   }
 
+  dimension_group: reservation_checkout {
+    type: time
+    label: "Check-out"
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: CAST(${TABLE}.checkoutdatelocal as TIMESTAMP);;
+  }
+
+  # This will convert San Jose and Null values as per above derived table
   dimension: timezone {
+    label: "Timezone"
+    description: "Adjusted timezone to account for null and invalid values"
     type: string
-    hidden: yes
-    sql: ${TABLE}.timezone ;;
+    hidden: no
+    sql: ${TABLE}.res_revised_timezone ;;
   }
 
   dimension: guestid {
     label: "Guest ID"
+    hidden: yes
     type: string
     sql: ${TABLE}.guestid ;;
   }
@@ -127,6 +227,7 @@ view: guest_verification_form {
   }
 
   dimension_group: createdat {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -147,11 +248,13 @@ view: guest_verification_form {
 
   dimension: earlycheckin {
     type: string
+    hidden: yes
     sql: ${TABLE}.earlycheckin ;;
   }
 
   dimension_group: updatedat {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       time,
@@ -252,7 +355,7 @@ view: guest_verification_form {
 
   dimension: guest {
     type: string
-    hidden: yes
+    hidden: no
     sql: ${TABLE}.guest ;;
   }
 
@@ -340,8 +443,25 @@ view: guest_verification_form {
   }
 
   dimension: isverified {
-    type: string
+    type: yesno
     sql: ${TABLE}.verification.isverified ;;
+  }
+
+  dimension_group: timestamp {
+    label: "GV Submission"
+    description: "This shows the timestamp for when the GV was submitted despite if it was approved or not"
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.revised_verification_timezone;;
+    convert_tz: no
   }
 
   dimension_group: correct_date {
@@ -357,15 +477,18 @@ view: guest_verification_form {
     ]
     label: "GV Submission*"
     description: "This will show the GV submission date for guests with multiple bookings and the approved guest guest verification date for guests that had a single booking"
-    sql: CASE WHEN ${TABLE}.guest_type = "First"
-    THEN ${TABLE}.verification.verifiedat__ts
-    ELSE ${TABLE}.timestamp
+    sql:
+    CASE
+    WHEN ${TABLE}.guest_type = "First Time" and extract(year from ${TABLE}.revised_verification_success_timezone) != 1969
+    THEN ${TABLE}.revised_verification_success_timezone
+    ELSE ${TABLE}.revised_verification_timezone
     END ;;
   }
 
+
   dimension_group: verification {
     type: time
-    sql: ${TABLE}.verification.verifiedat__ts ;;
+    sql: ${TABLE}.revised_verification_success_timezone ;;
   }
 
   dimension: reservationrisk {
@@ -946,21 +1069,6 @@ view: guest_verification_form {
     sql: ${TABLE}.middlename ;;
   }
 
-  dimension_group: timestamp {
-    label: "GV Submission"
-    description: "This shows the timestamp for when the GV was submitted despite if it was approved or not"
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.timestamp ;;
-  }
 
   dimension: diff {
     type: string
