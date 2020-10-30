@@ -59,8 +59,9 @@ view: units {
     sql: ${TABLE}.baseprice ;;
   }
 
-  dimension: bathrooms {
+  dimension: bathrooms_old {
     type: number
+    hidden: yes
     sql: ${TABLE}.bathrooms ;;
   }
 
@@ -69,6 +70,12 @@ view: units {
     sql: ${TABLE}.bathrooms__fl ;;
   }
 
+  dimension: bathrooms {
+    type: number
+    sql: CASE WHEN ${TABLE}.bathrooms__fl IS NULL THEN ${TABLE}.bathrooms
+          ELSE ${TABLE}.bathrooms__fl
+          END;;
+  }
 
   dimension: bedrooms {
     type: number
