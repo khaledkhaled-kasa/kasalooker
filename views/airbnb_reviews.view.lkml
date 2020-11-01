@@ -13,7 +13,6 @@ view: airbnb_reviews {
     sql: ${TABLE}.Accuracy_Rating ;;
   }
 
-
   dimension: checkin_comments {
     type: string
     sql: ${TABLE}.Checkin_Comments ;;
@@ -136,6 +135,7 @@ view: airbnb_reviews {
     datatype: date
     sql: ${TABLE}.Review_Date ;;
   }
+
 
   dimension: value_comments {
     type: string
