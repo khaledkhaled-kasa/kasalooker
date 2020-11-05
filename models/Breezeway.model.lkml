@@ -1,5 +1,6 @@
 connection: "bigquery"
 include: "../views/*"
+# include: "../dashboards/*"
 
 
 datagroup: breezeway_default_datagroup {

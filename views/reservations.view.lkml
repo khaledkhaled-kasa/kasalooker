@@ -8,17 +8,17 @@ view: reservations {
   derived_table: {
     sql:
 
-select reservations.*, guest_type
-from reservations
-JOIN (
-select guest,
-case when count(*) > 1 then "Repeat"
-else "First Time"
-END guest_type
-from reservations
-group by 1)a
-on reservations.guest = a.guest;;
-}
+    select reservations.*, guest_type
+    from reservations
+    JOIN (
+    select guest,
+    case when count(*) > 1 then "Repeat"
+    else "First Time"
+    END guest_type
+    from reservations
+    group by 1)a
+    on reservations.guest = a.guest;;
+  }
 
   dimension: guest_type {
     hidden: no
@@ -385,7 +385,7 @@ on reservations.guest = a.guest;;
   dimension: financial_night_part_of_res {
     type:  yesno
     sql: format_date('%Y-%m-%d', ${financials.night_date}) < ${TABLE}.checkoutdatelocal and
-    format_date('%Y-%m-%d', ${financials.night_date}) >= ${TABLE}.checkindatelocal;;
+      format_date('%Y-%m-%d', ${financials.night_date}) >= ${TABLE}.checkindatelocal;;
   }
 
   measure: num_reservations {

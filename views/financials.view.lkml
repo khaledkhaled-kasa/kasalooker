@@ -32,8 +32,9 @@ view: financials {
         AND (CAST(financials.night AS DATE) >= CAST(reservations.checkindatelocal AS DATE) AND CAST(financials.night AS DATE) < CAST(reservations.checkoutdatelocal AS DATE))
         GROUP BY 1)t3
         ON financials.reservation = t3.reservationid
+        where financials.isvalid is null or financials.isvalid = true
       ;;
-}
+  }
 
 
   dimension: amount_revised {
@@ -48,7 +49,7 @@ view: financials {
           END;;
   }
 
- # Amount with old financials table
+  # Amount with old financials table
   # measure: amount {
   #   view_label: "Metrics"
   #   label: "Amount"
@@ -92,31 +93,31 @@ view: financials {
 
 
   measure: cleaning_amount {
-   type: number
-   value_format: "$#,##0.00"
-   sql: sum(if(${TABLE}.type = "cleaning",${amount_revised},0)) ;;
+    type: number
+    value_format: "$#,##0.00"
+    sql: sum(if(${TABLE}.type = "cleaning",${amount_revised},0)) ;;
   }
 
   measure: clean_refund_amount {
-   type: number
-   value_format: "$#,##0.00"
-   sql: sum(if(${TABLE}.type = "CleanRefund",${amount_revised},0)) ;;
+    type: number
+    value_format: "$#,##0.00"
+    sql: sum(if(${TABLE}.type = "CleanRefund",${amount_revised},0)) ;;
   }
 
   measure: cleaning_transactions {
-   type: count
-   value_format: "0"
-   filters: [
-     type: "cleaning"
-   ]
+    type: count
+    value_format: "0"
+    filters: [
+      type: "cleaning"
+    ]
   }
 
   measure: cleaning_refund_transactions {
-   type: count
-   value_format: "0"
-   filters: [
-     type: "CleanRefund"
-   ]
+    type: count
+    value_format: "0"
+    filters: [
+      type: "CleanRefund"
+    ]
   }
 
   measure: adr {
@@ -145,6 +146,7 @@ view: financials {
 
   dimension: isvalid {
     type: yesno
+    hidden: yes
     sql: ${TABLE}.isvalid is null OR ${TABLE}.isvalid = true;;
   }
 
