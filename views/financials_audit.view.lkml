@@ -1,4 +1,4 @@
-view: financials_wip {
+view: financials_audit {
   derived_table: {
     sql: SELECT financials.*
         FROM financials
@@ -63,7 +63,7 @@ view: financials_wip {
     description: "Average daily rate: amount / reservation_night"
     type: number
     value_format: "$#,##0.00"
-    sql: ${amount} / NULLIF(${reservations.reservation_night}, 0) ;;
+    sql: ${amount} / NULLIF(${reservations_audit.reservation_night}, 0) ;;
   }
 
 

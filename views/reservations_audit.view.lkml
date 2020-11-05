@@ -1,4 +1,4 @@
-view: reservations_wip {
+view: reservations_audit {
   sql_table_name: `bigquery-analytics-272822.mongo.reservations`
     ;;
 
@@ -359,16 +359,16 @@ view: reservations_wip {
     label: "Num ReservationNights"
     description: "Reservation night stay"
     type:  count_distinct
-    sql: CONCAT(${confirmationcode}, '-', ${financials_wip.night_date});;
+    sql: CONCAT(${confirmationcode}, '-', ${financials_audit.night_date});;
     filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
     #sql: CONCAT(${confirmationcode}, '-', ${capacities_rolled.night_date});;
-    drill_fields: [financials_wip.night_date, reservation_details*]
+    drill_fields: [financials_audit.night_date, reservation_details*]
   }
 
   dimension: financial_night_part_of_res {
     type:  yesno
-    sql: format_date('%Y-%m-%d', ${financials_wip.night_date}) < ${TABLE}.checkoutdatelocal and
-      format_date('%Y-%m-%d', ${financials_wip.night_date}) >= ${TABLE}.checkindatelocal;;
+    sql: format_date('%Y-%m-%d', ${financials_audit.night_date}) < ${TABLE}.checkoutdatelocal and
+      format_date('%Y-%m-%d', ${financials_audit.night_date}) >= ${TABLE}.checkindatelocal;;
   }
 
   measure: num_reservations {
@@ -388,7 +388,7 @@ view: reservations_wip {
     type: number
     value_format: "0.0%"
     sql:  ${reservation_night} / NULLIF(${capacities_rolled.capacity_measure}, 0) ;;
-#     drill_fields: [financials_wip.night_date, reservation_details*]
+#     drill_fields: [financials_audit.night_date, reservation_details*]
     link: {
       label: "Drill - Reservation Nights"
       url: "{{ reservation_night._link }}"
