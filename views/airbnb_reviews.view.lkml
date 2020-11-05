@@ -155,20 +155,22 @@ view: airbnb_reviews {
   }
 
   measure: count_5_star {
-    type: count
+    type: count_distinct
     value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
     filters: [
       overall_rating: "5"
     ]
   }
 
   measure: count_less_than_4_star {
-    type: count
+    type: count_distinct
     value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
     filters: [
-      overall_rating: "<=3"
-    ]
-  }
+    overall_rating: "<=3"
+  ]
+}
 
   measure: percent_5_star {
     type: number

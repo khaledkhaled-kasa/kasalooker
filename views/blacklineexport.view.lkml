@@ -11,6 +11,13 @@ view: blacklineexport {
     drill_fields: [detail*]
   }
 
+  measure: balance_sum_deficit {
+    type: sum
+    value_format: "#,##0.00"
+    sql: ${balance_oct} - ${balance_sep} ;;
+    drill_fields: [detail*]
+  }
+
   measure: balance_sum {
     type: sum
     sql: ${balance}  ;;
@@ -51,6 +58,22 @@ view: blacklineexport {
   dimension: balance {
     type: number
     sql: ${TABLE}.balance ;;
+  }
+
+  dimension: balance_oct {
+    type: number
+    sql: CASE WHEN CAST(${period_intake} as date) = '2020-10-31' THEN
+          ${TABLE}.balance
+          ELSE 0
+          END;;
+  }
+
+  dimension: balance_sep {
+    type: number
+    sql: CASE WHEN CAST(${period_intake} as date) = '2020-09-30' THEN
+    ${TABLE}.balance
+    ELSE 0
+    END;;
   }
 
   dimension: entity_unique_identifier_1 {
