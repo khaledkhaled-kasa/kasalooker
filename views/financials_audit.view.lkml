@@ -73,7 +73,7 @@ view: financials_audit {
     description: "Revenue per available room: amount / capacity"
     type: number
     value_format: "$#,##0.00"
-    sql: ${amount} / NULLIF(${capacities_rolled.capacity_measure}, 0) ;;
+    sql: ${amount} / NULLIF(${capacities_rolled_audit.capacity_measure}, 0) ;;
   }
 
   dimension: cashatbooking {

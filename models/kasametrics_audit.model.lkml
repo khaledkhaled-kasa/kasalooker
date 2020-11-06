@@ -26,14 +26,15 @@ explore: reservations_audit {
     relationship: many_to_one
     sql_on: ${complexes._id} = ${units.complex} ;;
   }
-  join: capacities_rolled {
+  join: capacities_rolled_audit {
     type:  left_outer
     relationship: many_to_one
     sql_on:
-        ${capacities_rolled.night} = ${financials_audit.night_date}
+        ${capacities_rolled_audit.night} = ${financials_audit.night_date}
+        and cast(${capacities_rolled_audit.bedroom} as string) = cast(${units.bedrooms} as string)
       {% if complexes.title._is_selected or complexes.title._is_filtered %}
         and
-        ${complexes._id} = ${capacities_rolled.complex}
+        ${complexes._id} = ${capacities_rolled_audit.complex}
       {% endif %}
     ;;
   }
@@ -95,35 +96,3 @@ explore: reservations_audit {
 
   }
 }
-
-# explore: reservationsRev {
-#   from: capacities_rolled
-#   join: financials {
-#   type:  inner
-#   relationship: many_to_one
-#   sql_on:
-#       ${capacities_rolled.night} = ${financials.night_date}
-#       {% if complexes.title._is_selected or complexes.title._is_filtered %}
-#         and
-#         ${complexes._id} = ${capacities_rolled.complex}
-#       {% endif %}
-#       and ${reservations._id} = ${financials.reservation}
-#     ;;
-#   }
-#   join: reservations {
-#     type:  inner
-#     relationship:  many_to_one
-#      sql_on: ${reservations._id} = ${financials.reservation}
-#   }
-#   join: units {
-#     type:  inner
-#     relationship: many_to_one
-#     sql_on: ${units._id} = ${reservations.unit} ;;
-#   }
-#   join: complexes {
-#     type:  inner
-#     relationship: many_to_one
-#     sql_on: ${complexes._id} = ${units.complex} ;;
-#   }
-#
-# }

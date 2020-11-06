@@ -13,8 +13,29 @@ view: blacklineexport {
 
   measure: balance_sum_deficit {
     type: sum
-    value_format: "#,##0.00"
-    sql: ${balance_oct} - ${balance_sep} ;;
+    value_format: "$#,##0.00"
+    sql: ${balance_now} - ${balance_prev} ;;
+    drill_fields: [detail*]
+  }
+
+  measure: expenses_deficit {
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${expenses_now} - ${expenses_prev} ;;
+    drill_fields: [detail*]
+  }
+
+  measure: revenues_deficit {
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${revenues_now} - ${revenues_prev} ;;
+    drill_fields: [detail*]
+  }
+
+  measure: margin_deficit {
+    type: sum
+    value_format: "$#,##0.00"
+    sql: (${revenues_now} - ${revenues_prev}) - (${expenses_now}  - ${expenses_prev}) ;;
     drill_fields: [detail*]
   }
 
@@ -60,20 +81,68 @@ view: blacklineexport {
     sql: ${TABLE}.balance ;;
   }
 
-  dimension: balance_oct {
+  dimension: revenues {
     type: number
-    sql: CASE WHEN CAST(${period_intake} as date) = '2020-10-31' THEN
-          ${TABLE}.balance
+    sql: CASE WHEN ${account_number} LIKE '4%'
+      THEN ${TABLE}.balance
+      ELSE 0
+      END;;
+  }
+
+  dimension: revenues_now {
+    type: number
+    sql: CASE WHEN CAST(${period_intake} as date) = '2020-10-31'
+          THEN ${revenues}
           ELSE 0
           END;;
   }
 
-  dimension: balance_sep {
+  dimension: revenues_prev {
     type: number
-    sql: CASE WHEN CAST(${period_intake} as date) = '2020-09-30' THEN
-    ${TABLE}.balance
-    ELSE 0
-    END;;
+    sql: CASE WHEN CAST(${period_intake} as date) = '2020-09-30'
+          THEN ${revenues}
+          ELSE 0
+          END;;
+  }
+
+  dimension: expenses {
+    type: number
+    sql: CASE WHEN ${account_number} LIKE '5%'
+      THEN ${TABLE}.balance
+      ELSE 0
+      END;;
+  }
+
+  dimension: expenses_now {
+    type: number
+    sql: CASE WHEN CAST(${period_intake} as date) = '2020-10-31'
+          THEN ${expenses}
+          ELSE 0
+          END;;
+  }
+
+  dimension: expenses_prev {
+    type: number
+    sql: CASE WHEN CAST(${period_intake} as date) = '2020-09-30'
+          THEN ${expenses}
+          ELSE 0
+          END;;
+  }
+
+  dimension: balance_now {
+    type: number
+    sql: CASE WHEN CAST(${period_intake} as date) = '2020-10-31'
+          THEN ${TABLE}.balance
+          ELSE 0
+          END;;
+  }
+
+  dimension: balance_prev {
+    type: number
+    sql: CASE WHEN CAST(${period_intake} as date) = '2020-09-30'
+      THEN ${TABLE}.balance
+      ELSE 0
+      END;;
   }
 
   dimension: entity_unique_identifier_1 {

@@ -361,7 +361,6 @@ view: reservations_audit {
     type:  count_distinct
     sql: CONCAT(${confirmationcode}, '-', ${financials_audit.night_date});;
     filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
-    #sql: CONCAT(${confirmationcode}, '-', ${capacities_rolled.night_date});;
     drill_fields: [financials_audit.night_date, reservation_details*]
   }
 
@@ -387,7 +386,7 @@ view: reservations_audit {
     description: "Number of reservation nights / capacity"
     type: number
     value_format: "0.0%"
-    sql:  ${reservation_night} / NULLIF(${capacities_rolled.capacity_measure}, 0) ;;
+    sql:  ${reservation_night} / NULLIF(${capacities_rolled_audit.capacity_measure}, 0) ;;
 #     drill_fields: [financials_audit.night_date, reservation_details*]
     link: {
       label: "Drill - Reservation Nights"
