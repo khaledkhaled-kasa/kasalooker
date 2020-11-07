@@ -149,6 +149,11 @@ view: units {
     sql: ${TABLE}.externalrefs ;;
   }
 
+  dimension: externalrefs_property_id {
+    hidden: yes
+    sql: ${TABLE}.externalrefs.guesty_id ;;
+  }
+
   dimension: facilities {
     hidden: yes
     sql: ${TABLE}.facilities ;;
