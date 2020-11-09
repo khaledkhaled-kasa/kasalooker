@@ -70,6 +70,16 @@ view: breezeway_export {
     sql: ${TABLE}.Cost_Description ;;
   }
 
+  dimension: scorecard_name {
+    type: string
+    sql: ${TABLE}.Scorecard_Name ;;
+  }
+
+  dimension: building {
+    type: string
+    sql: ${TABLE}.Building ;;
+  }
+
   dimension_group: created {
     type: time
     timeframes: [
