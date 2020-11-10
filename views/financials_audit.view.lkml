@@ -144,11 +144,6 @@ view: financials_audit {
     sql: ${TABLE}.type ;;
   }
 
-  dimension: types_filtered{
-    description: "This will filter out Channel Fees / ToTs"
-    type: yesno
-    sql: ${TABLE}.type is null or ${TABLE}.type not IN ("channelFee","ToT","ToTInflow","ToTOutflowNonLiability","ToTInflowNonLiability");;
-  }
 
 
 }

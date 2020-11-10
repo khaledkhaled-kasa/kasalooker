@@ -7,7 +7,7 @@ view: airbnb_reviews {
     sql: ${TABLE}.Accuracy_Comments ;;
   }
 
-   measure: accuracy_rating {
+   measure: accuracy_rating_avg {
     type: average
     value_format: "0.00"
     sql: ${TABLE}.Accuracy_Rating ;;
@@ -18,7 +18,7 @@ view: airbnb_reviews {
     sql: ${TABLE}.Checkin_Comments ;;
   }
 
-   measure: checkin_rating {
+   measure: checkin_rating_avg {
     type: average
     value_format: "0.00"
     sql: ${TABLE}.Checkin_Rating ;;
@@ -30,7 +30,7 @@ view: airbnb_reviews {
     sql: ${TABLE}.Cleanliness_Comments ;;
   }
 
-  measure: cleanliness_rating {
+  measure: cleanliness_rating_avg {
     type: average
     value_format: "0.00"
     sql: ${TABLE}.Cleanliness_Rating ;;
@@ -41,7 +41,7 @@ view: airbnb_reviews {
     sql: ${TABLE}.Communication_Comments ;;
   }
 
-  measure: communication_rating {
+  measure: communication_rating_avg {
     type: average
     value_format: "0.00"
     sql: ${TABLE}.Communication_Rating ;;
@@ -92,7 +92,7 @@ view: airbnb_reviews {
     sql: ${TABLE}.Location_Comments ;;
   }
 
-  measure: location_rating {
+  measure: location_rating_avg {
     type: average
     value_format: "0.00"
     sql: ${TABLE}.Location_Rating ;;
@@ -113,6 +113,12 @@ view: airbnb_reviews {
     type: number
     value_format: "0.00"
     sql: ${TABLE}.Overall_Rating ;;
+  }
+
+  dimension: cleanliness_rating {
+    type: number
+    value_format: "0.00"
+    sql: ${TABLE}.Cleanliness_Rating ;;
   }
 
   dimension: reservation_code {
@@ -142,7 +148,7 @@ view: airbnb_reviews {
     sql: ${TABLE}.Value_Comments ;;
   }
 
-  measure: value_rating {
+  measure: value_rating_avg {
     type: average
     value_format: "0.00"
     sql: ${TABLE}.Value_Rating ;;
@@ -188,4 +194,28 @@ view: airbnb_reviews {
     type: count_distinct
     sql: ${TABLE}.Reservation_Code ;;
   }
+
+  measure: clean_count_less_than_4_star {
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      cleanliness_rating: "<=3"
+    ]
+  }
+
+  measure: count_clean {
+    type: count_distinct
+    sql: ${TABLE}.Reservation_Code ;;
+    filters: [
+      cleanliness_rating: "1,2,3,4,5"
+    ]
+  }
+
+  measure: percent_less_than_4_star_clean {
+    type: number
+    value_format: "0.0%"
+    sql: ${clean_count_less_than_4_star} / ${count_clean};;
+  }
+
 }
