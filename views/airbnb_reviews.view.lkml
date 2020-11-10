@@ -7,7 +7,7 @@ view: airbnb_reviews {
     sql: ${TABLE}.Accuracy_Comments ;;
   }
 
-   measure: accuracy_rating_avg {
+   measure: accuracy_rating {
     type: average
     value_format: "0.00"
     sql: ${TABLE}.Accuracy_Rating ;;
@@ -18,7 +18,7 @@ view: airbnb_reviews {
     sql: ${TABLE}.Checkin_Comments ;;
   }
 
-   measure: checkin_rating_avg {
+   measure: checkin_rating {
     type: average
     value_format: "0.00"
     sql: ${TABLE}.Checkin_Rating ;;
@@ -30,7 +30,7 @@ view: airbnb_reviews {
     sql: ${TABLE}.Cleanliness_Comments ;;
   }
 
-  measure: cleanliness_rating_avg {
+  measure: cleanliness_rating {
     type: average
     value_format: "0.00"
     sql: ${TABLE}.Cleanliness_Rating ;;
@@ -41,7 +41,7 @@ view: airbnb_reviews {
     sql: ${TABLE}.Communication_Comments ;;
   }
 
-  measure: communication_rating_avg {
+  measure: communication_rating {
     type: average
     value_format: "0.00"
     sql: ${TABLE}.Communication_Rating ;;
@@ -92,7 +92,7 @@ view: airbnb_reviews {
     sql: ${TABLE}.Location_Comments ;;
   }
 
-  measure: location_rating_avg {
+  measure: location_rating {
     type: average
     value_format: "0.00"
     sql: ${TABLE}.Location_Rating ;;
@@ -115,8 +115,9 @@ view: airbnb_reviews {
     sql: ${TABLE}.Overall_Rating ;;
   }
 
-  dimension: cleanliness_rating {
+  dimension: cleanliness_rating_dim {
     type: number
+    hidden: yes
     value_format: "0.00"
     sql: ${TABLE}.Cleanliness_Rating ;;
   }
@@ -148,7 +149,7 @@ view: airbnb_reviews {
     sql: ${TABLE}.Value_Comments ;;
   }
 
-  measure: value_rating_avg {
+  measure: value_rating {
     type: average
     value_format: "0.00"
     sql: ${TABLE}.Value_Rating ;;
@@ -200,7 +201,7 @@ view: airbnb_reviews {
     value_format: "0"
     sql: ${TABLE}.Reservation_Code;;
     filters: [
-      cleanliness_rating: "<=3"
+      cleanliness_rating_dim: "<=3"
     ]
   }
 
@@ -208,7 +209,7 @@ view: airbnb_reviews {
     type: count_distinct
     sql: ${TABLE}.Reservation_Code ;;
     filters: [
-      cleanliness_rating: "1,2,3,4,5"
+      cleanliness_rating_dim: "1,2,3,4,5"
     ]
   }
 
