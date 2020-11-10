@@ -364,6 +364,16 @@ view: reservations_audit {
     drill_fields: [financials_audit.night_date, reservation_details*]
   }
 
+  measure: reservation_night_canceled {
+    view_label: "Metrics"
+    label: "Num ReservationNights (Cancelled)"
+    description: "Reservation night stay for canceled bookings"
+    type:  count_distinct
+    sql: CONCAT(${confirmationcode}, '-', ${financials_audit.night_date});;
+    filters: [status: "canceled"]
+    drill_fields: [financials_audit.night_date, reservation_details*]
+  }
+
   dimension: financial_night_part_of_res {
     type:  yesno
     sql: format_date('%Y-%m-%d', ${financials_audit.night_date}) < ${TABLE}.checkoutdatelocal and
@@ -377,6 +387,16 @@ view: reservations_audit {
     type: count_distinct
     sql: ${confirmationcode} ;;
     filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
+    drill_fields: [reservation_details*]
+  }
+
+  measure: num_reservations_canceled {
+    view_label: "Metrics"
+    label: "Num Reservations (Canceled)"
+    description: "Number of unique reservations for canceled bookings"
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    filters: [status: "canceled"]
     drill_fields: [reservation_details*]
   }
 
