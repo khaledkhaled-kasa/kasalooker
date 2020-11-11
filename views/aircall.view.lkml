@@ -48,15 +48,33 @@ view: aircall {
     label: ""
     timeframes: [
       raw,
+      time,
       date,
       week,
       month,
       quarter,
-      year
+      year,
+      day_of_week,
+      hour_of_day
     ]
-    convert_tz: no
-    datatype: date
-    sql: cast(${TABLE}.datetime__utc_ as date) ;;
+    sql: ${TABLE}.datetime__utc_ ;;
+  }
+
+  dimension_group: datetime__pst_ {
+    type: time
+    label: " (PST)"
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      day_of_week,
+      hour_of_day
+    ]
+    sql: CAST(datetime(CAST(${TABLE}.datetime__utc_ as TIMESTAMP),'America/Los_Angeles') as TIMESTAMP);;
   }
 
   dimension: direction {

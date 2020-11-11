@@ -121,6 +121,22 @@ view: reservations_audit {
     sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
   }
 
+  dimension_group: checkindate_pst {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      day_of_week,
+      hour_of_day
+    ]
+    sql: CAST(datetime(CAST(${TABLE}.checkindate as TIMESTAMP),'America/Los_Angeles') as TIMESTAMP);;
+  }
+
 
   dimension_group: reservation_checkin {
     type: time
@@ -131,7 +147,9 @@ view: reservations_audit {
       week,
       month,
       quarter,
-      year
+      year,
+      day_of_week,
+      hour_of_day
     ]
     sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
   }
@@ -312,12 +330,6 @@ view: reservations_audit {
     sql: ${TABLE}.status ;;
   }
 
-  dimension: status_booked{
-    description: "Was this night booked?"
-    type: yesno
-#     sql: ${TABLE}.status is null or ${TABLE}.status IN ("confirmed","checked_in");;
-    sql: ${TABLE}.status is null or ${TABLE}.status IN ("confirmed","checked_in", "inquiry", "canceled", "declined");;
-  }
 
   dimension: suspicious {
     type: yesno
@@ -360,7 +372,7 @@ view: reservations_audit {
     description: "Reservation night stay"
     type:  count_distinct
     sql: CONCAT(${confirmationcode}, '-', ${financials_audit.night_date});;
-    filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
+    filters: [financial_night_part_of_res: "yes"]
     drill_fields: [financials_audit.night_date, reservation_details*]
   }
 
@@ -386,7 +398,7 @@ view: reservations_audit {
     description: "Number of unique reservations"
     type: count_distinct
     sql: ${confirmationcode} ;;
-    filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
+    filters: [financial_night_part_of_res: "yes"]
     drill_fields: [reservation_details*]
   }
 
