@@ -402,6 +402,15 @@ view: reservations_audit {
     drill_fields: [reservation_details*]
   }
 
+  measure: num_reservations_star {
+    view_label: "Metrics"
+    label: "Number of reservations*"
+    description: "Number of unique reservations excluding financials table"
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    drill_fields: [reservation_details*]
+  }
+
   measure: num_reservations_canceled {
     view_label: "Metrics"
     label: "Num Reservations (Canceled)"
