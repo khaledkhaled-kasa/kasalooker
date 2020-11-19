@@ -161,6 +161,42 @@ view: airbnb_reviews {
     sql: (${overall_rating_avg} - 4.535)/(4.825 - 4.535) ;;
   }
 
+  measure: overall_quality_score_accuracy {
+    type: number
+    value_format: "0%"
+    sql: (${accuracy_rating} - 4.761)/(4.901 - 4.761) ;;
+  }
+
+  measure: overall_quality_score_cleanliness {
+    type: number
+    value_format: "0%"
+    sql: (${cleanliness_rating} - 4.66)/(4.855 - 4.66) ;;
+  }
+
+  measure: overall_quality_score_communication {
+    type: number
+    value_format: "0%"
+    sql: (${communication_rating} - 4.681)/(4.848 - 4.681) ;;
+  }
+
+  measure: overall_quality_score_checkin_rating {
+    type: number
+    value_format: "0%"
+    sql: (${checkin_rating} - 4.482)/(4.729 - 4.482) ;;
+  }
+
+  measure: overall_quality_score_value {
+    type: number
+    value_format: "0%"
+    sql: (${value_rating} - 4.614)/(4.783 - 4.614) ;;
+  }
+
+  measure: overall_quality_score_location {
+    type: number
+    value_format: "0%"
+    sql: (${location_rating} - 4.799)/(4.871 - 4.799) ;;
+  }
+
   measure: count_5_star {
     type: count_distinct
     value_format: "0"
