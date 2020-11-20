@@ -9,7 +9,7 @@ datagroup: ximble_default_datagroup {
 
 
 persist_with: ximble_default_datagroup
-label: "Kasa Reviews"
-explore: ximble_hours {
-  from: ximble_hours
+label: "Ximble"
+explore: ximble_hourly_schedule {
+  from: ximble_hourly_schedule
 }
