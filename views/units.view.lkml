@@ -49,6 +49,16 @@ view: units {
     sql: ${TABLE}.availability ;;
   }
 
+  dimension: availability_startdate {
+    hidden: yes
+    sql: ${TABLE}.availability.startdate ;;
+  }
+
+  dimension: availability_enddate {
+    hidden: yes
+    sql: ${TABLE}.availability.enddate ;;
+  }
+
   dimension: backupsmartlockcodes {
     hidden: yes
     sql: ${TABLE}.backupsmartlockcodes ;;
