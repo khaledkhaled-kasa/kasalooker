@@ -50,12 +50,12 @@ view: units {
   }
 
   dimension: availability_startdate {
-    hidden: yes
+    hidden: no
     sql: ${TABLE}.availability.startdate ;;
   }
 
   dimension: availability_enddate {
-    hidden: yes
+    hidden: no
     sql: ${TABLE}.availability.enddate ;;
   }
 

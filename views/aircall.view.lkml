@@ -208,9 +208,11 @@ view: aircall {
   }
 
   measure: num_of_missed_calls {
-    hidden: yes
+    view_label: "Metrics"
+    description: "Number of Missed Calls (User Didn't Answer + No Avail User)"
+    hidden: no
     type: count
-    label: "Number of missed calls"
+    label: "Number of Missed Calls"
     filters: {field: answered
       value: "no"
     }
@@ -220,16 +222,18 @@ view: aircall {
     filters: {field: direction
       value: "inbound"
     }
-    # filters: {
-    #   field: duration__total_
-    #   value: ">0"
-    # }
+    filters: {
+      field: duration__total_
+      value: ">0"
+    }
   }
 
   measure: num_of_accepted_calls {
-    hidden: yes
+    view_label: "Metrics"
+    description: "Number of Accepted Calls (User Didn't Answer + No Avail User)"
+    hidden: no
     type: count
-    label: "Number of accepted calls"
+    label: "Number of Accepted Calls"
     filters: {field: answered
       value: "yes"
     }

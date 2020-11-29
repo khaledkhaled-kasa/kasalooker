@@ -83,6 +83,7 @@ view: reservations_v3 {
     type:  average
     sql: ${length_of_stay};;
     drill_fields: [reservation_details*]
+    filters: [financial_night_part_of_res: "yes"]
   }
 
   measure: median_length_of_stay {
@@ -92,6 +93,7 @@ view: reservations_v3 {
     type:  median
     sql: ${length_of_stay};;
     drill_fields: [reservation_details*]
+    #filters: [financial_night_part_of_res: "yes"]
   }
 
 
