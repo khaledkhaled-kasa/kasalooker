@@ -248,8 +248,9 @@ view: aircall {
     description: "% Missed Calls (User Didn't Answer + No Avail User)"
     type: number
     value_format: "0.0%"
-    sql: ${num_of_missed_calls} / ${count_inbound};;
+    sql: ${num_of_missed_calls} / NULLIF(${count_inbound},0);;
   }
+
 
     measure: accepted_calls_percentage {
       view_label: "Metrics"
