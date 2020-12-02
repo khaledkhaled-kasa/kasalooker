@@ -116,6 +116,15 @@ view: financials_v3{
     sql: ${amount} / NULLIF(${reservations_v3.reservation_night}, 0) ;;
   }
 
+  measure: revenue_per_booked_room {
+    view_label: "Metrics"
+    label: "Revenue per Booked Room"
+    description: "Average daily rate: amount / reservation_night"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${amount} / NULLIF(${reservations_v3.reservation_night}, 0) ;;
+  }
+
 
   measure: revpar {
     view_label: "Metrics"

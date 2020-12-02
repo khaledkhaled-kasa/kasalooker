@@ -152,6 +152,14 @@ view: capacities_v3 {
     sql: CONCAT(${units._id}, '-', ${night_date});;
   }
 
+  measure: days_available {
+    view_label: "Metrics"
+    label: "Days Available"
+    description: "Number of available room nights bookable"
+    type: count_distinct
+    sql: CONCAT(${units._id}, '-', ${night_date});;
+  }
+
   dimension: primary_key {
     primary_key: yes
     hidden: yes
