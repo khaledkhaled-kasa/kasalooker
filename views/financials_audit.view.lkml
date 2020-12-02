@@ -139,6 +139,11 @@ view: financials_audit {
     sql: ${TABLE}.transactiondate ;;
   }
 
+  dimension: actualizedat {
+    type: string
+    sql: ${TABLE}.actualizedat ;;
+  }
+
   dimension: type {
     type: string
     sql: ${TABLE}.type ;;

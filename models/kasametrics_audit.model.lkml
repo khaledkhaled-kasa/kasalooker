@@ -17,12 +17,12 @@ explore: reservations_audit {
     sql_on: ${reservations_audit._id} = ${financials_audit.reservation} ;;
   }
   join: units {
-    type:  inner
+    type:  left_outer
     relationship: many_to_one
     sql_on: ${units._id} = ${reservations_audit.unit} ;;
   }
   join: complexes {
-    type:  inner
+    type:  left_outer
     relationship: many_to_one
     sql_on: ${complexes._id} = ${units.complex} ;;
   }
