@@ -97,6 +97,7 @@ view: capacities_v3 {
       date,
       week,
       month,
+      month_name,
       day_of_week,
       quarter,
       year

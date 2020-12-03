@@ -42,6 +42,7 @@ view: reservations_v3 {
       date,
       week,
       month,
+      month_name,
       quarter,
       year
     ]
