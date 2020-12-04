@@ -15,12 +15,16 @@ view: units {
 
   dimension: address_city {
     hidden: no
-    sql: ${TABLE}.address.city ;;
+    sql: CASE WHEN ${TABLE}.address.city = "" THEN NULL
+    ELSE ${TABLE}.address.city
+    END;;
   }
 
   dimension: address_state {
     hidden: no
-    sql: ${TABLE}.address.state ;;
+    sql: CASE WHEN ${TABLE}.address.state = "" THEN NULL
+    ELSE ${TABLE}.address.state
+    END;;
   }
 
   dimension: region {
@@ -564,11 +568,7 @@ view: units__rooms__value {
 #   }
 # }
 #
-# view: units__address {
-#   dimension: city {
-#     type: string
-#     sql: ${TABLE}.city ;;
-#   }
+
 #
 #   dimension: country {
 #     type: string
@@ -586,10 +586,6 @@ view: units__rooms__value {
 #     sql: ${TABLE}.lon ;;
 #   }
 #
-#   dimension: state {
-#     type: string
-#     sql: ${TABLE}.state ;;
-#   }
 #
 #   dimension: street {
 #     type: string

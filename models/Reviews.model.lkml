@@ -31,4 +31,10 @@ explore: reservations_clean {
     relationship: one_to_one
     sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_clean.confirmationcode} ;;
   }
+  join: geo_location {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on:  ${units.address_city} = ${geo_location.city}
+    and ${units.address_state} = ${geo_location.state};;
+  }
 }
