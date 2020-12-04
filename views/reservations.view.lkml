@@ -69,6 +69,7 @@ view: reservations {
     value_format: "0.0"
     type:  average
     sql: ${lead_time};;
+    filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
     drill_fields: [reservation_details*]
   }
 
@@ -78,6 +79,7 @@ view: reservations {
     value_format: "0.0"
     type:  median
     sql: ${lead_time};;
+    filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
     drill_fields: [reservation_details*]
   }
 
@@ -87,6 +89,7 @@ view: reservations {
     value_format: "0.0"
     type:  average
     sql: ${length_of_stay};;
+    filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
     drill_fields: [reservation_details*]
   }
 
@@ -96,6 +99,7 @@ view: reservations {
     value_format: "0.0"
     type:  median
     sql: ${length_of_stay};;
+    filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
     drill_fields: [reservation_details*]
   }
 

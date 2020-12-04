@@ -142,7 +142,6 @@ view: reservations_v3 {
     sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
   }
 
-
   dimension_group: reservation_checkin {
     type: time
     timeframes: [
