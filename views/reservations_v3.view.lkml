@@ -28,6 +28,11 @@ view: reservations_v3 {
     sql: ${TABLE}._id ;;
   }
 
+  dimension: Extension {
+    type: yesno
+    sql: ${TABLE}.guesty.source IN ('Manual (Extension)', 'Manual (extension)', 'Maunal Extension');;
+  }
+
   dimension: additionalguests {
     hidden: yes
     sql: ${TABLE}.additionalguests ;;
@@ -41,6 +46,7 @@ view: reservations_v3 {
       time,
       date,
       week,
+      week_of_year,
       month,
       month_name,
       quarter,
