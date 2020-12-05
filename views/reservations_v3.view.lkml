@@ -51,6 +51,15 @@ ON reservations.guest = guest_type_table.guest ;;
     }
   }
 
+  measure: Extension_guesty_count {
+    view_label: "Metrics"
+    label: "Extended Booking Count (Guesty Label)"
+    type: count_distinct
+    sql: CONCAT(${Extension_by_channel_label}, ${confirmationcode}) ;;
+    filters: {field: Extension_by_channel_label
+      value: "yes"
+    }
+  }
 
   dimension: _id {
     hidden: yes
@@ -58,10 +67,11 @@ ON reservations.guest = guest_type_table.guest ;;
     sql: ${TABLE}._id ;;
   }
 
-  # dimension: Extension {
-  #   type: yesno
-  #   sql: ${TABLE}.guesty.source IN ('Manual (Extension)', 'Manual (extension)', 'Maunal Extension');;
-  # }
+  dimension: Extension_by_channel_label {
+    hidden: yes
+    type: yesno
+    sql: ${TABLE}.guesty.source IN ('Manual (Extension)', 'Manual (extension)', 'Maunal Extension');;
+  }
 
   dimension: additionalguests {
     hidden: yes
