@@ -3,22 +3,52 @@ view: reservations_v3 {
   derived_table: {
     sql:
 
-    select reservations.*, guest_type
-    from reservations
-    JOIN (
-    select guest,
+WITH guest_type_table AS
+    (select guest,
     case when count(*) > 1 then "Repeat"
     else "First Time"
     END guest_type
     from reservations
-    group by 1)a
-    on reservations.guest = a.guest;;
+    group by 1),
+
+    extensions AS (
+      select r2.confirmationcode as reservation_extensions
+      from reservations r1 join reservations r2
+      on r1.guest = r2.guest
+      and cast(timestamp(r1.checkoutdate) as date) = cast(timestamp(r2.checkindate) as date)
+      where r1.status IN ('confirmed','checked_in')
+      and r2.status IN ('confirmed','checked_in'))
+
+SELECT reservations.*, guest_type,
+CASE WHEN reservation_extensions is not null THEN 1
+ELSE NULL
+END extended_booking
+from reservations
+LEFT JOIN extensions
+ON reservations.confirmationcode = extensions.reservation_extensions
+LEFT JOIN guest_type_table
+ON reservations.guest = guest_type_table.guest ;;
   }
 
   dimension: guest_type {
     hidden: no
     type: string
     sql: ${TABLE}.guest_type ;;
+  }
+
+  dimension: extended_booking {
+    type: yesno
+    sql: ${TABLE}.extended_booking = 1 ;;
+  }
+
+  measure: extended_booking_count {
+    view_label: "Metrics"
+    label: "Extended Booking Count"
+    type: count_distinct
+    sql: CONCAT(${extended_booking}, ${confirmationcode}) ;;
+    filters: {field: extended_booking
+      value: "yes"
+    }
   }
 
 
@@ -28,10 +58,10 @@ view: reservations_v3 {
     sql: ${TABLE}._id ;;
   }
 
-  dimension: Extension {
-    type: yesno
-    sql: ${TABLE}.guesty.source IN ('Manual (Extension)', 'Manual (extension)', 'Maunal Extension');;
-  }
+  # dimension: Extension {
+  #   type: yesno
+  #   sql: ${TABLE}.guesty.source IN ('Manual (Extension)', 'Manual (extension)', 'Maunal Extension');;
+  # }
 
   dimension: additionalguests {
     hidden: yes

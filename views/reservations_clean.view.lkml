@@ -2,6 +2,7 @@ view: reservations_clean {
   sql_table_name: `bigquery-analytics-272822.mongo.reservations`
     ;;
 
+
   dimension: _id {
     hidden: yes
     type: string
@@ -53,6 +54,7 @@ view: reservations_clean {
     type:  number
     sql:  date_diff(CAST(${checkindate} as DATE), CAST(${TABLE}.bookingdate as DATE), DAY) ;;
   }
+
 
   dimension: length_of_stay {
     type:  number
