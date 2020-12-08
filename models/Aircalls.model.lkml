@@ -9,7 +9,13 @@ datagroup: aircalls_default_datagroup {
 
 
 persist_with: aircalls_default_datagroup
-label: "Kasa Reviews"
+label: "Aircall"
 explore: aircall {
+  label: "Aircalls Export"
   from: aircall
+}
+
+
+explore: aircalls {
+  label: "Aircall"
 }
