@@ -38,8 +38,6 @@ view: aircalls {
     }
 
 
-#### ALL MEASURES TO BE REVISED!!!!
-
   measure: count_all {
     view_label: "Metrics"
     description: "All Calls"
