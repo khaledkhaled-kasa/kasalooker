@@ -16,10 +16,6 @@ explore: aircall {
 }
 
 
-explore: aircalls {
-  label: "Aircall"
-}
-
 explore: aircall_segment {
-  label: "Aircalls (Segment)"
+  label: "Aircalls"
 }
