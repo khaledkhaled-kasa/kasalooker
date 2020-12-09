@@ -1,6 +1,6 @@
 connection: "bigquery"
 include: "../views/*"
-include: "../dashboards/*"
+# include: "../dashboards/*"
 
 datagroup: kasametrics_default_datagroup_v2 {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
@@ -29,11 +29,7 @@ explore: capacities_rolled {
   join: reservations {
     type:  left_outer
     relationship: one_to_many
-    sql_on: ${reservations.unit} = ${units._id}
-    and
-    ${capacities_rolled.night} >= ${reservations.checkindate}
-    and
-    ${capacities_rolled.night} < ${reservations.checkoutdate};;
+    sql_on: ${reservations.unit} = ${units._id};;
 
   }
   join: financials {
@@ -101,4 +97,8 @@ explore: capacities_rolled {
     sql_on: ${reservations.confirmationcode} = ${hk_clean_time.conf_code} ;;
 
   }
+}
+
+explore: guest_verification_form {
+  label: "GV Verification"
 }

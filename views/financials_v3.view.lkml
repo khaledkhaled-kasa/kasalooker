@@ -1,9 +1,5 @@
-# Old financials table
-# view: financials {
-#   sql_table_name: `bigquery-analytics-272822.mongo.financials`
-#     ;;
-
-view: financials {
+view: financials_v3{
+  label: "Financials"
   derived_table: {
     sql: SELECT financials.*, t2.outstanding_amount / t3.count_nights_room_revenue as nightly_outstanding_amount
         FROM financials
@@ -49,16 +45,6 @@ view: financials {
           END;;
   }
 
-  # Amount with old financials table
-  # measure: amount {
-  #   view_label: "Metrics"
-  #   label: "Amount"
-  #   description: "Amount per night"
-  #   type: sum
-  #   value_format: "$#,##0.00"
-  #   sql: ${amount_revised} ;;
-  #   filters: [reservations.status: "-inquiry, -canceled, -declined"]
-  # }
 
   measure: amount_original {
     view_label: "Metrics"
@@ -68,8 +54,9 @@ view: financials {
     type: sum
     value_format: "$#,##0.00"
     sql: ${amount_revised} ;;
-    filters: [financials.isvalid: "yes", reservations.financial_night_part_of_res: "Yes", reservations.status: "-inquiry, -canceled, -declined"]
+    filters: [financials_v3.isvalid: "yes", reservations_v3.financial_night_part_of_res: "Yes", reservations_v3.status: "confirmed, checked_in"]
   }
+
 
   measure: amount_outstanding {
     view_label: "Metrics"
@@ -79,7 +66,7 @@ view: financials {
     type: sum
     value_format: "$#,##0.00"
     sql: ${TABLE}.nightly_outstanding_amount;;
-    filters: [financials.isvalid: "yes", reservations.financial_night_part_of_res: "yes", reservations.status: "-inquiry, -canceled, -declined"]
+    filters: [financials_v3.isvalid: "yes", reservations_v3.financial_night_part_of_res: "yes", reservations_v3.status: "confirmed, checked_in"]
   }
 
   measure: amount {
@@ -126,7 +113,16 @@ view: financials {
     description: "Average daily rate: amount / reservation_night"
     type: number
     value_format: "$#,##0.00"
-    sql: ${amount} / NULLIF(${reservations.reservation_night}, 0) ;;
+    sql: ${amount} / NULLIF(${reservations_v3.reservation_night}, 0) ;;
+  }
+
+  measure: revenue_per_booked_room {
+    view_label: "Metrics"
+    label: "Revenue per Booked Room"
+    description: "Average daily rate: amount / reservation_night"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${amount} / NULLIF(${reservations_v3.reservation_night}, 0) ;;
   }
 
 
@@ -136,7 +132,7 @@ view: financials {
     description: "Revenue per available room: amount / capacity"
     type: number
     value_format: "$#,##0.00"
-    sql: ${amount} / NULLIF(${capacities_rolled.capacity_measure}, 0) ;;
+    sql: ${amount} / NULLIF(${capacities_v3.capacity}, 0) ;;
   }
 
   dimension: cashatbooking {

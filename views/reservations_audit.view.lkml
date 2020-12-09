@@ -1,24 +1,7 @@
-# Old reservations 10-21-2020
+view: reservations_audit {
+  sql_table_name: `bigquery-analytics-272822.mongo.reservations`
+    ;;
 
-# view: reservations {
-#   sql_table_name: `bigquery-analytics-272822.mongo.reservations`
-#     ;;
-
-view: reservations {
-  derived_table: {
-    sql:
-
-    select reservations.*, guest_type
-    from reservations
-    JOIN (
-    select guest,
-    case when count(*) > 1 then "Repeat"
-    else "First Time"
-    END guest_type
-    from reservations
-    group by 1)a
-    on reservations.guest = a.guest;;
-  }
 
   dimension: guest_type {
     hidden: no
@@ -69,7 +52,6 @@ view: reservations {
     value_format: "0.0"
     type:  average
     sql: ${lead_time};;
-    filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
     drill_fields: [reservation_details*]
   }
 
@@ -79,7 +61,6 @@ view: reservations {
     value_format: "0.0"
     type:  median
     sql: ${lead_time};;
-    filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
     drill_fields: [reservation_details*]
   }
 
@@ -89,7 +70,6 @@ view: reservations {
     value_format: "0.0"
     type:  average
     sql: ${length_of_stay};;
-    filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
     drill_fields: [reservation_details*]
   }
 
@@ -99,7 +79,6 @@ view: reservations {
     value_format: "0.0"
     type:  median
     sql: ${length_of_stay};;
-    filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
     drill_fields: [reservation_details*]
   }
 
@@ -142,6 +121,22 @@ view: reservations {
     sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
   }
 
+  dimension_group: checkindate_pst {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year,
+      day_of_week,
+      hour_of_day
+    ]
+    sql: CAST(datetime(CAST(${TABLE}.checkindate as TIMESTAMP),'America/Los_Angeles') as TIMESTAMP);;
+  }
+
 
   dimension_group: reservation_checkin {
     type: time
@@ -152,7 +147,9 @@ view: reservations {
       week,
       month,
       quarter,
-      year
+      year,
+      day_of_week,
+      hour_of_day
     ]
     sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
   }
@@ -333,12 +330,6 @@ view: reservations {
     sql: ${TABLE}.status ;;
   }
 
-  dimension: status_booked{
-    description: "Was this night booked?"
-    type: yesno
-#     sql: ${TABLE}.status is null or ${TABLE}.status IN ("confirmed","checked_in");;
-    sql: ${TABLE}.status is null or ${TABLE}.status IN ("confirmed","checked_in", "inquiry", "canceled", "declined");;
-  }
 
   dimension: suspicious {
     type: yesno
@@ -380,16 +371,25 @@ view: reservations {
     label: "Num ReservationNights"
     description: "Reservation night stay"
     type:  count_distinct
-    sql: CONCAT(${confirmationcode}, '-', ${financials.night_date});;
-    filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
-    #sql: CONCAT(${confirmationcode}, '-', ${capacities_rolled.night_date});;
-    drill_fields: [financials.night_date, reservation_details*]
+    sql: CONCAT(${confirmationcode}, '-', ${financials_audit.night_date});;
+    filters: [financial_night_part_of_res: "yes"]
+    drill_fields: [financials_audit.night_date, reservation_details*]
+  }
+
+  measure: reservation_night_canceled {
+    view_label: "Metrics"
+    label: "Num ReservationNights (Cancelled)"
+    description: "Reservation night stay for canceled bookings"
+    type:  count_distinct
+    sql: CONCAT(${confirmationcode}, '-', ${financials_audit.night_date});;
+    filters: [status: "canceled"]
+    drill_fields: [financials_audit.night_date, reservation_details*]
   }
 
   dimension: financial_night_part_of_res {
     type:  yesno
-    sql: format_date('%Y-%m-%d', ${financials.night_date}) < ${TABLE}.checkoutdatelocal and
-      format_date('%Y-%m-%d', ${financials.night_date}) >= ${TABLE}.checkindatelocal;;
+    sql: format_date('%Y-%m-%d', ${financials_audit.night_date}) < ${TABLE}.checkoutdatelocal and
+      format_date('%Y-%m-%d', ${financials_audit.night_date}) >= ${TABLE}.checkindatelocal;;
   }
 
   measure: num_reservations {
@@ -398,7 +398,26 @@ view: reservations {
     description: "Number of unique reservations"
     type: count_distinct
     sql: ${confirmationcode} ;;
-    filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
+    filters: [financial_night_part_of_res: "yes"]
+    drill_fields: [reservation_details*]
+  }
+
+  measure: num_reservations_star {
+    view_label: "Metrics"
+    label: "Number of reservations*"
+    description: "Number of unique reservations excluding financials table"
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    drill_fields: [reservation_details*]
+  }
+
+  measure: num_reservations_canceled {
+    view_label: "Metrics"
+    label: "Num Reservations (Canceled)"
+    description: "Number of unique reservations for canceled bookings"
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    filters: [status: "canceled"]
     drill_fields: [reservation_details*]
   }
 
@@ -408,14 +427,13 @@ view: reservations {
     description: "Number of reservation nights / capacity"
     type: number
     value_format: "0.0%"
-    sql:  ${reservation_night} / NULLIF(${capacities_rolled.capacity_measure}, 0) ;;
-#     drill_fields: [financials.night_date, reservation_details*]
+    sql:  ${reservation_night} / NULLIF(${capacities_rolled_audit.capacity_measure}, 0) ;;
+#     drill_fields: [financials_audit.night_date, reservation_details*]
     link: {
       label: "Drill - Reservation Nights"
       url: "{{ reservation_night._link }}"
     }
   }
-
 
 # This isn't correct because it doesn't handle the "status".
 # NumReservations accomplishes what we want here.

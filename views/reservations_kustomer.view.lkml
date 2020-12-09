@@ -1,31 +1,6 @@
-# Old reservations 10-21-2020
-
-# view: reservations {
-#   sql_table_name: `bigquery-analytics-272822.mongo.reservations`
-#     ;;
-
-view: reservations {
-  derived_table: {
-    sql:
-
-    select reservations.*, guest_type
-    from reservations
-    JOIN (
-    select guest,
-    case when count(*) > 1 then "Repeat"
-    else "First Time"
-    END guest_type
-    from reservations
-    group by 1)a
-    on reservations.guest = a.guest;;
-  }
-
-  dimension: guest_type {
-    hidden: no
-    type: string
-    sql: ${TABLE}.guest_type ;;
-  }
-
+view: reservations_kustomer {
+  sql_table_name: `bigquery-analytics-272822.mongo.reservations`
+  ;;
 
   dimension: _id {
     hidden: yes
@@ -69,7 +44,6 @@ view: reservations {
     value_format: "0.0"
     type:  average
     sql: ${lead_time};;
-    filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
     drill_fields: [reservation_details*]
   }
 
@@ -79,7 +53,6 @@ view: reservations {
     value_format: "0.0"
     type:  median
     sql: ${lead_time};;
-    filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
     drill_fields: [reservation_details*]
   }
 
@@ -89,7 +62,6 @@ view: reservations {
     value_format: "0.0"
     type:  average
     sql: ${length_of_stay};;
-    filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
     drill_fields: [reservation_details*]
   }
 
@@ -99,7 +71,6 @@ view: reservations {
     value_format: "0.0"
     type:  median
     sql: ${length_of_stay};;
-    filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
     drill_fields: [reservation_details*]
   }
 
@@ -333,12 +304,6 @@ view: reservations {
     sql: ${TABLE}.status ;;
   }
 
-  dimension: status_booked{
-    description: "Was this night booked?"
-    type: yesno
-#     sql: ${TABLE}.status is null or ${TABLE}.status IN ("confirmed","checked_in");;
-    sql: ${TABLE}.status is null or ${TABLE}.status IN ("confirmed","checked_in", "inquiry", "canceled", "declined");;
-  }
 
   dimension: suspicious {
     type: yesno
@@ -375,211 +340,18 @@ view: reservations {
     sql: ${TABLE}.updatedat ;;
   }
 
-  measure: reservation_night {
-    view_label: "Metrics"
-    label: "Num ReservationNights"
-    description: "Reservation night stay"
-    type:  count_distinct
-    sql: CONCAT(${confirmationcode}, '-', ${financials.night_date});;
-    filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
-    #sql: CONCAT(${confirmationcode}, '-', ${capacities_rolled.night_date});;
-    drill_fields: [financials.night_date, reservation_details*]
-  }
-
-  dimension: financial_night_part_of_res {
-    type:  yesno
-    sql: format_date('%Y-%m-%d', ${financials.night_date}) < ${TABLE}.checkoutdatelocal and
-      format_date('%Y-%m-%d', ${financials.night_date}) >= ${TABLE}.checkindatelocal;;
-  }
-
   measure: num_reservations {
     view_label: "Metrics"
     label: "Num Reservations"
     description: "Number of unique reservations"
     type: count_distinct
     sql: ${confirmationcode} ;;
-    filters: [financial_night_part_of_res: "yes", status: "-inquiry, -canceled, -declined"]
     drill_fields: [reservation_details*]
   }
 
-  measure: occupancy {
-    view_label: "Metrics"
-    label: "Occupancy"
-    description: "Number of reservation nights / capacity"
-    type: number
-    value_format: "0.0%"
-    sql:  ${reservation_night} / NULLIF(${capacities_rolled.capacity_measure}, 0) ;;
-#     drill_fields: [financials.night_date, reservation_details*]
-    link: {
-      label: "Drill - Reservation Nights"
-      url: "{{ reservation_night._link }}"
-    }
-  }
-
-
-# This isn't correct because it doesn't handle the "status".
-# NumReservations accomplishes what we want here.
-#   measure: count {
-#     type:  count
-#     drill_fields: []
-#   }
 
   set:reservation_details {
     fields: [confirmationcode, status, source, checkindate, checkoutdate, bookingdate_date]
   }
 
 }
-
-# view: reservations__notes__value {
-#   dimension: _id {
-#     type: string
-#     sql: ${TABLE}._id ;;
-#   }
-#
-#   dimension: kind {
-#     type: string
-#     sql: ${TABLE}.kind ;;
-#   }
-#
-#   dimension: value {
-#     type: string
-#     sql: ${TABLE}.value ;;
-#   }
-# }
-#
-# view: reservations__earlycheckin {
-#   dimension: approvedtime {
-#     type: number
-#     sql: ${TABLE}.approvedtime ;;
-#   }
-#
-#   dimension: requestedtime {
-#     type: number
-#     sql: ${TABLE}.requestedtime ;;
-#   }
-#
-#   dimension: requestnote {
-#     type: string
-#     sql: ${TABLE}.requestnote ;;
-#   }
-#
-#   dimension: status {
-#     type: string
-#     sql: ${TABLE}.status ;;
-#   }
-# }
-#
-# view: reservations__keycafeaccess {
-#   dimension: accesscode {
-#     type: string
-#     sql: ${TABLE}.accesscode ;;
-#   }
-#
-#   dimension: accessid {
-#     type: string
-#     sql: ${TABLE}.accessid ;;
-#   }
-# }
-#
-# view: reservations__petfeescard {
-#   dimension_group: submittedat {
-#     type: time
-#     timeframes: [
-#       raw,
-#       time,
-#       date,
-#       week,
-#       month,
-#       quarter,
-#       year
-#     ]
-#     sql: ${TABLE}.submittedat ;;
-#   }
-#
-#   dimension: wasprovided {
-#     type: yesno
-#     sql: ${TABLE}.wasprovided ;;
-#   }
-# }
-#
-#
-# view: reservations__additionalguests__value {
-#   dimension: _id {
-#     type: string
-#     sql: ${TABLE}._id ;;
-#   }
-#
-#   dimension: email {
-#     type: string
-#     sql: ${TABLE}.email ;;
-#   }
-#
-#   dimension: name {
-#     type: string
-#     sql: ${TABLE}.name ;;
-#   }
-# }
-#
-# view: reservations__cards__value__usefor {
-#   dimension: value {
-#     type: string
-#     sql: ${TABLE}.value ;;
-#   }
-# }
-#
-# view: reservations__cards__value {
-#   dimension: _id {
-#     type: string
-#     sql: ${TABLE}._id ;;
-#   }
-#
-#   dimension: card {
-#     type: string
-#     sql: ${TABLE}.card ;;
-#   }
-#
-#   dimension: usefor {
-#     hidden: yes
-#     sql: ${TABLE}.usefor ;;
-#   }
-# }
-#
-# view: reservations__chargelogs {
-#   dimension: value {
-#     type: string
-#     sql: ${TABLE}.value ;;
-#   }
-# }
-#
-# view: reservations__externalrefs {
-#   dimension: guesty_id {
-#     type: string
-#     sql: ${TABLE}.guesty_id ;;
-#   }
-#
-#   dimension: stripecardid {
-#     type: string
-#     sql: ${TABLE}.stripecardid ;;
-#   }
-# }
-#
-# view: reservations__notes {
-#   dimension: value {
-#     hidden: yes
-#     sql: ${TABLE}.value ;;
-#   }
-# }
-#
-# view: reservations__additionalguests {
-#   dimension: value {
-#     hidden: yes
-#     sql: ${TABLE}.value ;;
-#   }
-# }
-#
-# view: reservations__cards {
-#   dimension: value {
-#     hidden: yes
-#     sql: ${TABLE}.value ;;
-#   }
-# }

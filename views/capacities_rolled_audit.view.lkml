@@ -1,23 +1,27 @@
 
-view: capacities_rolled {
+view: capacities_rolled_audit {
 # If necessary, uncomment the line below to include explore_source.
 # include: "capacities.model.lkml"
-derived_table: {
-  sql:
+  derived_table: {
+    sql:
 
     SELECT
       TIMESTAMP(capacities.night) AS night,
         capacities.bedroomtype as bedroom,
-         complex,
-       COALESCE(SUM(capacities.capacity ), 0) AS capacity
+
+      {% if complexes.title._is_selected %}
+        complex,
+      {% endif %}
+      COALESCE(SUM(capacities.capacity), 0) AS capacity
     FROM
       capacities  AS capacities
     GROUP BY 1
-         ,2
-        ,3
+      {% if complexes.title._is_selected %}
+        ,2,
+        3
+      {% endif %}
 ;;
-}
-
+  }
 
 dimension_group: night {
   view_label: "Date Dimensions"
@@ -29,7 +33,7 @@ dimension_group: night {
     week,
     month,
     day_of_week
-    ]
+  ]
   sql: ${TABLE}.night ;;
 }
 

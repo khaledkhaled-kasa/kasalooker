@@ -1,21 +1,38 @@
 connection: "bigquery"
 include: "../views/*"
+# include: "../dashboards/*"
 
 
-datagroup: reviews_default_datagroup {
+datagroup: breezeway_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
   max_cache_age: "1 hour"
 }
 
-persist_with: reviews_default_datagroup
+persist_with: breezeway_default_datagroup
 label: "Kasa Reviews"
-explore: reservations_clean {
-  from: reservations_clean
+explore: breezeway_export {
+  from: breezeway_export
   join: units {
-    type:  inner
+    type:  left_outer
+    relationship: many_to_one
+    sql_on: ${units.externalrefs_property_id} = ${breezeway_export.property_internal_id} ;;
+  }
+  join: complexes {
+    type:  left_outer
+    relationship: many_to_one
+    sql_on: ${complexes._id} = ${units.complex} ;;
+  }
+  join: hk_partners {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on:  ${hk_partners.buildings} = ${complexes.internaltitle} ;;
+  }
+  join: reservations_clean {
+    type:  left_outer
     relationship: many_to_one
     sql_on: ${units._id} = ${reservations_clean.unit} ;;
   }
+
   join: airbnb_reviews {
     type: full_outer
     relationship:  one_to_one
@@ -31,10 +48,5 @@ explore: reservations_clean {
     relationship: one_to_one
     sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_clean.confirmationcode} ;;
   }
-  join: geo_location {
-    type:  left_outer
-    relationship: one_to_one
-    sql_on:  ${units.address_city} = ${geo_location.city}
-    and ${units.address_state} = ${geo_location.state};;
-  }
+
 }

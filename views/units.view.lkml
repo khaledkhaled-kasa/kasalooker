@@ -13,9 +13,29 @@ view: units {
     sql: ${TABLE}.accomodates ;;
   }
 
-  dimension: address {
-    hidden: yes
-    sql: ${TABLE}.address ;;
+  dimension: address_city {
+    hidden: no
+    sql: CASE WHEN ${TABLE}.address.city = "" THEN NULL
+    ELSE ${TABLE}.address.city
+    END;;
+  }
+
+  dimension: address_state {
+    hidden: no
+    sql: CASE WHEN ${TABLE}.address.state = "" THEN NULL
+    ELSE ${TABLE}.address.state
+    END;;
+  }
+
+  dimension: region {
+    hidden: no
+    sql: CASE
+    WHEN ${TABLE}.address.state IN ("TX") THEN "Texas"
+    WHEN ${TABLE}.address.state IN ("WA","CA","UT","CO") THEN "West"
+    WHEN ${TABLE}.address.state IN ("FL","DC","PA","CT","NJ","SC","NC","GA","VA","TN") THEN "East"
+    WHEN ${TABLE}.address.state IN ("IL","IA","WI","MO","MN","AZ") THEN "Central"
+    ELSE "Other"
+    END ;;
   }
 
   dimension: amenities {
@@ -33,6 +53,16 @@ view: units {
     sql: ${TABLE}.availability ;;
   }
 
+  dimension: availability_startdate {
+    hidden: no
+    sql: ${TABLE}.availability.startdate ;;
+  }
+
+  dimension: availability_enddate {
+    hidden: no
+    sql: ${TABLE}.availability.enddate ;;
+  }
+
   dimension: backupsmartlockcodes {
     hidden: yes
     sql: ${TABLE}.backupsmartlockcodes ;;
@@ -43,8 +73,9 @@ view: units {
     sql: ${TABLE}.baseprice ;;
   }
 
-  dimension: bathrooms {
+  dimension: bathrooms_old {
     type: number
+    hidden: yes
     sql: ${TABLE}.bathrooms ;;
   }
 
@@ -53,11 +84,19 @@ view: units {
     sql: ${TABLE}.bathrooms__fl ;;
   }
 
+  dimension: bathrooms {
+    type: number
+    sql: CASE WHEN ${TABLE}.bathrooms__fl IS NULL THEN ${TABLE}.bathrooms
+          ELSE ${TABLE}.bathrooms__fl
+          END;;
+  }
+
   dimension: bedrooms {
     type: number
     primary_key: yes
-    sql: ${TABLE}.bedrooms ;;
+    sql: ${TABLE}.roomtype.bedroomcount ;;
   }
+
 
   dimension: building {
     type: string
@@ -122,6 +161,11 @@ view: units {
   dimension: externalrefs {
     hidden: yes
     sql: ${TABLE}.externalrefs ;;
+  }
+
+  dimension: externalrefs_property_id {
+    hidden: yes
+    sql: ${TABLE}.externalrefs.guesty_id ;;
   }
 
   dimension: facilities {
@@ -258,7 +302,9 @@ view: units {
     type: count
     drill_fields: [nickname]
   }
+
 }
+
 
 view: units__rooms__value {
   drill_fields: [id]
@@ -522,11 +568,7 @@ view: units__rooms__value {
 #   }
 # }
 #
-# view: units__address {
-#   dimension: city {
-#     type: string
-#     sql: ${TABLE}.city ;;
-#   }
+
 #
 #   dimension: country {
 #     type: string
@@ -544,10 +586,6 @@ view: units__rooms__value {
 #     sql: ${TABLE}.lon ;;
 #   }
 #
-#   dimension: state {
-#     type: string
-#     sql: ${TABLE}.state ;;
-#   }
 #
 #   dimension: street {
 #     type: string
