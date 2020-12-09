@@ -37,11 +37,15 @@ explore: reservations {
       {% endif %}
     ;;
   }
-
   join: guests {
     type:  inner
     relationship: one_to_one
     sql_on:  ${reservations.guest} = ${guests._id} ;;
+  }
+  join: chargelogs {
+    type:  inner
+    relationship: many_to_one
+    sql_on: ${reservations._id} = ${chargelogs.reservation} ;;
   }
   join: reviews {
     type:  inner
