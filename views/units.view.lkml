@@ -55,12 +55,14 @@ view: units {
 
   dimension: availability_startdate {
     hidden: no
-    sql: ${TABLE}.availability.startdate ;;
+    type: date
+    sql: TIMESTAMP(${TABLE}.availability.startdate);;
   }
 
   dimension: availability_enddate {
     hidden: no
-    sql: ${TABLE}.availability.enddate ;;
+    type: date
+    sql: TIMESTAMP(${TABLE}.availability.enddate);;
   }
 
   dimension: backupsmartlockcodes {

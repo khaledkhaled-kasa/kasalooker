@@ -7,7 +7,7 @@ datagroup: kasametrics_audit_default_datagroup {
 }
 
 persist_with: kasametrics_audit_default_datagroup
-label: "Kasa Metrics"
+label: "Finance (Audit)"
 
 explore: reservations_audit {
   from: reservations_audit
