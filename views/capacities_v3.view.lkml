@@ -98,6 +98,7 @@ view: capacities_v3 {
       week,
       month,
       month_name,
+      week_of_year,
       day_of_month,
       day_of_week,
       quarter,

@@ -159,6 +159,7 @@ view: financials_v3{
     type: time
     timeframes: [
       date,
+      week_of_year,
       week,
       month,
       day_of_week
