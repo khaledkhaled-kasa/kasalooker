@@ -243,11 +243,14 @@ view: airbnb_reviews {
 
   measure: count_clean {
     type: count_distinct
+    label: "Count Reviews (6 Ratings besides Overall)"
     sql: ${TABLE}.Reservation_Code ;;
     filters: [
       cleanliness_rating_dim: "1,2,3,4,5"
     ]
   }
+
+
 
   measure: percent_less_than_4_star_clean {
     type: number
