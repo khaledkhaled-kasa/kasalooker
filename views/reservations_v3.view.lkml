@@ -257,6 +257,13 @@ ON reservations.guest = guest_type_table.guest ;;
     sql: ${TABLE}.guestscount ;;
   }
 
+  measure: guestscount_sum {
+    label: "Total Number of Guests"
+    view_label: "Metrics"
+    type: sum
+    sql: guestscount ;;
+  }
+
   dimension: keycafeaccess {
     hidden: yes
     sql: ${TABLE}.keycafeaccess ;;
