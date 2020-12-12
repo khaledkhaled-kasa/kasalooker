@@ -436,6 +436,7 @@ ON reservations.guest = guest_type_table.guest ;;
       format_date('%Y-%m-%d', ${financials_v3.night_date}) >= ${TABLE}.checkindatelocal;;
   }
 
+
   measure: num_reservations {
     view_label: "Metrics"
     label: "Num Reservations"

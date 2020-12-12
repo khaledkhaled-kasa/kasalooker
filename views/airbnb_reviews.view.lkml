@@ -2,6 +2,17 @@ view: airbnb_reviews {
   sql_table_name: `bigquery-analytics-272822.airbnb_review_master.Airbnb_Reviews`
     ;;
 
+  dimension: first_45 {
+    hidden: no
+    type: string
+    sql: CASE WHEN ${airbnb_reviews.review_date} >= ${units.availability_startdate}
+          AND
+          ${airbnb_reviews.review_date} <= ${units.availability_startdate_45day_mark}
+          THEN "First 45 Days"
+          ELSE "Other Properties"
+          END;;
+  }
+
   dimension: accuracy_comments {
     type: string
     sql: ${TABLE}.Accuracy_Comments ;;
