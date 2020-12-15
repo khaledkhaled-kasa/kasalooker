@@ -55,12 +55,39 @@ view: units {
 
   dimension: availability_startdate {
     hidden: no
-    sql: ${TABLE}.availability.startdate ;;
+    type: date
+    sql: TIMESTAMP(${TABLE}.availability.startdate);;
+  }
+
+  dimension: availability_periods  {
+    hidden: no
+    type: string
+    sql: CASE WHEN
+    --TIMESTAMP(${TABLE}.availability.startdate)
+    (((TIMESTAMP(units.availability.startdate)) >=
+    ((TIMESTAMP(CONCAT(CAST(DATE_ADD(CAST(TIMESTAMP_TRUNC(CAST(TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), DAY) AS TIMESTAMP), MONTH) AS DATE), INTERVAL -5 MONTH) AS STRING)
+    , ' ', CAST(TIME(CAST(TIMESTAMP_TRUNC(CAST(TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), DAY) AS TIMESTAMP), MONTH) AS TIMESTAMP)) AS STRING)))))
+    AND (TIMESTAMP(units.availability.startdate)) <
+    ((TIMESTAMP(CONCAT(CAST(DATE_ADD(CAST(TIMESTAMP(CONCAT(CAST(DATE_ADD(CAST(TIMESTAMP_TRUNC(CAST(TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), DAY) AS TIMESTAMP), MONTH) AS DATE), INTERVAL -5 MONTH) AS STRING)
+    , ' ', CAST(TIME(CAST(TIMESTAMP_TRUNC(CAST(TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), DAY) AS TIMESTAMP), MONTH) AS TIMESTAMP)) AS STRING))) AS DATE), INTERVAL 6 MONTH) AS STRING)
+    , ' ', CAST(TIME(CAST(TIMESTAMP(CONCAT(CAST(DATE_ADD(CAST(TIMESTAMP_TRUNC(CAST(TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), DAY) AS TIMESTAMP), MONTH) AS DATE), INTERVAL -5 MONTH) AS STRING)
+    , ' ', CAST(TIME(CAST(TIMESTAMP_TRUNC(CAST(TIMESTAMP_TRUNC(CURRENT_TIMESTAMP(), DAY) AS TIMESTAMP), MONTH) AS TIMESTAMP)) AS STRING))) AS TIMESTAMP)) AS STRING))))))) THEN "Last 6 Months"
+    ELSE "Before 6 Months Ago"
+    END;;
+  }
+
+
+
+  dimension: availability_startdate_45day_mark {
+    hidden: no
+    type: date
+    sql: TIMESTAMP_ADD(TIMESTAMP(${TABLE}.availability.startdate), INTERVAL 45 DAY);;
   }
 
   dimension: availability_enddate {
     hidden: no
-    sql: ${TABLE}.availability.enddate ;;
+    type: date
+    sql: TIMESTAMP(${TABLE}.availability.enddate);;
   }
 
   dimension: backupsmartlockcodes {

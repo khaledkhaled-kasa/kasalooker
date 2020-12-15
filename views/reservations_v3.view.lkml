@@ -257,6 +257,13 @@ ON reservations.guest = guest_type_table.guest ;;
     sql: ${TABLE}.guestscount ;;
   }
 
+  measure: guestscount_sum {
+    label: "Total Number of Guests"
+    view_label: "Metrics"
+    type: sum
+    sql: guestscount ;;
+  }
+
   dimension: keycafeaccess {
     hidden: yes
     sql: ${TABLE}.keycafeaccess ;;
@@ -428,6 +435,7 @@ ON reservations.guest = guest_type_table.guest ;;
     sql: format_date('%Y-%m-%d', ${financials_v3.night_date}) < ${TABLE}.checkoutdatelocal and
       format_date('%Y-%m-%d', ${financials_v3.night_date}) >= ${TABLE}.checkindatelocal;;
   }
+
 
   measure: num_reservations {
     view_label: "Metrics"

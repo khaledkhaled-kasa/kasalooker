@@ -9,6 +9,6 @@ datagroup: compliance_tracker_default_datagroup {
 
 
 persist_with: compliance_tracker_default_datagroup
-label: "Compliance"
+label: "Legal"
 explore: compliance_tracker {
 }

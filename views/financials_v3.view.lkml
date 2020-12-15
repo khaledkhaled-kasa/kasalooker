@@ -1,7 +1,7 @@
 view: financials_v3{
   label: "Financials"
   derived_table: {
-    sql: SELECT financials.*, t2.outstanding_amount / t3.count_nights_room_revenue as nightly_outstanding_amount
+    sql: SELECT financials.*, (t2.outstanding_amount / t3.count_nights_room_revenue) as nightly_outstanding_amount
         FROM financials
         LEFT JOIN
 
@@ -19,7 +19,7 @@ view: financials_v3{
         ON financials.reservation = t2.reservation_id
         AND financials.type = t2.type
 
-        JOIN
+        LEFT JOIN
 
         (SELECT financials.reservation as reservationid, count(*) as count_nights_room_revenue
         FROM financials JOIN reservations
@@ -54,7 +54,7 @@ view: financials_v3{
     type: sum
     value_format: "$#,##0.00"
     sql: ${amount_revised} ;;
-    filters: [financials_v3.isvalid: "yes", reservations_v3.financial_night_part_of_res: "Yes", reservations_v3.status: "confirmed, checked_in"]
+    filters: [financials_v3.isvalid: "yes", reservations_v3.financial_night_part_of_res: "yes"]
   }
 
 
@@ -66,7 +66,7 @@ view: financials_v3{
     type: sum
     value_format: "$#,##0.00"
     sql: ${TABLE}.nightly_outstanding_amount;;
-    filters: [financials_v3.isvalid: "yes", reservations_v3.financial_night_part_of_res: "yes", reservations_v3.status: "confirmed, checked_in"]
+    filters: [financials_v3.isvalid: "yes", reservations_v3.financial_night_part_of_res: "yes"]
   }
 
   measure: amount {
@@ -159,6 +159,7 @@ view: financials_v3{
     type: time
     timeframes: [
       date,
+      week_of_year,
       week,
       month,
       day_of_week

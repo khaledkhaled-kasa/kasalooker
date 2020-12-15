@@ -27,7 +27,11 @@ view: financials_audit {
     sql: ${amount_revised} ;;
   }
 
-
+  dimension: types_filtered{
+    description: "This will filter out Channel Fees / ToTs"
+    type: yesno
+    sql: ${TABLE}.type is null or ${TABLE}.type not IN ("channelFee","ToT","ToTInflow","ToTOutflowNonLiability","ToTInflowNonLiability");;
+  }
 
   measure: cleaning_amount {
     type: number
@@ -67,14 +71,14 @@ view: financials_audit {
   }
 
 
-  measure: revpar {
-    view_label: "Metrics"
-    label: "RevPar"
-    description: "Revenue per available room: amount / capacity"
-    type: number
-    value_format: "$#,##0.00"
-    sql: ${amount} / NULLIF(${capacities_rolled_audit.capacity_measure}, 0) ;;
-  }
+  # measure: revpar {
+  #   view_label: "Metrics"
+  #   label: "RevPar"
+  #   description: "Revenue per available room: amount / capacity"
+  #   type: number
+  #   value_format: "$#,##0.00"
+  #   sql: ${amount} / NULLIF(${capacities_rolled_audit.capacity_measure}, 0) ;;
+  # }
 
   dimension: cashatbooking {
     type: yesno

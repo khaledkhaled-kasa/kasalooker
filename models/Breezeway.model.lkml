@@ -9,7 +9,7 @@ datagroup: breezeway_default_datagroup {
 }
 
 persist_with: breezeway_default_datagroup
-label: "Kasa Reviews"
+label: "Breezeway"
 explore: breezeway_export {
   from: breezeway_export
   join: units {

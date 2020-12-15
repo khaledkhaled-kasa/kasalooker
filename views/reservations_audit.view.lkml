@@ -21,6 +21,13 @@ view: reservations_audit {
     sql: ${TABLE}.additionalguests ;;
   }
 
+  measure: guestscount_sum {
+    label: "Total Number of Guests"
+    view_label: "Metrics"
+    type: sum
+    sql: guestscount ;;
+  }
+
   dimension_group: bookingdate {
     view_label: "Date Dimensions"
     type: time
@@ -310,6 +317,13 @@ view: reservations_audit {
     sql: ${TABLE}.smartlockcodeisset ;;
   }
 
+  dimension: status_booked{
+    description: "Was this night booked?"
+    type: yesno
+#     sql: ${TABLE}.status is null or ${TABLE}.status IN ("confirmed","checked_in");;
+    sql: ${TABLE}.status is null or ${TABLE}.status IN ("confirmed","checked_in");;
+  }
+
   dimension: source {
     type: string
     sql: ${TABLE}.source ;;
@@ -398,7 +412,7 @@ view: reservations_audit {
     description: "Number of unique reservations"
     type: count_distinct
     sql: ${confirmationcode} ;;
-    filters: [financial_night_part_of_res: "yes"]
+    filters: [financial_night_part_of_res: "yes", status: "confirmed, checked_in"]
     drill_fields: [reservation_details*]
   }
 
@@ -421,19 +435,19 @@ view: reservations_audit {
     drill_fields: [reservation_details*]
   }
 
-  measure: occupancy {
-    view_label: "Metrics"
-    label: "Occupancy"
-    description: "Number of reservation nights / capacity"
-    type: number
-    value_format: "0.0%"
-    sql:  ${reservation_night} / NULLIF(${capacities_rolled_audit.capacity_measure}, 0) ;;
-#     drill_fields: [financials_audit.night_date, reservation_details*]
-    link: {
-      label: "Drill - Reservation Nights"
-      url: "{{ reservation_night._link }}"
-    }
-  }
+#   measure: occupancy {
+#     view_label: "Metrics"
+#     label: "Occupancy"
+#     description: "Number of reservation nights / capacity"
+#     type: number
+#     value_format: "0.0%"
+#     sql:  ${reservation_night} / NULLIF(${capacities_rolled_audit.capacity_measure}, 0) ;;
+# #     drill_fields: [financials_audit.night_date, reservation_details*]
+#     link: {
+#       label: "Drill - Reservation Nights"
+#       url: "{{ reservation_night._link }}"
+#     }
+#   }
 
 # This isn't correct because it doesn't handle the "status".
 # NumReservations accomplishes what we want here.

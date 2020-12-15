@@ -2,6 +2,17 @@ view: airbnb_reviews {
   sql_table_name: `bigquery-analytics-272822.airbnb_review_master.Airbnb_Reviews`
     ;;
 
+  dimension: first_45 {
+    hidden: no
+    type: string
+    sql: CASE WHEN ${airbnb_reviews.review_date} >= ${units.availability_startdate}
+          AND
+          ${airbnb_reviews.review_date} <= ${units.availability_startdate_45day_mark}
+          THEN "First 45 Days"
+          ELSE "Other Properties"
+          END;;
+  }
+
   dimension: accuracy_comments {
     type: string
     sql: ${TABLE}.Accuracy_Comments ;;
@@ -243,11 +254,14 @@ view: airbnb_reviews {
 
   measure: count_clean {
     type: count_distinct
+    label: "Count Reviews (6 Ratings besides Overall)"
     sql: ${TABLE}.Reservation_Code ;;
     filters: [
       cleanliness_rating_dim: "1,2,3,4,5"
     ]
   }
+
+
 
   measure: percent_less_than_4_star_clean {
     type: number

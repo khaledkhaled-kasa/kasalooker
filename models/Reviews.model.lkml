@@ -10,6 +10,7 @@ datagroup: reviews_default_datagroup {
 persist_with: reviews_default_datagroup
 label: "Kasa Reviews"
 explore: reservations_clean {
+  label: "Reservations"
   from: reservations_clean
   join: units {
     type:  inner
