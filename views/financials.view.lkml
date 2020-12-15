@@ -38,7 +38,6 @@ view: financials {
 
 
   dimension: amount_revised {
-    hidden: yes
     view_label: "Metrics"
     label: "Amount Revised"
     description: "This will correct for unavailable amount__fl values"
