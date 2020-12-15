@@ -126,11 +126,46 @@ view: airbnb_reviews {
     sql: ${TABLE}.Overall_Rating ;;
   }
 
+  dimension: accuracy_rating_dim {
+    type: number
+    hidden: no
+    value_format: "0.00"
+    sql: ${TABLE}.Accuracy_Rating ;;
+  }
+
+  dimension: value_rating_dim {
+    type: number
+    hidden: no
+    value_format: "0.00"
+    sql: ${TABLE}.Value_Rating ;;
+  }
+
+  dimension: location_rating_dim {
+    type: number
+    hidden: no
+    value_format: "0.00"
+    sql: ${TABLE}.Location_Rating ;;
+  }
+
   dimension: cleanliness_rating_dim {
     type: number
-    hidden: yes
+    hidden: no
     value_format: "0.00"
     sql: ${TABLE}.Cleanliness_Rating ;;
+  }
+
+  dimension: checkin_rating_dim {
+    type: number
+    hidden: no
+    value_format: "0.00"
+    sql: ${TABLE}.Checkin_Rating ;;
+  }
+
+  dimension: communication_rating_dim {
+    type: number
+    hidden: no
+    value_format: "0.00"
+    sql: ${TABLE}.Communication_Rating ;;
   }
 
   dimension: reservation_code {
