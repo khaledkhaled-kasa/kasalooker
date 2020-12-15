@@ -1,4 +1,4 @@
-connection: "bigquery_new"
+connection: "bigquery"
 include: "../views/*"
 
 
