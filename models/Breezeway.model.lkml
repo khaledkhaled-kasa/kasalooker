@@ -1,4 +1,4 @@
-connection: "bigquery"
+connection: "bigquery_new"
 include: "../views/*"
 # include: "../dashboards/*"
 
