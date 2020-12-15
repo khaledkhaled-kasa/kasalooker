@@ -39,7 +39,7 @@ view: financials {
 
   dimension: amount_revised {
     view_label: "Metrics"
-    label: "Amount Revised"
+    hidden:  yes
     description: "This will correct for unavailable amount__fl values"
     type: number
     value_format: "$#,##0.00"
@@ -49,15 +49,15 @@ view: financials {
   }
 
   # Amount with old financials table
-  # measure: amount {
-  #   view_label: "Metrics"
-  #   label: "Amount"
-  #   description: "Amount per night"
-  #   type: sum
-  #   value_format: "$#,##0.00"
-  #   sql: ${amount_revised} ;;
-  #   filters: [reservations.status: "-inquiry, -canceled, -declined"]
-  # }
+  measure: amount_revised_base_measure {
+    view_label: "Metrics"
+    label: "Amount Revised"
+    description: "Amount per night"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${amount_revised} ;;
+    filters: [financials.isvalid: "yes"]
+  }
 
   measure: amount_original {
     view_label: "Metrics"
