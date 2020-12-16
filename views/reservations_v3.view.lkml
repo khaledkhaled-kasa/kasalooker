@@ -28,6 +28,11 @@ LEFT JOIN extensions
 ON reservations.confirmationcode = extensions.reservation_extensions
 LEFT JOIN guest_type_table
 ON reservations.guest = guest_type_table.guest ;;
+
+    persist_for: "1 hour"
+    # datagroup_trigger: kasametrics_v3_default_datagroup
+    # indexes: ["night","transaction"]
+    # publish_as_db_view: yes
   }
 
   dimension: guest_type {
