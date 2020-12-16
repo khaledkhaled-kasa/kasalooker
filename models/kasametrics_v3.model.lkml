@@ -15,6 +15,42 @@ persist_with: kasametrics_v3_default_datagroup
 label: "Kasa Metrics V3"
 
 
+
+explore: test {
+    from:  base_view
+  join: capacities_v3 {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${capacities_v3._id} = ${test._id} ;;
+  }
+
+  join: complexes {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${complexes._id} = ${test.complex_id}_id} ;;
+  }
+
+  join: reservations_v3 {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${reservations_v3.unit} = ${test.unit} ;;
+  }
+  join: financials_v3 {
+    type:  left_outer
+    relationship: one_to_many
+    sql_on: ${reservations_v3._id} = ${financials_v3.reservation}
+      and ${test.night_date} = ${financials_v3.night_date};;
+  }
+  join: units {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${test.unit} = ${units._id} ;;
+  }
+
+  }
+
+
+
 explore: capacities_v3 {
   label: "Reservations"
   from: capacities_v3

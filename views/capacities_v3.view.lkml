@@ -11,7 +11,7 @@ view: capacities_v3 {
 
   dimension: _id {
     type: string
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}._id ;;
   }
 
@@ -118,7 +118,7 @@ view: capacities_v3 {
 
   dimension: unit {
     type: string
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}.unit ;;
   }
 
