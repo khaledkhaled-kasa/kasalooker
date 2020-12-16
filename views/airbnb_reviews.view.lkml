@@ -336,6 +336,51 @@ view: airbnb_reviews {
     ]
   }
 
+  measure: accuracy_count_less_than_4_star {
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      accuracy_rating_dim: "<=3"
+    ]
+  }
+
+  measure: value_count_less_than_4_star {
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      value_rating_dim: "<=3"
+    ]
+  }
+
+  measure: location_count_less_than_4_star {
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      location_rating_dim: "<=3"
+    ]
+  }
+
+  measure: communication_count_less_than_4_star {
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      communication_rating_dim: "<=3"
+    ]
+  }
+
+  measure: checkin_count_less_than_4_star {
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      checkin_rating_dim: "<=3"
+    ]
+  }
+
   measure: count_clean {
     type: count_distinct
     label: "Count Reviews (6 Ratings besides Overall)"
@@ -346,11 +391,40 @@ view: airbnb_reviews {
   }
 
 
-
   measure: percent_less_than_4_star_clean {
     type: number
     value_format: "0.0%"
     sql: ${clean_count_less_than_4_star} / ${count_clean};;
+  }
+
+  measure: percent_less_than_4_star_accuracy {
+    type: number
+    value_format: "0.0%"
+    sql: ${accuracy_count_less_than_4_star} / ${count_clean};;
+  }
+
+  measure: percent_less_than_4_star_location {
+    type: number
+    value_format: "0.0%"
+    sql: ${location_count_less_than_4_star} / ${count_clean};;
+  }
+
+  measure: percent_less_than_4_star_value {
+    type: number
+    value_format: "0.0%"
+    sql: ${value_count_less_than_4_star} / ${count_clean};;
+  }
+
+  measure: percent_less_than_4_star_communication {
+    type: number
+    value_format: "0.0%"
+    sql: ${communication_count_less_than_4_star} / ${count_clean};;
+  }
+
+  measure: percent_less_than_4_star_checkin {
+    type: number
+    value_format: "0.0%"
+    sql: ${checkin_count_less_than_4_star} / ${count_clean};;
   }
 
 }
