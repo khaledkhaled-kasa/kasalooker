@@ -252,6 +252,37 @@ view: airbnb_reviews {
     ]
   }
 
+
+  measure: count_3_star {
+    type: count_distinct
+    hidden: yes
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      overall_rating: "3"
+    ]
+  }
+
+  measure: count_2_star {
+    type: count_distinct
+    hidden: yes
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      overall_rating: "2"
+    ]
+  }
+
+  measure: count_1_star {
+    type: count_distinct
+    hidden: yes
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      overall_rating: "1"
+    ]
+  }
+
   measure: count_less_than_4_star {
     type: count_distinct
     value_format: "0"
@@ -271,6 +302,24 @@ view: airbnb_reviews {
     type: number
     value_format: "0.0%"
     sql: ${count_less_than_4_star} / ${count};;
+  }
+
+  measure: percent_3_star {
+    type: number
+    value_format: "0.0%"
+    sql: ${count_3_star} / ${count};;
+  }
+
+  measure: percent_2_star {
+    type: number
+    value_format: "0.0%"
+    sql: ${count_2_star} / ${count};;
+  }
+
+  measure: percent_1_star {
+    type: number
+    value_format: "0.0%"
+    sql: ${count_1_star} / ${count};;
   }
 
   measure: count {
