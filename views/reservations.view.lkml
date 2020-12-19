@@ -228,6 +228,7 @@ view: reservations {
     sql: ${TABLE}.licenseplate ;;
   }
 
+
   dimension: listingaddress {
     type: string
     sql: ${TABLE}.listingaddress ;;

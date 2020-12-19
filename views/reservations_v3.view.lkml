@@ -267,7 +267,7 @@ ON reservations.guest = guest_type_table.guest ;;
     label: "Total Number of Guests"
     view_label: "Metrics"
     type: sum
-    sql: guestscount ;;
+    sql: ${guestscount} ;;
   }
 
   dimension: keycafeaccess {

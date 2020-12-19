@@ -67,6 +67,7 @@ view: aircall_segment {
       date,
       week,
       week_of_year,
+      day_of_week,
       month,
       month_name,
       quarter,

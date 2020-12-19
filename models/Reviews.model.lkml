@@ -17,6 +17,11 @@ explore: reservations_clean {
     relationship: many_to_one
     sql_on: ${units._id} = ${reservations_clean.unit} ;;
   }
+  # join: complexes {
+  #   type:  inner
+  #   relationship: many_to_one
+  #   sql_on: ${reservations_clean.property} = ${complexes._id} ;;
+  # }
   join: airbnb_reviews {
     type: full_outer
     relationship:  one_to_one
