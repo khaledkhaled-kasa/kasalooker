@@ -18,6 +18,12 @@ view: aircall_segment {
     sql: ${TABLE}.properties.missed_call_reason ;;
   }
 
+  dimension: id {
+    type: string
+    sql: ${TABLE}.properties.id ;;
+  }
+
+
   dimension: duration {
     type: number
     sql: ${TABLE}.properties.duration ;;
@@ -25,7 +31,28 @@ view: aircall_segment {
 
   dimension: user_name {
     type: string
+    hidden: yes
     sql: ${TABLE}.properties.user.name ;;
+  }
+
+  dimension: user_name_adjusted {
+    type: string
+    label: "Username"
+    description: "These names have been adjusted to match what's shown on Kustomer"
+    sql:
+    CASE
+    WHEN ${user_name} = "Angela Gazdziak" THEN "Angie Gazdziak"
+    WHEN ${user_name} = "Infiniti " THEN "Infiniti"
+    WHEN ${user_name} = 'Katherine Chappell' THEN "Kate Chappell"
+    WHEN ${user_name} = "Charmagne " THEN "Charmagne Coston"
+    WHEN ${user_name} = "Jeffrey Haas" THEN "Jeff Haas"
+    WHEN ${user_name} = "Jennifer Knight" THEN "Jen Knight"
+    WHEN ${user_name} = "Sheila Marie Cruz" THEN "Sheila Cruz"
+    WHEN ${user_name} = "Mel  Doroteo" THEN "Mel Doroteo"
+    WHEN ${user_name} = 'Nikki Cardno' THEN 'Nicole Cardno'
+    ELSE ${user_name}
+    END
+    ;;
   }
 
   dimension: event {
@@ -97,7 +124,8 @@ view: aircall_segment {
   measure: count_all {
     view_label: "Metrics"
     description: "All Calls"
-    type: count
+    type: count_distinct
+    sql: concat(${id},${event}) ;;
     # filters: {
     #   field: duration__total_
     #   value: ">0"
@@ -112,7 +140,8 @@ view: aircall_segment {
   measure: count_inbound {
     view_label: "Metrics"
     description: "Inbound Calls"
-    type: count
+    type: count_distinct
+    sql: concat(${id},${event}) ;;
     filters: {
       field: direction
       value: "inbound"
@@ -130,7 +159,8 @@ view: aircall_segment {
   measure: count_outbound {
     view_label: "Metrics"
     description: "Outbound Calls"
-    type: count
+    type: count_distinct
+    sql: concat(${id},${event}) ;;
     filters: {
       field: direction
       value: "outbound"
@@ -150,7 +180,8 @@ view: aircall_segment {
     view_label: "Metrics"
     description: "Number of Missed Calls (User Didn't Answer + No Avail User)"
     hidden: no
-    type: count
+    type: count_distinct
+    sql: concat(${id},${event}) ;;
     label: "Number of Missed Calls"
     filters: {field: answered
       value: "no"
@@ -175,7 +206,8 @@ view: aircall_segment {
     view_label: "Metrics"
     description: "Number of Accepted Calls (User Didn't Answer + No Avail User)"
     hidden: no
-    type: count
+    type: count_distinct
+    sql: concat(${id},${event}) ;;
     label: "Number of Accepted Calls"
     filters: {field: answered
       value: "yes"
