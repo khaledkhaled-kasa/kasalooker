@@ -29,6 +29,18 @@ view: aircall_segment {
     sql: ${TABLE}.properties.duration ;;
   }
 
+  measure: avg_duration {
+    type: average
+    view_label: "Metrics"
+    label: "Average Call Time (minutes)"
+    value_format: "0.0"
+    sql: ${TABLE}.properties.duration/60;;
+    filters: {
+      field: duration
+      value: ">0"
+    }
+  }
+
   dimension: user_name {
     type: string
     hidden: yes
@@ -204,7 +216,7 @@ view: aircall_segment {
 
   measure: num_of_accepted_calls {
     view_label: "Metrics"
-    description: "Number of Accepted Calls (User Didn't Answer + No Avail User)"
+    description: "Number of Accepted Calls"
     hidden: no
     type: count_distinct
     sql: concat(${id},${event}) ;;
