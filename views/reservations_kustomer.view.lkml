@@ -340,14 +340,6 @@ view: reservations_kustomer {
     sql: ${TABLE}.updatedat ;;
   }
 
-  measure: num_reservations {
-    view_label: "Metrics"
-    label: "Num Reservations"
-    description: "Number of unique reservations"
-    type: count_distinct
-    sql: ${confirmationcode} ;;
-    drill_fields: [reservation_details*]
-  }
 
 
   set:reservation_details {
