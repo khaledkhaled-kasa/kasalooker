@@ -178,7 +178,9 @@ view: financials_v3{
   dimension: weekend {
     view_label: "Date Dimensions"
     type:  yesno
-    sql:  ${night_day_of_week} in ('Friday', 'Saturday') ;;
+    sql:  ${capacities_v3.night_day_of_week} in ('Friday', 'Saturday') ;;
+
+    # sql:  ${night_day_of_week} in ('Friday', 'Saturday') ;;
   }
 
   dimension: reservation {

@@ -326,6 +326,7 @@ view: airbnb_reviews {
     type: count_distinct
     sql: ${TABLE}.Reservation_Code ;;
   }
+  #drill_fields: [airbnb_reviews.overall_comments]
 
   measure: clean_count_less_than_4_star {
     type: count_distinct
