@@ -255,7 +255,7 @@ view: airbnb_reviews {
 
   measure: count_3_star {
     type: count_distinct
-    hidden: yes
+    hidden: no
     value_format: "0"
     sql: ${TABLE}.Reservation_Code;;
     filters: [
@@ -265,7 +265,7 @@ view: airbnb_reviews {
 
   measure: count_2_star {
     type: count_distinct
-    hidden: yes
+    hidden: no
     value_format: "0"
     sql: ${TABLE}.Reservation_Code;;
     filters: [
@@ -275,7 +275,7 @@ view: airbnb_reviews {
 
   measure: count_1_star {
     type: count_distinct
-    hidden: yes
+    hidden: no
     value_format: "0"
     sql: ${TABLE}.Reservation_Code;;
     filters: [
