@@ -6,6 +6,17 @@ view: financials_audit {
       ;;
   }
 
+  # Amount with old financials table
+  measure: amount_revised_base_measure {
+    view_label: "Metrics"
+    label: "Amount Revised"
+    description: "Amount per night"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${amount_revised} ;;
+    filters: [isvalid: "yes"]
+  }
+
   dimension: amount_revised {
     hidden: yes
     view_label: "Metrics"
