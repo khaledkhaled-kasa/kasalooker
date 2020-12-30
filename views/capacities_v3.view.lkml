@@ -155,6 +155,7 @@ view: capacities_v3 {
     sql: CONCAT(${units._id}, '-', ${night_date});;
   }
 
+
   measure: days_available {
     view_label: "Metrics"
     label: "Days Available"

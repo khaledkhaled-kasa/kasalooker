@@ -1,6 +1,6 @@
 connection: "bigquery"
 include: "../views/*"
-include: "../dashboards/*"
+# include: "../dashboards/*"
 
 datagroup: kasametrics_v3_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
@@ -73,6 +73,10 @@ explore: capacities_v3 {
     sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_v3.confirmationcode} ;;
   }
 
+}
+
+explore: guest_verification_form {
+  label: "GV Verification"
 }
 
 # explore: test {
