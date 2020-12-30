@@ -8,7 +8,7 @@ datagroup: reservations_marketing_default_datagroup {
 }
 
 persist_with: reservations_marketing_default_datagroup
-label: "Kasa Reviews"
+label: "Kasametrics"
 explore: reservations_marketing {
   from: reservations_clean
   join: units {

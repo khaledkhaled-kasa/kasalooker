@@ -12,7 +12,7 @@ datagroup: pdt_hourly {
 }
 
 persist_with: kasametrics_v3_default_datagroup
-label: "Kasa Metrics V3"
+label: "Kasa Metrics"
 
 
 explore: capacities_v3 {
