@@ -295,13 +295,13 @@ view: airbnb_reviews {
   measure: percent_5_star {
     type: number
     value_format: "0.0%"
-    sql: ${count_5_star} / ${count} ;;
+    sql: ${count_5_star} / nullif(${count},0) ;;
   }
 
   measure: percent_less_than_4_star {
     type: number
     value_format: "0.0%"
-    sql: ${count_less_than_4_star} / ${count};;
+    sql: ${count_less_than_4_star} / nullif(${count},0);;
   }
 
   measure: percent_3_star {
