@@ -4,7 +4,7 @@ view: complexes {
     ;;
 
   dimension: _id {
-    hidden:  yes
+    # hidden:  yes
     type: string
     sql: ${TABLE}._id ;;
   }

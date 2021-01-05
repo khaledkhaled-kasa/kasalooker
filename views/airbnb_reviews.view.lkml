@@ -252,6 +252,37 @@ view: airbnb_reviews {
     ]
   }
 
+
+  measure: count_3_star {
+    type: count_distinct
+    hidden: no
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      overall_rating: "3"
+    ]
+  }
+
+  measure: count_2_star {
+    type: count_distinct
+    hidden: no
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      overall_rating: "2"
+    ]
+  }
+
+  measure: count_1_star {
+    type: count_distinct
+    hidden: no
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      overall_rating: "1"
+    ]
+  }
+
   measure: count_less_than_4_star {
     type: count_distinct
     value_format: "0"
@@ -264,19 +295,38 @@ view: airbnb_reviews {
   measure: percent_5_star {
     type: number
     value_format: "0.0%"
-    sql: ${count_5_star} / ${count} ;;
+    sql: ${count_5_star} / nullif(${count},0) ;;
   }
 
   measure: percent_less_than_4_star {
     type: number
     value_format: "0.0%"
-    sql: ${count_less_than_4_star} / ${count};;
+    sql: ${count_less_than_4_star} / nullif(${count},0);;
+  }
+
+  measure: percent_3_star {
+    type: number
+    value_format: "0.0%"
+    sql: ${count_3_star} / ${count};;
+  }
+
+  measure: percent_2_star {
+    type: number
+    value_format: "0.0%"
+    sql: ${count_2_star} / ${count};;
+  }
+
+  measure: percent_1_star {
+    type: number
+    value_format: "0.0%"
+    sql: ${count_1_star} / ${count};;
   }
 
   measure: count {
     type: count_distinct
     sql: ${TABLE}.Reservation_Code ;;
   }
+  #drill_fields: [airbnb_reviews.overall_comments]
 
   measure: clean_count_less_than_4_star {
     type: count_distinct
@@ -284,6 +334,51 @@ view: airbnb_reviews {
     sql: ${TABLE}.Reservation_Code;;
     filters: [
       cleanliness_rating_dim: "<=3"
+    ]
+  }
+
+  measure: accuracy_count_less_than_4_star {
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      accuracy_rating_dim: "<=3"
+    ]
+  }
+
+  measure: value_count_less_than_4_star {
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      value_rating_dim: "<=3"
+    ]
+  }
+
+  measure: location_count_less_than_4_star {
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      location_rating_dim: "<=3"
+    ]
+  }
+
+  measure: communication_count_less_than_4_star {
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      communication_rating_dim: "<=3"
+    ]
+  }
+
+  measure: checkin_count_less_than_4_star {
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      checkin_rating_dim: "<=3"
     ]
   }
 
@@ -297,11 +392,40 @@ view: airbnb_reviews {
   }
 
 
-
   measure: percent_less_than_4_star_clean {
     type: number
     value_format: "0.0%"
     sql: ${clean_count_less_than_4_star} / ${count_clean};;
+  }
+
+  measure: percent_less_than_4_star_accuracy {
+    type: number
+    value_format: "0.0%"
+    sql: ${accuracy_count_less_than_4_star} / ${count_clean};;
+  }
+
+  measure: percent_less_than_4_star_location {
+    type: number
+    value_format: "0.0%"
+    sql: ${location_count_less_than_4_star} / ${count_clean};;
+  }
+
+  measure: percent_less_than_4_star_value {
+    type: number
+    value_format: "0.0%"
+    sql: ${value_count_less_than_4_star} / ${count_clean};;
+  }
+
+  measure: percent_less_than_4_star_communication {
+    type: number
+    value_format: "0.0%"
+    sql: ${communication_count_less_than_4_star} / ${count_clean};;
+  }
+
+  measure: percent_less_than_4_star_checkin {
+    type: number
+    value_format: "0.0%"
+    sql: ${checkin_count_less_than_4_star} / ${count_clean};;
   }
 
 }

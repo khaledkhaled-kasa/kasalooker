@@ -28,6 +28,12 @@ LEFT JOIN extensions
 ON reservations.confirmationcode = extensions.reservation_extensions
 LEFT JOIN guest_type_table
 ON reservations.guest = guest_type_table.guest ;;
+
+    persist_for: "1 hour"
+    # datagroup_trigger: kasametrics_v3_default_datagroup
+    # indexes: ["night","transaction"]
+    # publish_as_db_view: yes
+
   }
 
   dimension: guest_type {
@@ -109,38 +115,48 @@ ON reservations.guest = guest_type_table.guest ;;
     view_label: "Metrics"
     description: "Days between booking and checking in"
     value_format: "0.0"
-    type:  average
+    type:  average_distinct
+    sql_distinct_key: ${confirmationcode} ;;
     sql: ${lead_time};;
     drill_fields: [reservation_details*]
+    filters: [capacity_night_part_of_res: "yes"]
+    # filters: [financial_night_part_of_res: "yes"]
   }
 
   measure: median_lead_time {
     view_label: "Metrics"
     description: "Days between booking and checking in"
     value_format: "0.0"
-    type:  median
+    type:  median_distinct
+    sql_distinct_key: ${confirmationcode} ;;
     sql: ${lead_time};;
     drill_fields: [reservation_details*]
+    filters: [capacity_night_part_of_res: "yes"]
+    # filters: [financial_night_part_of_res: "yes"]
   }
 
   measure: avg_length_of_stay {
     view_label: "Metrics"
     description: "Number of days of stay"
     value_format: "0.0"
-    type:  average
+    type:  average_distinct
+    sql_distinct_key: ${confirmationcode} ;;
     sql: ${length_of_stay};;
     drill_fields: [reservation_details*]
-    filters: [financial_night_part_of_res: "yes"]
+    filters: [capacity_night_part_of_res: "yes"]
+    # filters: [financial_night_part_of_res: "yes"]
   }
 
   measure: median_length_of_stay {
     view_label: "Metrics"
     description: "Number of days of stay"
     value_format: "0.0"
-    type:  median
+    type:  median_distinct
+    sql_distinct_key: ${confirmationcode} ;;
     sql: ${length_of_stay};;
     drill_fields: [reservation_details*]
-    #filters: [financial_night_part_of_res: "yes"]
+    filters: [capacity_night_part_of_res: "yes"]
+    # filters: [financial_night_part_of_res: "yes"]
   }
 
 
@@ -261,7 +277,7 @@ ON reservations.guest = guest_type_table.guest ;;
     label: "Total Number of Guests"
     view_label: "Metrics"
     type: sum
-    sql: guestscount ;;
+    sql: ${guestscount} ;;
   }
 
   dimension: keycafeaccess {
@@ -427,13 +443,20 @@ ON reservations.guest = guest_type_table.guest ;;
     description: "Reservation night stay"
     type:  count_distinct
     sql: CONCAT(${confirmationcode}, '-', ${capacities_v3.night_date});;
-    filters: [financial_night_part_of_res: "yes", status: "confirmed, checked_in"]
+    filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in"]
+    # filters: [financial_night_part_of_res: "yes", status: "confirmed, checked_in"]
   }
 
   dimension: financial_night_part_of_res {
     type:  yesno
     sql: format_date('%Y-%m-%d', ${financials_v3.night_date}) < ${TABLE}.checkoutdatelocal and
       format_date('%Y-%m-%d', ${financials_v3.night_date}) >= ${TABLE}.checkindatelocal;;
+  }
+
+  dimension: capacity_night_part_of_res {
+    type:  yesno
+    sql: format_date('%Y-%m-%d', ${capacities_v3.night_date}) < ${TABLE}.checkoutdatelocal and
+      format_date('%Y-%m-%d', ${capacities_v3.night_date}) >= ${TABLE}.checkindatelocal;;
   }
 
 
@@ -443,7 +466,8 @@ ON reservations.guest = guest_type_table.guest ;;
     description: "Number of unique reservations"
     type: count_distinct
     sql: ${confirmationcode} ;;
-    filters: [financial_night_part_of_res: "yes", status: "confirmed, checked_in"]
+    filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in"]
+    # filters: [financial_night_part_of_res: "yes", status: "confirmed, checked_in"]
     drill_fields: [reservation_details*]
   }
 

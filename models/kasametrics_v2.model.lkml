@@ -1,6 +1,6 @@
 connection: "bigquery"
 include: "../views/*"
-# include: "../dashboards/*"
+#include: "../dashboards/*"
 
 datagroup: kasametrics_default_datagroup_v2 {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
@@ -8,7 +8,7 @@ datagroup: kasametrics_default_datagroup_v2 {
 }
 
 persist_with: kasametrics_default_datagroup_v2
-label: "Kasa Metrics V2"
+label: "Kasa Metrics V2 (OLD)"
 
 explore: capacities_rolled {
   label: "Reservations"
@@ -99,6 +99,6 @@ explore: capacities_rolled {
   }
 }
 
-explore: guest_verification_form {
-  label: "GV Verification"
-}
+# explore: guest_verification_form {
+#   label: "GV Verification"
+# }

@@ -30,7 +30,14 @@ view: financials_v3{
         ON financials.reservation = t3.reservationid
         where financials.isvalid is null or financials.isvalid = true
       ;;
+
+
+    persist_for: "1 hour"
+    # datagroup_trigger: kasametrics_v3_default_datagroup
+    # indexes: ["night","transaction"]
+    # publish_as_db_view: yes
   }
+
 
 
   dimension: amount_revised {
@@ -171,7 +178,9 @@ view: financials_v3{
   dimension: weekend {
     view_label: "Date Dimensions"
     type:  yesno
-    sql:  ${night_day_of_week} in ('Friday', 'Saturday') ;;
+    sql:  ${capacities_v3.night_day_of_week} in ('Friday', 'Saturday') ;;
+
+    # sql:  ${night_day_of_week} in ('Friday', 'Saturday') ;;
   }
 
   dimension: reservation {

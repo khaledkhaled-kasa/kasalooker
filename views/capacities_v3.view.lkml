@@ -11,7 +11,7 @@ view: capacities_v3 {
 
   dimension: _id {
     type: string
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}._id ;;
   }
 
@@ -118,7 +118,7 @@ view: capacities_v3 {
 
   dimension: unit {
     type: string
-    hidden: yes
+    # hidden: yes
     sql: ${TABLE}.unit ;;
   }
 
@@ -154,6 +154,7 @@ view: capacities_v3 {
     type: count_distinct
     sql: CONCAT(${units._id}, '-', ${night_date});;
   }
+
 
   measure: days_available {
     view_label: "Metrics"

@@ -14,6 +14,11 @@ view: reservations_clean {
     sql: ${TABLE}.additionalguests ;;
   }
 
+  dimension: property {
+    type: string
+    sql: ${TABLE}.property ;;
+  }
+
   dimension_group: bookingdate {
     view_label: "Date Dimensions"
     type: time

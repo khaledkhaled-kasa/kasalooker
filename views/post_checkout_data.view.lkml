@@ -57,7 +57,7 @@ view: post_checkout_data {
     type: number
     value_format: "00%"
     sql: sum(if(${TABLE}.How_would_you_feel_if_you_could_no_longer_stay_at_any_Kasa_locations_ = "Very disappointed",1,0)) /
-    count(${TABLE}.How_would_you_feel_if_you_could_no_longer_stay_at_any_Kasa_locations_);;
+    NULLIF(count(${TABLE}.How_would_you_feel_if_you_could_no_longer_stay_at_any_Kasa_locations_),0);;
   }
 
   #dimension_group: month {
@@ -99,7 +99,7 @@ view: post_checkout_data {
   measure: calc_nps {
     type: number
     value_format: "0%"
-    sql: (${promotor_count}-${detractor_count})/${count};;
+    sql: (${promotor_count}-${detractor_count})/NULLIF(count(${TABLE}.NPS),0);;
   }
 
   dimension: overall {
