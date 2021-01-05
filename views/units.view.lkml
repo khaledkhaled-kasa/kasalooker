@@ -191,7 +191,7 @@ view: units {
   }
 
   dimension: externalrefs_property_id {
-    hidden: yes
+    label: "Guesty Id"
     sql: ${TABLE}.externalrefs.guesty_id ;;
   }
 
