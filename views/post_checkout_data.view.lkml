@@ -165,7 +165,7 @@ view: post_checkout_data {
 
   measure: direct_reviews {
     type: count
-    value_format: "0.00"
+    value_format: "0"
     filters: [
       platform_clean: "Direct"
     ]
@@ -173,7 +173,7 @@ view: post_checkout_data {
 
   measure: booking_reviews {
     type: count
-    value_format: "0.00"
+    value_format: "0"
     filters: [
       platform_clean: "Booking.com"
     ]
@@ -181,7 +181,7 @@ view: post_checkout_data {
 
   measure: expedia_reviews {
     type: count
-    value_format: "0.00"
+    value_format: "0"
     filters: [
       platform_clean: "Expedia"
     ]
