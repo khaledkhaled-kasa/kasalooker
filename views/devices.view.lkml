@@ -39,6 +39,11 @@ view: devices {
     sql: ${TABLE}.unit ;;
   }
 
+  dimension: connectionstatus {
+    type: string
+    sql: ${TABLE}.connectionstatus ;;
+  }
+
   measure: count {
     type: count
     drill_fields: [deviceid]
