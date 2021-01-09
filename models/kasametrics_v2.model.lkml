@@ -8,10 +8,10 @@ datagroup: kasametrics_default_datagroup_v2 {
 }
 
 persist_with: kasametrics_default_datagroup_v2
-label: "Kasa Metrics V2 (OLD)"
+label: "Developer View"
 
 explore: capacities_rolled {
-  label: "Reservations"
+  label: "Kasametrics V2 Reservations"
   from: capacities_rolled
   join: complexes {
     type:  left_outer

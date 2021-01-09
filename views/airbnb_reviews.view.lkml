@@ -253,6 +253,16 @@ view: airbnb_reviews {
   }
 
 
+  measure: count_4_star {
+    type: count_distinct
+    hidden: no
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      overall_rating: "4"
+    ]
+  }
+
   measure: count_3_star {
     type: count_distinct
     hidden: no
