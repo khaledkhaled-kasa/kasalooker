@@ -302,10 +302,23 @@ view: airbnb_reviews {
   ]
 }
 
+  measure: count_perfect_stay {
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [overall_rating: "5", cleanliness_rating_dim: "5", accuracy_rating_dim: "5", checkin_rating_dim: "5", communication_rating_dim: "5", location_rating_dim: "5", value_rating_dim: "5"]
+  }
+
   measure: percent_5_star {
     type: number
     value_format: "0.0%"
     sql: ${count_5_star} / nullif(${count},0) ;;
+  }
+
+  measure: percent_perfect_stay {
+    type: number
+    value_format: "0.0%"
+    sql: ${count_perfect_stay} / nullif(${count},0);;
   }
 
   measure: percent_less_than_4_star {
