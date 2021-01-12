@@ -156,7 +156,19 @@ view: financials_audit {
 
   dimension: actualizedat {
     type: string
+    hidden: yes
     sql: ${TABLE}.actualizedat ;;
+  }
+
+  dimension: actualizedat_modified {
+    label: "Actualized Record"
+    description: "This will only pull actualized records for any financial records up to today and nonactualized records for future nights"
+    type: string
+    sql:
+    CASE WHEN (${night_date} >= CURRENT_DATE("America/Los_Angeles")) THEN "Future Booking"
+    WHEN (${TABLE}.actualizedat is not null) THEN "Actualized"
+    WHEN ${TABLE}.actualizedat is null THEN null
+    END;;
   }
 
   dimension: type {
