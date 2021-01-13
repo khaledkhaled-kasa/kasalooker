@@ -24,6 +24,12 @@ explore: reservations_clean {
     sql_on: ${complexes._id} = ${units.complex} ;;
   }
 
+  join: reviews {
+    type:  full_outer
+    relationship:  one_to_one
+    sql_on:  ${reviews.reservation} = ${reservations_clean._id} ;;
+  }
+
   join: airbnb_reviews {
     type: full_outer
     relationship:  one_to_one
@@ -39,10 +45,19 @@ explore: reservations_clean {
     relationship: one_to_one
     sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_clean.confirmationcode} ;;
   }
+
+# for marketing
+  join: latest_listing_review_date {
+    type: full_outer
+    relationship: one_to_one
+    sql_on: ${latest_listing_review_date.airbnb_reviews_listing_id} = ${airbnb_reviews.listing_id} ;;
+  }
+
   join: geo_location {
     type:  left_outer
     relationship: one_to_one
     sql_on:  ${units.address_city} = ${geo_location.city}
     and ${units.address_state} = ${geo_location.state};;
   }
+
 }

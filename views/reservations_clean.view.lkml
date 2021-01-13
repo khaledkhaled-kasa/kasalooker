@@ -66,41 +66,41 @@ view: reservations_clean {
     sql:  date_diff(CAST(${checkoutdate} as DATE), CAST(${checkindate} as DATE), DAY) ;;
   }
 
-  measure: avg_lead_time {
-    view_label: "Metrics"
-    description: "Days between booking and checking in"
-    value_format: "0.0"
-    type:  average
-    sql: ${lead_time};;
-    drill_fields: [reservation_details*]
-  }
+  # measure: avg_lead_time {
+  #   view_label: "Metrics"
+  #   description: "Days between booking and checking in"
+  #   value_format: "0.0"
+  #   type:  average
+  #   sql: ${lead_time};;
+  #   drill_fields: [reservation_details*]
+  # }
 
-  measure: median_lead_time {
-    view_label: "Metrics"
-    description: "Days between booking and checking in"
-    value_format: "0.0"
-    type:  median
-    sql: ${lead_time};;
-    drill_fields: [reservation_details*]
-  }
+  # measure: median_lead_time {
+  #   view_label: "Metrics"
+  #   description: "Days between booking and checking in"
+  #   value_format: "0.0"
+  #   type:  median
+  #   sql: ${lead_time};;
+  #   drill_fields: [reservation_details*]
+  # }
 
-  measure: avg_length_of_stay {
-    view_label: "Metrics"
-    description: "Number of days of stay"
-    value_format: "0.0"
-    type:  average
-    sql: ${length_of_stay};;
-    drill_fields: [reservation_details*]
-  }
+  # measure: avg_length_of_stay {
+  #   view_label: "Metrics"
+  #   description: "Number of days of stay"
+  #   value_format: "0.0"
+  #   type:  average
+  #   sql: ${length_of_stay};;
+  #   drill_fields: [reservation_details*]
+  # }
 
-  measure: median_length_of_stay {
-    view_label: "Metrics"
-    description: "Number of days of stay"
-    value_format: "0.0"
-    type:  median
-    sql: ${length_of_stay};;
-    drill_fields: [reservation_details*]
-  }
+  # measure: median_length_of_stay {
+  #   view_label: "Metrics"
+  #   description: "Number of days of stay"
+  #   value_format: "0.0"
+  #   type:  median
+  #   sql: ${length_of_stay};;
+  #   drill_fields: [reservation_details*]
+  # }
 
 
   dimension: bringingpets {
@@ -332,14 +332,14 @@ view: reservations_clean {
     sql: ${TABLE}.updatedat ;;
   }
 
-  measure: num_reservations {
-    view_label: "Metrics"
-    label: "Num Reservations"
-    description: "Number of unique reservations"
-    type: count_distinct
-    sql: ${confirmationcode} ;;
-    drill_fields: [reservation_details*]
-  }
+  # measure: num_reservations {
+  #   view_label: "Metrics"
+  #   label: "Num Reservations"
+  #   description: "Number of unique reservations"
+  #   type: count_distinct
+  #   sql: ${confirmationcode} ;;
+  #   drill_fields: [reservation_details*]
+  # }
 
   measure: OQS {
     type: number

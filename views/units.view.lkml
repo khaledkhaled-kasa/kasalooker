@@ -325,6 +325,20 @@ view: units {
     sql: ${TABLE}.wifi ;;
   }
 
+  measure: unit_count {
+    view_label: "Metrics"
+    label: "Number of Units"
+    type: count_distinct
+    sql: ${TABLE}._id ;;
+  }
+
+  measure: property_count {
+    view_label: "Metrics"
+    label: "Number of Properties"
+    type: count_distinct
+    sql: ${TABLE}.complex ;;
+  }
+
   measure: count {
     type: count
     drill_fields: [nickname]
