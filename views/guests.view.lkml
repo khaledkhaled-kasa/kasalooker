@@ -4,6 +4,7 @@ view: guests {
 
   dimension: _id {
     type: string
+    hidden: yes
     sql: ${TABLE}._id ;;
   }
 
@@ -45,6 +46,7 @@ view: guests {
 
   dimension_group: createdat {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       time,
@@ -108,6 +110,7 @@ view: guests {
 
   dimension_group: updatedat {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       time,

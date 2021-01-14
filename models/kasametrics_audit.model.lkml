@@ -25,6 +25,14 @@ explore: reservations_audit {
     type:  left_outer
     relationship: many_to_one
     sql_on: ${complexes._id} = ${units.complex} ;;
+
+  }
+
+  join: geo_location {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on:  ${units.address_city} = ${geo_location.city}
+      and ${units.address_state} = ${geo_location.state};;
   }
   # join: capacities_rolled_audit {
   #   type:  left_outer

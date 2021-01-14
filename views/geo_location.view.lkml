@@ -19,6 +19,7 @@ view: geo_location {
 
   dimension: city {
     type: string
+    view_label: "Core Dimensions"
     sql: CASE WHEN ${TABLE}.City = "King of Prussia" THEN "King Of Prussia"
     WHEN ${TABLE}.City = "Arlington, TX" THEN "Arlington"
     WHEN ${TABLE}.City = "Arlington, VA" THEN "Arlington"
@@ -45,6 +46,7 @@ view: geo_location {
   # }
 
   dimension: metro {
+    view_label: "Core Dimensions"
     type: string
     sql: ${TABLE}.Metro ;;
   }
@@ -75,6 +77,7 @@ view: geo_location {
   # }
 
   dimension: region {
+    view_label: "Core Dimensions"
     type: string
     sql: ${TABLE}.Region ;;
   }
@@ -85,6 +88,7 @@ view: geo_location {
   # }
 
   dimension: state {
+    view_label: "Core Dimensions"
     type: string
     sql: ${TABLE}.State ;;
   }

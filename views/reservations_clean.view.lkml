@@ -21,6 +21,8 @@ view: reservations_clean {
 
   dimension_group: bookingdate {
     view_label: "Date Dimensions"
+    group_label: "Booking Date"
+    label: ""
     type: time
     timeframes: [
       raw,
@@ -36,6 +38,8 @@ view: reservations_clean {
 
   dimension_group: review_date {
     view_label: "Date Dimensions"
+    group_label: "All Reviews Date"
+    label: ""
     type: time
     datatype: date
     timeframes: [
@@ -55,16 +59,16 @@ view: reservations_clean {
     #sql: coalesce(${airbnb_reviews.review_raw},CAST(${post_checkout_data.review_raw} as DATE),${booking_reviews.review_raw}) ;;
   }
 
-   dimension: lead_time {
-    type:  number
-    sql:  date_diff(CAST(${checkindate} as DATE), CAST(${TABLE}.bookingdate as DATE), DAY) ;;
-  }
+  # dimension: lead_time {
+  #   type:  number
+  #   sql:  date_diff(CAST(${checkindate} as DATE), CAST(${TABLE}.bookingdate as DATE), DAY) ;;
+  # }
 
 
-  dimension: length_of_stay {
-    type:  number
-    sql:  date_diff(CAST(${checkoutdate} as DATE), CAST(${checkindate} as DATE), DAY) ;;
-  }
+  # dimension: length_of_stay {
+  #   type:  number
+  #   sql:  date_diff(CAST(${checkoutdate} as DATE), CAST(${checkindate} as DATE), DAY) ;;
+  # }
 
   # measure: avg_lead_time {
   #   view_label: "Metrics"
@@ -115,6 +119,8 @@ view: reservations_clean {
 
   dimension_group: cancellationdate {
     view_label: "Date Dimensions"
+    group_label: "Reservation Cancellation Date"
+    label: ""
     type: time
     timeframes: [
       time,
@@ -138,10 +144,14 @@ view: reservations_clean {
 
   dimension: checkindate {
     type: date
+    view_label: "Date Dimensions"
+    label: "Reservation Check-in Date"
     sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
   }
 
   dimension: checkoutdate {
+    view_label: "Date Dimensions"
+    label: "Reservation Check-out Date"
     type: date
     sql: CAST(${TABLE}.checkoutdatelocal as TIMESTAMP);;
   }
@@ -178,6 +188,7 @@ view: reservations_clean {
   }
 
   dimension: guest {
+    hidden: yes
     type: string
     sql: ${TABLE}.guest ;;
   }
@@ -314,11 +325,13 @@ view: reservations_clean {
   }
 
   dimension: unit {
+    hidden: yes
     type: string
     sql: ${TABLE}.unit ;;
   }
 
   dimension_group: updatedat {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -342,6 +355,8 @@ view: reservations_clean {
   # }
 
   measure: OQS {
+    label: "Overall Quality Score (OQS)"
+    view_label: "Metrics"
     type: number
     value_format: "0%"
     sql: (ifnull((${airbnb_reviews.overall_quality_score} * ${airbnb_reviews.count}),0) +  ifnull((${post_checkout_data.direct_oqs} * ${post_checkout_data.direct_reviews}),0)
@@ -351,6 +366,7 @@ view: reservations_clean {
 
   measure: count_total {
     type: number
+    view_label: "Metrics"
     label: "Total Reviews"
     value_format: "0"
     sql: ${airbnb_reviews.count} + ${post_checkout_data.direct_reviews} + ${post_checkout_data.expedia_reviews} + ${post_checkout_data.booking_reviews} ;;

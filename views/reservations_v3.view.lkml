@@ -86,6 +86,8 @@ ON reservations.guest = guest_type_table.guest ;;
 
   dimension_group: bookingdate {
     view_label: "Date Dimensions"
+    group_label: "Booking Date"
+    label: ""
     type: time
     timeframes: [
       raw,
@@ -120,7 +122,6 @@ ON reservations.guest = guest_type_table.guest ;;
     sql: ${lead_time};;
     drill_fields: [reservation_details*]
     filters: [capacity_night_part_of_res: "yes"]
-    # filters: [financial_night_part_of_res: "yes"]
   }
 
   measure: median_lead_time {
@@ -132,7 +133,6 @@ ON reservations.guest = guest_type_table.guest ;;
     sql: ${lead_time};;
     drill_fields: [reservation_details*]
     filters: [capacity_night_part_of_res: "yes"]
-    # filters: [financial_night_part_of_res: "yes"]
   }
 
   measure: avg_length_of_stay {
@@ -144,7 +144,6 @@ ON reservations.guest = guest_type_table.guest ;;
     sql: ${length_of_stay};;
     drill_fields: [reservation_details*]
     filters: [capacity_night_part_of_res: "yes"]
-    # filters: [financial_night_part_of_res: "yes"]
   }
 
   measure: median_length_of_stay {
@@ -156,7 +155,6 @@ ON reservations.guest = guest_type_table.guest ;;
     sql: ${length_of_stay};;
     drill_fields: [reservation_details*]
     filters: [capacity_night_part_of_res: "yes"]
-    # filters: [financial_night_part_of_res: "yes"]
   }
 
 
@@ -172,6 +170,8 @@ ON reservations.guest = guest_type_table.guest ;;
 
   dimension_group: cancellationdate {
     view_label: "Date Dimensions"
+    group_label: "Cancellation Date"
+    label: ""
     type: time
     timeframes: [
       time,
@@ -194,12 +194,16 @@ ON reservations.guest = guest_type_table.guest ;;
   }
 
   dimension: checkindate {
+    hidden: yes
     type: date
     sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
   }
 
   dimension_group: reservation_checkin {
     type: time
+    view_label: "Date Dimensions"
+    group_label: "Check-in Date"
+    label: ""
     timeframes: [
       raw,
       time,
@@ -213,12 +217,16 @@ ON reservations.guest = guest_type_table.guest ;;
   }
 
   dimension: checkoutdate {
+    hidden: yes
     type: date
     sql: CAST(${TABLE}.checkoutdatelocal as TIMESTAMP);;
   }
 
   dimension_group: reservation_checkout {
     type: time
+    view_label: "Date Dimensions"
+    group_label: "Check-out Date"
+    label: ""
     timeframes: [
       raw,
       time,
@@ -264,6 +272,7 @@ ON reservations.guest = guest_type_table.guest ;;
   }
 
   dimension: guest {
+    hidden: yes
     type: string
     sql: ${TABLE}.guest ;;
   }
@@ -298,6 +307,7 @@ ON reservations.guest = guest_type_table.guest ;;
   }
 
   dimension: listingname {
+    hidden: yes
     type: string
     sql: ${TABLE}.listingname ;;
   }
@@ -309,6 +319,7 @@ ON reservations.guest = guest_type_table.guest ;;
 
   dimension: nickname {
     type: string
+    hidden: yes
     sql: ${TABLE}.nickname ;;
   }
 
@@ -400,7 +411,6 @@ ON reservations.guest = guest_type_table.guest ;;
   dimension: status_booked{
     description: "Was this night booked?"
     type: yesno
-#     sql: ${TABLE}.status is null or ${TABLE}.status IN ("confirmed","checked_in");;
     sql: ${TABLE}.status is null or ${TABLE}.status IN ("confirmed","checked_in");;
   }
 
@@ -422,11 +432,13 @@ ON reservations.guest = guest_type_table.guest ;;
 
   dimension: unit {
     type: string
+    hidden: yes
     sql: ${TABLE}.unit ;;
   }
 
   dimension_group: updatedat {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       time,
@@ -446,7 +458,6 @@ ON reservations.guest = guest_type_table.guest ;;
     type:  count_distinct
     sql: CONCAT(${confirmationcode}, '-', ${capacities_v3.night_date});;
     filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in"]
-    # filters: [financial_night_part_of_res: "yes", status: "confirmed, checked_in"]
   }
 
   dimension: financial_night_part_of_res {
@@ -469,7 +480,6 @@ ON reservations.guest = guest_type_table.guest ;;
     type: count_distinct
     sql: ${confirmationcode} ;;
     filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in"]
-    # filters: [financial_night_part_of_res: "yes", status: "confirmed, checked_in"]
     drill_fields: [reservation_details*]
   }
 

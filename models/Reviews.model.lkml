@@ -35,11 +35,11 @@ explore: reservations_clean {
     relationship:  one_to_one
     sql_on: ${reservations_clean.confirmationcode} = ${airbnb_reviews.reservation_code} ;;
   }
-  join: booking_reviews {
-    type: full_outer
-    relationship: one_to_many
-    sql_on: ${units.propcode} = ${booking_reviews.building} ;;
-  }
+  # join: booking_reviews {
+  #   type: full_outer
+  #   relationship: one_to_many
+  #   sql_on: ${units.propcode} = ${booking_reviews.building} ;;
+  # }
   join: post_checkout_data {
     type:  full_outer
     relationship: one_to_one

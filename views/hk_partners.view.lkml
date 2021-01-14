@@ -3,11 +3,13 @@ view: hk_partners {
     ;;
 
   dimension: buildings {
+    hidden: yes
     type: string
     sql: ${TABLE}.Buildings ;;
   }
 
   dimension: comm_preferred {
+    hidden: yes
     type: string
     sql: ${TABLE}.Comm_Preferred ;;
   }
@@ -18,6 +20,7 @@ view: hk_partners {
   }
 
   dimension: daily_occupancy_report_set_up {
+    hidden: yes
     type: yesno
     sql: ${TABLE}.Daily_Occupancy_Report_set_up ;;
   }
@@ -63,6 +66,7 @@ view: hk_partners {
   }
 
   dimension_group: start {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -82,8 +86,4 @@ view: hk_partners {
     sql: ${TABLE}.Status ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: [company_name]
-  }
 }

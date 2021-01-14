@@ -27,6 +27,7 @@
 
   dimension: _id {
     type: string
+    hidden: yes
     sql: ${TABLE}._id ;;
   }
 
@@ -77,6 +78,9 @@
   }
 
   dimension_group: submitdate {
+    view_label: "Date Dimensions"
+    group_label: "Real-time Check-in Review Submit Date"
+    label: ""
     type: time
     timeframes: [
       raw,
@@ -92,11 +96,13 @@
 
   dimension: target {
     type: string
+    label: "Type"
     sql: ${TABLE}.target ;;
   }
 
   dimension: unit {
     type: string
+    hidden: yes
     sql: ${TABLE}.unit ;;
   }
 

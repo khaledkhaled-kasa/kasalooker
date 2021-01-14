@@ -14,21 +14,24 @@ view: units {
   }
 
   dimension: address_city {
-    hidden: no
+    hidden: yes
+    label: "City"
     sql: CASE WHEN ${TABLE}.address.city = "" THEN NULL
     ELSE ${TABLE}.address.city
     END;;
   }
 
   dimension: address_state {
-    hidden: no
+    hidden: yes
+    label: "State"
     sql: CASE WHEN ${TABLE}.address.state = "" THEN NULL
     ELSE ${TABLE}.address.state
     END;;
   }
 
   dimension: region {
-    hidden: no
+    hidden: yes
+    label: "Region"
     sql: CASE
     WHEN ${TABLE}.address.state IN ("TX") THEN "Texas"
     WHEN ${TABLE}.address.state IN ("WA","CA","UT","CO") THEN "West"
@@ -54,6 +57,8 @@ view: units {
   }
 
   dimension: availability_startdate {
+    view_label: "Date Dimensions"
+    label: "Unit Availability Start Date"
     hidden: no
     type: date
     sql: TIMESTAMP(${TABLE}.availability.startdate);;
@@ -86,6 +91,8 @@ view: units {
 
   dimension: availability_enddate {
     hidden: no
+    view_label: "Date Dimensions"
+    label: "Unit Availability End Date"
     type: date
     sql: TIMESTAMP(${TABLE}.availability.enddate);;
   }
@@ -97,6 +104,7 @@ view: units {
 
   dimension: baseprice {
     type: number
+    hidden: yes
     sql: ${TABLE}.baseprice ;;
   }
 
@@ -108,6 +116,7 @@ view: units {
 
   dimension: bathrooms__fl {
     type: number
+    hidden: yes
     sql: ${TABLE}.bathrooms__fl ;;
   }
 
@@ -127,16 +136,19 @@ view: units {
 
   dimension: building {
     type: string
+    hidden: yes
     sql: ${TABLE}.building ;;
   }
 
   dimension: buildingexternaltitle {
     type: string
+    hidden: yes
     sql: ${TABLE}.buildingexternaltitle ;;
   }
 
   dimension: buildinginternaltitle {
     type: string
+    hidden: yes
     sql: ${TABLE}.buildinginternaltitle ;;
   }
 
@@ -157,6 +169,7 @@ view: units {
 
   dimension: complex {
     type: string
+    hidden: yes
     sql: ${TABLE}.complex ;;
   }
 
@@ -182,6 +195,7 @@ view: units {
 
   dimension: door {
     type: string
+    hidden: yes
     sql: ${TABLE}.door ;;
   }
 
@@ -226,11 +240,16 @@ view: units {
   }
 
   dimension: internaltitle {
+    view_label: "Core Dimensions"
+    label: "Unit"
     type: string
     sql: ${TABLE}.internaltitle ;;
   }
 
   dimension: propcode {
+    hidden: no
+    view_label: "Core Dimensions"
+    label: "Property Code"
     type: string
     sql: substr(${TABLE}.internaltitle, 1, 3) ;;
   }
@@ -262,6 +281,7 @@ view: units {
 
   dimension: nickname {
     type: string
+    hidden: yes
     sql: ${TABLE}.nickname ;;
   }
 
@@ -282,6 +302,7 @@ view: units {
 
   dimension: propertyexternaltitle {
     type: string
+    hidden: yes
     sql: ${TABLE}.propertyexternaltitle ;;
   }
 
@@ -292,6 +313,7 @@ view: units {
 
   dimension: propertyinternaltitle {
     type: string
+    hidden: yes
     sql: ${TABLE}.propertyinternaltitle ;;
   }
 
@@ -312,11 +334,13 @@ view: units {
 
   dimension: timezone {
     type: string
+    hidden: yes
     sql: ${TABLE}.timezone ;;
   }
 
   dimension: title {
     type: string
+    hidden: yes
     sql: ${TABLE}.title ;;
   }
 
@@ -341,6 +365,7 @@ view: units {
 
   measure: count {
     type: count
+    hidden: yes
     drill_fields: [nickname]
   }
 

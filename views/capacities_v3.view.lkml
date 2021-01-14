@@ -11,7 +11,7 @@ view: capacities_v3 {
 
   dimension: _id {
     type: string
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}._id ;;
   }
 
@@ -92,6 +92,7 @@ view: capacities_v3 {
     view_label: "Date Dimensions"
     group_label: "Occupied / Unoccupied Night"
     description: "A night at a Kasa (Occupied / Unoccupied)"
+    label: ""
     type: time
     timeframes: [
       date,
@@ -118,7 +119,7 @@ view: capacities_v3 {
 
   dimension: unit {
     type: string
-    # hidden: yes
+    hidden: yes
     sql: ${TABLE}.unit ;;
   }
 

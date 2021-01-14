@@ -6,16 +6,6 @@ view: financials_audit {
       ;;
   }
 
-  # Amount with old financials table
-  measure: amount_revised_base_measure {
-    view_label: "Metrics"
-    label: "Amount Revised"
-    description: "Amount per night"
-    type: sum
-    value_format: "$#,##0.00"
-    sql: ${amount_revised} ;;
-    filters: [isvalid: "yes"]
-  }
 
   dimension: amount_revised {
     hidden: yes
@@ -46,18 +36,21 @@ view: financials_audit {
 
   measure: cleaning_amount {
     type: number
+    view_label: "Metrics"
     value_format: "$#,##0.00"
     sql: sum(if(${TABLE}.type = "cleaning",${amount_revised},0)) ;;
   }
 
   measure: clean_refund_amount {
     type: number
+    view_label: "Metrics"
     value_format: "$#,##0.00"
     sql: sum(if(${TABLE}.type = "CleanRefund",${amount_revised},0)) ;;
   }
 
   measure: cleaning_transactions {
     type: count
+    view_label: "Metrics"
     value_format: "0"
     filters: [
       type: "cleaning"
@@ -66,6 +59,7 @@ view: financials_audit {
 
   measure: cleaning_refund_transactions {
     type: count
+    view_label: "Metrics"
     value_format: "0"
     filters: [
       type: "CleanRefund"
@@ -131,12 +125,14 @@ view: financials_audit {
   dimension: reservation {
     type: string
     primary_key: yes
+    hidden: yes
     sql: ${TABLE}.reservation ;;
   }
 
   dimension_group: transaction {
     view_label: "Date Dimensions"
     group_label: "Transaction Date"
+    label: ""
     description: "Date of a given financial transaction"
     type: time
     timeframes: [
@@ -151,6 +147,7 @@ view: financials_audit {
 
   dimension: transactiondate {
     type: string
+    hidden: yes
     sql: ${TABLE}.transactiondate ;;
   }
 
@@ -167,6 +164,7 @@ view: financials_audit {
     sql:
     CASE WHEN (${night_date} >= CURRENT_DATE("America/Los_Angeles")) THEN "Future Booking"
     WHEN (${TABLE}.actualizedat is not null) THEN "Actualized"
+    WHEN (${night_date} < "2020-09-01") THEN "Older Booking"
     WHEN ${TABLE}.actualizedat is null THEN null
     END;;
   }

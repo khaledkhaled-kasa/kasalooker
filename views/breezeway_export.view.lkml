@@ -41,6 +41,7 @@ view: breezeway_export {
   }
 
   dimension: assigned_employee_ids {
+    hidden: yes
     type: string
     sql: ${TABLE}.Assigned_Employee_IDs ;;
   }
@@ -51,11 +52,13 @@ view: breezeway_export {
   }
 
   dimension: bill_to {
+    hidden: yes
     type: string
     sql: ${TABLE}.Bill_To ;;
   }
 
   dimension: completed {
+    hidden: yes
     type: string
     sql: ${TABLE}.Completed ;;
   }
@@ -66,6 +69,7 @@ view: breezeway_export {
   }
 
   dimension: cost_description {
+    hidden: yes
     type: string
     sql: ${TABLE}.Cost_Description ;;
   }
@@ -76,11 +80,13 @@ view: breezeway_export {
   }
 
   dimension: building {
+    hidden: yes
     type: string
     sql: ${TABLE}.Building ;;
   }
 
   dimension_group: created {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -95,6 +101,7 @@ view: breezeway_export {
   }
 
   dimension: created_by {
+    hidden: yes
     type: string
     sql: ${TABLE}.Created_By ;;
   }
@@ -111,7 +118,9 @@ view: breezeway_export {
   }
 
   measure: done_on_time {
+    view_label: "Metrics"
     type: count
+    group_label: "BW Metrics"
     filters: {
       field: done_on_time_
       value: "On Time"
@@ -120,6 +129,8 @@ view: breezeway_export {
 
   measure: late {
     type: count
+    view_label: "Metrics"
+    group_label: "BW Metrics"
     filters: {
       field: done_on_time_
       value: "Late"
@@ -128,6 +139,8 @@ view: breezeway_export {
 
   measure: pct_on_time {
     type: number
+    view_label: "Metrics"
+    group_label: "BW Metrics"
     value_format: "0.0%"
     sql: ${done_on_time}/${count};;
   }
@@ -139,11 +152,13 @@ view: breezeway_export {
   }
 
   dimension: name {
+    hidden: yes
     type: string
     sql: ${TABLE}.Name ;;
   }
 
   dimension: past_due_by_ {
+    hidden: yes
     type: string
     sql: ${TABLE}.Past_Due_By_ ;;
   }
@@ -154,42 +169,50 @@ view: breezeway_export {
   }
 
   dimension: property_id {
+    hidden: yes
     type: number
     sql: ${TABLE}.Property_ID ;;
   }
 
   dimension: property_internal_id {
+    hidden: yes
     type: string
     sql: ${TABLE}.Property_Internal_ID ;;
   }
 
   dimension: property_marketing_id {
+    hidden: yes
     type: string
     sql: ${TABLE}.Property_Marketing_ID ;;
   }
 
   dimension: rate_paid {
+    hidden: yes
     type: number
     value_format_name: id
     sql: ${TABLE}.Rate_Paid ;;
   }
 
   dimension: rate_type {
+    hidden: yes
     type: string
     sql: ${TABLE}.Rate_Type ;;
   }
 
   dimension: report_summary {
+    hidden: yes
     type: string
     sql: ${TABLE}.Report_Summary ;;
   }
 
   dimension: requested_by {
+    hidden: yes
     type: string
     sql: ${TABLE}.Requested_By ;;
   }
 
   dimension_group: started {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -209,6 +232,7 @@ view: breezeway_export {
   }
 
   dimension: tags {
+    hidden: yes
     type: string
     sql: ${TABLE}.Tags ;;
   }
@@ -229,6 +253,8 @@ view: breezeway_export {
   }
 
   measure: average_completion {
+    view_label: "Metrics"
+    group_label: "BW Metrics"
     label: "Average Completion Time (Hours)"
     type: average
     hidden: no
@@ -238,6 +264,7 @@ view: breezeway_export {
 
 
   dimension: total_cost {
+    hidden: yes
     type: number
     sql: ${TABLE}.Total_Cost ;;
   }
@@ -248,6 +275,7 @@ view: breezeway_export {
   }
 
   dimension_group: updated {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -262,6 +290,7 @@ view: breezeway_export {
   }
 
   measure: count {
+    hidden: yes
     type: count
     drill_fields: [id, name]
   }

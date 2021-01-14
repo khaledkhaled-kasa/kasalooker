@@ -52,6 +52,14 @@ explore: capacities_v3 {
     relationship: one_to_one
     sql_on:  ${reservations_v3.guest} = ${guests._id} ;;
   }
+
+  join: geo_location {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on:  ${units.address_city} = ${geo_location.city}
+      and ${units.address_state} = ${geo_location.state};;
+  }
+
   # join: reviews {
   #   type:  full_outer
   #   relationship:  one_to_one

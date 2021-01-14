@@ -4,7 +4,7 @@ view: complexes {
     ;;
 
   dimension: _id {
-    # hidden:  yes
+    hidden:  yes
     type: string
     sql: ${TABLE}._id ;;
   }
@@ -36,6 +36,7 @@ view: complexes {
   }
 
   dimension: ishighrisk {
+    hidden:  yes
     type: yesno
     sql: ${TABLE}.ishighrisk ;;
   }
@@ -46,16 +47,19 @@ view: complexes {
   }
 
   dimension: propertymanager {
+    hidden:  yes
     type: string
     sql: ${TABLE}.propertymanager ;;
   }
 
   dimension: propertyowner {
+    hidden:  yes
     type: string
     sql: ${TABLE}.propertyowner ;;
   }
 
   dimension: timezone {
+    hidden:  yes
     type: string
     sql: ${TABLE}.timezone ;;
   }
@@ -69,39 +73,41 @@ view: complexes {
   }
 
   dimension: city {
+    hidden: yes
     type:  string
     sql:  ${TABLE}.address.city ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: []
-  }
 }
 
 view: complexes__address {
   dimension: city {
+    view_label: "Core Dimensions"
     type: string
     sql: ${TABLE}.city ;;
   }
 
   dimension: country {
+    view_label: "Core Dimensions"
     type: string
     map_layer_name: countries
     sql: ${TABLE}.country ;;
   }
 
   dimension: state {
+    view_label: "Core Dimensions"
     type: string
     sql: ${TABLE}.state ;;
   }
 
   dimension: street {
+    view_label: "Core Dimensions"
     type: string
     sql: ${TABLE}.street ;;
   }
 
   dimension: zip {
+    view_label: "Core Dimensions"
     type: zipcode
     sql: ${TABLE}.zip ;;
   }

@@ -46,6 +46,8 @@ view: aircall {
   dimension_group: datetime__utc_ {
     type: time
     label: ""
+    view_label: "Date Dimensions"
+    group_label: "Started Date (UTC)"
     timeframes: [
       raw,
       time,
@@ -62,7 +64,9 @@ view: aircall {
 
   dimension_group: datetime__pst_ {
     type: time
-    label: " (PST)"
+    label: ""
+    view_label: "Date Dimensions"
+    group_label: "Started Date (PST)"
     timeframes: [
       raw,
       time,

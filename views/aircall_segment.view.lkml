@@ -79,6 +79,7 @@ view: aircall_segment {
 
   dimension_group: started_at_UTC {
     type: time
+    label: ""
     view_label: "Date Dimensions"
     group_label: "Started Date (UTC)"
     timeframes: [
@@ -98,6 +99,7 @@ view: aircall_segment {
 
   dimension_group: started_at_PST {
     type: time
+    label: ""
     view_label: "Date Dimensions"
     group_label: "Started Date (PST)"
     timeframes: [

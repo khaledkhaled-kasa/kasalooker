@@ -88,18 +88,21 @@ view: financials_v3{
 
   measure: cleaning_amount {
     type: number
+    view_label: "Metrics"
     value_format: "$#,##0.00"
     sql: sum(if(${TABLE}.type = "cleaning",${amount_revised},0)) ;;
   }
 
   measure: clean_refund_amount {
     type: number
+    view_label: "Metrics"
     value_format: "$#,##0.00"
     sql: sum(if(${TABLE}.type = "CleanRefund",${amount_revised},0)) ;;
   }
 
   measure: cleaning_transactions {
     type: count
+    view_label: "Metrics"
     value_format: "0"
     filters: [
       type: "cleaning"
@@ -108,6 +111,7 @@ view: financials_v3{
 
   measure: cleaning_refund_transactions {
     type: count
+    view_label: "Metrics"
     value_format: "0"
     filters: [
       type: "CleanRefund"
@@ -155,14 +159,16 @@ view: financials_v3{
 
   dimension: casheventual {
     type: yesno
+    hidden: yes
     sql: ${TABLE}.casheventual ;;
   }
 
   dimension_group: night {
     hidden:  no
     view_label: "Date Dimensions"
-    group_label: "Stay Night"
+    group_label: "Financial Night"
     description: "An occupied night at a Kasa"
+    label: "yes"
     type: time
     timeframes: [
       date,
@@ -193,6 +199,7 @@ view: financials_v3{
     view_label: "Date Dimensions"
     group_label: "Transaction Date"
     description: "Date of a given financial transaction"
+    label: ""
     type: time
     timeframes: [
       raw,
@@ -206,6 +213,7 @@ view: financials_v3{
 
   dimension: transactiondate {
     type: string
+    hidden: yes
     sql: ${TABLE}.transactiondate ;;
   }
 
@@ -218,6 +226,24 @@ view: financials_v3{
     description: "This will filter out Channel Fees / ToTs"
     type: yesno
     sql: ${TABLE}.type is null or ${TABLE}.type not IN ("channelFee","ToT","ToTInflow","ToTOutflowNonLiability","ToTInflowNonLiability");;
+  }
+
+  dimension: actualizedat {
+    type: string
+    hidden: yes
+    sql: ${TABLE}.actualizedat ;;
+  }
+
+  dimension: actualizedat_modified {
+    label: "Actualized Record"
+    description: "This will only pull actualized records for any financial records up to today and nonactualized records for future nights"
+    type: string
+    sql:
+    CASE WHEN (${night_date} >= CURRENT_DATE("America/Los_Angeles")) THEN "Future Booking"
+    WHEN (${TABLE}.actualizedat is not null) THEN "Actualized"
+    WHEN (${night_date} < "2020-09-01") THEN "Older Booking"
+    WHEN ${TABLE}.actualizedat is null THEN null
+    END;;
   }
 
 
