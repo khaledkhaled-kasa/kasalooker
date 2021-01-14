@@ -1,5 +1,5 @@
 connection: "bigquery"
-include: "../views/*"
+# include: "../views/*"
 
 
 # datagroup: blacklineexport_default_datagroup {

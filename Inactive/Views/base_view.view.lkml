@@ -1,5 +1,5 @@
 view: base_view
- {
+{
   derived_table: {
     explore_source: capacities_v3 {
       column: _id {}

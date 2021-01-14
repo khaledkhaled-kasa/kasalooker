@@ -1,5 +1,5 @@
 connection: "bigquery"
-include: "../views/*"
+# include: "../views/*"
 #include: "../dashboards/*"
 
 # datagroup: kasametrics_default_datagroup {
