@@ -15,6 +15,7 @@ view: reservations_kustomer {
 
   dimension_group: bookingdate {
     view_label: "Date Dimensions"
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -38,41 +39,41 @@ view: reservations_kustomer {
     sql:  date_diff(CAST(${checkoutdate} as DATE), CAST(${checkindate} as DATE), DAY) ;;
   }
 
-  measure: avg_lead_time {
-    view_label: "Metrics"
-    description: "Days between booking and checking in"
-    value_format: "0.0"
-    type:  average
-    sql: ${lead_time};;
-    drill_fields: [reservation_details*]
-  }
+  # measure: avg_lead_time {
+  #   view_label: "Metrics"
+  #   description: "Days between booking and checking in"
+  #   value_format: "0.0"
+  #   type:  average
+  #   sql: ${lead_time};;
+  #   drill_fields: [reservation_details*]
+  # }
 
-  measure: median_lead_time {
-    view_label: "Metrics"
-    description: "Days between booking and checking in"
-    value_format: "0.0"
-    type:  median
-    sql: ${lead_time};;
-    drill_fields: [reservation_details*]
-  }
+  # measure: median_lead_time {
+  #   view_label: "Metrics"
+  #   description: "Days between booking and checking in"
+  #   value_format: "0.0"
+  #   type:  median
+  #   sql: ${lead_time};;
+  #   drill_fields: [reservation_details*]
+  # }
 
-  measure: avg_length_of_stay {
-    view_label: "Metrics"
-    description: "Number of days of stay"
-    value_format: "0.0"
-    type:  average
-    sql: ${length_of_stay};;
-    drill_fields: [reservation_details*]
-  }
+  # measure: avg_length_of_stay {
+  #   view_label: "Metrics"
+  #   description: "Number of days of stay"
+  #   value_format: "0.0"
+  #   type:  average
+  #   sql: ${length_of_stay};;
+  #   drill_fields: [reservation_details*]
+  # }
 
-  measure: median_length_of_stay {
-    view_label: "Metrics"
-    description: "Number of days of stay"
-    value_format: "0.0"
-    type:  median
-    sql: ${length_of_stay};;
-    drill_fields: [reservation_details*]
-  }
+  # measure: median_length_of_stay {
+  #   view_label: "Metrics"
+  #   description: "Number of days of stay"
+  #   value_format: "0.0"
+  #   type:  median
+  #   sql: ${length_of_stay};;
+  #   drill_fields: [reservation_details*]
+  # }
 
 
   dimension: bringingpets {
@@ -87,6 +88,7 @@ view: reservations_kustomer {
 
   dimension_group: cancellationdate {
     view_label: "Date Dimensions"
+    hidden: yes
     type: time
     timeframes: [
       time,
@@ -116,6 +118,7 @@ view: reservations_kustomer {
 
   dimension_group: reservation_checkin {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       time,
@@ -135,6 +138,7 @@ view: reservations_kustomer {
 
   dimension_group: reservation_checkout {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       time,
@@ -201,11 +205,13 @@ view: reservations_kustomer {
 
   dimension: listingaddress {
     type: string
+    hidden: yes
     sql: ${TABLE}.listingaddress ;;
   }
 
   dimension: listingname {
     type: string
+    hidden: yes
     sql: ${TABLE}.listingname ;;
   }
 
@@ -323,11 +329,13 @@ view: reservations_kustomer {
 
   dimension: unit {
     type: string
+    hidden: yes
     sql: ${TABLE}.unit ;;
   }
 
   dimension_group: updatedat {
     type: time
+    hidden: yes
     timeframes: [
       raw,
       time,
