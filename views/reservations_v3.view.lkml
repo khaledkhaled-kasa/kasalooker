@@ -276,8 +276,10 @@ ON reservations.guest = guest_type_table.guest ;;
   measure: guestscount_sum {
     label: "Total Number of Guests"
     view_label: "Metrics"
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${confirmationcode} ;;
     sql: ${guestscount} ;;
+    filters: [capacity_night_part_of_res: "yes"]
   }
 
   dimension: keycafeaccess {
