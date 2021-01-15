@@ -4,7 +4,7 @@ view: guests {
 
   dimension: _id {
     type: string
-    hidden: yes
+    hidden: no
     sql: ${TABLE}._id ;;
   }
 
