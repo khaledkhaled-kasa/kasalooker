@@ -31,7 +31,7 @@ view: reservations_audit {
   dimension_group: bookingdate {
     view_label: "Date Dimensions"
     group_label: "Booking Date"
-    label: ""
+    label: "Booking"
     type: time
     timeframes: [
       raw,
@@ -154,7 +154,7 @@ view: reservations_audit {
   dimension_group: reservation_checkin {
     view_label: "Date Dimensions"
     group_label: "Checkin Date"
-    label: ""
+    label: "Checkin"
     type: time
     hidden: no
     timeframes: [
@@ -181,7 +181,7 @@ view: reservations_audit {
     type: time
     view_label: "Date Dimensions"
     group_label: "Checkout Date"
-    label: ""
+    label: "Checkout"
     timeframes: [
       raw,
       time,
@@ -338,7 +338,8 @@ view: reservations_audit {
   dimension: status_booked{
     description: "Was this night booked?"
     type: yesno
-    sql: ${TABLE}.status is null or ${TABLE}.status IN ("confirmed","checked_in");;
+    sql: ${TABLE}.status IN ("confirmed","checked_in");;
+
   }
 
   dimension: source {
@@ -405,7 +406,7 @@ view: reservations_audit {
     description: "Reservation night stay"
     type:  count_distinct
     sql: CONCAT(${confirmationcode}, '-', ${financials_audit.night_date});;
-    filters: [financial_night_part_of_res: "yes"]
+    filters: [financial_night_part_of_res: "yes", status: "confirmed, checked_in"]
     drill_fields: [financials_audit.night_date, reservation_details*]
   }
 
@@ -428,21 +429,13 @@ view: reservations_audit {
   measure: num_reservations {
     view_label: "Metrics"
     label: "Num Reservations"
-    description: "Number of unique reservations"
+    description: "Number of unique reservations - These numbers may be slightly higher than the Kasametrics model as they are also taking into account reservations that aren't mapped to units / active units"
     type: count_distinct
     sql: ${confirmationcode} ;;
     filters: [financial_night_part_of_res: "yes", status: "confirmed, checked_in"]
     drill_fields: [reservation_details*]
   }
 
-  measure: num_reservations_star {
-    view_label: "Metrics"
-    label: "Num Reservations*"
-    description: "Number of unique reservations excluding financials table"
-    type: count_distinct
-    sql: ${confirmationcode} ;;
-    drill_fields: [reservation_details*]
-  }
 
   measure: num_reservations_canceled {
     view_label: "Metrics"

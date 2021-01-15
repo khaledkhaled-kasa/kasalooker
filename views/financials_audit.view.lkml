@@ -26,6 +26,7 @@ view: financials_audit {
     type: sum
     value_format: "$#,##0.00"
     sql: ${amount_revised} ;;
+    filters: [actualizedat_modified: "-Nonactualized (Historic)"]
   }
 
   dimension: types_filtered{
@@ -75,15 +76,6 @@ view: financials_audit {
     sql: ${amount} / NULLIF(${reservations_audit.reservation_night}, 0) ;;
   }
 
-
-  # measure: revpar {
-  #   view_label: "Metrics"
-  #   label: "RevPar"
-  #   description: "Revenue per available room: amount / capacity"
-  #   type: number
-  #   value_format: "$#,##0.00"
-  #   sql: ${amount} / NULLIF(${capacities_rolled_audit.capacity_measure}, 0) ;;
-  # }
 
   dimension: cashatbooking {
     type: yesno
@@ -165,7 +157,8 @@ view: financials_audit {
     CASE WHEN (${night_date} >= CURRENT_DATE("America/Los_Angeles")) THEN "Future Booking"
     WHEN (${TABLE}.actualizedat is not null) THEN "Actualized"
     WHEN (${night_date} < "2020-09-01") THEN "Older Booking"
-    WHEN ${TABLE}.actualizedat is null THEN null
+    WHEN (${TABLE}.actualizedat is null and ${TABLE}._id is not null) THEN "Nonactualized (Historic)"
+    --WHEN ${TABLE}.actualizedat is null THEN null
     END;;
   }
 
@@ -173,7 +166,5 @@ view: financials_audit {
     type: string
     sql: ${TABLE}.type ;;
   }
-
-
 
 }

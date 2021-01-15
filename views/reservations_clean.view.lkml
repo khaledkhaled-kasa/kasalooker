@@ -22,7 +22,7 @@ view: reservations_clean {
   dimension_group: bookingdate {
     view_label: "Date Dimensions"
     group_label: "Booking Date"
-    label: ""
+    label: "Booking"
     type: time
     timeframes: [
       raw,
@@ -39,7 +39,7 @@ view: reservations_clean {
   dimension_group: review_date {
     view_label: "Date Dimensions"
     group_label: "All Reviews Date"
-    label: ""
+    label: "All Reviews"
     type: time
     datatype: date
     timeframes: [
@@ -120,7 +120,7 @@ view: reservations_clean {
   dimension_group: cancellationdate {
     view_label: "Date Dimensions"
     group_label: "Reservation Cancellation Date"
-    label: ""
+    label: "Cancellation"
     type: time
     timeframes: [
       time,

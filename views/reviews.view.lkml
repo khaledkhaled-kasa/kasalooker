@@ -79,8 +79,8 @@
 
   dimension_group: submitdate {
     view_label: "Date Dimensions"
-    group_label: "Real-time Check-in Review Submit Date"
-    label: ""
+    group_label: "Real-time Review Date"
+    label: "Real-time Review"
     type: time
     timeframes: [
       raw,

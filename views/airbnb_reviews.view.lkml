@@ -74,7 +74,7 @@ view: airbnb_reviews {
     type: time
     group_label: "Airbnb Check-in Date"
     view_label: "Date Dimensions"
-    label: ""
+    label: "Airbnb Checkin"
     timeframes: [
       raw,
       date,
@@ -92,7 +92,7 @@ view: airbnb_reviews {
     type: time
     group_label: "Airbnb Check-out Date"
     view_label: "Date Dimensions"
-    label: ""
+    label: "Airbnb Checkout"
     timeframes: [
       raw,
       date,
@@ -216,7 +216,7 @@ view: airbnb_reviews {
   dimension_group: review {
     group_label: "Airbnb Review Date"
     view_label: "Date Dimensions"
-    label: ""
+    label: "Airbnb Review"
     type: time
     timeframes: [
       raw,

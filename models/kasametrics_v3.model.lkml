@@ -3,7 +3,7 @@ include: "../views/*"
 # include: "../dashboards/*"
 
 datagroup: kasametrics_v3_default_datagroup {
-  # sql_trigger: SELECT MAX(id) FROM etl_log;;
+  sql_trigger: SELECT MAX(id) FROM etl_log;;
   max_cache_age: "1 hour"
 }
 
@@ -14,23 +14,22 @@ datagroup: pdt_hourly {
 persist_with: kasametrics_v3_default_datagroup
 label: "Kasa Metrics"
 
-
 explore: capacities_v3 {
   label: "Reservations"
   from: capacities_v3
   join: units {
-    type:  left_outer
-    relationship: one_to_one
+    type:  inner
+    relationship: many_to_one
     sql_on: ${capacities_v3.unit} = ${units._id} ;;
   }
   join: complexes {
-    type:  left_outer
+    type:  inner
     relationship: many_to_one
     sql_on: ${units.complex} = ${complexes._id} ;;
   }
   join: reservations_v3 {
     type:  left_outer
-    relationship: one_to_many
+    relationship: many_to_one
     sql_on: ${reservations_v3.unit} = ${units._id} ;;
   }
   join: financials_v3 {
@@ -126,3 +125,29 @@ explore: guest_verification_form {
 #   }
 
   # }
+
+# old jan-13
+# explore: capacities_v3 {
+#   label: "Reservations"
+#   from: capacities_v3
+#   join: units {
+#     type:  left_outer
+#     relationship: one_to_one
+#     sql_on: ${capacities_v3.unit} = ${units._id} ;;
+#   }
+#   join: complexes {
+#     type:  left_outer
+#     relationship: many_to_one
+#     sql_on: ${units.complex} = ${complexes._id} ;;
+#   }
+#   join: reservations_v3 {
+#     type:  left_outer
+#     relationship: one_to_many
+#     sql_on: ${reservations_v3.unit} = ${units._id} ;;
+#   }
+#   join: financials_v3 {
+#     type:  left_outer
+#     relationship: one_to_many
+#     sql_on: ${reservations_v3._id} = ${financials_v3.reservation}
+#       and ${capacities_v3.night_date} = ${financials_v3.night_date};;
+#   }

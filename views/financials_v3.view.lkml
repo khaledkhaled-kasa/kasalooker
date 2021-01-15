@@ -1,7 +1,10 @@
 view: financials_v3{
   label: "Financials"
   derived_table: {
-    sql: SELECT financials.*, (t2.outstanding_amount / t3.count_nights_room_revenue) as nightly_outstanding_amount
+    sql: SELECT financials.*,
+        CASE WHEN CAST(financials.night as date) < '2021-01-01' THEN (t2.outstanding_amount / t3.count_nights_room_revenue)
+        ELSE null
+        END nightly_outstanding_amount
         FROM financials
         LEFT JOIN
 
@@ -61,7 +64,7 @@ view: financials_v3{
     type: sum
     value_format: "$#,##0.00"
     sql: ${amount_revised} ;;
-    filters: [financials_v3.isvalid: "yes", reservations_v3.financial_night_part_of_res: "yes"]
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)"]
   }
 
 
@@ -73,7 +76,7 @@ view: financials_v3{
     type: sum
     value_format: "$#,##0.00"
     sql: ${TABLE}.nightly_outstanding_amount;;
-    filters: [financials_v3.isvalid: "yes", reservations_v3.financial_night_part_of_res: "yes"]
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)"]
   }
 
   measure: amount {
@@ -84,6 +87,7 @@ view: financials_v3{
     value_format: "$#,##0.00"
     sql: ${amount_original} + ${amount_outstanding};;
   }
+
 
 
   measure: cleaning_amount {
@@ -164,11 +168,11 @@ view: financials_v3{
   }
 
   dimension_group: night {
-    hidden:  no
+    hidden:  yes
     view_label: "Date Dimensions"
     group_label: "Financial Night"
     description: "An occupied night at a Kasa"
-    label: "yes"
+    label: "Financial"
     type: time
     timeframes: [
       date,
@@ -189,9 +193,16 @@ view: financials_v3{
     # sql:  ${night_day_of_week} in ('Friday', 'Saturday') ;;
   }
 
-  dimension: reservation {
+
+  dimension: _id {
     type: string
     primary_key: yes
+    sql: ${TABLE}._id ;;
+  }
+
+  dimension: reservation {
+    type: string
+    # primary_key: yes
     sql: ${TABLE}.reservation ;;
   }
 
@@ -242,7 +253,7 @@ view: financials_v3{
     CASE WHEN (${night_date} >= CURRENT_DATE("America/Los_Angeles")) THEN "Future Booking"
     WHEN (${TABLE}.actualizedat is not null) THEN "Actualized"
     WHEN (${night_date} < "2020-09-01") THEN "Older Booking"
-    WHEN ${TABLE}.actualizedat is null THEN null
+    WHEN (${TABLE}.actualizedat is null and ${TABLE}._id is not null) THEN "Nonactualized (Historic)"
     END;;
   }
 

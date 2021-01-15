@@ -1,7 +1,17 @@
 view: capacities_v3 {
-  label: "Capacities"
-  sql_table_name: `bigquery-analytics-272822.mongo.capacitydenorms`
-    ;;
+  derived_table: {
+    sql: SELECT *
+        FROM capacitydenorms
+          WHERE unit is not null
+      ;;
+
+    # persist_for: "1 hour"
+    datagroup_trigger: kasametrics_v3_default_datagroup
+    # indexes: ["night","unit"]
+    publish_as_db_view: yes
+
+
+  }
 
   dimension: __v {
     type: number
@@ -11,6 +21,7 @@ view: capacities_v3 {
 
   dimension: _id {
     type: string
+    # primary_key: yes
     hidden: yes
     sql: ${TABLE}._id ;;
   }
@@ -170,5 +181,7 @@ view: capacities_v3 {
     hidden: yes
     sql: CONCAT(${TABLE}.night, ${TABLE}.unit) ;;
   }
+
+
 
 }

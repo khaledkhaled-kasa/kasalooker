@@ -11,7 +11,7 @@ datagroup: aircalls_default_datagroup {
 persist_with: aircalls_default_datagroup
 label: "Aircall"
 explore: aircall {
-  label: "Aircalls Export"
+  label: "Aircalls Export (Historical Data)"
   from: aircall
 }
 

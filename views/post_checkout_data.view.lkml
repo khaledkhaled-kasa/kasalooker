@@ -244,7 +244,7 @@ view: post_checkout_data {
 
   dimension_group: review {
     group_label: "Post-check-out Review Date"
-    label: ""
+    label: "Post-check-out Review"
     view_label: "Date Dimensions"
     type: time
     timeframes: [

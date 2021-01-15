@@ -29,7 +29,7 @@ ON reservations.confirmationcode = extensions.reservation_extensions
 LEFT JOIN guest_type_table
 ON reservations.guest = guest_type_table.guest ;;
 
-    persist_for: "1 hour"
+    # persist_for: "1 hour"
     # datagroup_trigger: kasametrics_v3_default_datagroup
     # indexes: ["night","transaction"]
     # publish_as_db_view: yes
@@ -86,7 +86,7 @@ ON reservations.guest = guest_type_table.guest ;;
 
   dimension_group: bookingdate {
     view_label: "Date Dimensions"
-    group_label: "Booking Date"
+    group_label: "Booking"
     label: ""
     type: time
     timeframes: [
@@ -171,7 +171,7 @@ ON reservations.guest = guest_type_table.guest ;;
   dimension_group: cancellationdate {
     view_label: "Date Dimensions"
     group_label: "Cancellation Date"
-    label: ""
+    label: "Cancellation"
     type: time
     timeframes: [
       time,
@@ -203,7 +203,7 @@ ON reservations.guest = guest_type_table.guest ;;
     type: time
     view_label: "Date Dimensions"
     group_label: "Check-in Date"
-    label: ""
+    label: "Checkin"
     timeframes: [
       raw,
       time,
@@ -226,7 +226,7 @@ ON reservations.guest = guest_type_table.guest ;;
     type: time
     view_label: "Date Dimensions"
     group_label: "Check-out Date"
-    label: ""
+    label: "Checkout"
     timeframes: [
       raw,
       time,
@@ -461,13 +461,24 @@ ON reservations.guest = guest_type_table.guest ;;
   }
 
   dimension: financial_night_part_of_res {
+    hidden: yes
     type:  yesno
     sql: format_date('%Y-%m-%d', ${financials_v3.night_date}) < ${TABLE}.checkoutdatelocal and
       format_date('%Y-%m-%d', ${financials_v3.night_date}) >= ${TABLE}.checkindatelocal;;
   }
 
+  dimension: financial_night_part_of_res_modified {
+    hidden: yes
+    description: "This will ultimately just apply the financial night part of reservations for any financial nights prior to 01-21 where neccessary data manipulation for historic data was set in place"
+    type:  string
+    sql: CASE WHEN (${financial_night_part_of_res} OR ${financials_v3.night_date} >= '2021-01-01')THEN "yes"
+    ELSE "no"
+    END;;
+  }
+
   dimension: capacity_night_part_of_res {
     type:  yesno
+    hidden: yes
     sql: format_date('%Y-%m-%d', ${capacities_v3.night_date}) < ${TABLE}.checkoutdatelocal and
       format_date('%Y-%m-%d', ${capacities_v3.night_date}) >= ${TABLE}.checkindatelocal;;
   }
