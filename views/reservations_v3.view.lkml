@@ -13,9 +13,10 @@ WITH guest_type_table AS
 
     extensions AS (
       select r2.confirmationcode as reservation_extensions
-      from reservations r1 join reservations r2
-      on r1.guest = r2.guest
+      from reservations r1 join reservations r2 on r1.guest = r2.guest
+      join units u1 on r1.unit = u1._id join units u2 on r2.unit = u2._id
       and cast(timestamp(r1.checkoutdate) as date) = cast(timestamp(r2.checkindate) as date)
+      and u1.complex = u2.complex
       where r1.status IN ('confirmed','checked_in')
       and r2.status IN ('confirmed','checked_in'))
 
