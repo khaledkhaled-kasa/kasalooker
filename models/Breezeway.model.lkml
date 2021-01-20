@@ -15,7 +15,7 @@ explore: breezeway_export {
   join: units {
     type:  left_outer
     relationship: many_to_one
-    sql_on: ${units.externalrefs_property_id} = ${breezeway_export.property_internal_id} ;;
+    sql_on: ${units.internaltitle} = ${breezeway_export.property_internal_id} ;;
   }
   join: complexes {
     type:  left_outer

@@ -24,22 +24,79 @@ view: aircall_segment {
   }
 
 
-  dimension: duration {
+  dimension: total_duration {
     type: number
     sql: ${TABLE}.properties.duration ;;
   }
 
-  measure: avg_duration {
-    type: average
+  dimension: incall_duration {
+    type: duration_second
+    datatype: epoch
+    hidden: yes
+    sql_start: ${TABLE}.properties.answered_at;;
+    sql_end: ${TABLE}.properties.ended_at;;
+  }
+
+  dimension: hold_duration {
+    type: duration_second
+    datatype: epoch
+    hidden: yes
+    sql_start: ${TABLE}.properties.started_at;;
+    sql_end: CASE WHEN ${TABLE}.properties.answered_at is NULL THEN ${TABLE}.properties.ended_at
+    ELSE ${TABLE}.properties.answered_at
+    END;;
+  }
+
+  measure: incall_duration_total {
+    type: sum_distinct
+    view_label: "Metrics"
+    label: "In Call Duration (Seconds)"
+    sql: ${incall_duration} ;;
+    sql_distinct_key: concat(${id},${event}) ;;
+    filters: {
+      field: event
+      value: "call_hungup"
+    }
+  }
+
+  measure: hold_duration_total {
+    type: sum_distinct
+    view_label: "Metrics"
+    label: "Hold Duration (Seconds)"
+    sql: ${hold_duration} ;;
+    sql_distinct_key: concat(${id},${event}) ;;
+    filters: {
+      field: event
+      value: "call_hungup"
+    }
+  }
+
+  measure: avg_incall_duration {
+    type: average_distinct
     view_label: "Metrics"
     label: "Average Call Time (minutes)"
     value_format: "0.0"
-    sql: ${TABLE}.properties.duration/60;;
+    sql: ${incall_duration}/60;;
+    sql_distinct_key: concat(${id},${event}) ;;
     filters: {
-      field: duration
-      value: ">0"
+      field: event
+      value: "call_hungup"
     }
   }
+
+  measure: avg_hold_duration {
+    type: average_distinct
+    view_label: "Metrics"
+    label: "Average Hold Time (minutes)"
+    value_format: "0.0"
+    sql: ${hold_duration}/60;;
+    sql_distinct_key: concat(${id},${event}) ;;
+    filters: {
+      field: event
+      value: "call_hungup"
+    }
+  }
+
 
   dimension: user_name {
     type: string
@@ -207,7 +264,7 @@ view: aircall_segment {
       value: "inbound"
     }
     filters: {
-      field: duration
+      field: total_duration
       value: ">0"
     }
     filters: {
