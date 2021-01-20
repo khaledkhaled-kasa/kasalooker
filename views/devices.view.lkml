@@ -49,6 +49,10 @@ view: devices {
     sql: ${TABLE}.laststatusupdate ;;
   }
 
+  dimension: mount_status {
+    type:  string
+    sql:  ${TABLE}.metadata.mount_status ;;
+  }
 
   measure: count {
     type: count
