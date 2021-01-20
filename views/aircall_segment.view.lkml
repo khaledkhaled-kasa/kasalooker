@@ -23,6 +23,11 @@ view: aircall_segment {
     sql: ${TABLE}.properties.id ;;
   }
 
+  dimension: composite_primary_key {
+    primary_key: yes
+    sql: concat(${TABLE}.properties.id,${TABLE}.event) ;;
+  }
+
 
   dimension: total_duration {
     type: number
@@ -55,7 +60,7 @@ view: aircall_segment {
     sql_distinct_key: concat(${id},${event}) ;;
     filters: {
       field: event
-      value: "call_hungup"
+      value: "call.hungup"
     }
   }
 
@@ -67,7 +72,7 @@ view: aircall_segment {
     sql_distinct_key: concat(${id},${event}) ;;
     filters: {
       field: event
-      value: "call_hungup"
+      value: "call.hungup"
     }
   }
 
@@ -80,7 +85,7 @@ view: aircall_segment {
     sql_distinct_key: concat(${id},${event}) ;;
     filters: {
       field: event
-      value: "call_hungup"
+      value: "call.hungup"
     }
   }
 
@@ -93,10 +98,9 @@ view: aircall_segment {
     sql_distinct_key: concat(${id},${event}) ;;
     filters: {
       field: event
-      value: "call_hungup"
+      value: "call.hungup"
     }
   }
-
 
   dimension: user_name {
     type: string
@@ -175,23 +179,6 @@ view: aircall_segment {
   }
 
 
-  # dimension_group: answered_at_UTC {
-  #   type: time
-  #   timeframes: [
-  #     raw,
-  #     time,
-  #     date,
-  #     week,
-  #     week_of_year,
-  #     month,
-  #     month_name,
-  #     quarter,
-  #     year
-  #   ]
-  #   sql: TIMESTAMP_SECONDS(${TABLE}.properties.answered_at);;
-  # }
-
-
   measure: count_all {
     view_label: "Metrics"
     description: "All Calls"
@@ -203,7 +190,7 @@ view: aircall_segment {
     # }
     filters: {
       field: event
-      value: "call_hungup"
+      value: "call.hungup"
     }
     drill_fields: []
   }
@@ -219,7 +206,7 @@ view: aircall_segment {
     }
     filters: {
       field: event
-      value: "call_hungup"
+      value: "call.hungup"
     }
     # filters: {
     #   field: duration__total_
@@ -238,7 +225,7 @@ view: aircall_segment {
     }
     filters: {
       field: event
-      value: "call_hungup"
+      value: "call.hungup"
     }
     # filters: {
     #   field: duration__total_
@@ -269,7 +256,7 @@ view: aircall_segment {
     }
     filters: {
       field: event
-      value: "call_hungup"
+      value: "call.hungup"
     }
   }
 
@@ -288,7 +275,7 @@ view: aircall_segment {
     }
     filters: {
       field: event
-      value: "call_hungup"
+      value: "call.hungup"
     }
   }
 
