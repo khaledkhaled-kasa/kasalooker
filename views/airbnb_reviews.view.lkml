@@ -375,14 +375,24 @@ view: airbnb_reviews {
   ]
 }
 
-  measure: count_perfect_stay {
-    view_label: "Metrics"
-    group_label: "Airbnb Metrics"
-    type: count_distinct
-    value_format: "0"
-    sql: ${TABLE}.Reservation_Code;;
-    filters: [overall_rating: "5", cleanliness_rating_dim: "5", accuracy_rating_dim: "5", checkin_rating_dim: "5", communication_rating_dim: "5", location_rating_dim: "5", value_rating_dim: "5"]
-  }
+## This will calculate perfect stays when all categories are 5
+  # measure: count_perfect_stay {
+  #   view_label: "Metrics"
+  #   group_label: "Airbnb Metrics"
+  #   type: count_distinct
+  #   value_format: "0"
+  #   sql: ${TABLE}.Reservation_Code;;
+  #   filters: [overall_rating: "5", cleanliness_rating_dim: "5", accuracy_rating_dim: "5", checkin_rating_dim: "5", communication_rating_dim: "5", location_rating_dim: "5", value_rating_dim: "5"]
+  # }
+
+    # measure: percent_perfect_stay {
+  #   view_label: "Metrics"
+  #   group_label: "Airbnb Metrics"
+  #   type: number
+  #   value_format: "0.0%"
+  #   sql: ${count_perfect_stay} / nullif(${count},0);;
+  # }
+
 
   measure: percent_5_star {
     view_label: "Metrics"
@@ -392,12 +402,34 @@ view: airbnb_reviews {
     sql: ${count_5_star} / nullif(${count},0) ;;
   }
 
-  measure: percent_perfect_stay {
+  measure: percent_perfect_stay{
     view_label: "Metrics"
-    group_label: "Airbnb Metrics"
+    group_label: "NQS Metrics"
+    description: "This is the same as % 5 star (overall)"
     type: number
     value_format: "0.0%"
-    sql: ${count_perfect_stay} / nullif(${count},0);;
+    sql: ${count_5_star} / nullif(${count},0) ;;
+  }
+
+
+
+  measure: net_quality_score {
+    view_label: "Metrics"
+    group_label: "NQS Metrics"
+    label: "Net Quality Score (NQS)"
+    type: number
+    value_format: "0.0%"
+    sql: ${percent_perfect_stay} - ${percent_less_than_4_star};;
+  }
+
+  measure: percent_bad_stay {
+    view_label: "Metrics"
+    group_label: "NQS Metrics"
+    description: "This is the same as % less than 4 star"
+    label: "Percent Bad Stay"
+    type: number
+    value_format: "0.0%"
+    sql: ${count_less_than_4_star} / nullif(${count},0);;
   }
 
   measure: percent_less_than_4_star {
