@@ -44,6 +44,12 @@ view: devices {
     sql: ${TABLE}.connectionstatus ;;
   }
 
+  dimension: laststatusupdate {
+    type: date
+    sql: ${TABLE}.laststatusupdate ;;
+  }
+
+
   measure: count {
     type: count
     drill_fields: [deviceid]
