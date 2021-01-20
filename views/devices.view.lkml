@@ -45,7 +45,7 @@ view: devices {
   }
 
   dimension: laststatusupdate {
-    type: date
+    type: date_time
     sql: ${TABLE}.laststatusupdate ;;
   }
 
