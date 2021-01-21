@@ -11,8 +11,8 @@ WITH guest_type_table AS
     from reservations
     group by 1),
 
-    extensions AS (
-      select r2.confirmationcode as reservation_extensions
+    extensions AS (select r1.confirmationcode as initial_reservation_extensions,
+    r2.confirmationcode as reservation_extensions
       from reservations r1 join reservations r2 on r1.guest = r2.guest
       join units u1 on r1.unit = u1._id join units u2 on r2.unit = u2._id
       and cast(timestamp(r1.checkoutdate) as date) = cast(timestamp(r2.checkindate) as date)
@@ -21,12 +21,17 @@ WITH guest_type_table AS
       and r2.status IN ('confirmed','checked_in'))
 
 SELECT reservations.*, guest_type,
-CASE WHEN reservation_extensions is not null THEN 1
+CASE WHEN e2.initial_reservation_extensions is not null THEN 1
+ELSE NULL
+END initial_booking,
+CASE WHEN e1.reservation_extensions is not null THEN 1
 ELSE NULL
 END extended_booking
 from reservations
-LEFT JOIN extensions
-ON reservations.confirmationcode = extensions.reservation_extensions
+LEFT JOIN extensions e1
+ON reservations.confirmationcode = e1.reservation_extensions
+LEFT JOIN extensions e2
+ON reservations.confirmationcode = e2.initial_reservation_extensions
 LEFT JOIN guest_type_table
 ON reservations.guest = guest_type_table.guest ;;
 
@@ -46,6 +51,11 @@ ON reservations.guest = guest_type_table.guest ;;
   dimension: extended_booking {
     type: yesno
     sql: ${TABLE}.extended_booking = 1 ;;
+  }
+
+  dimension: initial_booking {
+    type: yesno
+    sql: ${TABLE}.initial_booking = 1 ;;
   }
 
   measure: extended_booking_count {
@@ -531,7 +541,7 @@ ON reservations.guest = guest_type_table.guest ;;
     description: "Number of Check-ins"
     type: count_distinct
     sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
-    filters: [checkin_night: "yes"]
+    filters: [checkin_night: "yes", extended_booking: "no"]
   }
 
   measure: number_of_checkouts {
@@ -540,7 +550,7 @@ ON reservations.guest = guest_type_table.guest ;;
     description: "Number of Check-outs"
     type: count_distinct
     sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
-    filters: [checkout_night: "yes"]
+    filters: [checkout_night: "yes", initial_booking: "no"]
   }
 
 
