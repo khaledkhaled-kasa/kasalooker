@@ -13,16 +13,18 @@ explore: reservations_clean {
   label: "Reservations"
   from: reservations_clean
   join: units {
-    type:  inner
-    relationship: many_to_one
+    type:  full_outer
+    relationship: one_to_one
     sql_on: ${units._id} = ${reservations_clean.unit} ;;
   }
 
   join: complexes {
     type:  inner
-    relationship: many_to_one
+    relationship: one_to_one
     sql_on: ${complexes._id} = ${units.complex} ;;
+    #OR ${complexes._id} = ${reservations_clean.property};;
   }
+
 
   join: reviews {
     type:  full_outer

@@ -21,6 +21,15 @@ view: units {
     END;;
   }
 
+  # dimension: address_city_revised {
+  #   hidden: yes
+  #   label: "City (Incl. Complexes)"
+  #   description: "This will pull the city from complexes if the unit is returning null values"
+  #   sql: CASE WHEN ${address_city} IS NULL THEN ${complexes.address_city}
+  #         ELSE ${address_city}
+  #         END;;
+  # }
+
   dimension: address_state {
     hidden: yes
     label: "State"
@@ -28,6 +37,15 @@ view: units {
     ELSE ${TABLE}.address.state
     END;;
   }
+
+  # dimension: address_state_revised {
+  #   hidden: yes
+  #   label: "State (Incl. Complexes)"
+  #   description: "This will pull the State from complexes if the unit is returning null values"
+  #   sql: CASE WHEN ${address_state} IS NULL THEN ${complexes.address_state}
+  #         ELSE ${address_state}
+  #         END;;
+  # }
 
   dimension: region {
     hidden: yes
@@ -246,13 +264,25 @@ view: units {
     sql: ${TABLE}.internaltitle ;;
   }
 
+
   dimension: propcode {
     hidden: no
     view_label: "Core Dimensions"
     label: "Property Code"
     type: string
-    sql: substr(${TABLE}.internaltitle, 1, 3) ;;
+    sql: substr(${TABLE}.internaltitle, 1, 3);;
   }
+
+  # dimension: propcode {
+  #   hidden: no
+  #   view_label: "Core Dimensions"
+  #   label: "Property Code"
+  #   type: string
+  #   sql:
+  #   CASE WHEN ${TABLE}.internaltitle IS NOT NULL THEN substr(${TABLE}.internaltitle, 1, 3)
+  #   ELSE ${complexes.internaltitle}
+  #   END;;
+  # }
 
   dimension: islisted {
     type: yesno

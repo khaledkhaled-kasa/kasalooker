@@ -505,6 +505,45 @@ ON reservations.guest = guest_type_table.guest ;;
     sql:  ${reservation_night} / NULLIF(${capacities_v3.capacity}, 0) ;;
   }
 
+  dimension: checkin_night {
+    hidden: yes
+    type:  yesno
+    sql: format_date('%Y-%m-%d', ${capacities_v3.night_date}) = format_date('%Y-%m-%d', ${reservation_checkin_date}) ;;
+  }
+
+  dimension: checkout_night {
+    hidden: yes
+    type:  yesno
+    sql: format_date('%Y-%m-%d', ${capacities_v3.night_date}) = format_date('%Y-%m-%d', ${reservation_checkout_date}) ;;
+  }
+
+  dimension: checkins_checkouts {
+    label: "Clean-up"
+    description: "Night is either a check-in or check-out (clean up redundant rows)"
+    type: yesno
+    sql: format_date('%Y-%m-%d', ${capacities_v3.night_date}) = format_date('%Y-%m-%d', ${reservation_checkout_date})
+    OR format_date('%Y-%m-%d', ${capacities_v3.night_date}) = format_date('%Y-%m-%d', ${reservation_checkin_date}) ;;
+  }
+
+  measure: number_of_checkins {
+    view_label: "Metrics"
+    label: "Number of Checkins"
+    description: "Number of Check-ins"
+    type: count_distinct
+    sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
+    filters: [checkin_night: "yes"]
+  }
+
+  measure: number_of_checkouts {
+    view_label: "Metrics"
+    label: "Number of Checkouts"
+    description: "Number of Check-outs"
+    type: count_distinct
+    sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
+    filters: [checkout_night: "yes"]
+  }
+
+
   set:reservation_details {
     fields: [confirmationcode, status, source, checkindate, checkoutdate, bookingdate_date]
   }

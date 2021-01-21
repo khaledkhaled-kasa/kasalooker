@@ -448,6 +448,8 @@ view: reservations_audit {
   }
 
 
+
+
   set:reservation_details {
     fields: [confirmationcode, status, source, checkindate, checkoutdate, bookingdate_date]
   }

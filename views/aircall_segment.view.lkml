@@ -166,6 +166,7 @@ view: aircall_segment {
     timeframes: [
       raw,
       time,
+      hour_of_day,
       date,
       week,
       week_of_year,

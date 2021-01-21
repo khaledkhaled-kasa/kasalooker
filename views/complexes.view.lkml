@@ -14,6 +14,23 @@ view: complexes {
     sql: ${TABLE}.address ;;
   }
 
+  # dimension: address_city {
+  #   hidden: yes
+  #   label: "City"
+  #   sql: CASE WHEN ${TABLE}.address.city = "" THEN NULL
+  #         ELSE ${TABLE}.address.city
+  #         END;;
+  # }
+
+  # dimension: address_state {
+  #   hidden: yes
+  #   label: "State"
+  #   sql: CASE WHEN ${TABLE}.address.state = "" THEN NULL
+  #         ELSE ${TABLE}.address.state
+  #         END;;
+  # }
+
+
   dimension: contacts {
     hidden: yes
     sql: ${TABLE}.contacts ;;
