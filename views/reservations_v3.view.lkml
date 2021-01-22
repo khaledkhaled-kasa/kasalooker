@@ -9,6 +9,7 @@ WITH guest_type_table AS
     else "First Time"
     END guest_type
     from reservations
+    where status IN ('confirmed','checked_in')
     group by 1),
 
     extensions AS (select r1.confirmationcode as initial_reservation_extensions,

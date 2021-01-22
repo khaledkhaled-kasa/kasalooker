@@ -170,6 +170,7 @@ dimension: address_city_revised {
     sql: ${TABLE}._id ;;
   }
 
+
 }
 
 view: complexes__externaltitle {
