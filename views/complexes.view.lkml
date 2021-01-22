@@ -1,5 +1,4 @@
 view: complexes {
-  label: "zBuildings"
   sql_table_name: `bigquery-analytics-272822.mongo.complexes`
     ;;
 
@@ -13,23 +12,6 @@ view: complexes {
     hidden: yes
     sql: ${TABLE}.address ;;
   }
-
-  # dimension: address_city {
-  #   hidden: yes
-  #   label: "City"
-  #   sql: CASE WHEN ${TABLE}.address.city = "" THEN NULL
-  #         ELSE ${TABLE}.address.city
-  #         END;;
-  # }
-
-  # dimension: address_state {
-  #   hidden: yes
-  #   label: "State"
-  #   sql: CASE WHEN ${TABLE}.address.state = "" THEN NULL
-  #         ELSE ${TABLE}.address.state
-  #         END;;
-  # }
-
 
   dimension: contacts {
     hidden: yes
@@ -98,36 +80,96 @@ view: complexes {
 }
 
 view: complexes__address {
-  dimension: city {
-    view_label: "Core Dimensions"
-    type: string
-    sql: ${TABLE}.city ;;
+  derived_table: {
+    sql: SELECT address, _id, internaltitle, title
+        FROM complexes
+      ;;
   }
 
-  dimension: country {
+  dimension: title {
     view_label: "Core Dimensions"
+    label: "Building Title*"
+    description: "This is used in the reviews model to take into consideration units which are unmapped to reservations"
     type: string
-    map_layer_name: countries
-    sql: ${TABLE}.country ;;
+    primary_key: yes
+    sql: CASE WHEN ${complexes.title} IS NULL THEN ${TABLE}.title
+          ELSE ${complexes.title}
+          END;;
   }
 
-  dimension: state {
-    view_label: "Core Dimensions"
+  dimension: internaltitle {
+    hidden:  yes
     type: string
-    sql: ${TABLE}.state ;;
+    sql: ${TABLE}.internaltitle ;;
   }
 
-  dimension: street {
+    dimension: address_city {
+    hidden: yes
     view_label: "Core Dimensions"
-    type: string
-    sql: ${TABLE}.street ;;
+    label: "City from C2"
+    sql: CASE WHEN ${TABLE}.address.city = "" THEN NULL
+          ELSE ${TABLE}.address.city
+          END;;
   }
 
-  dimension: zip {
+  dimension: address_state {
+    hidden: yes
     view_label: "Core Dimensions"
-    type: zipcode
-    sql: ${TABLE}.zip ;;
+    label: "State from C2"
+    sql: CASE WHEN ${TABLE}.address.state = "" THEN NULL
+          ELSE ${TABLE}.address.state
+          END;;
   }
+
+dimension: address_city_revised {
+    hidden: yes
+    view_label: "Core Dimensions"
+    label: "City (Incl. Complexes)"
+    description: "This will pull the city from complexes if the unit is returning null values"
+    sql: CASE WHEN ${units.address_city} IS NULL THEN ${complexes__address.address_city}
+          ELSE ${units.address_city}
+          END;;
+  }
+
+  dimension: address_state_revised {
+    hidden: yes
+    label: "State"
+    description: "This will pull the State from complexes if the unit is returning null values"
+    sql: CASE WHEN ${units.address_state} IS NULL THEN ${complexes__address.address_state}
+          ELSE ${units.address_state}
+          END;;
+  }
+
+  dimension: propcode_revised {
+    hidden: no
+    view_label: "Core Dimensions"
+    label: "Property Code*"
+    description: "This will pull the Property Code from complexes if the unit is returning null values"
+    type: string
+    sql: CASE WHEN ${units.internaltitle} IS NULL THEN ${complexes__address.internaltitle}
+          ELSE substr(${TABLE}.internaltitle, 1, 3)
+          END
+          ;;
+  }
+
+  dimension: region_revised {
+    hidden: yes
+    label: "Region"
+    sql: CASE
+          WHEN ${address_state_revised} IN ("TX") THEN "Texas"
+          WHEN ${address_state_revised} IN ("WA","CA","UT","CO") THEN "West"
+          WHEN ${address_state_revised} IN ("FL","DC","PA","CT","NJ","SC","NC","GA","VA","TN") THEN "East"
+          WHEN ${address_state_revised} IN ("IL","IA","WI","MO","MN","AZ") THEN "Central"
+          ELSE "Other"
+          END ;;
+  }
+
+  dimension: _id {
+    hidden:  yes
+    type: string
+    sql: ${TABLE}._id ;;
+  }
+
 }
 
 view: complexes__externaltitle {

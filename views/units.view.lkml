@@ -21,14 +21,6 @@ view: units {
     END;;
   }
 
-  # dimension: address_city_revised {
-  #   hidden: yes
-  #   label: "City (Incl. Complexes)"
-  #   description: "This will pull the city from complexes if the unit is returning null values"
-  #   sql: CASE WHEN ${address_city} IS NULL THEN ${complexes.address_city}
-  #         ELSE ${address_city}
-  #         END;;
-  # }
 
   dimension: address_state {
     hidden: yes
@@ -38,25 +30,16 @@ view: units {
     END;;
   }
 
-  # dimension: address_state_revised {
-  #   hidden: yes
-  #   label: "State (Incl. Complexes)"
-  #   description: "This will pull the State from complexes if the unit is returning null values"
-  #   sql: CASE WHEN ${address_state} IS NULL THEN ${complexes.address_state}
-  #         ELSE ${address_state}
-  #         END;;
-  # }
-
   dimension: region {
     hidden: yes
     label: "Region"
     sql: CASE
-    WHEN ${TABLE}.address.state IN ("TX") THEN "Texas"
-    WHEN ${TABLE}.address.state IN ("WA","CA","UT","CO") THEN "West"
-    WHEN ${TABLE}.address.state IN ("FL","DC","PA","CT","NJ","SC","NC","GA","VA","TN") THEN "East"
-    WHEN ${TABLE}.address.state IN ("IL","IA","WI","MO","MN","AZ") THEN "Central"
-    ELSE "Other"
-    END ;;
+          WHEN ${TABLE}.address.state IN ("TX") THEN "Texas"
+          WHEN ${TABLE}.address.state IN ("WA","CA","UT","CO") THEN "West"
+          WHEN ${TABLE}.address.state IN ("FL","DC","PA","CT","NJ","SC","NC","GA","VA","TN") THEN "East"
+          WHEN ${TABLE}.address.state IN ("IL","IA","WI","MO","MN","AZ") THEN "Central"
+          ELSE "Other"
+          END ;;
   }
 
   dimension: amenities {

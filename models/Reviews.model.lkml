@@ -13,18 +13,23 @@ explore: reservations_clean {
   label: "Reservations"
   from: reservations_clean
   join: units {
-    type:  full_outer
+    type:  left_outer
     relationship: one_to_one
     sql_on: ${units._id} = ${reservations_clean.unit} ;;
   }
 
   join: complexes {
-    type:  inner
+    type:  left_outer
     relationship: one_to_one
     sql_on: ${complexes._id} = ${units.complex} ;;
-    #OR ${complexes._id} = ${reservations_clean.property};;
   }
 
+  join: complexes__address {
+    from: complexes__address
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${complexes__address._id} = ${reservations_clean.property};;
+  }
 
   join: reviews {
     type:  full_outer
@@ -37,11 +42,7 @@ explore: reservations_clean {
     relationship:  one_to_one
     sql_on: ${reservations_clean.confirmationcode} = ${airbnb_reviews.reservation_code} ;;
   }
-  # join: booking_reviews {
-  #   type: full_outer
-  #   relationship: one_to_many
-  #   sql_on: ${units.propcode} = ${booking_reviews.building} ;;
-  # }
+
   join: post_checkout_data {
     type:  full_outer
     relationship: one_to_one
@@ -58,8 +59,8 @@ explore: reservations_clean {
   join: geo_location {
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${units.address_city} = ${geo_location.city}
-    and ${units.address_state} = ${geo_location.state};;
+    sql_on:  ${complexes__address.address_city_revised} = ${geo_location.city}
+    and ${complexes__address.address_state_revised} = ${geo_location.state};;
   }
 
 }
