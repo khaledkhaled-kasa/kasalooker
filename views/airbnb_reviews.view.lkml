@@ -248,64 +248,65 @@ view: airbnb_reviews {
 
   measure: overall_quality_score {
     view_label: "Metrics"
-    group_label: "Airbnb OQS Metrics"
+    group_label: "OQS Metrics"
     label: "Airbnb OQS"
     type: number
     value_format: "0%"
     sql: (${overall_rating_avg} - 4.535)/(4.825 - 4.535) ;;
   }
 
-  measure: overall_quality_score_accuracy {
-    view_label: "Metrics"
-    group_label: "Airbnb OQS Metrics"
-    type: number
-    value_format: "0%"
-    sql: (${accuracy_rating} - 4.761)/(4.901 - 4.761) ;;
-  }
+  # measure: overall_quality_score_accuracy {
+  #   view_label: "Metrics"
+  #   group_label: "Airbnb OQS Metrics"
+  #   type: number
+  #   value_format: "0%"
+  #   sql: (${accuracy_rating} - 4.761)/(4.901 - 4.761) ;;
+  # }
 
-  measure: overall_quality_score_cleanliness {
-    view_label: "Metrics"
-    group_label: "Airbnb OQS Metrics"
-    type: number
-    value_format: "0%"
-    sql: (${cleanliness_rating} - 4.66)/(4.855 - 4.66) ;;
-  }
+  # measure: overall_quality_score_cleanliness {
+  #   view_label: "Metrics"
+  #   group_label: "Airbnb OQS Metrics"
+  #   type: number
+  #   value_format: "0%"
+  #   sql: (${cleanliness_rating} - 4.66)/(4.855 - 4.66) ;;
+  # }
 
-  measure: overall_quality_score_communication {
-    view_label: "Metrics"
-    group_label: "Airbnb OQS Metrics"
-    type: number
-    value_format: "0%"
-    sql: (${communication_rating} - 4.681)/(4.848 - 4.681) ;;
-  }
+  # measure: overall_quality_score_communication {
+  #   view_label: "Metrics"
+  #   group_label: "Airbnb OQS Metrics"
+  #   type: number
+  #   value_format: "0%"
+  #   sql: (${communication_rating} - 4.681)/(4.848 - 4.681) ;;
+  # }
 
-  measure: overall_quality_score_checkin_rating {
-    view_label: "Metrics"
-    group_label: "Airbnb OQS Metrics"
-    type: number
-    value_format: "0%"
-    sql: (${checkin_rating} - 4.482)/(4.729 - 4.482) ;;
-  }
+  # measure: overall_quality_score_checkin_rating {
+  #   view_label: "Metrics"
+  #   group_label: "Airbnb OQS Metrics"
+  #   type: number
+  #   value_format: "0%"
+  #   sql: (${checkin_rating} - 4.482)/(4.729 - 4.482) ;;
+  # }
 
-  measure: overall_quality_score_value {
-    view_label: "Metrics"
-    group_label: "Airbnb OQS Metrics"
-    type: number
-    value_format: "0%"
-    sql: (${value_rating} - 4.614)/(4.783 - 4.614) ;;
-  }
+  # measure: overall_quality_score_value {
+  #   view_label: "Metrics"
+  #   group_label: "Airbnb OQS Metrics"
+  #   type: number
+  #   value_format: "0%"
+  #   sql: (${value_rating} - 4.614)/(4.783 - 4.614) ;;
+  # }
 
-  measure: overall_quality_score_location {
-    view_label: "Metrics"
-    group_label: "Airbnb OQS Metrics"
-    type: number
-    value_format: "0%"
-    sql: (${location_rating} - 4.799)/(4.871 - 4.799) ;;
-  }
+  # measure: overall_quality_score_location {
+  #   view_label: "Metrics"
+  #   group_label: "Airbnb OQS Metrics"
+  #   type: number
+  #   value_format: "0%"
+  #   sql: (${location_rating} - 4.799)/(4.871 - 4.799) ;;
+  # }
 
   measure: count_5_star {
     view_label: "Metrics"
-    group_label: "Airbnb Metrics"
+    group_label: "Airbnb Perfect Stay Metrics"
+    label: "Count 5 Star Overall"
     type: count_distinct
     value_format: "0"
     sql: ${TABLE}.Reservation_Code;;
@@ -317,7 +318,7 @@ view: airbnb_reviews {
 
   measure: count_4_star {
     view_label: "Metrics"
-    group_label: "Airbnb Metrics"
+    group_label: "Airbnb Count Metrics"
     type: count_distinct
     hidden: no
     value_format: "0"
@@ -329,7 +330,7 @@ view: airbnb_reviews {
 
   measure: count_3_star {
     view_label: "Metrics"
-    group_label: "Airbnb Metrics"
+    group_label: "Airbnb Count Metrics"
     type: count_distinct
     hidden: no
     value_format: "0"
@@ -341,7 +342,7 @@ view: airbnb_reviews {
 
   measure: count_2_star {
     view_label: "Metrics"
-    group_label: "Airbnb Metrics"
+    group_label: "Airbnb Count Metrics"
     type: count_distinct
     hidden: no
     value_format: "0"
@@ -354,7 +355,7 @@ view: airbnb_reviews {
   measure: count_1_star {
     view_label: "Metrics"
     type: count_distinct
-    group_label: "Airbnb Metrics"
+    group_label: "Airbnb Count Metrics"
     hidden: no
     value_format: "0"
     sql: ${TABLE}.Reservation_Code;;
@@ -396,21 +397,12 @@ view: airbnb_reviews {
 
   measure: percent_5_star {
     view_label: "Metrics"
-    group_label: "Airbnb Metrics"
+    group_label: "Airbnb Perfect Stay Metrics"
+    label: "Percent 5 Star Overall"
     type: number
     value_format: "0.0%"
     sql: ${count_5_star} / nullif(${count},0) ;;
   }
-
-  measure: percent_perfect_stay{
-    view_label: "Metrics"
-    group_label: "NQS Metrics"
-    description: "This is the same as % 5 star (overall)"
-    type: number
-    value_format: "0.0%"
-    sql: ${count_5_star} / nullif(${count},0) ;;
-  }
-
 
 
   measure: net_quality_score {
@@ -419,14 +411,80 @@ view: airbnb_reviews {
     label: "Net Quality Score (NQS)"
     type: number
     value_format: "0.0%"
-    sql: ${percent_perfect_stay} - ${percent_less_than_4_star};;
+    sql: ${percent_perfect_stay} - ${percent_bad_stay};;
   }
+
+  measure: net_quality_score_accuracy {
+    view_label: "Metrics"
+    group_label: "NQS Metrics"
+    label: "NQS (Accuracy)"
+    type: number
+    value_format: "0.0%"
+    sql: ${percent_5_star_accuracy} - ${percent_less_than_4_star_accuracy};;
+  }
+
+  measure: net_quality_score_value{
+    view_label: "Metrics"
+    group_label: "NQS Metrics"
+    label: "NQS (Value)"
+    type: number
+    value_format: "0.0%"
+    sql: ${percent_5_star_value} - ${percent_less_than_4_star_value};;
+  }
+
+  measure: net_quality_score_location {
+    view_label: "Metrics"
+    group_label: "NQS Metrics"
+    label: "NQS (Location)"
+    type: number
+    value_format: "0.0%"
+    sql: ${percent_5_star_location} - ${percent_less_than_4_star_location};;
+  }
+
+  measure: net_quality_score_checkin {
+    view_label: "Metrics"
+    group_label: "NQS Metrics"
+    label: "NQS (Checkin)"
+    type: number
+    value_format: "0.0%"
+    sql: ${percent_5_star_checkin} - ${percent_less_than_4_star_checkin};;
+  }
+
+  measure: net_quality_score_clean {
+    view_label: "Metrics"
+    group_label: "NQS Metrics"
+    label: "NQS (Clean)"
+    type: number
+    value_format: "0.0%"
+    sql: ${percent_5_star_clean} - ${percent_less_than_4_star_clean};;
+  }
+
+  measure: net_quality_score_communication {
+    view_label: "Metrics"
+    group_label: "NQS Metrics"
+    label: "NQS (Communication)"
+    type: number
+    value_format: "0.0%"
+    sql: ${percent_5_star_communication} - ${percent_less_than_4_star_communication};;
+  }
+
+
+  measure: percent_perfect_stay{
+    view_label: "Metrics"
+    group_label: "NQS Metrics"
+    description: "This is the same as % 5 star (overall)"
+    label: "Percent Perfect Stay (Overall)"
+    type: number
+    value_format: "0.0%"
+    sql: ${count_5_star} / nullif(${count},0) ;;
+  }
+
 
   measure: percent_bad_stay {
     view_label: "Metrics"
     group_label: "NQS Metrics"
     description: "This is the same as % less than 4 star"
-    label: "Percent Bad Stay"
+    label: "Percent Bad Stay (Overall)"
     type: number
     value_format: "0.0%"
     sql: ${count_less_than_4_star} / nullif(${count},0);;
@@ -467,12 +525,83 @@ view: airbnb_reviews {
 
   measure: count {
     view_label: "Metrics"
-    group_label: "Airbnb Metrics"
+    group_label: "Airbnb Count Metrics"
     label: "Airbnb Review Count"
     type: count_distinct
     sql: ${TABLE}.Reservation_Code ;;
   }
 
+  measure: clean_count_5_star {
+    view_label: "Metrics"
+    group_label: "Airbnb Perfect Stay Metrics"
+    label: "Count 5 Star Clean"
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      cleanliness_rating_dim: "5"
+    ]
+  }
+
+  measure: accuracy_count_5_star {
+    view_label: "Metrics"
+    group_label: "Airbnb Perfect Stay Metrics"
+    label: "Count 5 Star Accuracy"
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      accuracy_rating_dim: "5"
+    ]
+  }
+
+  measure: value_count_5_star {
+    view_label: "Metrics"
+    group_label: "Airbnb Perfect Stay Metrics"
+    label: "Count 5 Star Value"
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      value_rating_dim: "5"
+    ]
+  }
+
+  measure: location_count_5_star {
+    view_label: "Metrics"
+    group_label: "Airbnb Perfect Stay Metrics"
+    label: "Count 5 Star Location"
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      location_rating_dim: "5"
+    ]
+  }
+
+  measure: communication_count_5_star {
+    view_label: "Metrics"
+    group_label: "Airbnb Perfect Stay Metrics"
+    label: "Count 5 Star Communication"
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      communication_rating_dim: "5"
+    ]
+  }
+
+  measure: checkin_count_5_star {
+    view_label: "Metrics"
+    group_label: "Airbnb Perfect Stay Metrics"
+    label: "Count 5 Star Checkin"
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      checkin_rating_dim: "5"
+    ]
+  }
 
   measure: clean_count_less_than_4_star {
     view_label: "Metrics"
@@ -548,7 +677,7 @@ view: airbnb_reviews {
 
   measure: count_clean {
     view_label: "Metrics"
-    group_label: "Airbnb Metrics"
+    group_label: "Airbnb Count Metrics"
     type: count_distinct
     label: "Count Reviews (6 Ratings besides Overall)"
     sql: ${TABLE}.Reservation_Code ;;
@@ -605,5 +734,55 @@ view: airbnb_reviews {
     value_format: "0.0%"
     sql: ${checkin_count_less_than_4_star} / ${count_clean};;
   }
+
+  measure: percent_5_star_clean {
+    view_label: "Metrics"
+    group_label: "Airbnb Perfect Stay Metrics"
+    type: number
+    value_format: "0.0%"
+    sql: ${clean_count_5_star} / ${count_clean};;
+  }
+
+  measure: percent_5_star_value {
+    view_label: "Metrics"
+    group_label: "Airbnb Perfect Stay Metrics"
+    type: number
+    value_format: "0.0%"
+    sql: ${value_count_5_star} / ${count_clean};;
+  }
+
+  measure: percent_5_star_location {
+    view_label: "Metrics"
+    group_label: "Airbnb Perfect Stay Metrics"
+    type: number
+    value_format: "0.0%"
+    sql: ${location_count_5_star} / ${count_clean};;
+  }
+
+  measure: percent_5_star_communication {
+    view_label: "Metrics"
+    group_label: "Airbnb Perfect Stay Metrics"
+    type: number
+    value_format: "0.0%"
+    sql: ${communication_count_5_star} / ${count_clean};;
+  }
+
+  measure: percent_5_star_checkin {
+    view_label: "Metrics"
+    group_label: "Airbnb Perfect Stay Metrics"
+    type: number
+    value_format: "0.0%"
+    sql: ${checkin_count_5_star} / ${count_clean};;
+  }
+
+  measure: percent_5_star_accuracy {
+    view_label: "Metrics"
+    group_label: "Airbnb Perfect Stay Metrics"
+    type: number
+    value_format: "0.0%"
+    sql: ${accuracy_count_5_star} / ${count_clean};;
+  }
+
+
 
 }

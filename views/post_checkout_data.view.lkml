@@ -152,7 +152,7 @@ view: post_checkout_data {
   }
 
   measure: direct_oqs {
-    group_label: "Post-check-out Metrics"
+    group_label: "OQS Metrics"
     view_label: "Metrics"
     label: "Direct OQS"
     type: number
@@ -161,7 +161,7 @@ view: post_checkout_data {
   }
 
   measure: expedia_oqs {
-    group_label: "Post-check-out Metrics"
+    group_label: "OQS Metrics"
     view_label: "Metrics"
     label: "Expedia OQS"
     type: number
@@ -170,7 +170,7 @@ view: post_checkout_data {
   }
 
   measure: booking_oqs {
-    group_label: "Post-check-out Metrics"
+    group_label: "OQS Metrics"
     view_label: "Metrics"
     label: "Booking OQS"
     type: number

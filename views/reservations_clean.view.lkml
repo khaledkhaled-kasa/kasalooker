@@ -357,6 +357,7 @@ view: reservations_clean {
   measure: OQS {
     label: "Overall Quality Score (OQS)"
     view_label: "Metrics"
+    group_label: "OQS Metrics"
     type: number
     value_format: "0%"
     sql: (ifnull((${airbnb_reviews.overall_quality_score} * ${airbnb_reviews.count}),0) +  ifnull((${post_checkout_data.direct_oqs} * ${post_checkout_data.direct_reviews}),0)
