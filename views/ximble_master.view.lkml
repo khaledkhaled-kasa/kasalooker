@@ -145,7 +145,6 @@ view: ximble_master {
     type: yesno
     sql: (LOWER(${TABLE}.Shift_Label) NOT LIKE "%project time%")
     AND (LOWER(${TABLE}.Shift_Label) NOT LIKE '%training class%')
-    AND (LOWER(${TABLE}.Shift_Label) NOT LIKE "%phone queue%")
     AND (LOWER(${TABLE}.Shift_Label) NOT LIKE "%culture amp%")
     OR ${TABLE}.Shift_Label IS NULL
     ;;

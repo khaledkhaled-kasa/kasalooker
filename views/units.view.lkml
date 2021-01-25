@@ -58,7 +58,6 @@ view: units {
   }
 
   dimension: availability_startdate {
-    view_label: "Date Dimensions"
     label: "Unit Availability Start Date"
     hidden: no
     type: date
@@ -91,8 +90,6 @@ view: units {
   }
 
   dimension: availability_enddate {
-    hidden: no
-    view_label: "Date Dimensions"
     label: "Unit Availability End Date"
     type: date
     sql: TIMESTAMP(${TABLE}.availability.enddate);;

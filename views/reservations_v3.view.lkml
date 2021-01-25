@@ -98,7 +98,7 @@ ON reservations.guest = guest_type_table.guest ;;
 
   dimension_group: bookingdate {
     view_label: "Date Dimensions"
-    group_label: "Booking"
+    group_label: "Booking Date"
     label: ""
     type: time
     timeframes: [
