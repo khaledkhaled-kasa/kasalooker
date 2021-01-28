@@ -59,6 +59,9 @@
 
   measure: Rating {
     type:  average
+    view_label: "Metrics"
+    value_format: "0.0"
+    label: "Real-time Review Rating"
     sql: ${TABLE}.overallratingstandardized ;;
   }
 

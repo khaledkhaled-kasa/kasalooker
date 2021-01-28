@@ -1,6 +1,9 @@
 view: airbnb_reviews {
-  sql_table_name: `bigquery-analytics-272822.airbnb_review_master.Airbnb_Reviews`
-    ;;
+  derived_table: {
+    sql: SELECT *
+      FROM `bigquery-analytics-272822.airbnb_review_master.Airbnb_Reviews`
+       ;;
+  }
 
   dimension: first_45 {
     hidden: no
@@ -534,6 +537,7 @@ view: airbnb_reviews {
     view_label: "Metrics"
     group_label: "Airbnb Count Metrics"
     label: "Count Reviews (Overall)"
+    description: "This will take the count of all reviews which had an overall rating (Higher than subcategory review count)"
     type: count_distinct
     sql: ${TABLE}.Reservation_Code ;;
   }
@@ -686,7 +690,7 @@ view: airbnb_reviews {
     view_label: "Metrics"
     group_label: "Airbnb Count Metrics"
     type: count_distinct
-    label: "Count Reviews (6 Ratings besides Overall)"
+    label: "Count Reviews (Subcategories)"
     sql: ${TABLE}.Reservation_Code ;;
     filters: [
       cleanliness_rating_dim: "1,2,3,4,5"

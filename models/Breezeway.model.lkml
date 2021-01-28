@@ -14,12 +14,12 @@ explore: breezeway_export {
   from: breezeway_export
   join: units {
     type:  left_outer
-    relationship: many_to_one
+    relationship: one_to_one
     sql_on: ${units.internaltitle} = ${breezeway_export.property_internal_id} ;;
   }
   join: complexes {
     type:  left_outer
-    relationship: many_to_one
+    relationship: one_to_one
     sql_on: ${complexes._id} = ${units.complex} ;;
   }
   join: hk_partners {
@@ -29,7 +29,7 @@ explore: breezeway_export {
   }
   join: reservations_clean {
     type:  left_outer
-    relationship: many_to_one
+    relationship: one_to_one
     sql_on: ${units._id} = ${reservations_clean.unit} ;;
   }
 
@@ -38,11 +38,7 @@ explore: breezeway_export {
     relationship:  one_to_one
     sql_on: ${reservations_clean.confirmationcode} = ${airbnb_reviews.reservation_code} ;;
   }
-  # join: booking_reviews {
-  #   type: full_outer
-  #   relationship: one_to_many
-  #   sql_on: ${units.propcode} = ${booking_reviews.building} ;;
-  # }
+
   join: post_checkout_data {
     type:  full_outer
     relationship: one_to_one
@@ -54,6 +50,12 @@ explore: breezeway_export {
     relationship: one_to_one
     sql_on:  ${units.address_city} = ${geo_location.city}
       and ${units.address_state} = ${geo_location.state};;
+  }
+
+  join: reviews {
+    type:  full_outer
+    relationship:  one_to_one
+    sql_on:  ${reviews.reservation} = ${reservations_clean._id} ;;
   }
 
 }

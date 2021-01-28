@@ -76,7 +76,14 @@ view: breezeway_export {
 
   dimension: scorecard_name {
     type: string
+    label: "Partner Name"
     sql: ${TABLE}.Scorecard_Name ;;
+  }
+
+  dimension: hk_name {
+    type: string
+    label: "Housekeeper Name"
+    sql: ${TABLE}.Housekeeper_Name ;;
   }
 
   dimension: building {
@@ -141,6 +148,7 @@ view: breezeway_export {
     type: number
     view_label: "Metrics"
     group_label: "BW Metrics"
+    label: "% BW Tasks on Time"
     value_format: "0.0%"
     sql: ${done_on_time}/${count};;
   }
@@ -290,7 +298,10 @@ view: breezeway_export {
   }
 
   measure: count {
-    hidden: yes
+    view_label: "Metrics"
+    group_label: "BW Metrics"
+    label: "BW Tasks Count"
+    hidden: no
     type: count
     drill_fields: [id, name]
   }
