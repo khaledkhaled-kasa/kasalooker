@@ -3,11 +3,11 @@ include: "../views/*"
 
 
 datagroup: reviews_default_datagroup {
-  sql_trigger: SELECT MAX(id) FROM etl_log;;
-  #max_cache_age: "1 hour"
+  #sql_trigger: SELECT MAX(id) FROM etl_log;;
+  max_cache_age: "6 hours"
 }
 
-persist_with: reviews_default_datagroup
+# persist_with: reviews_default_datagroup
 label: "Kasa Reviews"
 explore: reservations_clean {
   label: "Reservations"

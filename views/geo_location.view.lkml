@@ -1,6 +1,10 @@
 view: geo_location {
-  sql_table_name: `bigquery-analytics-272822.Geos.Geo_Location`
-    ;;
+  derived_table: {
+    sql:   SELECT *
+          FROM `bigquery-analytics-272822.Geos.Geo_Location`
+       ;;
+  persist_for: "24 hours"
+  }
 
   # dimension: active_kasa_units__city_ {
   #   type: number
