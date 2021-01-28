@@ -7,11 +7,11 @@ datagroup: kasametrics_v3_default_datagroup {
   max_cache_age: "1 hour"
 }
 
-datagroup: pdt_hourly {
-  max_cache_age: "1 hour"
-}
+# datagroup: pdt_hourly {
+#   max_cache_age: "1 hour"
+# }
 
-persist_with: kasametrics_v3_default_datagroup
+# persist_with: kasametrics_v3_default_datagroup
 label: "Kasa Metrics"
 
 explore: capacities_v3 {

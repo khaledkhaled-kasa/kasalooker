@@ -1,7 +1,13 @@
 view: breezeway_export {
-  sql_table_name: `bigquery-analytics-272822.Breezeway_Data.export_summary`
-    ;;
+  derived_table: {
+    sql: SELECT *
+    FROM `bigquery-analytics-272822.Breezeway_Data.export_summary` ;;
+
+    #datagroup_trigger: reviews_default_datagroup
+    persist_for: "12 hours"
+}
   drill_fields: [id]
+
 
   dimension: id {
     primary_key: yes

@@ -1,6 +1,11 @@
-view: post_checkout_data {
-  sql_table_name: `bigquery-analytics-272822.overall_quality_score.Post_Checkout_Data`
-    ;;
+  view: post_checkout_data {
+    derived_table: {
+      sql:   SELECT *
+          FROM `bigquery-analytics-272822.overall_quality_score.Post_Checkout_Data`
+       ;;
+      persist_for: "6 hours"
+    }
+
 
   dimension: building_quality___location {
     type: string

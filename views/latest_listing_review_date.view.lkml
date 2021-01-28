@@ -12,7 +12,9 @@ view: latest_listing_review_date {
       where accuracy_rating is not null
       GROUP BY 1
        ;;
+    persist_for: "1 hour"
   }
+
 
   measure: count {
     type: count

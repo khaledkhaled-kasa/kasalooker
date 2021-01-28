@@ -1,6 +1,10 @@
 view: ximble_hourly_schedule {
-  sql_table_name: `bigquery-analytics-272822.ximble.ximble_hourly_schedule`
-    ;;
+  derived_table: {
+    sql:   SELECT *
+          FROM `bigquery-analytics-272822.ximble.ximble_hourly_schedule`
+       ;;
+    persist_for: "24 hours"
+  }
 
   dimension: job {
     type: string

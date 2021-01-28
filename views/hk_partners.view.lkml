@@ -1,6 +1,12 @@
-view: hk_partners {
-  sql_table_name: `bigquery-analytics-272822.Breezeway_Data.hk_partners`
-    ;;
+  view: hk_partners {
+    derived_table: {
+      sql:   SELECT *
+          FROM `bigquery-analytics-272822.Breezeway_Data.hk_partners`
+       ;;
+      persist_for: "24 hours"
+    }
+
+
 
   dimension: buildings {
     hidden: yes

@@ -5,11 +5,7 @@ view: capacities_v3 {
           WHERE unit is not null
       ;;
 
-    # persist_for: "1 hour"
-    datagroup_trigger: kasametrics_v3_default_datagroup
-    # indexes: ["night","unit"]
-    publish_as_db_view: yes
-
+    persist_for: "12 hours"
 
   }
 

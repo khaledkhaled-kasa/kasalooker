@@ -3,10 +3,10 @@ include: "../views/*"
 # include: "../dashboards/*"
 
 
-# datagroup: breezeway_default_datagroup {
-#   # sql_trigger: SELECT MAX(id) FROM etl_log;;
-#   max_cache_age: "1 hour"
-# }
+datagroup: breezeway_default_datagroup {
+  # sql_trigger: SELECT MAX(id) FROM etl_log;;
+max_cache_age: "12 hours"
+}
 
 #persist_with: reviews_default_datagroup
 label: "Breezeway"

@@ -3,7 +3,7 @@ view: geo_location {
     sql:   SELECT *
           FROM `bigquery-analytics-272822.Geos.Geo_Location`
        ;;
-  persist_for: "24 hours"
+  persist_for: "48 hours"
   }
 
   # dimension: active_kasa_units__city_ {
