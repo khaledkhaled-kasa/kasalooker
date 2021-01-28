@@ -4,46 +4,66 @@ view: reservations_v3 {
     sql:
 
   WITH  guest_type_table AS (
-         select email,
-         case when count(*) > 1 then "Multiple Reservations"
-         else "Single Reservation"
-         END guest_type
-         from reservations
-         join guests on reservations.guest = guests._id
-         where reservations.status IN ('confirmed','checked_in')
-         group by 1),
+         SELECT email,
+         CASE WHEN count(*) > 1 THEN "Multi Booker"
+         ELSE "Single Booker"
+         END guest_type,
+         count(*) AS number_of_bookings
+         FROM reservations
+         JOIN guests ON reservations.guest = guests._id
+         WHERE reservations.status IN ('confirmed','checked_in')
+         GROUP BY 1),
 
         extensions AS (
-            with r1 as (select reservations.*, guests.email
-            from reservations join guests on reservations.guest = guests._id),
-            r2 as (select reservations.*, guests.email
-            from reservations join guests on reservations.guest = guests._id)
-          select r1.confirmationcode as initial_reservation_extensions,
-          r2.confirmationcode as reservation_extensions
-          from r1 join r2 on r1.email = r2.email
-          and cast(timestamp(r1.checkoutdate) as date) = cast(timestamp(r2.checkindate) as date)
-          and r1.property = r2.property
-          where r1.status IN ('confirmed','checked_in')
-          and r2.status IN ('confirmed','checked_in')),
+            with r1 AS (SELECT reservations.*, guests.email
+            FROM reservations JOIN guests ON reservations.guest = guests._id),
+            r2 AS (SELECT reservations.*, guests.email
+            FROM reservations JOIN guests ON reservations.guest = guests._id)
+          SELECT r1.confirmationcode AS initial_reservation_extensions,
+          r2.confirmationcode AS reservation_extensions
+          FROM r1 JOIN r2 ON r1.email = r2.email
+          AND CAST(TIMESTAMP(r1.checkoutdate) AS DATE) = CAST(TIMESTAMP(r2.checkindate) AS DATE)
+          AND r1.property = r2.property
+          WHERE r1.status IN ('confirmed','checked_in')
+          AND r2.status IN ('confirmed','checked_in')),
+
+          number_of_extended_bookings AS (
+            with r1 AS (SELECT reservations.*, guests.email
+            FROM reservations JOIN guests ON reservations.guest = guests._id),
+            r2 AS (SELECT reservations.*, guests.email
+            FROM reservations JOIN guests ON reservations.guest = guests._id)
+          SELECT r1.email, count(*) AS bookings_with_extensions
+          FROM r1 JOIN r2 ON r1.email = r2.email
+          AND CAST(TIMESTAMP(r1.checkoutdate) AS DATE) = CAST(TIMESTAMP(r2.checkindate) AS DATE)
+          AND r1.property = r2.property
+          WHERE r1.status IN ('confirmed','checked_in')
+          AND r2.status IN ('confirmed','checked_in')
+          GROUP BY 1),
 
         reservations_new AS (
-          select reservations.*, email
-          from reservations join guests
-          on reservations.guest = guests._id)
+          SELECT reservations.*, email
+          FROM reservations JOIN guests
+          ON reservations.guest = guests._id)
 
 
-    SELECT reservations_new.*, guest_type,
+    SELECT reservations_new.*, guest_type_table.guest_type, guest_type_table.number_of_bookings, number_of_extended_bookings.bookings_with_extensions,
+    CASE WHEN bookings_with_extensions is null THEN guest_type_table.number_of_bookings
+    WHEN (guest_type_table.number_of_bookings - number_of_extended_bookings.bookings_with_extensions) < 1 THEN (guest_type_table.number_of_bookings - 0.5*number_of_extended_bookings.bookings_with_extensions)
+    ELSE guest_type_table.number_of_bookings - number_of_extended_bookings.bookings_with_extensions
+    END number_of_unique_reservations,
     CASE WHEN e2.initial_reservation_extensions is not null THEN 1
     ELSE NULL
     END initial_booking,
     CASE WHEN e1.reservation_extensions is not null THEN 1
     ELSE NULL
     END extended_booking
-    from reservations_new
+    FROM reservations_new
     LEFT JOIN extensions e1
     ON reservations_new.confirmationcode = e1.reservation_extensions
     LEFT JOIN extensions e2
     ON reservations_new.confirmationcode = e2.initial_reservation_extensions
+    LEFT JOIN number_of_extended_bookings
+    ON reservations_new.email = number_of_extended_bookings.email
     LEFT JOIN guest_type_table
     ON reservations_new.email = guest_type_table.email ;;
 
@@ -57,12 +77,31 @@ view: reservations_v3 {
 
     dimension: guest_type {
       hidden: no
+      view_label: "Guests"
       type: string
+      description: "Multibooker is classified as someone making more than one UNIQUE reservation (extensions are excluded)"
       sql: CASE
-      WHEN ${TABLE}.guest_type IS NULL THEN "Single Reservation"
+      WHEN ${TABLE}.guest_type = "Multi Booker" and ${TABLE}.number_of_unique_reservations = 1 THEN "Single Booker"
       ELSE ${TABLE}.guest_type
       END;;
     }
+
+  dimension: guest_reservations {
+    view_label: "Guests"
+    hidden: no
+    description: "This includes extensions"
+    type: number
+    sql: ${TABLE}.number_of_bookings ;;
+  }
+
+    dimension: guest_unique_reservations {
+      view_label: "Guests"
+      description: "These are unique reservations (extensions are excluded)"
+      hidden: no
+      type: number
+      sql: ${TABLE}.number_of_unique_reservations ;;
+      }
+
 
     # dimension: bookingflags {
     #   hidden: no
