@@ -5,7 +5,9 @@ view: capacities_v3 {
           WHERE unit is not null
       ;;
 
-    persist_for: "12 hours"
+    datagroup_trigger: capacities_v3_default_datagroup
+    # indexes: ["night","transaction"]
+    publish_as_db_view: yes
 
   }
 

@@ -7,6 +7,11 @@ datagroup: kasametrics_v3_default_datagroup {
   max_cache_age: "1 hour"
 }
 
+datagroup: capacities_v3_default_datagroup {
+  sql_trigger: SELECT MAX(id) FROM etl_log;;
+  max_cache_age: "24 hours"
+}
+
 # datagroup: pdt_hourly {
 #   max_cache_age: "1 hour"
 # }
