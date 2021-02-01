@@ -6,7 +6,7 @@ datagroup: kasametrics_audit_default_datagroup {
   max_cache_age: "1 hour"
 }
 
-# persist_with: kasametrics_audit_default_datagroup
+persist_with: kasametrics_audit_default_datagroup
 label: "Finance (Audit)"
 
 explore: reservations_audit {
