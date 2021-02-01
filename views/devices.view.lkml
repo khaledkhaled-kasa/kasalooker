@@ -34,6 +34,15 @@ view: devices {
     sql: ${TABLE}.rssi ;;
   }
 
+  dimension: wifi_health {
+    type: string
+    sql: CASE WHEN ${TABLE}.rssi <= -75 THEN "Poor"
+    WHEN ${TABLE}.rssi > -74 AND ${TABLE}.rssi <= -68 THEN "Ok"
+    WHEN ${TABLE}.rssi >= -67 THEN "Good"
+    ELSE "Check rssi"
+    END;;
+  }
+
   dimension: unit {
     type: string
     sql: ${TABLE}.unit ;;
