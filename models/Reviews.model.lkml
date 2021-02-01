@@ -7,7 +7,7 @@ datagroup: reviews_default_datagroup {
   max_cache_age: "6 hours"
 }
 
-# persist_with: reviews_default_datagroup
+persist_with: reviews_default_datagroup
 label: "Kasa Reviews"
 explore: reservations_clean {
   label: "Reservations"

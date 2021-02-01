@@ -8,7 +8,7 @@ datagroup: breezeway_default_datagroup {
 max_cache_age: "12 hours"
 }
 
-#persist_with: reviews_default_datagroup
+persist_with: breezeway_default_datagroup
 label: "Breezeway"
 explore: breezeway_export {
   from: breezeway_export
