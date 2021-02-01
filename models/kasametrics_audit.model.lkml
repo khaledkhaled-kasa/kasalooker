@@ -2,7 +2,7 @@ connection: "bigquery"
 include: "../views/*"
 
 datagroup: kasametrics_audit_default_datagroup {
-  sql_trigger: SELECT MAX(id) FROM etl_log;;
+  sql_trigger: SELECT MAX(financials_audit.night) FROM etl_log;;
   max_cache_age: "1 hour"
 }
 
