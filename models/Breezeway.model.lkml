@@ -5,7 +5,7 @@ include: "../views/*"
 
 datagroup: breezeway_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
-max_cache_age: "12 hours"
+max_cache_age: "6 hours"
 }
 
 persist_with: breezeway_default_datagroup
