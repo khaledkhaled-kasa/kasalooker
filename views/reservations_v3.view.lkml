@@ -75,12 +75,6 @@ view: reservations_v3 {
     }
 
 
-  dimension: preceding_cleaning_task {
-    hidden: no
-    type: string
-    description: "This will pull the BW task prior to the stay"
-    sql: ${TABLE}.precedingcleaningtask ;;
-  }
 
     dimension: guest_type {
       hidden: no

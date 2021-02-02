@@ -25,22 +25,24 @@ explore: breezeway_export {
   join: hk_partners {
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${hk_partners.buildings} = ${complexes.internaltitle} ;;
+    sql_on:  ${hk_partners.buildings} = LEFT(${breezeway_export.property_internal_id},3)
+    AND (${breezeway_export.assigned_date_date} BETWEEN ${hk_partners.start_date} AND ${hk_partners.end_date})
+    AND ${breezeway_export.type} = "Cleaning";;
   }
   join: reservations_clean {
     type:  left_outer
     relationship: one_to_one
-    sql_on: ${units._id} = ${reservations_clean.unit} ;;
+    sql_on: CAST(${breezeway_export.id} as STRING) = ${reservations_clean.preceding_cleaning_task} ;;
   }
 
   join: airbnb_reviews {
-    type: full_outer
+    type: left_outer
     relationship:  one_to_one
     sql_on: ${reservations_clean.confirmationcode} = ${airbnb_reviews.reservation_code} ;;
   }
 
   join: post_checkout_data {
-    type:  full_outer
+    type:  left_outer
     relationship: one_to_one
     sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_clean.confirmationcode} ;;
   }
@@ -53,7 +55,7 @@ explore: breezeway_export {
   }
 
   join: reviews {
-    type:  full_outer
+    type:  left_outer
     relationship:  one_to_one
     sql_on:  ${reviews.reservation} = ${reservations_clean._id} ;;
   }

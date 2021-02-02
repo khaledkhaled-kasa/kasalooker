@@ -81,6 +81,7 @@ view: breezeway_export {
   }
 
   dimension: scorecard_name {
+    hidden: yes
     type: string
     label: "Partner Name"
     sql: ${TABLE}.Scorecard_Name ;;

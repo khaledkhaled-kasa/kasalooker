@@ -6,7 +6,15 @@
       persist_for: "24 hours"
     }
 
+    dimension: start_date {
+      type: date
+      sql: ${TABLE}.Start_Date ;;
+    }
 
+    dimension: end_date {
+      type: date
+      sql: ${TABLE}.End_Date ;;
+    }
 
   dimension: buildings {
     hidden: yes
@@ -41,7 +49,7 @@
     sql: ${TABLE}.Home_Address ;;
   }
 
-  dimension: housekeeper {
+  dimension: partner_name {
     type: string
     sql: ${TABLE}.Housekeeper ;;
   }
@@ -71,21 +79,6 @@
     sql: ${TABLE}.Phone ;;
   }
 
-  dimension_group: start {
-    hidden: yes
-    type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    convert_tz: no
-    datatype: date
-    sql: ${TABLE}.Start_Date ;;
-  }
 
   dimension: status {
     type: string

@@ -59,6 +59,13 @@ view: reservations_clean {
     #sql: coalesce(${airbnb_reviews.review_raw},CAST(${post_checkout_data.review_raw} as DATE),${booking_reviews.review_raw}) ;;
   }
 
+  dimension: preceding_cleaning_task {
+    hidden: no
+    type: string
+    description: "This will pull the BW task prior to the stay"
+    sql: ${TABLE}.precedingcleaningtask ;;
+  }
+
   # dimension: lead_time {
   #   type:  number
   #   sql:  date_diff(CAST(${checkindate} as DATE), CAST(${TABLE}.bookingdate as DATE), DAY) ;;
