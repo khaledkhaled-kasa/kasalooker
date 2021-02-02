@@ -31,7 +31,9 @@ view: breezeway_export {
   }
 
   dimension_group: assigned_date {
-    label: "Assigned"
+    view_label: "Date Dimensions"
+    group_label: "BW Assigned Date"
+    label: ""
     type: time
     timeframes: [
       raw,

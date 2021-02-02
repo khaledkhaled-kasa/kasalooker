@@ -60,4 +60,10 @@ explore: breezeway_export {
     sql_on:  ${reviews.reservation} = ${reservations_clean._id} ;;
   }
 
+  join: financials_clean {
+    type:  left_outer
+    relationship: one_to_many
+    sql_on: ${reservations_clean._id} = ${financials_clean.reservation} ;;
+  }
+
 }
