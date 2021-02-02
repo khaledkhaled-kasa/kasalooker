@@ -3,7 +3,7 @@ include: "../views/*"
 
 datagroup: kasametrics_audit_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
-  sql_trigger: SELECT MAX(id) ;;
+  sql_trigger: SELECT MAX(createdat) from reservations ;;
   max_cache_age: "1 hours"
 }
 
