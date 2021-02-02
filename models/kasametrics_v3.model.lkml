@@ -3,12 +3,12 @@ include: "../views/*"
 # include: "../dashboards/*"
 
 datagroup: kasametrics_v3_default_datagroup {
-  sql_trigger: SELECT MAX(_id);;
+  sql_trigger: SELECT MAX(id);;
   max_cache_age: "1 hours"
 }
 
 datagroup: capacities_v3_default_datagroup {
-  sql_trigger: SELECT MAX(_id);;
+  sql_trigger: SELECT MAX(id);;
   max_cache_age: "24 hours"
 }
 
