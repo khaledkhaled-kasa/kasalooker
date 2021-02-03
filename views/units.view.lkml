@@ -238,7 +238,7 @@ view: units {
   }
 
   dimension: internaltitle {
-    view_label: "Core Dimensions"
+    view_label: "Units"
     label: "Unit"
     type: string
     sql: ${TABLE}.internaltitle ;;
@@ -247,7 +247,7 @@ view: units {
 
   dimension: propcode {
     hidden: no
-    view_label: "Core Dimensions"
+    view_label: "Building and Geographic Information"
     label: "Property Code"
     type: string
     sql: substr(${TABLE}.internaltitle, 1, 3);;

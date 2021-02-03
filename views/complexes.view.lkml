@@ -64,7 +64,7 @@ view: complexes {
   }
 
   dimension: title {
-    view_label: "Core Dimensions"
+    view_label: "Building and Geographic Information"
     label: "Building Title"
     type: string
     primary_key: yes
@@ -87,7 +87,7 @@ view: complexes__address {
   }
 
   dimension: title {
-    view_label: "Core Dimensions"
+    view_label: "Building and Geographic Information"
     label: "Building Title*"
     description: "This is used in the reviews model to take into consideration units which are unmapped to reservations"
     type: string
