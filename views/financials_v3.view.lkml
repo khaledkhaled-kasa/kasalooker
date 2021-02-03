@@ -89,39 +89,6 @@ view: financials_v3{
   }
 
 
-
-  measure: cleaning_amount {
-    type: number
-    view_label: "Metrics"
-    value_format: "$#,##0.00"
-    sql: sum(if(${TABLE}.type = "cleaning",${amount_revised},0)) ;;
-  }
-
-  measure: clean_refund_amount {
-    type: number
-    view_label: "Metrics"
-    value_format: "$#,##0.00"
-    sql: sum(if(${TABLE}.type = "CleanRefund",${amount_revised},0)) ;;
-  }
-
-  measure: cleaning_transactions {
-    type: count
-    view_label: "Metrics"
-    value_format: "0"
-    filters: [
-      type: "cleaning"
-    ]
-  }
-
-  measure: cleaning_refund_transactions {
-    type: count
-    view_label: "Metrics"
-    value_format: "0"
-    filters: [
-      type: "CleanRefund"
-    ]
-  }
-
   measure: adr {
     view_label: "Metrics"
     label: "ADR"

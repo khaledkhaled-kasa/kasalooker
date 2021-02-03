@@ -42,19 +42,21 @@ view: financials_clean {
     }
 
     measure: cleaning_amount {
-      type: number
+      type: sum
       group_label: "Cleaning"
       view_label: "Metrics"
       value_format: "$#,##0.00"
-      sql: sum(if(${TABLE}.type = "cleaning",${amount_revised},0)) ;;
+      sql: ${amount_revised};;
+      filters: [type: "cleaning", actualizedat_modified: "-Nonactualized (Historic)"]
     }
 
     measure: clean_refund_amount {
-      type: number
+      type: sum
       view_label: "Metrics"
       group_label: "Cleaning"
       value_format: "$#,##0.00"
-      sql: sum(if(${TABLE}.type = "CleanRefund",${amount_revised},0)) ;;
+      sql: ${amount_revised};;
+      filters: [type: "CleanRefund", actualizedat_modified: "-Nonactualized (Historic)"]
     }
 
 
@@ -63,9 +65,7 @@ view: financials_clean {
       view_label: "Metrics"
       group_label: "Cleaning"
       value_format: "0"
-      filters: [
-        type: "cleaning"
-      ]
+      filters: [type: "cleaning", actualizedat_modified: "-Nonactualized (Historic)"]
     }
 
     measure: cleaning_refund_transactions {
@@ -73,9 +73,7 @@ view: financials_clean {
       view_label: "Metrics"
       group_label: "Cleaning"
       value_format: "0"
-      filters: [
-        type: "CleanRefund"
-      ]
+      filters: [type: "CleanRefund", actualizedat_modified: "-Nonactualized (Historic)"]
     }
 
     # dimension: cashatbooking {

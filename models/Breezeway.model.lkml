@@ -61,7 +61,7 @@ explore: breezeway_export {
   }
 
   join: financials_clean {
-    type:  left_outer
+    type:  full_outer
     relationship: one_to_many
     sql_on: ${reservations_clean._id} = ${financials_clean.reservation} ;;
   }
