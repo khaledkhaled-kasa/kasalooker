@@ -131,15 +131,15 @@ view: reservations_v3 {
       }
     }
 
-    measure: Extension_guesty_count {
-      view_label: "Metrics"
-      label: "Extended Booking Count (Guesty Label)"
-      type: count_distinct
-      sql: CONCAT(${Extension_by_channel_label}, ${confirmationcode}) ;;
-      filters: {field: Extension_by_channel_label
-        value: "yes"
-      }
-    }
+    # measure: Extension_guesty_count {
+    #   view_label: "Metrics"
+    #   label: "Extended Booking Count (Guesty Label)"
+    #   type: count_distinct
+    #   sql: CONCAT(${Extension_by_channel_label}, ${confirmationcode}) ;;
+    #   filters: {field: Extension_by_channel_label
+    #     value: "yes"
+    #   }
+    # }
 
     dimension: _id {
       hidden: yes

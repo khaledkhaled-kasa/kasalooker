@@ -117,7 +117,7 @@ explore: breezeway_export {
 explore: reservations_clean {
   persist_with: reviews_default_datagroup
   group_label: "Kasa Reviews"
-  label: "Reservations"
+  label: "Reviews"
   from: reservations_clean
   join: units {
     type:  left_outer
