@@ -320,6 +320,18 @@ view: airbnb_reviews {
     ]
   }
 
+  measure: count_promoter {
+    view_label: "Metrics"
+    group_label: "NQS Metrics"
+    label: "# of Perfect Stays (Promoters)"
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      overall_rating: "5"
+    ]
+  }
+
 
   measure: count_4_star {
     view_label: "Metrics"
@@ -384,6 +396,18 @@ view: airbnb_reviews {
     overall_rating: "<=3"
   ]
 }
+
+  measure: count_detractor {
+    view_label: "Metrics"
+    group_label: "NQS Metrics"
+    label: "# of Bad Stays (Detractors)"
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      overall_rating: "<=3"
+    ]
+  }
 
 ## This will calculate perfect stays when all categories are 5
   # measure: count_perfect_stay {
@@ -482,7 +506,7 @@ view: airbnb_reviews {
     view_label: "Metrics"
     group_label: "NQS Metrics"
     description: "This is the same as % 5 star (overall)"
-    label: "Percent Perfect Stay (Overall)"
+    label: "% Perfect Stays (Promoters)"
     type: number
     value_format: "0.0%"
     sql: ${count_5_star} / nullif(${count},0) ;;
@@ -493,7 +517,7 @@ view: airbnb_reviews {
     view_label: "Metrics"
     group_label: "NQS Metrics"
     description: "This is the same as % less than 4 star"
-    label: "Percent Bad Stay (Overall)"
+    label: "% Bad Stays (Detractors)"
     type: number
     value_format: "0.0%"
     sql: ${count_less_than_4_star} / nullif(${count},0);;
