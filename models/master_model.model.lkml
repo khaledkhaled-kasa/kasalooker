@@ -41,7 +41,7 @@ datagroup: capacities_v3_default_datagroup {
 }
 
 datagroup: ximble_default_datagroup {
-  # sql_trigger: SELECT MAX(id) FROM etl_log;;
+  sql_trigger: SELECT MAX(date) FROM ximble.ximble_master`;;
   max_cache_age: "1 hour"
 }
 
@@ -310,7 +310,6 @@ explore: ximble_hourly_schedule {
   persist_with: ximble_default_datagroup
   from: ximble_hourly_schedule
 }
-
 
 explore: ximble_master {
   group_label: "Ximble"

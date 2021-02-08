@@ -58,13 +58,14 @@
     sql: ${TABLE}.How_often_do_you_plan_to_return_to_this_location_ ;;
   }
 
-  measure: disapointed_percentage {
+  measure: disappointed_percentage {
     group_label: "Post-check-out Metrics"
     view_label: "Metrics"
+    label: "Disappointed Score"
     type: number
-    value_format: "00%"
-    sql: sum(if(${TABLE}.How_would_you_feel_if_you_could_no_longer_stay_at_any_Kasa_locations_ = "Very disappointed",1,0)) /
-    NULLIF(count(${TABLE}.How_would_you_feel_if_you_could_no_longer_stay_at_any_Kasa_locations_),0);;
+    value_format: "0.0"
+    sql: 100*(sum(if(${TABLE}.How_would_you_feel_if_you_could_no_longer_stay_at_any_Kasa_locations_ = "Very disappointed",1,0)) /
+    NULLIF(count(${TABLE}.How_would_you_feel_if_you_could_no_longer_stay_at_any_Kasa_locations_),0));;
   }
 
   dimension: nps {
@@ -97,8 +98,8 @@
     view_label: "Metrics"
     label: "NPS"
     type: number
-    value_format: "0%"
-    sql: (${promotor_count}-${detractor_count})/NULLIF(count(${TABLE}.NPS),0);;
+    value_format: "0.0"
+    sql: 100*((${promotor_count}-${detractor_count})/NULLIF(count(${TABLE}.NPS),0));;
   }
 
   dimension: overall {

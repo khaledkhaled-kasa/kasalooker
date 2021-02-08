@@ -419,8 +419,8 @@ view: airbnb_reviews {
     group_label: "NQS Metrics"
     label: "Net Quality Score (NQS)"
     type: number
-    value_format: "0.0%"
-    sql: ${percent_perfect_stay} - ${percent_bad_stay};;
+    value_format: "0.0"
+    sql: 100*(${percent_perfect_stay} - ${percent_bad_stay});;
   }
 
   measure: net_quality_score_accuracy {
@@ -428,8 +428,8 @@ view: airbnb_reviews {
     group_label: "NQS Metrics"
     label: "NQS (Accuracy)"
     type: number
-    value_format: "0.0%"
-    sql: ${percent_5_star_accuracy} - ${percent_less_than_4_star_accuracy};;
+    value_format: "0.0"
+    sql: 100*(${percent_5_star_accuracy} - ${percent_less_than_4_star_accuracy});;
   }
 
   measure: net_quality_score_value{
@@ -437,8 +437,8 @@ view: airbnb_reviews {
     group_label: "NQS Metrics"
     label: "NQS (Value)"
     type: number
-    value_format: "0.0%"
-    sql: ${percent_5_star_value} - ${percent_less_than_4_star_value};;
+    value_format: "0.0"
+    sql: 100*(${percent_5_star_value} - ${percent_less_than_4_star_value});;
   }
 
   measure: net_quality_score_location {
@@ -446,8 +446,8 @@ view: airbnb_reviews {
     group_label: "NQS Metrics"
     label: "NQS (Location)"
     type: number
-    value_format: "0.0%"
-    sql: ${percent_5_star_location} - ${percent_less_than_4_star_location};;
+    value_format: "0.0"
+    sql: 100*(${percent_5_star_location} - ${percent_less_than_4_star_location});;
   }
 
   measure: net_quality_score_checkin {
@@ -455,8 +455,8 @@ view: airbnb_reviews {
     group_label: "NQS Metrics"
     label: "NQS (Checkin)"
     type: number
-    value_format: "0.0%"
-    sql: ${percent_5_star_checkin} - ${percent_less_than_4_star_checkin};;
+    value_format: "0.0"
+    sql: 100*(${percent_5_star_checkin} - ${percent_less_than_4_star_checkin});;
   }
 
   measure: net_quality_score_clean {
@@ -464,8 +464,8 @@ view: airbnb_reviews {
     group_label: "NQS Metrics"
     label: "NQS (Clean)"
     type: number
-    value_format: "0.0%"
-    sql: ${percent_5_star_clean} - ${percent_less_than_4_star_clean};;
+    value_format: "0.0"
+    sql: 100*(${percent_5_star_clean} - ${percent_less_than_4_star_clean});;
   }
 
   measure: net_quality_score_communication {
@@ -473,8 +473,8 @@ view: airbnb_reviews {
     group_label: "NQS Metrics"
     label: "NQS (Communication)"
     type: number
-    value_format: "0.0%"
-    sql: ${percent_5_star_communication} - ${percent_less_than_4_star_communication};;
+    value_format: "0.0"
+    sql: 100*(${percent_5_star_communication} - ${percent_less_than_4_star_communication});;
   }
 
 
