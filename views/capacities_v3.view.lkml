@@ -162,7 +162,9 @@ view: capacities_v3 {
     label: "Capacity"
     description: "Number of available room nights bookable"
     type: count_distinct
-    sql: CONCAT(${units.internaltitle}, '-', ${night_date});;
+    sql: CASE WHEN ${units.internaltitle} LIKE "%-RES" THEN NULL
+    ELSE CONCAT(${units.internaltitle}, '-', ${night_date})
+    END;;
   }
 
 
