@@ -9,6 +9,11 @@ datagroup: aircalls_default_datagroup {
   max_cache_age: "1 hours"
 }
 
+datagroup: compliance_default_datagroup {
+  # sql_trigger: SELECT MAX(id) FROM etl_log;;
+  max_cache_age: "1 hours"
+}
+
 datagroup: breezeway_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
   max_cache_age: "6 hours"
@@ -48,10 +53,16 @@ explore: aircall {
   from: aircall
 }
 
+explore: compliance_tracker {
+  group_label: "Legal"
+  persist_with: aircalls_default_datagroup
+  label: "Compliance Tracker"
+}
+
 
 explore: aircall_segment {
   group_label: "Aircall"
-  persist_with: aircalls_default_datagroup
+  persist_with: compliance_default_datagroup
   label: "Aircalls"
 }
 
