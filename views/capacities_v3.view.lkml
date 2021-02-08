@@ -162,7 +162,7 @@ view: capacities_v3 {
     label: "Capacity"
     description: "Number of available room nights bookable"
     type: count_distinct
-    sql: CONCAT(${units._id}, '-', ${night_date});;
+    sql: CONCAT(${units.internaltitle}, '-', ${night_date});;
   }
 
 
@@ -171,7 +171,7 @@ view: capacities_v3 {
     label: "Days Available"
     description: "Number of available room nights bookable"
     type: count_distinct
-    sql: CONCAT(${units._id}, '-', ${night_date});;
+    sql: CONCAT(${units.internaltitle}, '-', ${night_date});;
   }
 
   dimension: primary_key {
