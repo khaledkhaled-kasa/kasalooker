@@ -178,6 +178,23 @@ view: capacities_v3 {
     END;;
   }
 
+  dimension: first_active_day {
+    label: "First active month day"
+    description: "This will pull the first day of the month after the units have been activated for the first full month"
+    type: string
+    hidden: yes
+    sql: DATE_TRUNC(DATE_ADD(DATE(TIMESTAMP(availability.startdate)), INTERVAL 1 MONTH), MONTH);;
+  }
+
+  measure: capacity_after_first_active_month {
+    label: "Capacity after First Active Month"
+    description: "Number of available room nights bookable post first active month"
+    type: count_distinct
+    sql: CASE WHEN (${units.internaltitle} LIKE "%-RES") OR (${night_date} < ${first_active_day}) THEN NULL
+          ELSE CONCAT(${units.internaltitle}, '-', ${night_date})
+          END;;
+  }
+
   dimension: primary_key {
     primary_key: yes
     hidden: yes

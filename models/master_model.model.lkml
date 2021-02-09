@@ -91,6 +91,8 @@ explore: breezeway_export {
     type:  left_outer
     relationship: one_to_one
     sql_on: CAST(${breezeway_export.id} as STRING) = ${reservations_clean.preceding_cleaning_task} ;;
+    # sql_on: ${units._id} = ${reservations_clean.unit} ;;
+
   }
 
   join: airbnb_reviews {

@@ -16,6 +16,15 @@
       sql: ${TABLE}.End_Date ;;
     }
 
+
+  # dimension: first_3_months {
+  #     label: "Review within First 3 Months"
+  #     description: "Review is given on a reservation checked in within the first 90 days of the HK Partner contractual date"
+  #     hidden: no
+  #     type: yesno
+  #     sql: ${airbnb_reviews.ds_checkin_date} >= ${start_date} AND ${airbnb_reviews.ds_checkin_date} <= (${start_date} + 90) ;;
+  #   }
+
   dimension: buildings {
     hidden: yes
     type: string
