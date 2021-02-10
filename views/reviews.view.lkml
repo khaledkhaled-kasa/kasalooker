@@ -110,6 +110,7 @@
   }
 
   measure: count {
+    label: "Review Count"
     type: count
     drill_fields: []
   }

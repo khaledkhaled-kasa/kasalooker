@@ -269,6 +269,13 @@ view: breezeway_export {
     sql: ${TABLE}.Completion_Time__Minutes_ ;;
   }
 
+  dimension: completion_time_filter {
+    label: "Completion Time (Minutes)"
+    type: yesno
+    hidden: no
+    sql: ${completion_time_mins} > 30 AND ${completion_time_mins} < 240 ;;
+  }
+
   measure: average_completion {
     view_label: "Metrics"
     group_label: "BW Metrics"
@@ -277,6 +284,7 @@ view: breezeway_export {
     hidden: no
     value_format: "0.0"
     sql: ${completion_time_mins} / 60;;
+    filters: [completion_time_filter: "yes"]
   }
 
 
@@ -309,9 +317,29 @@ view: breezeway_export {
   measure: count {
     view_label: "Metrics"
     group_label: "BW Metrics"
-    label: "BW Tasks Count"
+    label: "BW Task Count (Total)"
+    description: "This will measure the total number of BW Tasks, including those with inaccurate completion times"
     hidden: no
     type: count
     drill_fields: [id, name]
+  }
+
+  measure: count_filter_count {
+    view_label: "Metrics"
+    group_label: "BW Metrics"
+    label: "BW Task Count (Allocated)"
+    hidden: no
+    type: count
+    filters: [completion_time_filter: "yes"]
+  }
+
+  measure: count_filter_percentage {
+    view_label: "Metrics"
+    group_label: "BW Metrics"
+    label: "% of BW Task Count (Allocated)"
+    hidden: no
+    type: number
+    sql: ${count_filter_count} / ${count} ;;
+    value_format: "0.0%"
   }
 }
