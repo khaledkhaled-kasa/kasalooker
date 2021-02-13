@@ -92,7 +92,9 @@ view: breezeway_export {
   dimension: hk_name {
     type: string
     label: "Housekeeper Name"
-    sql: ${TABLE}.Housekeeper_Name ;;
+    sql: CASE WHEN ${TABLE}.Housekeeper_Name IN ("Jason Schaniel","Jason O'Connell","Karlynne Sampson","Connor Harris","Megan Bencen","Alex Molitor","Jeff Orton","Patrick Bartlett","Chaena Cage","Caitlin Amen","Allison Zogg","Gavin Smith","Jack Moes","Gina Cerra","Trey Samoline","Infiniti Lauzon-Marshall","Henning Burton","Tony Rex","Ben Shalom","Marv Sengbloh","Tara Newton","Melissa Spoth","Jack Shalvoy","Jamie Howze","Adam Kiss","Mike Marando","JD Modrak","Willie Moore","Jesse Karp") THEN "Kasa Staff"
+    ELSE ${TABLE}.Housekeeper_Name
+    END;;
   }
 
   dimension: building {

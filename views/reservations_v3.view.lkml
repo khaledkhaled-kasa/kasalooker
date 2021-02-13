@@ -531,7 +531,7 @@ view: reservations_v3 {
       description: "Reservation night stay"
       type:  count_distinct
       sql: CONCAT(${confirmationcode}, '-', ${capacities_v3.night_date});;
-      filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in"]
+      filters: [capacity_night_part_of_res: "yes"]
     }
 
     dimension: financial_night_part_of_res {
@@ -564,7 +564,7 @@ view: reservations_v3 {
       description: "Number of unique reservations"
       type: count_distinct
       sql: ${confirmationcode} ;;
-      filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in"]
+      filters: [capacity_night_part_of_res: "yes"]
       drill_fields: [reservation_details*]
     }
 

@@ -307,11 +307,12 @@ explore: guest_verification_form {
   persist_with: kasametrics_v3_default_datagroup
 }
 
-explore: ximble_hourly_schedule {
-  group_label: "Ximble"
-  persist_with: ximble_default_datagroup
-  from: ximble_hourly_schedule
-}
+# Project on Hold (Forecast Schedule)
+# explore: ximble_hourly_schedule {
+#   group_label: "Ximble"
+#   persist_with: ximble_default_datagroup
+#   from: ximble_hourly_schedule
+# }
 
 explore: ximble_master {
   group_label: "Ximble"

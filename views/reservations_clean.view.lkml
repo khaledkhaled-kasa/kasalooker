@@ -15,6 +15,11 @@ view: reservations_clean {
     sql: ${TABLE}.additionalguests ;;
   }
 
+  dimension: sourcedetail {
+    type: string
+    sql: ${TABLE}.sourcedetail ;;
+  }
+
   dimension: property {
     type: string
     sql: ${TABLE}.property ;;
