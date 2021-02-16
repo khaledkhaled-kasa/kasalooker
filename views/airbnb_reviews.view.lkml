@@ -834,4 +834,65 @@ view: airbnb_reviews {
 
 
 
+
+
+
+
+  measure: percent_4_star_clean {
+    view_label: "Metrics"
+    group_label: "Airbnb Neutral Metrics (passives)"
+    type: number
+    value_format: "0.0%"
+    sql: 1 - (${percent_5_star_clean} + ${percent_less_than_4_star_clean});;
+  }
+
+  measure: percent_4_star_value {
+    view_label: "Metrics"
+    group_label: "Airbnb Neutral Metrics (passives)"
+    type: number
+    value_format: "0.0%"
+    sql: 1 - (${percent_5_star_value} + ${percent_less_than_4_star_value});;
+  }
+
+  measure: percent_4_star_location {
+    view_label: "Metrics"
+    group_label: "Airbnb Neutral Metrics (passives)"
+    type: number
+    value_format: "0.0%"
+    sql: 1 - (${percent_5_star_location} + ${percent_less_than_4_star_location});;
+  }
+
+  measure: percent_4_star_communication {
+    view_label: "Metrics"
+    group_label: "Airbnb Neutral Metrics (passives)"
+    type: number
+    value_format: "0.0%"
+    sql: 1 - (${percent_5_star_communication} + ${percent_less_than_4_star_communication});;
+  }
+
+  measure: percent_4_star_checkin {
+    view_label: "Metrics"
+    group_label: "Airbnb Neutral Metrics (passives)"
+    type: number
+    value_format: "0.0%"
+    sql: 1 - (${percent_5_star_checkin} + ${percent_less_than_4_star_checkin});;
+  }
+
+  measure: percent_4_star_accuracy {
+    view_label: "Metrics"
+    group_label: "Airbnb Neutral Metrics (passives)"
+    type: number
+    value_format: "0.0%"
+    sql: 1 - (${percent_5_star_accuracy} + ${percent_less_than_4_star_accuracy});;
+  }
+
+  measure: percent_4_star {
+    view_label: "Metrics"
+    group_label: "Airbnb Neutral Metrics (passives)"
+    label: "Percent 4 Star Overall"
+    type: number
+    value_format: "0.0%"
+    sql: 1 - (${percent_5_star} + ${percent_less_than_4_star});;
+  }
+
 }
