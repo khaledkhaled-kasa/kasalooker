@@ -592,6 +592,18 @@ view: airbnb_reviews {
     ]
   }
 
+  measure: accuracy_count_4_star {
+    view_label: "Metrics"
+    group_label: "Airbnb Count Metrics"
+    label: "Count 4 Star Accuracy"
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      accuracy_rating_dim: "4"
+    ]
+  }
+
   measure: value_count_5_star {
     view_label: "Metrics"
     group_label: "Airbnb Count Metrics"
