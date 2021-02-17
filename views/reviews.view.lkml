@@ -65,6 +65,21 @@
     sql: ${TABLE}.overallratingstandardized ;;
   }
 
+  measure: count_thumbs_up {
+    type: count
+    hidden: yes
+    view_label: "Metrics"
+    filters: [overallratingstandardized: "10"]
+  }
+
+    measure: percent_thumbs_up {
+      type: number
+      view_label: "Metrics"
+      label: "% Thumbs Up"
+      value_format: "0%"
+      sql: ${count_thumbs_up} / ${count} ;;
+    }
+
   dimension: privatereviewtext {
     type: string
     sql: ${TABLE}.privatereviewtext ;;

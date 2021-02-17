@@ -160,7 +160,7 @@ view: breezeway_export {
     view_label: "Metrics"
     group_label: "BW Metrics"
     label: "% BW Tasks on Time"
-    value_format: "0.0%"
+    value_format: "0%"
     sql: ${done_on_time}/${count};;
   }
 
