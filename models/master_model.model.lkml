@@ -307,21 +307,14 @@ explore: guest_verification_form {
   persist_with: kasametrics_v3_default_datagroup
 }
 
+explore: ximble_master {
+  label: "Ximble"
+  persist_with: kasametrics_v3_default_datagroup
+}
+
 # Project on Hold (Forecast Schedule)
 # explore: ximble_hourly_schedule {
 #   group_label: "Ximble"
 #   persist_with: ximble_default_datagroup
 #   from: ximble_hourly_schedule
 # }
-
-explore: ximble_master {
-  group_label: "Ximble"
-  persist_with: ximble_default_datagroup
-  from: ximble_master
-  join: aircall_segment {
-    type: full_outer
-    relationship: one_to_one
-    sql_on: ${ximble_master.name_adjusted} = ${aircall_segment.user_name_adjusted}
-      and ${ximble_master.date_date} = ${aircall_segment.started_at_PST_date} ;;
-  }
-}

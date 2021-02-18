@@ -11,7 +11,7 @@ view: reservations_audit {
 
 
   dimension: _id {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}._id ;;
   }

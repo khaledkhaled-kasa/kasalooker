@@ -20,6 +20,7 @@ view: ximble_master {
     sql: ${TABLE}.Date ;;
   }
 
+
   dimension: department {
     type: string
     sql: ${TABLE}.Department ;;
@@ -97,6 +98,7 @@ view: ximble_master {
     WHEN ${name} = "Sheila Marie Cruz" THEN "Sheila Cruz"
     WHEN ${name} = "Rommel Doroteo" THEN "Mel Doroteo"
     WHEN ${name} = "Katherine Chappell" THEN "Kate Chappell"
+    WHEN ${name} = "Roan Litz" THEN "Roan D"
     ELSE ${name}
     END
     ;;
@@ -143,10 +145,11 @@ view: ximble_master {
 
   dimension: shift_label_filtered {
     type: yesno
-    sql: (LOWER(${TABLE}.Shift_Label) NOT LIKE "%project time%")
+    sql:
+    ${TABLE}.Shift_Label IS NULL OR
+    ((LOWER(${TABLE}.Shift_Label) NOT LIKE "%project time%")
     AND (LOWER(${TABLE}.Shift_Label) NOT LIKE '%training class%')
-    AND (LOWER(${TABLE}.Shift_Label) NOT LIKE "%culture amp%")
-    OR ${TABLE}.Shift_Label IS NULL
+    AND (LOWER(${TABLE}.Shift_Label) NOT LIKE "%culture amp%"))
     ;;
   }
 

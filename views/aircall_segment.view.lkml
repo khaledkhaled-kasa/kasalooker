@@ -123,6 +123,7 @@ view: aircall_segment {
     WHEN ${user_name} = "Sheila Marie Cruz" THEN "Sheila Cruz"
     WHEN ${user_name} = "Mel  Doroteo" THEN "Mel Doroteo"
     WHEN ${user_name} = 'Nikki Cardno' THEN 'Nicole Cardno'
+    WHEN ${user_name} = 'Roan ' THEN 'Roan D'
     ELSE ${user_name}
     END
     ;;
@@ -142,7 +143,7 @@ view: aircall_segment {
     type: time
     label: ""
     view_label: "Date Dimensions"
-    group_label: "Started Date (UTC)"
+    group_label: "Aircall Started Date (UTC)"
     timeframes: [
       raw,
       time,
@@ -162,7 +163,7 @@ view: aircall_segment {
     type: time
     label: ""
     view_label: "Date Dimensions"
-    group_label: "Started Date (PST)"
+    group_label: "Aircall Started Date (PST)"
     timeframes: [
       raw,
       time,
@@ -178,6 +179,7 @@ view: aircall_segment {
     ]
     sql: CAST(datetime(TIMESTAMP_SECONDS(${TABLE}.properties.started_at),'America/Los_Angeles') as TIMESTAMP) ;;
   }
+
 
 
   measure: count_all {
