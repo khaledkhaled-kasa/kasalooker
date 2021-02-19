@@ -139,31 +139,11 @@ view: aircall_segment {
     sql: ${TABLE}.properties.number.name ;;
   }
 
-  dimension_group: started_at_UTC {
+  dimension_group: started_at {
     type: time
     label: ""
     view_label: "Date Dimensions"
-    group_label: "Aircall Started Date (UTC)"
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      week_of_year,
-      month,
-      month_name,
-      quarter,
-      year
-    ]
-    sql: TIMESTAMP_SECONDS(${TABLE}.properties.started_at) ;;
-  }
-
-
-  dimension_group: started_at_PST {
-    type: time
-    label: ""
-    view_label: "Date Dimensions"
-    group_label: "Aircall Started Date (PST)"
+    group_label: "Aircall Started Date"
     timeframes: [
       raw,
       time,
@@ -177,7 +157,7 @@ view: aircall_segment {
       quarter,
       year
     ]
-    sql: CAST(datetime(TIMESTAMP_SECONDS(${TABLE}.properties.started_at),'America/Los_Angeles') as TIMESTAMP) ;;
+    sql: TIMESTAMP_SECONDS(${TABLE}.properties.started_at) ;;
   }
 
 

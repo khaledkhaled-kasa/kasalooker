@@ -461,7 +461,6 @@ view: guest_verification_form {
       year
     ]
     sql: ${TABLE}.revised_verification_timezone;;
-    convert_tz: no
   }
 
   dimension_group: correct_date {

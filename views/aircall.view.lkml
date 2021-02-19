@@ -32,7 +32,6 @@ view: aircall {
       quarter,
       year
     ]
-    convert_tz: no
     datatype: date
     sql: ${TABLE}.date__TZ_offset_incl__ ;;
   }

@@ -20,7 +20,6 @@ view: breezeway_export {
     type: time
     timeframes: [
       raw,
-      time,
       date,
       week,
       month,
@@ -37,6 +36,7 @@ view: breezeway_export {
     type: time
     timeframes: [
       raw,
+      time,
       date,
       week,
       month,
@@ -116,6 +116,7 @@ view: breezeway_export {
       year
     ]
     sql: ${TABLE}.Created ;;
+    convert_tz: no
   }
 
   dimension: created_by {

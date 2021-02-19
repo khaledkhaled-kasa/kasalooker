@@ -182,6 +182,11 @@ view: reservations_v3 {
       sql:  date_diff(CAST(${checkindate} as DATE), CAST(${TABLE}.bookingdate as DATE), DAY) ;;
     }
 
+  dimension: cancellation_window {
+    type:  number
+    sql:  date_diff(CAST(${checkindate} as DATE), CAST(${TABLE}.cancellationdate as DATE), DAY) ;;
+  }
+
     dimension: length_of_stay {
       type:  number
       sql:  date_diff(CAST(${checkoutdate} as DATE), CAST(${checkindate} as DATE), DAY) ;;
@@ -197,6 +202,17 @@ view: reservations_v3 {
       drill_fields: [reservation_details*]
       filters: [capacity_night_part_of_res: "yes"]
     }
+
+  measure: avg_cancellation_window {
+    view_label: "Metrics"
+    description: "Days between cancelling and checking in"
+    value_format: "0.0"
+    type:  average_distinct
+    sql_distinct_key: ${confirmationcode} ;;
+    sql: ${cancellation_window};;
+    drill_fields: [reservation_details*]
+    filters: [capacity_night_part_of_res: "yes"]
+  }
 
     measure: median_lead_time {
       view_label: "Metrics"

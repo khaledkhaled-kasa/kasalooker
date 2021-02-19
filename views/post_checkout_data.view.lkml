@@ -263,6 +263,7 @@
       year
     ]
     sql: ${TABLE}.Submitted_At ;;
+    convert_tz: no
   }
 
   dimension: token {

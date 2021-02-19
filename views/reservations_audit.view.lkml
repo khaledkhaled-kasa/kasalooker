@@ -133,23 +133,6 @@ view: reservations_audit {
     sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
   }
 
-  dimension_group: checkindate_pst {
-    type: time
-    hidden: yes
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year,
-      day_of_week,
-      hour_of_day
-    ]
-    sql: CAST(datetime(CAST(${TABLE}.checkindate as TIMESTAMP),'America/Los_Angeles') as TIMESTAMP);;
-  }
-
 
   dimension_group: reservation_checkin {
     view_label: "Date Dimensions"
