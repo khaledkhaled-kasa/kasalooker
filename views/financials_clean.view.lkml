@@ -104,6 +104,7 @@ view: financials_clean {
         day_of_week
       ]
       sql: ${TABLE}.night ;;
+      convert_tz: no
     }
 
 

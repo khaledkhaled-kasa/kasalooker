@@ -14,7 +14,7 @@ view: financials_audit {
 
 
   dimension: amount_revised {
-    hidden: yes
+    hidden: no
     view_label: "Metrics"
     label: "Amount Revised"
     description: "This will correct for unavailable amount__fl values"
@@ -114,6 +114,7 @@ view: financials_audit {
       day_of_week
     ]
     sql: ${TABLE}.night ;;
+    convert_tz: no
   }
 
 
@@ -154,7 +155,7 @@ view: financials_audit {
 
   dimension: actualizedat {
     type: string
-    hidden: yes
+    hidden: no
     sql: ${TABLE}.actualizedat ;;
   }
 

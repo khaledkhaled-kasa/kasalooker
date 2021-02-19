@@ -149,6 +149,7 @@ view: financials_v3{
       day_of_week
     ]
     sql: ${TABLE}.night ;;
+    convert_tz: no
   }
 
 
