@@ -9,11 +9,13 @@
     dimension: start_date {
       type: date
       sql: ${TABLE}.Start_Date ;;
+      convert_tz: no
     }
 
     dimension: end_date {
       type: date
       sql: ${TABLE}.End_Date ;;
+      convert_tz: no
     }
 
 
