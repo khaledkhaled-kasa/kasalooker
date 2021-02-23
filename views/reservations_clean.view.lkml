@@ -48,7 +48,7 @@ view: reservations_clean {
     label: "Review"
     description: "If Airbnb Review Present, this date will reflect the Airbnb Review. Otherwise, date is grabbed from Post-Checkout Data"
     type: time
-    datatype: date
+    # datatype: date
     timeframes: [
       raw,
       time,
@@ -60,7 +60,7 @@ view: reservations_clean {
     ]
     sql:  case
     when ${airbnb_reviews.review_raw} is not NULL then ${airbnb_reviews.review_raw}
-    when Cast(${post_checkout_data.review_raw} as Date) is not NULL then Cast(${post_checkout_data.review_raw} as Date)
+    when cast(${post_checkout_data.review_raw} as Date) is not NULL AND ${airbnb_reviews.review_raw} IS NULL then Cast(${post_checkout_data.review_raw} as Date)
     else NULL
     end;;
     #sql: coalesce(${airbnb_reviews.review_raw},CAST(${post_checkout_data.review_raw} as DATE),${booking_reviews.review_raw}) ;;
