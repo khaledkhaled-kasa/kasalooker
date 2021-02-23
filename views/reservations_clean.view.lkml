@@ -48,7 +48,7 @@ view: reservations_clean {
     label: "Review"
     description: "If Airbnb Review Present, this date will reflect the Airbnb Review. Otherwise, date is grabbed from Post-Checkout Data"
     type: time
-    # datatype: date
+    datatype: date
     timeframes: [
       raw,
       time,

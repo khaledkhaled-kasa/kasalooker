@@ -240,7 +240,7 @@
     label: "Booking OQS"
     type: number
     value_format: "0%"
-    sql: (${avg_booking}booking} - 3.07)/(3.97-3.07);;
+    sql: (${avg_booking} - 3.07)/(3.97-3.07);;
   }
 
   measure: count_direct_reviews {
