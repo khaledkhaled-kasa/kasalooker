@@ -46,13 +46,6 @@ datagroup: ximble_default_datagroup {
 }
 
 
-explore: aircall {
-  group_label: "Aircall"
-  persist_with: aircalls_default_datagroup
-  label: "Aircalls Export (Historical Data)"
-  from: aircall
-}
-
 explore: compliance_tracker {
   group_label: "Legal"
   persist_with: aircalls_default_datagroup
@@ -98,13 +91,13 @@ explore: breezeway_export {
   join: airbnb_reviews {
     type: left_outer
     relationship:  one_to_one
-    sql_on: ${reservations_clean.confirmationcode} = ${airbnb_reviews.reservation_code} ;;
+    sql_on: ${reservations_clean.confirmation_code} = ${airbnb_reviews.reservation_code} ;;
   }
 
   join: post_checkout_data {
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_clean.confirmationcode} ;;
+    sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_clean.confirmation_code}code} ;;
   }
 
   join: geo_location {
@@ -154,7 +147,7 @@ explore: reservations_clean {
   join: airbnb_reviews {
     type: full_outer
     relationship:  one_to_one
-    sql_on: ${reservations_clean.confirmationcode} = ${airbnb_reviews.reservation_code} ;;
+    sql_on: ${reservations_clean.confirmation_code} = ${airbnb_reviews.reservation_code} ;;
   }
 
   join: geo_location {
@@ -171,9 +164,10 @@ explore: reservations_clean {
   }
 
   join: post_checkout_data {
+    view_label: "Post Checkout Surveys"
     type:  full_outer
     relationship: one_to_one
-    sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_clean.confirmationcode} ;;
+    sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_clean.confirmation_code} ;;
   }
 
 # for marketing

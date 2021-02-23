@@ -551,7 +551,7 @@ view: reservations_v3 {
     }
 
     dimension: financial_night_part_of_res {
-      hidden: yes
+      hidden: no
       type:  yesno
       sql: format_date('%Y-%m-%d', ${financials_v3.night_date}) < ${TABLE}.checkoutdatelocal and
         format_date('%Y-%m-%d', ${financials_v3.night_date}) >= ${TABLE}.checkindatelocal;;
@@ -568,7 +568,7 @@ view: reservations_v3 {
 
     dimension: capacity_night_part_of_res {
       type:  yesno
-      hidden: yes
+      hidden: no
       sql: format_date('%Y-%m-%d', ${capacities_v3.night_date}) < ${TABLE}.checkoutdatelocal and
         format_date('%Y-%m-%d', ${capacities_v3.night_date}) >= ${TABLE}.checkindatelocal;;
     }

@@ -59,6 +59,7 @@ view: aircall {
       hour_of_day
     ]
     sql: ${TABLE}.datetime__utc_ ;;
+    convert_tz: no
   }
 
   dimension_group: datetime__pst_ {
@@ -78,6 +79,7 @@ view: aircall {
       hour_of_day
     ]
     sql: CAST(datetime(CAST(${TABLE}.datetime__utc_ as TIMESTAMP),'America/Los_Angeles') as TIMESTAMP);;
+    convert_tz: no
   }
 
   dimension: direction {

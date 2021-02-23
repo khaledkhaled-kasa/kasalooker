@@ -7,7 +7,15 @@
     }
 
 
+  dimension: confirmationcode {
+    label: "Confirmation Code"
+    type: string
+    sql: ${TABLE}.confirmationcode ;;
+    primary_key: yes
+  }
+
   dimension: building_quality___location {
+    label: "Building Location Quality"
     type: string
     sql: ${TABLE}.Building_quality___location ;;
   }
@@ -22,12 +30,6 @@
     sql: ${TABLE}.complex ;;
   }
 
-  dimension: confirmationcode {
-    type: string
-    sql: ${TABLE}.confirmationcode ;;
-    primary_key: yes
-  }
-
   dimension: covid {
     type: string
     sql: ${TABLE}.COVID ;;
@@ -39,6 +41,7 @@
   }
 
   dimension: guest_communications {
+    label: "Guest Communications Experience"
     type: string
     sql: ${TABLE}.Guest_communications ;;
   }
@@ -49,172 +52,32 @@
   }
 
   dimension: how_likely_are_you_to_recommend_kasa_to_someone_else_ {
+    label: "Likely To Recommend"
     type: number
     sql: ${TABLE}.How_likely_are_you_to_recommend_Kasa_to_someone_else_ ;;
   }
 
   dimension: how_often_do_you_plan_to_return_to_this_location_ {
+    label: "Plan to Return"
     type: string
     sql: ${TABLE}.How_often_do_you_plan_to_return_to_this_location_ ;;
   }
 
-  measure: disappointed_percentage {
-    group_label: "Post-check-out Metrics"
-    view_label: "Metrics"
-    label: "Disappointed Score"
-    type: number
-    value_format: "0.0"
-    sql: 100*(sum(if(${TABLE}.How_would_you_feel_if_you_could_no_longer_stay_at_any_Kasa_locations_ = "Very disappointed",1,0)) /
-    NULLIF(count(${TABLE}.How_would_you_feel_if_you_could_no_longer_stay_at_any_Kasa_locations_),0));;
-  }
-
-  dimension: nps {
+  dimension: NPS {
     type: string
     sql: ${TABLE}.NPS ;;
   }
 
-  measure: promotor_count {
-    group_label: "Post-check-out Metrics"
-    view_label: "Metrics"
-    type: count
-    value_format: "0"
-    filters: [
-      nps: "Promoter"
-    ]
-  }
-
-  measure: detractor_count {
-    group_label: "Post-check-out Metrics"
-    view_label: "Metrics"
-    type: count
-    value_format: "0"
-    filters: [
-      nps: "Detractor"
-    ]
-  }
-
-  measure: calc_nps {
-    group_label: "Post-check-out Metrics"
-    view_label: "Metrics"
-    label: "NPS"
-    type: number
-    value_format: "0.0"
-    sql: 100*((${promotor_count}-${detractor_count})/NULLIF(count(${TABLE}.NPS),0));;
-  }
-
   dimension: overall {
     type: string
+    hidden: yes
     sql: ${TABLE}.Overall ;;
   }
 
   dimension: overall_numerical {
+    label: "Overall Score"
     type: number
     sql: ${TABLE}.Overall_Numerical ;;
-  }
-
-  measure: overall_numerical_avg {
-    group_label: "Post-check-out Metrics"
-    view_label: "Metrics"
-    label: "Overall Rating"
-    type: average
-    value_format: "0.00"
-    sql: ${TABLE}.Overall_Numerical ;;
-  }
-
-  measure: direct_avg {
-    group_label: "Post-check-out Metrics"
-    view_label: "Metrics"
-    label: "Direct Booking Rating"
-    type: average
-    value_format: "0.00"
-    sql: ${TABLE}.Overall_Numerical;;
-    filters: [
-      platform_clean: "Direct"
-    ]
-  }
-
-  measure: booking_avg {
-    group_label: "Post-check-out Metrics"
-    view_label: "Metrics"
-    label: "Booking.com Rating"
-    type: average
-    value_format: "0.00"
-    sql: ${TABLE}.Overall_Numerical;;
-    filters: [
-      platform_clean: "Booking.com"
-    ]
-  }
-
-  measure: expedia_avg {
-    group_label: "Post-check-out Metrics"
-    view_label: "Metrics"
-    label: "Expedia Rating"
-    type: average
-    value_format: "0.00"
-    sql: ${TABLE}.Overall_Numerical;;
-    filters: [
-      platform_clean: "Expedia"
-    ]
-  }
-
-  measure: direct_oqs {
-    group_label: "OQS Metrics"
-    view_label: "Metrics"
-    label: "Direct OQS"
-    type: number
-    value_format: "0%"
-    sql: (${direct_avg} - 3.115)/(4.365-3.115);;
-  }
-
-  measure: expedia_oqs {
-    group_label: "OQS Metrics"
-    view_label: "Metrics"
-    label: "Expedia OQS"
-    type: number
-    value_format: "0%"
-    sql: (${expedia_avg} - 3.29)/(3.89-3.29);;
-  }
-
-  measure: booking_oqs {
-    group_label: "OQS Metrics"
-    view_label: "Metrics"
-    label: "Booking OQS"
-    type: number
-    value_format: "0%"
-    sql: (${booking_avg} - 3.07)/(3.97-3.07);;
-  }
-
-  measure: direct_reviews {
-    group_label: "Post-check-out Metrics"
-    view_label: "Metrics"
-    label: "Direct Booking Review Count"
-    type: count
-    value_format: "0"
-    filters: [
-      platform_clean: "Direct"
-    ]
-  }
-
-  measure: booking_reviews {
-    group_label: "Post-check-out Metrics"
-    view_label: "Metrics"
-    label: "Booking.com Review Count"
-    type: count
-    value_format: "0"
-    filters: [
-      platform_clean: "Booking.com"
-    ]
-  }
-
-  measure: expedia_reviews {
-    group_label: "Post-check-out Metrics"
-    view_label: "Metrics"
-    label: "Expedia Review Count"
-    type: count
-    value_format: "0"
-    filters: [
-      platform_clean: "Expedia"
-    ]
   }
 
   dimension: platform {
@@ -224,34 +87,25 @@
   }
 
   dimension: platform_clean {
+    label: "Platform"
     type: string
     sql: ${TABLE}.Platform_Clean ;;
   }
 
   dimension: prop_code {
+    label: "Property Code"
     type: string
     sql: ${TABLE}.PropCode ;;
   }
 
-  #dimension: property {
-  #  type: string
-  #  sql: ${TABLE}.property ;;
-  #}
-
-  #dimension: reservationid {
-  #  type: string
-  #  sql: ${TABLE}.reservationid ;;
-  #}
-
   dimension: room_quality___cleanliness {
+    label: "Room Quality/Cleanliness"
     type: string
     sql: ${TABLE}.Room_quality___cleanliness ;;
   }
 
   dimension_group: review {
-    group_label: "Post-check-out Review Date"
-    label: "Post-check-out Review"
-    view_label: "Date Dimensions"
+    label: "Review"
     type: time
     timeframes: [
       raw,
@@ -282,10 +136,153 @@
   #  sql: ${TABLE}.unitid ;;
   #}
 
-  dimension: unitinternaltitle {
+  dimension: unit_internal_title {
     type: string
     sql: ${TABLE}.unitinternaltitle ;;
   }
+
+  dimension: week_num {
+    type: number
+    hidden: yes
+    sql: ${TABLE}.WeekNum ;;
+  }
+
+  measure: disappointed_percentage {
+    label: "Disappointed Score"
+    type: number
+    value_format: "0.0"
+    sql: 100*(sum(if(${TABLE}.How_would_you_feel_if_you_could_no_longer_stay_at_any_Kasa_locations_ = "Very disappointed",1,0)) /
+    NULLIF(count(${TABLE}.How_would_you_feel_if_you_could_no_longer_stay_at_any_Kasa_locations_),0));;
+  }
+
+  measure: promotor_count {
+    type: count
+    value_format: "0"
+    filters: [
+      NPS: "Promoter"
+    ]
+  }
+
+  measure: detractor_count {
+    type: count
+    value_format: "0"
+    filters: [
+      NPS: "Detractor"
+    ]
+  }
+
+  measure: calc_nps {
+    label: "NPS"
+    type: number
+    value_format: "0.0"
+    sql: 100*((${promotor_count}-${detractor_count})/NULLIF(count(${TABLE}.NPS),0));;
+  }
+
+  measure: avg_overall_numerical {
+    group_label: "Ratings (Aggregate)"
+    label: "Average Overall Rating"
+    type: average
+    value_format: "0.00"
+    sql: ${TABLE}.Overall_Numerical ;;
+  }
+
+  measure: avg_direct {
+    group_label: "Ratings (Aggregate)"
+    label: "Average Direct Booking Rating"
+    type: average
+    value_format: "0.00"
+    sql: ${TABLE}.Overall_Numerical;;
+    filters: [
+      platform_clean: "Direct"
+    ]
+  }
+
+  measure: avg_booking {
+    group_label: "Ratings (Aggregate)"
+    label: "Average Booking.com Rating"
+    type: average
+    value_format: "0.00"
+    sql: ${TABLE}.Overall_Numerical;;
+    filters: [
+      platform_clean: "Booking.com"
+    ]
+  }
+
+  measure: expedia_avg {
+    group_label: "Ratings (Aggregate)"
+    label: "Average Expedia Rating"
+    type: average
+    value_format: "0.00"
+    sql: ${TABLE}.Overall_Numerical;;
+    filters: [
+      platform_clean: "Expedia"
+    ]
+  }
+
+  measure: direct_oqs {
+    group_label: "OQS Metrics"
+    label: "Direct OQS"
+    type: number
+    value_format: "0%"
+    sql: (${avg_direct} - 3.115)/(4.365-3.115);;
+  }
+
+  measure: expedia_oqs {
+    group_label: "OQS Metrics"
+    label: "Expedia OQS"
+    type: number
+    value_format: "0%"
+    sql: (${expedia_avg} - 3.29)/(3.89-3.29);;
+  }
+
+  measure: booking_oqs {
+    group_label: "OQS Metrics"
+    label: "Booking OQS"
+    type: number
+    value_format: "0%"
+    sql: (${avg_booking}booking} - 3.07)/(3.97-3.07);;
+  }
+
+  measure: count_direct_reviews {
+    group_label: "Review Counts"
+    label: "Direct Booking Review Count"
+    type: count
+    value_format: "0"
+    filters: [
+      platform_clean: "Direct"
+    ]
+  }
+
+  measure: count_booking_reviews {
+    group_label: "Review Counts"
+    label: "Booking.com Review Count"
+    type: count
+    value_format: "0"
+    filters: [
+      platform_clean: "Booking.com"
+    ]
+  }
+
+  measure: count_expedia_reviews {
+    group_label: "Review Counts"
+    label: "Expedia Review Count"
+    type: count
+    value_format: "0"
+    filters: [
+      platform_clean: "Expedia"
+    ]
+  }
+
+
+  #dimension: property {
+  #  type: string
+  #  sql: ${TABLE}.property ;;
+  #}
+
+  #dimension: reservationid {
+  #  type: string
+  #  sql: ${TABLE}.reservationid ;;
+  #}
 
   #dimension: unitname {
   #  type: string
@@ -296,12 +293,6 @@
   #  type: string
   #  sql: ${TABLE}.We_love_feedback__Is_there_anything_else_you_d_like_to_tell_us__ ;;
   #}
-
-  dimension: week_num {
-    type: number
-    hidden: yes
-    sql: ${TABLE}.WeekNum ;;
-  }
 
   #dimension: what_best_describes_the_nature_of_your_trip_ {
   #  type: string
@@ -340,7 +331,6 @@
 
   measure: count {
     type: count
-    hidden: yes
     drill_fields: []
   }
 }

@@ -26,8 +26,8 @@ view: reservations_clean {
   }
 
   dimension_group: bookingdate {
-    view_label: "Date Dimensions"
-    group_label: "Booking Date"
+    # view_label: "Date Dimensions"
+    # group_label: "Booking Date"
     label: "Booking"
     type: time
     timeframes: [
@@ -43,9 +43,10 @@ view: reservations_clean {
   }
 
   dimension_group: review_date {
-    view_label: "Date Dimensions"
-    group_label: "All Reviews Date"
-    label: "All Reviews"
+    # view_label: "Date Dimensions"
+    # group_label: "All Reviews Date"
+    label: "Review"
+    description: "If Airbnb Review Present, this date will reflect the Airbnb Review. Otherwise, date is grabbed from Post-Checkout Data"
     type: time
     datatype: date
     timeframes: [
@@ -120,19 +121,19 @@ view: reservations_clean {
   # }
 
 
-  dimension: bringingpets {
+  dimension: bring_pets {
     type: yesno
     sql: ${TABLE}.bringingpets ;;
   }
 
-  dimension: callboxcode {
+  dimension: call_box_code {
     type: string
     sql: ${TABLE}.callboxcode ;;
   }
 
-  dimension_group: cancellationdate {
-    view_label: "Date Dimensions"
-    group_label: "Reservation Cancellation Date"
+  dimension_group: cancellation_date {
+    # view_label: "Date Dimensions"
+    # group_label: "Reservation Cancellation Date"
     label: "Cancellation"
     type: time
     timeframes: [
@@ -155,27 +156,27 @@ view: reservations_clean {
     sql: ${TABLE}.chargelogs ;;
   }
 
-  dimension: checkindate {
-    type: date
-    view_label: "Date Dimensions"
-    label: "Reservation Check-in Date"
-    sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
+  dimension_group: checkindate {
+    type: time
+    timeframes: [raw, date, month, year, quarter]
+    label: "Reservation Check-In"
+    sql: CAST(${TABLE}.checkindate as TIMESTAMP);;
   }
 
-  dimension: checkoutdate {
-    view_label: "Date Dimensions"
-    label: "Reservation Check-out Date"
-    type: date
-    sql: CAST(${TABLE}.checkoutdatelocal as TIMESTAMP);;
+  dimension_group: checkoutdate {
+    label: "Reservation Check-Out"
+    type: time
+    timeframes: [raw, date, month, year, quarter]
+    sql: CAST(${TABLE}.checkoutdate as TIMESTAMP);;
   }
 
-  dimension: confirmationcode {
+  dimension: confirmation_code {
     type: string
     sql: ${TABLE}.confirmationcode ;;
     drill_fields: [reservation_details*]
   }
 
-  dimension_group: createdat {
+  dimension_group: created_date {
     hidden:  yes
     type: time
     timeframes: [
@@ -190,12 +191,12 @@ view: reservations_clean {
     sql: ${TABLE}.createdat ;;
   }
 
-  dimension: earlycheckin {
+  dimension: early_check_in {
     hidden: yes
     sql: ${TABLE}.earlycheckin ;;
   }
 
-  dimension: externalrefs {
+  dimension: external_refs {
     hidden: yes
     sql: ${TABLE}.externalrefs ;;
   }
@@ -206,32 +207,32 @@ view: reservations_clean {
     sql: ${TABLE}.guest ;;
   }
 
-  dimension: guestscount {
+  dimension: guests_count {
     type: number
     sql: ${TABLE}.guestscount ;;
   }
 
-  dimension: keycafeaccess {
+  dimension: key_cafe_access {
     hidden: yes
     sql: ${TABLE}.keycafeaccess ;;
   }
 
-  dimension: licenseplate {
+  dimension: license_plate {
     type: string
     sql: ${TABLE}.licenseplate ;;
   }
 
-  dimension: listingaddress {
+  dimension: listingg_address {
     type: string
     sql: ${TABLE}.listingaddress ;;
   }
 
-  dimension: listingname {
+  dimension: listing_name {
     type: string
     sql: ${TABLE}.listingname ;;
   }
 
-  dimension: maybebringingpetsdespiteban {
+  dimension: maybe_bringing_pets_despite_ban {
     type: yesno
     sql: ${TABLE}.maybebringingpetsdespiteban ;;
   }
@@ -246,17 +247,17 @@ view: reservations_clean {
     sql: ${TABLE}.notes ;;
   }
 
-  dimension: numberofpets {
+  dimension: number_of_pets {
     type: number
     sql: ${TABLE}.numberofpets ;;
   }
 
-  dimension: parkingspaceneeded {
+  dimension: parking_space_needed {
     type: yesno
     sql: ${TABLE}.parkingspaceneeded ;;
   }
 
-  dimension: petdescription {
+  dimension: pet_description {
     type: string
     sql: ${TABLE}.petdescription ;;
   }
@@ -271,17 +272,17 @@ view: reservations_clean {
     sql: ${TABLE}.pets ;;
   }
 
-  dimension: pettype {
+  dimension: pet_type {
     type: string
     sql: ${TABLE}.pettype ;;
   }
 
-  dimension: plannedarrival {
+  dimension: planned_arrival {
     type: string
     sql: ${TABLE}.plannedarrival ;;
   }
 
-  dimension: planneddeparture {
+  dimension: planned_departure {
     type: string
     sql: ${TABLE}.planneddeparture ;;
   }
@@ -291,7 +292,7 @@ view: reservations_clean {
     sql: ${TABLE}.platform ;;
   }
 
-  dimension: signeddoc {
+  dimension: signed_doc {
     type: string
     sql: ${TABLE}.signeddoc ;;
   }
@@ -311,7 +312,7 @@ view: reservations_clean {
     sql: ${TABLE}.source ;;
   }
 
-  dimension: specialrequest {
+  dimension: special_request {
     type: string
     sql: ${TABLE}.specialrequest ;;
   }
@@ -326,7 +327,8 @@ view: reservations_clean {
     sql: ${TABLE}.suspicious ;;
   }
 
-  dimension: termsaccepted {
+  dimension: terms_accepted {
+    hidden: yes
     type: yesno
     sql: ${TABLE}.termsaccepted ;;
   }
@@ -373,21 +375,20 @@ view: reservations_clean {
     group_label: "OQS Metrics"
     type: number
     value_format: "0%"
-    sql: (ifnull((${airbnb_reviews.overall_quality_score} * ${airbnb_reviews.count}),0) +  ifnull((${post_checkout_data.direct_oqs} * ${post_checkout_data.direct_reviews}),0)
-    + ifnull((${post_checkout_data.expedia_oqs} * ${post_checkout_data.expedia_reviews}),0) + ifnull((${post_checkout_data.booking_oqs} * ${post_checkout_data.booking_reviews}),0))
-    / nullif((ifnull(${airbnb_reviews.count},0) + ifnull(${post_checkout_data.direct_reviews},0) + ifnull(${post_checkout_data.expedia_reviews},0) + ifnull(${post_checkout_data.booking_reviews},0)),0);;
+    sql: (ifnull((${airbnb_reviews.overall_quality_score} * ${airbnb_reviews.count}),0) +  ifnull((${post_checkout_data.direct_oqs} * ${post_checkout_data.count_direct_reviews}),0)
+    + ifnull((${post_checkout_data.expedia_oqs} * ${post_checkout_data.count_expedia_reviews}),0) + ifnull((${post_checkout_data.booking_oqs} * ${post_checkout_data.count_booking_reviews}),0))
+    / nullif((ifnull(${airbnb_reviews.count},0) + ifnull(${post_checkout_data.count_direct_reviews},0) + ifnull(${post_checkout_data.count_expedia_reviews},0) + ifnull(${post_checkout_data.count_booking_reviews},0)),0);;
   }
 
   measure: count_total {
     type: number
-    view_label: "Metrics"
     label: "Total Reviews"
     value_format: "0"
-    sql: ${airbnb_reviews.count} + ${post_checkout_data.direct_reviews} + ${post_checkout_data.expedia_reviews} + ${post_checkout_data.booking_reviews} ;;
+    sql: ${airbnb_reviews.count} + ${post_checkout_data.count_direct_reviews} + ${post_checkout_data.count_expedia_reviews} + ${post_checkout_data.count_booking_reviews} ;;
   }
 
   set:reservation_details {
-    fields: [confirmationcode, status, source, checkindate, checkoutdate, bookingdate_date]
+    fields: [confirmation_code, status, source, checkindate_date, checkoutdate_date, bookingdate_date]
   }
 }
 
