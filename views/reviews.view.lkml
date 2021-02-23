@@ -25,6 +25,8 @@
   #   sql: ${TABLE}.__v ;;
   # }
 
+view_label: "Check-In Survey Data"
+
   dimension: _id {
     type: string
     hidden: yes
@@ -43,11 +45,15 @@
   }
 
   dimension: overallrating {
+    label: "Overall Rating"
+    hidden: yes
     type: number
     sql: ${TABLE}.overallrating ;;
   }
 
   dimension: overallratingstandardized {
+    description: "Overall Rating (Standardized)"
+    label: "Overall Rating (Standardized)"
     type: number
     sql: ${TABLE}.overallratingstandardized ;;
   }
@@ -57,11 +63,10 @@
     sql: ${TABLE}.review_tags ;;
   }
 
-  measure: Rating {
+  measure: avg_rating {
     type:  average
-    view_label: "Metrics"
     value_format: "0.0"
-    label: "Real-time Review Rating"
+    label: "Averaage Real-time Review Rating"
     sql: ${TABLE}.overallratingstandardized ;;
   }
 
@@ -74,13 +79,13 @@
 
     measure: percent_thumbs_up {
       type: number
-      view_label: "Metrics"
       label: "% Thumbs Up"
       value_format: "0%"
       sql: ${count_thumbs_up} / ${count} ;;
     }
 
   dimension: privatereviewtext {
+    label: "Private Revew Text"
     type: string
     sql: ${TABLE}.privatereviewtext ;;
   }
@@ -96,8 +101,6 @@
   }
 
   dimension_group: submitdate {
-    view_label: "Date Dimensions"
-    group_label: "Real-time Review Date"
     label: "Real-time Review"
     type: time
     timeframes: [
