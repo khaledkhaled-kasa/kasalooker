@@ -162,7 +162,7 @@ view: breezeway_export {
     group_label: "BW Metrics"
     label: "% BW Tasks on Time"
     value_format: "0%"
-    sql: ${done_on_time}/${count};;
+    sql: ${done_on_time}/nullif(${count},0);;
   }
 
   dimension: estimate_time_to_complete {

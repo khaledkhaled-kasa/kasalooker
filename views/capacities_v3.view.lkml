@@ -165,7 +165,7 @@ view: capacities_v3 {
     sql: CASE WHEN ((${units.internaltitle} LIKE "%-XX") OR (${units.internaltitle} LIKE "%-RES")) THEN NULL
     ELSE CONCAT(${units.internaltitle}, '-', ${night_date})
     END;;
-  }
+    }
 
 
   measure: days_available {
