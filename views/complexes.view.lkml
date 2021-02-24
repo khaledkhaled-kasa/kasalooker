@@ -142,7 +142,7 @@ dimension: address_city_revised {
 
   dimension: propcode_revised {
     hidden: no
-    view_label: "Core Dimensions"
+    view_label: "Building and Geographic Information"
     label: "Property Code*"
     description: "This will pull the Property Code from complexes if the unit is returning null values"
     type: string

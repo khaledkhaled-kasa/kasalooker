@@ -518,7 +518,7 @@ view: airbnb_reviews {
     label: "Percent 3 Star Overall"
     type: number
     value_format: "0.0%"
-    sql: ${count_3_star} / ${count};;
+    sql: ${count_3_star} / nullif(${count},0);;
   }
 
   measure: percent_2_star {
@@ -527,7 +527,7 @@ view: airbnb_reviews {
     label: "Percent 2 Star Overall"
     type: number
     value_format: "0.0%"
-    sql: ${count_2_star} / ${count};;
+    sql: ${count_2_star} / nullif(${count},0);;
   }
 
   measure: percent_1_star {
@@ -536,7 +536,7 @@ view: airbnb_reviews {
     label: "Percent 1 Star Overall"
     type: number
     value_format: "0.0%"
-    sql: ${count_1_star} / ${count};;
+    sql: ${count_1_star} / nullif(${count},0);;
   }
 
   measure: count {
@@ -720,7 +720,7 @@ view: airbnb_reviews {
     group_label: "Review Percentages"
     type: number
     value_format: "0.0%"
-    sql: ${clean_count_less_than_4_star} / ${count_clean};;
+    sql: ${clean_count_less_than_4_star} / nullif(${count_clean},0);;
   }
 
   measure: percent_less_than_4_star_accuracy {
@@ -728,7 +728,7 @@ view: airbnb_reviews {
     group_label: "Review Percentages"
     type: number
     value_format: "0.0%"
-    sql: ${accuracy_count_less_than_4_star} / ${count_clean};;
+    sql: ${accuracy_count_less_than_4_star} / nullif(${count_clean},0);;
   }
 
   measure: percent_less_than_4_star_location {
@@ -736,7 +736,7 @@ view: airbnb_reviews {
     group_label: "Review Percentages"
     type: number
     value_format: "0.0%"
-    sql: ${location_count_less_than_4_star} / ${count_clean};;
+    sql: ${location_count_less_than_4_star} / nullif(${count_clean},0);;
   }
 
   measure: percent_less_than_4_star_value {
@@ -744,7 +744,7 @@ view: airbnb_reviews {
     group_label: "Review Percentages"
     type: number
     value_format: "0.0%"
-    sql: ${value_count_less_than_4_star} / ${count_clean};;
+    sql: ${value_count_less_than_4_star} / nullif(${count_clean},0);;
   }
 
   measure: percent_less_than_4_star_communication {
@@ -752,7 +752,7 @@ view: airbnb_reviews {
     group_label: "Review Percentages"
     type: number
     value_format: "0.0%"
-    sql: ${communication_count_less_than_4_star} / ${count_clean};;
+    sql: ${communication_count_less_than_4_star} / nullif(${count_clean},0);;
   }
 
   measure: percent_less_than_4_star_checkin {
@@ -760,7 +760,7 @@ view: airbnb_reviews {
     group_label: "Review Percentages"
     type: number
     value_format: "0.0%"
-    sql: ${checkin_count_less_than_4_star} / ${count_clean};;
+    sql: ${checkin_count_less_than_4_star} / nullif(${count_clean},0);;
   }
 
   measure: percent_5_star_clean {
@@ -768,7 +768,7 @@ view: airbnb_reviews {
     group_label: "Review Percentages"
     type: number
     value_format: "0.0%"
-    sql: ${clean_count_5_star} / ${count_clean};;
+    sql: ${clean_count_5_star} / nullif(${count_clean},0);;
   }
 
   measure: percent_5_star_value {
@@ -776,7 +776,7 @@ view: airbnb_reviews {
     group_label: "Review Percentages"
     type: number
     value_format: "0.0%"
-    sql: ${value_count_5_star} / ${count_clean};;
+    sql: ${value_count_5_star} / nullif(${count_clean},0);;
   }
 
   measure: percent_5_star_location {
@@ -784,7 +784,7 @@ view: airbnb_reviews {
     group_label: "Review Percentages"
     type: number
     value_format: "0.0%"
-    sql: ${location_count_5_star} / ${count_clean};;
+    sql: ${location_count_5_star} / nullif(${count_clean},0);;
   }
 
   measure: percent_5_star_communication {
@@ -792,7 +792,7 @@ view: airbnb_reviews {
     group_label: "Review Percentages"
     type: number
     value_format: "0.0%"
-    sql: ${communication_count_5_star} / ${count_clean};;
+    sql: ${communication_count_5_star} / nullif(${count_clean},0);;
   }
 
   measure: percent_5_star_checkin {
@@ -800,7 +800,7 @@ view: airbnb_reviews {
     group_label: "Review Percentages"
     type: number
     value_format: "0.0%"
-    sql: ${checkin_count_5_star} / ${count_clean};;
+    sql: ${checkin_count_5_star} / nullif(${count_clean},0);;
   }
 
   measure: percent_5_star_accuracy {
@@ -808,7 +808,7 @@ view: airbnb_reviews {
     group_label: "Review Percentages"
     type: number
     value_format: "0.0%"
-    sql: ${accuracy_count_5_star} / ${count_clean};;
+    sql: ${accuracy_count_5_star} / nullif(${count_clean},0);;
   }
 
   measure: avg_communication_rating {
