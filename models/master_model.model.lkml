@@ -4,6 +4,8 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 # include: "/**/*.view.lkml"                 # include all views in this project
 # include: "my_dashboard.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
+
+
 datagroup: aircalls_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
   max_cache_age: "1 hours"
@@ -54,15 +56,16 @@ explore: compliance_tracker {
 
 
 explore: aircall_segment {
-  group_label: "Aircall"
+  group_label: "Software"
   persist_with: compliance_default_datagroup
-  label: "Aircalls"
+  label: "Aircall"
 }
 
 explore: breezeway_export {
-  group_label: "Breezeway"
+  group_label: "Software"
   persist_with: breezeway_default_datagroup
   from: breezeway_export
+  label: "Breezeway (Exports)"
   join: units {
     type:  left_outer
     relationship: one_to_one
@@ -122,7 +125,7 @@ explore: breezeway_export {
 
 explore: reservations_clean {
   persist_with: reviews_default_datagroup
-  group_label: "Kasa Reviews"
+  group_label: "Kasa Metrics"
   label: "Reviews"
   from: reservations_clean
   join: units {
@@ -179,7 +182,8 @@ explore: reservations_clean {
 }
 
 explore: reservations_audit {
-  group_label: "Finance (Audit)"
+  label: "Reservations (Finance Audit)"
+  group_label: "Kasa Metrics"
   from: reservations_audit
   join: financials_audit {
     type:  inner
@@ -204,18 +208,13 @@ explore: reservations_audit {
     sql_on:  ${units.address_city} = ${geo_location.city}
       and ${units.address_state} = ${geo_location.state};;
   }
-  # join: capacities_rolled_audit {
-  #   type:  left_outer
-  #   relationship: many_to_one
-  #   sql_on:
-  #       ${capacities_rolled_audit.night} = ${financials_audit.night_date}
-  #       and cast(${capacities_rolled_audit.bedroom} as string) = cast(${units.bedrooms} as string)
-  #     {% if complexes.title._is_selected or complexes.title._is_filtered %}
-  #       and
-  #       ${complexes._id} = ${capacities_rolled_audit.complex}
-  #     {% endif %}
-  #   ;;
-  # }
+
+  join: gv_form_ts {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${reservations_audit.confirmationcode} = ${gv_form_ts.confirmationcode} ;;
+  }
+
 }
 
 explore: capacities_v3 {
@@ -265,6 +264,7 @@ explore: capacities_v3 {
       and ${units.address_state} = ${geo_location.state};;
   }
 
+
   # join: reviews {
   #   type:  full_outer
   #   relationship:  one_to_one
@@ -296,12 +296,14 @@ explore: capacities_v3 {
 }
 
 explore: guest_verification_form {
-  group_label: "Kasa Metrics"
-  label: "GV Verification"
+  group_label: "Product & Tech"
+  label: "CSS (GV Verification)"
   persist_with: kasametrics_v3_default_datagroup
 }
 
+
 explore: ximble_master {
+  group_label: "Software"
   label: "Ximble"
   persist_with: kasametrics_v3_default_datagroup
 }

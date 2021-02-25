@@ -87,13 +87,13 @@ view: guest_verification_form {
     type: string
     description: "Distribution of hours ahead of check-in to submit the GV form (6 hours, 12 hours, 24 hours, 48 hours) before checkin"
     sql: CASE
-    WHEN ${date_diff} < 6 THEN "b1: < 6 hours"
-    WHEN ${date_diff} >= 6 AND ${date_diff} < 12 THEN "b2: 6 - 12 hours"
-    WHEN ${date_diff} >= 12 AND ${date_diff} < 24 THEN "b3: 12 - 24 hours"
-    WHEN ${date_diff} >= 24 AND ${date_diff} < 48 THEN "b4: 24 - 48 hours"
-    WHEN ${date_diff} >= 48 THEN "b5: >= 48 hours"
-    ELSE "b6: Not Submitted"
-    END;;
+          WHEN ${date_diff} < 6 THEN "b1: < 6 hours"
+          WHEN ${date_diff} >= 6 AND ${date_diff} < 12 THEN "b2: 6 - 12 hours"
+          WHEN ${date_diff} >= 12 AND ${date_diff} < 24 THEN "b3: 12 - 24 hours"
+          WHEN ${date_diff} >= 24 AND ${date_diff} < 48 THEN "b4: 24 - 48 hours"
+          WHEN ${date_diff} >= 48 THEN "b5: >= 48 hours"
+          ELSE "b6: Not Submitted"
+          END;;
   }
 
 

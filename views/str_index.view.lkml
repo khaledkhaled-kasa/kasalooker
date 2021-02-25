@@ -4,7 +4,6 @@ view: str_index {
 
 
   dimension_group: str_night {
-    view_label: "Date Dimensions"
     group_label: "STR Night"
     label: ""
     type: time

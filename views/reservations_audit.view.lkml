@@ -151,7 +151,7 @@ view: reservations_audit {
       day_of_week,
       hour_of_day
     ]
-    sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
+    sql: TIMESTAMP(${TABLE}.checkindate);;
   }
 
   dimension: checkoutdate {
@@ -174,7 +174,7 @@ view: reservations_audit {
       quarter,
       year
     ]
-    sql: CAST(${TABLE}.checkoutdatelocal as TIMESTAMP);;
+    sql: TIMESTAMP(${TABLE}.checkoutdate);;
   }
 
   dimension: confirmationcode {
