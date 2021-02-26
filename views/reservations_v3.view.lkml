@@ -539,8 +539,8 @@ view: reservations_v3 {
     dimension: financial_night_part_of_res {
       hidden: no
       type:  yesno
-      sql: format_date('%Y-%m-%d', ${financials_v3.night_date}) < ${checkoutdate_date} and
-        format_date('%Y-%m-%d', ${financials_v3.night_date}) >= ${checkindate_date};;
+      sql: ${financials_v3.night_date} < ${checkoutdate_date} and
+        ${financials_v3.night_date} >= ${checkindate_date};;
     }
 
     dimension: financial_night_part_of_res_modified {
@@ -555,8 +555,8 @@ view: reservations_v3 {
     dimension: capacity_night_part_of_res {
       type:  yesno
       hidden: no
-      sql: format_date('%Y-%m-%d', ${capacities_v3.night_date}) < ${checkoutdate_date} and
-        format_date('%Y-%m-%d', ${capacities_v3.night_date}) >= ${checkindate_date};;
+      sql: ${capacities_v3.night_date} < ${checkoutdate_date} and
+        ${capacities_v3.night_date} >= ${checkindate_date};;
     }
 
 
@@ -583,21 +583,21 @@ view: reservations_v3 {
     dimension: checkin_night {
       hidden: yes
       type:  yesno
-      sql: format_date('%Y-%m-%d', ${capacities_v3.night_date}) = format_date('%Y-%m-%d', ${checkindate_date}) ;;
+      sql: ${capacities_v3.night_date} = ${checkindate_date} ;;
     }
 
     dimension: checkout_night {
       hidden: yes
       type:  yesno
-      sql: format_date('%Y-%m-%d', ${capacities_v3.night_date}) = format_date('%Y-%m-%d', ${checkoutdate_date}) ;;
+      sql: ${capacities_v3.night_date} = ${checkoutdate_date} ;;
     }
 
     dimension: checkins_checkouts {
       label: "Clean-up"
       description: "Night is either a check-in or check-out (clean up redundant rows)"
       type: yesno
-      sql: format_date('%Y-%m-%d', ${capacities_v3.night_date}) = format_date('%Y-%m-%d', ${checkoutdate_date})
-        OR format_date('%Y-%m-%d', ${capacities_v3.night_date}) = format_date('%Y-%m-%d', ${checkindate_date}) ;;
+      sql: ${capacities_v3.night_date} = ${checkoutdate_date}
+        OR ${capacities_v3.night_date} = ${checkindate_date} ;;
     }
 
     measure: number_of_checkins {

@@ -407,8 +407,8 @@ view: reservations_audit {
 
   dimension: financial_night_part_of_res {
     type:  yesno
-    sql: format_date('%Y-%m-%d', ${financials_audit.night_date}) < ${checkoutdate_date} and
-      format_date('%Y-%m-%d', ${financials_audit.night_date}) >= ${checkindate_date};;
+    sql: ${financials_audit.night_date} < ${checkoutdate_date} and
+      ${financials_audit.night_date} >= ${checkindate_date};;
   }
 
   measure: num_reservations {
