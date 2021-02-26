@@ -104,13 +104,6 @@ view: reservations_v3 {
       }
 
 
-    # dimension: bookingflags {
-    #   hidden: no
-    #   type: string
-    #   sql: ${TABLE}.bookingflags ;;
-    # }
-
-
     dimension: extended_booking {
       type: yesno
       sql: ${TABLE}.extended_booking = 1 ;;
@@ -131,15 +124,6 @@ view: reservations_v3 {
       }
     }
 
-    # measure: Extension_guesty_count {
-    #   view_label: "Metrics"
-    #   label: "Extended Booking Count (Guesty Label)"
-    #   type: count_distinct
-    #   sql: CONCAT(${Extension_by_channel_label}, ${confirmationcode}) ;;
-    #   filters: {field: Extension_by_channel_label
-    #     value: "yes"
-    #   }
-    # }
 
     dimension: _id {
       hidden: no
@@ -161,7 +145,7 @@ view: reservations_v3 {
     dimension_group: bookingdate {
       view_label: "Date Dimensions"
       group_label: "Booking Date"
-      label: ""
+      label: "Booking"
       type: time
       timeframes: [
         raw,
@@ -179,17 +163,17 @@ view: reservations_v3 {
 
     dimension: lead_time {
       type:  number
-      sql:  date_diff(CAST(${checkindate} as DATE), CAST(${TABLE}.bookingdate as DATE), DAY) ;;
+      sql:  date_diff(CAST(${TABLE}.checkindate as DATE), CAST(${TABLE}.bookingdate as DATE), DAY) ;;
     }
 
   dimension: cancellation_window {
     type:  number
-    sql:  date_diff(CAST(${checkindate} as DATE), CAST(${TABLE}.cancellationdate as DATE), DAY) ;;
+    sql:  date_diff(CAST(${TABLE}.checkindate as DATE), CAST(${TABLE}.cancellationdate as DATE), DAY) ;;
   }
 
     dimension: length_of_stay {
       type:  number
-      sql:  date_diff(CAST(${checkoutdate} as DATE), CAST(${checkindate} as DATE), DAY) ;;
+      sql:  date_diff(CAST(${TABLE}.checkoutdate as DATE), CAST(${TABLE}.checkindate as DATE), DAY) ;;
     }
 
     measure: avg_lead_time {
@@ -283,13 +267,14 @@ view: reservations_v3 {
       sql: ${TABLE}.chargelogs ;;
     }
 
-    dimension: checkindate {
+    dimension: checkindate_local {
       hidden: yes
       type: date
       sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
+      convert_tz: no
     }
 
-    dimension_group: reservation_checkin {
+    dimension_group: checkindate {
       type: time
       view_label: "Date Dimensions"
       group_label: "Check-in Date"
@@ -303,16 +288,17 @@ view: reservations_v3 {
         quarter,
         year
       ]
-      sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
+      sql: TIMESTAMP(${TABLE}.checkindate);;
     }
 
-    dimension: checkoutdate {
+    dimension: checkoutdate_local {
       hidden: yes
       type: date
       sql: CAST(${TABLE}.checkoutdatelocal as TIMESTAMP);;
+      convert_tz: no
     }
 
-    dimension_group: reservation_checkout {
+    dimension_group: checkoutdate {
       type: time
       view_label: "Date Dimensions"
       group_label: "Check-out Date"
@@ -326,7 +312,7 @@ view: reservations_v3 {
         quarter,
         year
       ]
-      sql: CAST(${TABLE}.checkoutdatelocal as TIMESTAMP);;
+      sql: CAST(${TABLE}.checkoutdate as TIMESTAMP);;
     }
 
     dimension: confirmationcode {
@@ -553,8 +539,8 @@ view: reservations_v3 {
     dimension: financial_night_part_of_res {
       hidden: no
       type:  yesno
-      sql: format_date('%Y-%m-%d', ${financials_v3.night_date}) < ${TABLE}.checkoutdatelocal and
-        format_date('%Y-%m-%d', ${financials_v3.night_date}) >= ${TABLE}.checkindatelocal;;
+      sql: format_date('%Y-%m-%d', ${financials_v3.night_date}) < ${TABLE}.checkoutdate and
+        format_date('%Y-%m-%d', ${financials_v3.night_date}) >= ${TABLE}.checkindate;;
     }
 
     dimension: financial_night_part_of_res_modified {
@@ -569,8 +555,8 @@ view: reservations_v3 {
     dimension: capacity_night_part_of_res {
       type:  yesno
       hidden: no
-      sql: format_date('%Y-%m-%d', ${capacities_v3.night_date}) < ${TABLE}.checkoutdatelocal and
-        format_date('%Y-%m-%d', ${capacities_v3.night_date}) >= ${TABLE}.checkindatelocal;;
+      sql: format_date('%Y-%m-%d', ${capacities_v3.night_date}) < ${TABLE}.checkoutdate and
+        format_date('%Y-%m-%d', ${capacities_v3.night_date}) >= ${TABLE}.checkindate;;
     }
 
 
@@ -597,45 +583,63 @@ view: reservations_v3 {
     dimension: checkin_night {
       hidden: yes
       type:  yesno
-      sql: format_date('%Y-%m-%d', ${capacities_v3.night_date}) = format_date('%Y-%m-%d', ${reservation_checkin_date}) ;;
+      sql: format_date('%Y-%m-%d', ${capacities_v3.night_date}) = format_date('%Y-%m-%d', ${checkindate_date}) ;;
     }
 
     dimension: checkout_night {
       hidden: yes
       type:  yesno
-      sql: format_date('%Y-%m-%d', ${capacities_v3.night_date}) = format_date('%Y-%m-%d', ${reservation_checkout_date}) ;;
+      sql: format_date('%Y-%m-%d', ${capacities_v3.night_date}) = format_date('%Y-%m-%d', ${checkoutdate_date}) ;;
     }
 
     dimension: checkins_checkouts {
       label: "Clean-up"
       description: "Night is either a check-in or check-out (clean up redundant rows)"
       type: yesno
-      sql: format_date('%Y-%m-%d', ${capacities_v3.night_date}) = format_date('%Y-%m-%d', ${reservation_checkout_date})
-        OR format_date('%Y-%m-%d', ${capacities_v3.night_date}) = format_date('%Y-%m-%d', ${reservation_checkin_date}) ;;
+      sql: format_date('%Y-%m-%d', ${capacities_v3.night_date}) = format_date('%Y-%m-%d', ${checkoutdate_date})
+        OR format_date('%Y-%m-%d', ${capacities_v3.night_date}) = format_date('%Y-%m-%d', ${checkindate_date}) ;;
     }
 
     measure: number_of_checkins {
       view_label: "Metrics"
       label: "Number of Checkins"
-      description: "Number of Check-ins"
+      description: "Number of Check-ins EXCLUDING Extensions"
       type: count_distinct
       sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
       filters: [checkin_night: "yes", extended_booking: "no"]
     }
 
+  measure: number_of_checkins_star {
+    view_label: "Metrics"
+    label: "Number of Checkins*"
+    description: "Number of Check-ins INCLUDING Extensions"
+    type: count_distinct
+    sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
+    filters: [checkin_night: "yes"]
+  }
+
     measure: number_of_checkouts {
       view_label: "Metrics"
       label: "Number of Checkouts"
-      description: "Number of Check-outs"
+      description: "Number of Check-outs EXCLUDING Initial Extended Booking Checkouts"
       type: count_distinct
       sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
       filters: [checkout_night: "yes", initial_booking: "no"]
     }
 
+  measure: number_of_checkouts_star {
+    view_label: "Metrics"
+    label: "Number of Checkouts*"
+    description: "Number of Check-outs INCLUDING  Initial Extended Booking Checkouts"
+    type: count_distinct
+    sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
+    filters: [checkout_night: "yes"]
+  }
+
 
 
     set:reservation_details {
-      fields: [confirmationcode, status, source, checkindate, checkoutdate, bookingdate_date]
+      fields: [confirmationcode, status, source, checkindate_local, checkoutdate_local, bookingdate_date]
     }
 
 }

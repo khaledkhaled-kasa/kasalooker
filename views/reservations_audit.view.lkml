@@ -47,12 +47,12 @@ view: reservations_audit {
 
   dimension: lead_time {
     type:  number
-    sql:  date_diff(CAST(${checkindate} as DATE), CAST(${TABLE}.bookingdate as DATE), DAY) ;;
+    sql:  date_diff(CAST(${TABLE}.checkindate as DATE), CAST(${TABLE}.bookingdate as DATE), DAY) ;;
   }
 
   dimension: length_of_stay {
     type:  number
-    sql:  date_diff(CAST(${checkoutdate} as DATE), CAST(${checkindate} as DATE), DAY) ;;
+    sql:  date_diff(CAST(${TABLE}.checkoutdate as DATE), CAST(${TABLE}.checkindate as DATE), DAY) ;;
   }
 
   measure: avg_lead_time {
@@ -127,14 +127,15 @@ view: reservations_audit {
     sql: ${TABLE}.chargelogs ;;
   }
 
-  dimension: checkindate {
+  dimension: checkindate_local {
     type: date
     hidden: yes
     sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
+    convert_tz: no
   }
 
 
-  dimension_group: reservation_checkin {
+  dimension_group: checkindate {
     view_label: "Date Dimensions"
     group_label: "Checkin Date"
     label: "Checkin"
@@ -154,13 +155,14 @@ view: reservations_audit {
     sql: TIMESTAMP(${TABLE}.checkindate);;
   }
 
-  dimension: checkoutdate {
+  dimension: checkoutdate_local {
     hidden: yes
     type: date
     sql: CAST(${TABLE}.checkoutdatelocal as TIMESTAMP);;
+    convert_tz: no
   }
 
-  dimension_group: reservation_checkout {
+  dimension_group: checkoutdate {
     type: time
     view_label: "Date Dimensions"
     group_label: "Checkout Date"
@@ -405,8 +407,8 @@ view: reservations_audit {
 
   dimension: financial_night_part_of_res {
     type:  yesno
-    sql: format_date('%Y-%m-%d', ${financials_audit.night_date}) < ${TABLE}.checkoutdatelocal and
-      format_date('%Y-%m-%d', ${financials_audit.night_date}) >= ${TABLE}.checkindatelocal;;
+    sql: format_date('%Y-%m-%d', ${financials_audit.night_date}) < ${TABLE}.checkoutdate and
+      format_date('%Y-%m-%d', ${financials_audit.night_date}) >= ${TABLE}.checkindate;;
   }
 
   measure: num_reservations {
@@ -434,7 +436,7 @@ view: reservations_audit {
 
 
   set:reservation_details {
-    fields: [confirmationcode, status, source, checkindate, checkoutdate, bookingdate_date]
+    fields: [confirmationcode, status, source, checkindate_local, checkoutdate_local, bookingdate_date]
   }
 
 }

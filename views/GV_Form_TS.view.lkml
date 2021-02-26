@@ -97,7 +97,7 @@ view: gv_form_ts {
     label: "Number of Days"
     description: "Number of days ahead of check-in to submit the GV form"
     type:  number
-    sql:  date_diff(${reservations_audit.reservation_checkin_date}, ${verified_ts_date}, DAY) ;;
+    sql:  date_diff(${reservations_audit.checkindate_date}, ${verified_ts_date}, DAY) ;;
   }
 
   measure: avg_number_of_days {
@@ -113,7 +113,7 @@ view: gv_form_ts {
     label: "Number of Hours before Check-in"
     type: number
     description: "Number of hours ahead of check-in to submit the GV form"
-    sql: TIMESTAMP_DIFF(TIMESTAMP(${reservations_audit.reservation_checkin_time}), TIMESTAMP(${verified_ts_time}), HOUR);;
+    sql: TIMESTAMP_DIFF(TIMESTAMP(${reservations_audit.checkindate_time}), TIMESTAMP(${verified_ts_time}), HOUR);;
   }
 
   dimension: hour_bins {

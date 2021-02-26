@@ -14,7 +14,7 @@ view: financials_v3{
           (COALESCE(sum(amount),0) + COALESCE(sum(amount__fl),0)) as outstanding_amount
           FROM financials JOIN reservations
           ON financials.reservation = reservations._id
-          WHERE (CAST(financials.night AS DATE) < CAST(reservations.checkindatelocal AS DATE) OR CAST(financials.night AS DATE) >= CAST(reservations.checkoutdatelocal AS DATE))
+          WHERE (CAST(financials.night AS DATE) < CAST(reservations.checkindate AS DATE) OR CAST(financials.night AS DATE) >= CAST(reservations.checkoutdate AS DATE))
           AND financials.type NOT IN ("channelFee","ToT","ToTInflow","ToTOutflowNonLiability","ToTInflowNonLiability")
           AND (isvalid is null or isvalid = true)
           GROUP BY 1,2)t1)t2
@@ -28,7 +28,7 @@ view: financials_v3{
         FROM financials JOIN reservations
         ON financials.reservation = reservations._id
         AND financials.type = 'roomRevenue'
-        AND (CAST(financials.night AS DATE) >= CAST(reservations.checkindatelocal AS DATE) AND CAST(financials.night AS DATE) < CAST(reservations.checkoutdatelocal AS DATE))
+        AND (CAST(financials.night AS DATE) >= CAST(reservations.checkindate AS DATE) AND CAST(financials.night AS DATE) < CAST(reservations.checkoutdate AS DATE))
         GROUP BY 1)t3
         ON financials.reservation = t3.reservationid
         where financials.isvalid is null or financials.isvalid = true
@@ -158,7 +158,6 @@ view: financials_v3{
     type:  yesno
     sql:  ${capacities_v3.night_day_of_week} in ('Friday', 'Saturday') ;;
 
-    # sql:  ${night_day_of_week} in ('Friday', 'Saturday') ;;
   }
 
 

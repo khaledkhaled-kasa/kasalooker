@@ -31,50 +31,13 @@ view: reservations_kustomer {
 
   dimension: lead_time {
     type:  number
-    sql:  date_diff(CAST(${checkindate} as DATE), CAST(${TABLE}.bookingdate as DATE), DAY) ;;
+    sql:  date_diff(CAST(${TABLE}.checkindate as DATE), CAST(${TABLE}.bookingdate as DATE), DAY) ;;
   }
 
   dimension: length_of_stay {
     type:  number
-    sql:  date_diff(CAST(${checkoutdate} as DATE), CAST(${checkindate} as DATE), DAY) ;;
+    sql:  date_diff(CAST(${TABLE}.checkoutdate as DATE), CAST(${TABLE}.checkindate as DATE), DAY) ;;
   }
-
-  # measure: avg_lead_time {
-  #   view_label: "Metrics"
-  #   description: "Days between booking and checking in"
-  #   value_format: "0.0"
-  #   type:  average
-  #   sql: ${lead_time};;
-  #   drill_fields: [reservation_details*]
-  # }
-
-  # measure: median_lead_time {
-  #   view_label: "Metrics"
-  #   description: "Days between booking and checking in"
-  #   value_format: "0.0"
-  #   type:  median
-  #   sql: ${lead_time};;
-  #   drill_fields: [reservation_details*]
-  # }
-
-  # measure: avg_length_of_stay {
-  #   view_label: "Metrics"
-  #   description: "Number of days of stay"
-  #   value_format: "0.0"
-  #   type:  average
-  #   sql: ${length_of_stay};;
-  #   drill_fields: [reservation_details*]
-  # }
-
-  # measure: median_length_of_stay {
-  #   view_label: "Metrics"
-  #   description: "Number of days of stay"
-  #   value_format: "0.0"
-  #   type:  median
-  #   sql: ${length_of_stay};;
-  #   drill_fields: [reservation_details*]
-  # }
-
 
   dimension: bringingpets {
     type: yesno
@@ -110,9 +73,10 @@ view: reservations_kustomer {
     sql: ${TABLE}.chargelogs ;;
   }
 
-  dimension: checkindate {
+  dimension: checkindate_local {
     type: date
     sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
+    convert_tz: no
   }
 
 
@@ -128,12 +92,13 @@ view: reservations_kustomer {
       quarter,
       year
     ]
-    sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
+    sql: CAST(${TABLE}.checkindate as TIMESTAMP);;
   }
 
-  dimension: checkoutdate {
+  dimension: checkoutdate_local {
     type: date
     sql: CAST(${TABLE}.checkoutdatelocal as TIMESTAMP);;
+    convert_tz: no
   }
 
   dimension_group: reservation_checkout {
@@ -148,7 +113,7 @@ view: reservations_kustomer {
       quarter,
       year
     ]
-    sql: CAST(${TABLE}.checkoutdatelocal as TIMESTAMP);;
+    sql: CAST(${TABLE}.checkoutdate as TIMESTAMP);;
   }
 
   dimension: confirmationcode {
@@ -351,7 +316,7 @@ view: reservations_kustomer {
 
 
   set:reservation_details {
-    fields: [confirmationcode, status, source, checkindate, checkoutdate, bookingdate_date]
+    fields: [confirmationcode, status, source, checkindate_local, checkoutdate_local, bookingdate_date]
   }
 
 }
