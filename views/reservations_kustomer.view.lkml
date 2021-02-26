@@ -31,12 +31,12 @@ view: reservations_kustomer {
 
   dimension: lead_time {
     type:  number
-    sql:  date_diff(CAST(${TABLE}.checkindate as DATE), CAST(${TABLE}.bookingdate as DATE), DAY) ;;
+    sql:  date_diff(${checkindate_date}, CAST(${TABLE}.bookingdate as DATE), DAY) ;;
   }
 
   dimension: length_of_stay {
     type:  number
-    sql:  date_diff(CAST(${TABLE}.checkoutdate as DATE), CAST(${TABLE}.checkindate as DATE), DAY) ;;
+    sql:  date_diff(${checkoutdate_date}, ${checkindate_date}, DAY) ;;
   }
 
   dimension: bringingpets {
@@ -80,7 +80,7 @@ view: reservations_kustomer {
   }
 
 
-  dimension_group: reservation_checkin {
+  dimension_group: checkindate {
     type: time
     hidden: yes
     timeframes: [
@@ -101,7 +101,7 @@ view: reservations_kustomer {
     convert_tz: no
   }
 
-  dimension_group: reservation_checkout {
+  dimension_group: checkoutdate {
     type: time
     hidden: yes
     timeframes: [

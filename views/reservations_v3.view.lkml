@@ -163,17 +163,17 @@ view: reservations_v3 {
 
     dimension: lead_time {
       type:  number
-      sql:  date_diff(CAST(${TABLE}.checkindate as DATE), CAST(${TABLE}.bookingdate as DATE), DAY) ;;
+      sql:  date_diff(${checkindate_date}, CAST(${TABLE}.bookingdate as DATE), DAY) ;;
     }
 
   dimension: cancellation_window {
     type:  number
-    sql:  date_diff(CAST(${TABLE}.checkindate as DATE), CAST(${TABLE}.cancellationdate as DATE), DAY) ;;
+    sql:  date_diff(${checkindate_date}, CAST(${TABLE}.cancellationdate as DATE), DAY) ;;
   }
 
     dimension: length_of_stay {
       type:  number
-      sql:  date_diff(CAST(${TABLE}.checkoutdate as DATE), CAST(${TABLE}.checkindate as DATE), DAY) ;;
+      sql:  date_diff(${checkoutdate_date}, ${checkindate_date}, DAY) ;;
     }
 
     measure: avg_lead_time {
@@ -539,8 +539,8 @@ view: reservations_v3 {
     dimension: financial_night_part_of_res {
       hidden: no
       type:  yesno
-      sql: format_date('%Y-%m-%d', ${financials_v3.night_date}) < ${TABLE}.checkoutdate and
-        format_date('%Y-%m-%d', ${financials_v3.night_date}) >= ${TABLE}.checkindate;;
+      sql: format_date('%Y-%m-%d', ${financials_v3.night_date}) < ${checkoutdate_date} and
+        format_date('%Y-%m-%d', ${financials_v3.night_date}) >= ${checkindate_date};;
     }
 
     dimension: financial_night_part_of_res_modified {
@@ -555,8 +555,8 @@ view: reservations_v3 {
     dimension: capacity_night_part_of_res {
       type:  yesno
       hidden: no
-      sql: format_date('%Y-%m-%d', ${capacities_v3.night_date}) < ${TABLE}.checkoutdate and
-        format_date('%Y-%m-%d', ${capacities_v3.night_date}) >= ${TABLE}.checkindate;;
+      sql: format_date('%Y-%m-%d', ${capacities_v3.night_date}) < ${checkoutdate_date} and
+        format_date('%Y-%m-%d', ${capacities_v3.night_date}) >= ${checkindate_date};;
     }
 
 

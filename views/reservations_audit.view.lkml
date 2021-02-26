@@ -47,12 +47,12 @@ view: reservations_audit {
 
   dimension: lead_time {
     type:  number
-    sql:  date_diff(CAST(${TABLE}.checkindate as DATE), CAST(${TABLE}.bookingdate as DATE), DAY) ;;
+    sql:  date_diff(${checkindate_date}, CAST(${TABLE}.bookingdate as DATE), DAY) ;;
   }
 
   dimension: length_of_stay {
     type:  number
-    sql:  date_diff(CAST(${TABLE}.checkoutdate as DATE), CAST(${TABLE}.checkindate as DATE), DAY) ;;
+    sql:  date_diff(${checkoutdate_date}, ${checkindate_date}, DAY) ;;
   }
 
   measure: avg_lead_time {
@@ -407,8 +407,8 @@ view: reservations_audit {
 
   dimension: financial_night_part_of_res {
     type:  yesno
-    sql: format_date('%Y-%m-%d', ${financials_audit.night_date}) < ${TABLE}.checkoutdate and
-      format_date('%Y-%m-%d', ${financials_audit.night_date}) >= ${TABLE}.checkindate;;
+    sql: format_date('%Y-%m-%d', ${financials_audit.night_date}) < ${checkoutdate_date} and
+      format_date('%Y-%m-%d', ${financials_audit.night_date}) >= ${checkindate_date};;
   }
 
   measure: num_reservations {
