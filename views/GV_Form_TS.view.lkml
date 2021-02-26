@@ -104,7 +104,8 @@ view: gv_form_ts {
     label: "Average Number of Days before Check-in"
     description: "Average number of days ahead of check-in to submit the GV form"
     value_format: "0.0"
-    type:  average
+    type:  average_distinct
+    sql_distinct_key: ${reservations_audit.confirmationcode} ;;
     sql:  ${days_to_submit} ;;
   }
 
@@ -134,8 +135,15 @@ view: gv_form_ts {
     label: "Average Number of Hours"
     description: "Average number of hours ahead of check-in to submit the GV form"
     value_format: "0.0"
-    type:  average
+    type:  average_distinct
+    sql_distinct_key: ${reservations_audit.confirmationcode} ;;
     sql:  ${date_diff} ;;
+  }
+
+  measure: number_of_reservations {
+    label: "Number of Reservations"
+    type: count_distinct
+    sql: ${reservations_audit.confirmationcode} ;;
   }
 
 
