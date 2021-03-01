@@ -187,6 +187,7 @@ view: capacities_v3 {
   }
 
   measure: capacity_after_first_active_month {
+    view_label: "Metrics"
     label: "Capacity after First Active Month"
     description: "Number of available room nights bookable post first active month"
     type: count_distinct

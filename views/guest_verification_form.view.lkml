@@ -63,7 +63,7 @@ view: guest_verification_form {
     label: "Number of Days*"
     description: "Number of days ahead of check-in to submit the GV form"
     type:  number
-    sql:  date_diff(CAST(${checkindate} as DATE), ${correct_date_date}, DAY) ;;
+    sql:  date_diff(${checkindate_date}, ${correct_date_date}, DAY) ;;
   }
 
   measure: avg_number_of_days {
@@ -79,7 +79,7 @@ view: guest_verification_form {
     label: "Number of Hours before Check-in*"
     type: number
     description: "Number of hours ahead of check-in to submit the GV form"
-    sql: TIMESTAMP_DIFF(TIMESTAMP(${checkindatetime}), TIMESTAMP(${correct_date_time}), HOUR) + 15;;
+    sql: TIMESTAMP_DIFF(${checkindate_time}, TIMESTAMP(${correct_date_time}), HOUR) + 15;;
   }
 
   dimension: hour_bins {
@@ -122,13 +122,13 @@ view: guest_verification_form {
   }
 
 
-  dimension: checkindate {
+  dimension: checkindate_local {
     type: date
     hidden: yes
     sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
   }
 
-  dimension_group: reservation_checkin {
+  dimension_group: checkindate {
     type: time
     label: "Check-in"
     timeframes: [
@@ -140,22 +140,17 @@ view: guest_verification_form {
       quarter,
       year
     ]
-    sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
+    sql: CAST(${TABLE}.checkindate as TIMESTAMP);;
   }
 
-  dimension: checkindatetime {
-    type: date_time
-    hidden: yes
-    sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
-  }
 
-  dimension: checkoutdate {
+  dimension: checkoutdate_local {
     type: date
     hidden: yes
     sql: CAST(${TABLE}.checkoutdatelocal as TIMESTAMP);;
   }
 
-  dimension_group: reservation_checkout {
+  dimension_group: checkoutdate {
     type: time
     label: "Check-out"
     timeframes: [
@@ -167,7 +162,7 @@ view: guest_verification_form {
       quarter,
       year
     ]
-    sql: CAST(${TABLE}.checkoutdatelocal as TIMESTAMP);;
+    sql: CAST(${TABLE}.checkoutdate as TIMESTAMP);;
   }
 
   # This will convert San Jose and Null values as per above derived table
@@ -460,7 +455,7 @@ view: guest_verification_form {
       quarter,
       year
     ]
-    sql: ${TABLE}.revised_verification_timezone;;
+    sql: TIMESTAMP(${TABLE}.revised_verification_timezone);;
   }
 
   dimension_group: correct_date {
@@ -479,8 +474,8 @@ view: guest_verification_form {
     sql:
     CASE
     WHEN ${TABLE}.guest_type = "First Time" and extract(year from ${TABLE}.revised_verification_success_timezone) != 1969
-    THEN ${TABLE}.revised_verification_success_timezone
-    ELSE ${TABLE}.revised_verification_timezone
+    THEN TIMESTAMP(${TABLE}.revised_verification_success_timezone)
+    ELSE TIMESTAMP(${TABLE}.revised_verification_timezone)
     END ;;
   }
 
@@ -1130,7 +1125,7 @@ view: guest_verification_form {
       parkingspaceneeded,
       termsaccepted,
       suspicious,
-      checkindate,
+      checkindate_local,
       timezone,
       guestid,
       callboxcode,
@@ -1144,7 +1139,7 @@ view: guest_verification_form {
       earlycheckin,
       updatedat_time,
       externalrefs,
-      checkoutdate,
+      checkoutdate_local,
       signeddoc,
       status,
       listingname,

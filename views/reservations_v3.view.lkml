@@ -611,7 +611,7 @@ view: reservations_v3 {
 
   measure: number_of_checkins_star {
     view_label: "Metrics"
-    label: "Number of Checkins*"
+    label: "Number of Checkins (Including Extensions)"
     description: "Number of Check-ins INCLUDING Extensions"
     type: count_distinct
     sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
@@ -629,8 +629,8 @@ view: reservations_v3 {
 
   measure: number_of_checkouts_star {
     view_label: "Metrics"
-    label: "Number of Checkouts*"
-    description: "Number of Check-outs INCLUDING  Initial Extended Booking Checkouts"
+    label: "Number of Checkouts (Including Extensions)"
+    description: "Number of Check-outs INCLUDING Initial Extended Booking Checkouts"
     type: count_distinct
     sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
     filters: [checkout_night: "yes"]

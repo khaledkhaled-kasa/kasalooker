@@ -81,7 +81,7 @@ view_label: "Check-In Survey Data"
       type: number
       label: "% Thumbs Up"
       value_format: "0%"
-      sql: ${count_thumbs_up} / ${count} ;;
+      sql: ${count_thumbs_up} / nullif(${count},0) ;;
     }
 
   dimension: privatereviewtext {
