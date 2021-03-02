@@ -74,7 +74,12 @@ view: reservations_v3 {
 
     }
 
-
+  dimension: confirmationcode {
+    type: string
+    primary_key: yes
+    sql: ${TABLE}.confirmationcode ;;
+    drill_fields: [reservation_details*]
+  }
 
     dimension: guest_type {
       hidden: no
@@ -89,15 +94,17 @@ view: reservations_v3 {
 
   dimension: guest_reservations {
     view_label: "Guests"
+    label: "Total Guest Reservations (Including Extensions)"
     hidden: no
-    description: "This includes extensions"
+    description: "This pulls the number of reservations the guest has made including extensions"
     type: number
     sql: ${TABLE}.number_of_bookings ;;
   }
 
     dimension: guest_unique_reservations {
       view_label: "Guests"
-      description: "These are unique reservations (extensions are excluded)"
+      description: "This pulls the number of reservations the guest has made excluding extensions"
+      label: "Total Guest Reservations (Excluding Extensions)"
       hidden: no
       type: number
       sql: ${TABLE}.number_of_unique_reservations ;;
@@ -109,42 +116,24 @@ view: reservations_v3 {
       sql: ${TABLE}.extended_booking = 1 ;;
     }
 
+
     dimension: initial_booking {
+      label: "Initial Booking (For Extensions Only)"
+      description: "This will inform us if it's the original / initial booking of an extended stay."
       type: yesno
       sql: ${TABLE}.initial_booking = 1 ;;
     }
 
-    measure: extended_booking_count {
-      view_label: "Metrics"
-      label: "Extended Booking Count"
-      type: count_distinct
-      sql: CONCAT(${extended_booking}, ${confirmationcode}) ;;
-      filters: {field: extended_booking
-        value: "yes"
-      }
-    }
 
 
     dimension: _id {
-      hidden: no
+      hidden: yes
       type: string
       sql: ${TABLE}._id ;;
     }
 
-    dimension: Extension_by_channel_label {
-      hidden: yes
-      type: yesno
-      sql: ${TABLE}.guesty.source IN ('Manual (Extension)', 'Manual (extension)', 'Maunal Extension');;
-    }
-
-    dimension: additionalguests {
-      hidden: yes
-      sql: ${TABLE}.additionalguests ;;
-    }
 
     dimension_group: bookingdate {
-      view_label: "Date Dimensions"
-      group_label: "Booking Date"
       label: "Booking"
       type: time
       timeframes: [
@@ -162,11 +151,13 @@ view: reservations_v3 {
     }
 
     dimension: lead_time {
+      description: "This will pull the time between the booking date and checkin date."
       type:  number
       sql:  date_diff(${checkindate_date}, CAST(${TABLE}.bookingdate as DATE), DAY) ;;
     }
 
   dimension: cancellation_window {
+    description: "This will pull the time between the cancellation date and checkin date."
     type:  number
     sql:  date_diff(${checkindate_date}, CAST(${TABLE}.cancellationdate as DATE), DAY) ;;
   }
@@ -176,60 +167,6 @@ view: reservations_v3 {
       sql:  date_diff(${checkoutdate_date}, ${checkindate_date}, DAY) ;;
     }
 
-    measure: avg_lead_time {
-      view_label: "Metrics"
-      description: "Days between booking and checking in"
-      value_format: "0.0"
-      type:  average_distinct
-      sql_distinct_key: ${confirmationcode} ;;
-      sql: ${lead_time};;
-      drill_fields: [reservation_details*]
-      filters: [capacity_night_part_of_res: "yes"]
-    }
-
-  measure: avg_cancellation_window {
-    view_label: "Metrics"
-    description: "Days between cancelling and checking in"
-    value_format: "0.0"
-    type:  average_distinct
-    sql_distinct_key: ${confirmationcode} ;;
-    sql: ${cancellation_window};;
-    drill_fields: [reservation_details*]
-    filters: [capacity_night_part_of_res: "yes"]
-  }
-
-    measure: median_lead_time {
-      view_label: "Metrics"
-      description: "Days between booking and checking in"
-      value_format: "0.0"
-      type:  median_distinct
-      sql_distinct_key: ${confirmationcode} ;;
-      sql: ${lead_time};;
-      drill_fields: [reservation_details*]
-      filters: [capacity_night_part_of_res: "yes"]
-    }
-
-    measure: avg_length_of_stay {
-      view_label: "Metrics"
-      description: "Number of days of stay"
-      value_format: "0.0"
-      type:  average_distinct
-      sql_distinct_key: ${confirmationcode} ;;
-      sql: ${length_of_stay};;
-      drill_fields: [reservation_details*]
-      filters: [capacity_night_part_of_res: "yes"]
-    }
-
-    measure: median_length_of_stay {
-      view_label: "Metrics"
-      description: "Number of days of stay"
-      value_format: "0.0"
-      type:  median_distinct
-      sql_distinct_key: ${confirmationcode} ;;
-      sql: ${length_of_stay};;
-      drill_fields: [reservation_details*]
-      filters: [capacity_night_part_of_res: "yes"]
-    }
 
 
     dimension: bringingpets {
@@ -237,14 +174,9 @@ view: reservations_v3 {
       sql: ${TABLE}.bringingpets ;;
     }
 
-    dimension: callboxcode {
-      type: string
-      sql: ${TABLE}.callboxcode ;;
-    }
+
 
     dimension_group: cancellationdate {
-      view_label: "Date Dimensions"
-      group_label: "Cancellation Date"
       label: "Cancellation"
       type: time
       timeframes: [
@@ -257,27 +189,9 @@ view: reservations_v3 {
       sql: ${TABLE}.cancellationdate ;;
     }
 
-    dimension: cards {
-      hidden: yes
-      sql: ${TABLE}.cards ;;
-    }
-
-    dimension: chargelogs {
-      hidden: yes
-      sql: ${TABLE}.chargelogs ;;
-    }
-
-    dimension: checkindate_local {
-      hidden: yes
-      type: date
-      sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
-      convert_tz: no
-    }
 
     dimension_group: checkindate {
       type: time
-      view_label: "Date Dimensions"
-      group_label: "Check-in Date"
       label: "Checkin"
       timeframes: [
         raw,
@@ -291,17 +205,9 @@ view: reservations_v3 {
       sql: TIMESTAMP(${TABLE}.checkindate);;
     }
 
-    dimension: checkoutdate_local {
-      hidden: yes
-      type: date
-      sql: CAST(${TABLE}.checkoutdatelocal as TIMESTAMP);;
-      convert_tz: no
-    }
 
     dimension_group: checkoutdate {
       type: time
-      view_label: "Date Dimensions"
-      group_label: "Check-out Date"
       label: "Checkout"
       timeframes: [
         raw,
@@ -315,27 +221,6 @@ view: reservations_v3 {
       sql: CAST(${TABLE}.checkoutdate as TIMESTAMP);;
     }
 
-    dimension: confirmationcode {
-      type: string
-      primary_key: yes
-      sql: ${TABLE}.confirmationcode ;;
-      drill_fields: [reservation_details*]
-    }
-
-    dimension_group: createdat {
-      hidden:  yes
-      type: time
-      timeframes: [
-        raw,
-        time,
-        date,
-        week,
-        month,
-        quarter,
-        year
-      ]
-      sql: ${TABLE}.createdat ;;
-    }
 
     dimension: earlycheckin {
       hidden: yes
@@ -358,81 +243,18 @@ view: reservations_v3 {
       sql: ${TABLE}.guestscount ;;
     }
 
-    measure: guestscount_sum {
-      label: "Total Number of Guests"
-      view_label: "Metrics"
-      type: sum_distinct
-      sql_distinct_key: ${confirmationcode} ;;
-      sql: ${guestscount} ;;
-      filters: [capacity_night_part_of_res: "yes"]
-    }
-
-    dimension: keycafeaccess {
-      hidden: yes
-      sql: ${TABLE}.keycafeaccess ;;
-    }
-
-    dimension: licenseplate {
-      type: string
-      sql: ${TABLE}.licenseplate ;;
-    }
-
-    dimension: listingaddress {
-      type: string
-      sql: ${TABLE}.listingaddress ;;
-    }
-
-    dimension: listingname {
-      hidden: yes
-      type: string
-      sql: ${TABLE}.listingname ;;
-    }
-
-    dimension: maybebringingpetsdespiteban {
-      type: yesno
-      sql: ${TABLE}.maybebringingpetsdespiteban ;;
-    }
-
-    dimension: nickname {
-      type: string
-      hidden: yes
-      sql: ${TABLE}.nickname ;;
-    }
-
-    dimension: notes {
-      hidden: yes
-      sql: ${TABLE}.notes ;;
-    }
-
-    dimension: numberofpets {
-      type: number
-      sql: ${TABLE}.numberofpets ;;
-    }
 
     dimension: parkingspaceneeded {
       type: yesno
       sql: ${TABLE}.parkingspaceneeded ;;
     }
 
-    dimension: petdescription {
-      type: string
-      sql: ${TABLE}.petdescription ;;
-    }
-
-    dimension: petfeescard {
-      hidden: yes
-      sql: ${TABLE}.petfeescard ;;
-    }
 
     dimension: pets {
       type: yesno
       sql: ${TABLE}.pets ;;
     }
 
-    dimension: pettype {
-      type: string
-      sql: ${TABLE}.pettype ;;
-    }
 
     dimension: plannedarrival {
       type: string
@@ -459,10 +281,6 @@ view: reservations_v3 {
       sql: ${TABLE}.smartlockcode ;;
     }
 
-    dimension: smartlockcodeisset {
-      type: yesno
-      sql: ${TABLE}.smartlockcodeisset ;;
-    }
 
     dimension: source {
       type: string
@@ -495,11 +313,6 @@ view: reservations_v3 {
       sql: ${TABLE}.suspicious ;;
     }
 
-    dimension: termsaccepted {
-      type: yesno
-      sql: ${TABLE}.termsaccepted ;;
-    }
-
     dimension: timezone {
       hidden: yes
       type: string
@@ -512,32 +325,9 @@ view: reservations_v3 {
       sql: ${TABLE}.unit ;;
     }
 
-    dimension_group: updatedat {
-      type: time
-      hidden: yes
-      timeframes: [
-        raw,
-        time,
-        date,
-        week,
-        month,
-        quarter,
-        year
-      ]
-      sql: ${TABLE}.updatedat ;;
-    }
-
-    measure: reservation_night {
-      view_label: "Metrics"
-      label: "Num ReservationNights"
-      description: "Reservation night stay"
-      type:  count_distinct
-      sql: CONCAT(${confirmationcode}, '-', ${capacities_v3.night_date});;
-      filters: [capacity_night_part_of_res: "yes"]
-    }
 
     dimension: financial_night_part_of_res {
-      hidden: no
+      hidden: yes
       type:  yesno
       sql: ${financials_v3.night_date} < ${checkoutdate_date} and
         ${financials_v3.night_date} >= ${checkindate_date};;
@@ -554,25 +344,60 @@ view: reservations_v3 {
 
     dimension: capacity_night_part_of_res {
       type:  yesno
-      hidden: no
+      hidden: yes
       sql: ${capacities_v3.night_date} < ${checkoutdate_date} and
         ${capacities_v3.night_date} >= ${checkindate_date};;
     }
 
+  dimension: checkin_night {
+    hidden: yes
+    type:  yesno
+    sql: ${capacities_v3.night_date} = ${checkindate_date} ;;
+  }
+
+  dimension: checkout_night {
+    hidden: yes
+    type:  yesno
+    sql: ${capacities_v3.night_date} = ${checkoutdate_date} ;;
+  }
+
+  measure: reservation_night {
+    label: "Num ReservationNights"
+    description: "Reservation night stay. This metric will only consider confirmed / checked in bookings."
+    type:  count_distinct
+    sql: CONCAT(${confirmationcode}, '-', ${capacities_v3.night_date});;
+    filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in"]
+  }
+
+  measure: reservation_night_canceled {
+    label: "Num ReservationNights (Canceled)"
+    description: "Reservation night stay. This metric will only filter for canceled bookings."
+    type:  count_distinct
+    sql: CONCAT(${confirmationcode}, '-', ${capacities_v3.night_date});;
+    filters: [capacity_night_part_of_res: "yes", status: "cancelled, canceled"]
+  }
+
 
     measure: num_reservations {
-      view_label: "Metrics"
       label: "Num Reservations"
-      description: "Number of unique reservations"
+      description: "Number of unique reservations. This metric will only consider confirmed / checked in bookings."
       type: count_distinct
       sql: ${confirmationcode} ;;
-      filters: [capacity_night_part_of_res: "yes"]
+      filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in"]
       drill_fields: [reservation_details*]
     }
 
+  measure: num_reservations_canceled {
+    label: "Num Reservations (Canceled)"
+    description: "Number of unique reservations. This metric will only filter for canceled bookings."
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    filters: [capacity_night_part_of_res: "yes", status: "cancelled, canceled"]
+    drill_fields: [reservation_details*]
+  }
+
 
     measure: occupancy {
-      view_label: "Metrics"
       label: "Occupancy"
       description: "Number of reservation nights / capacity"
       type: number
@@ -580,66 +405,112 @@ view: reservations_v3 {
       sql:  ${reservation_night} / NULLIF(${capacities_v3.capacity}, 0) ;;
     }
 
-    dimension: checkin_night {
-      hidden: yes
-      type:  yesno
-      sql: ${capacities_v3.night_date} = ${checkindate_date} ;;
-    }
-
-    dimension: checkout_night {
-      hidden: yes
-      type:  yesno
-      sql: ${capacities_v3.night_date} = ${checkoutdate_date} ;;
-    }
-
-    dimension: checkins_checkouts {
-      label: "Clean-up"
-      description: "Night is either a check-in or check-out (clean up redundant rows)"
-      type: yesno
-      sql: ${capacities_v3.night_date} = ${checkoutdate_date}
-        OR ${capacities_v3.night_date} = ${checkindate_date} ;;
-    }
 
     measure: number_of_checkins {
-      view_label: "Metrics"
       label: "Number of Checkins"
       description: "Number of Check-ins EXCLUDING Extensions"
       type: count_distinct
       sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
-      filters: [checkin_night: "yes", extended_booking: "no"]
+      filters: [checkin_night: "yes", extended_booking: "no", status: "confirmed, checked_in"]
     }
 
   measure: number_of_checkins_star {
-    view_label: "Metrics"
-    label: "Number of Checkins (Including Extensions)"
+    label: "Number of Checkins - Including Extensions"
     description: "Number of Check-ins INCLUDING Extensions"
     type: count_distinct
     sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
-    filters: [checkin_night: "yes"]
+    filters: [checkin_night: "yes", status: "confirmed, checked_in"]
   }
 
     measure: number_of_checkouts {
-      view_label: "Metrics"
       label: "Number of Checkouts"
       description: "Number of Check-outs EXCLUDING Initial Extended Booking Checkouts"
       type: count_distinct
       sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
-      filters: [checkout_night: "yes", initial_booking: "no"]
+      filters: [checkout_night: "yes", initial_booking: "no", status: "confirmed, checked_in"]
     }
 
   measure: number_of_checkouts_star {
-    view_label: "Metrics"
-    label: "Number of Checkouts (Including Extensions)"
+    label: "Number of Checkouts - Including Extensions"
     description: "Number of Check-outs INCLUDING Initial Extended Booking Checkouts"
     type: count_distinct
     sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
-    filters: [checkout_night: "yes"]
+    filters: [checkout_night: "yes", status: "confirmed, checked_in"]
   }
 
+  measure: extended_booking_count {
+    label: "Extended Booking Count"
+    description: "This would apply only to confirmed / checked-in bookings"
+    type: count_distinct
+    sql: CONCAT(${extended_booking}, ${confirmationcode}) ;;
+    filters: [extended_booking: "yes", status: "confirmed, checked_in"]
+  }
 
+  measure: avg_lead_time {
+    label: "Average Lead Time"
+    description: "Days between booking and checking in. This metric will only consider confirmed / checked in bookings."
+    value_format: "0.0"
+    type:  average_distinct
+    sql_distinct_key: ${confirmationcode} ;;
+    sql: ${lead_time};;
+    drill_fields: [reservation_details*]
+    filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in"]
+  }
+
+  measure: avg_cancellation_window {
+    description: "Days between cancelling and checking in."
+    value_format: "0.0"
+    type:  average_distinct
+    sql_distinct_key: ${confirmationcode} ;;
+    sql: ${cancellation_window};;
+    drill_fields: [reservation_details*]
+    filters: [capacity_night_part_of_res: "yes"]
+  }
+
+  measure: median_lead_time {
+    description: "Days between booking and checking in. This metric will only consider confirmed / checked in bookings."
+    label: "Median Lead Time"
+    value_format: "0.0"
+    type:  median_distinct
+    sql_distinct_key: ${confirmationcode} ;;
+    sql: ${lead_time};;
+    drill_fields: [reservation_details*]
+    filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in"]
+  }
+
+  measure: avg_length_of_stay {
+    description: "Number of days of stay. This metric will only consider confirmed / checked in bookings."
+    label: "Average Length of Stay"
+    value_format: "0.0"
+    type:  average_distinct
+    sql_distinct_key: ${confirmationcode} ;;
+    sql: ${length_of_stay};;
+    drill_fields: [reservation_details*]
+    filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in"]
+  }
+
+  measure: median_length_of_stay {
+    description: "Number of days of stay. This metric will only consider confirmed / checked in bookings."
+    label: "Median Length of Stay"
+    value_format: "0.0"
+    type:  median_distinct
+    sql_distinct_key: ${confirmationcode} ;;
+    sql: ${length_of_stay};;
+    drill_fields: [reservation_details*]
+    filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in"]
+  }
+
+  measure: guestscount_sum {
+    label: "Total Number of Guests"
+    description: "Number of guests within the reservation(s). This metric will only consider confirmed / checked in bookings."
+    type: sum_distinct
+    sql_distinct_key: ${confirmationcode} ;;
+    sql: ${guestscount} ;;
+    filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in"]
+  }
 
     set:reservation_details {
-      fields: [confirmationcode, status, source, checkindate_local, checkoutdate_local, bookingdate_date]
+      fields: [confirmationcode, status, source, bookingdate_date]
     }
 
 }

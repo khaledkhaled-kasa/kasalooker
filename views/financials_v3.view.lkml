@@ -64,11 +64,33 @@ view: financials_v3{
     type: sum
     value_format: "$#,##0.00"
     sql: ${amount_revised} ;;
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", types_filtered: "yes"]
+    }
+
+  measure: amount_original_unfiltered {
+    view_label: "Metrics"
+    label: "Original Amount"
+    hidden: yes
+    description: "This is amount as per payment received dates"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${amount_revised} ;;
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)"]
   }
 
 
   measure: amount_outstanding {
+    view_label: "Metrics"
+    hidden: yes
+    label: "Amount Outstanding"
+    description: "This is the amount missing from previous scheduled nights"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.nightly_outstanding_amount;;
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", types_filtered: "yes"]
+  }
+
+  measure: amount_outstanding_unfiltered {
     view_label: "Metrics"
     hidden: yes
     label: "Amount Outstanding"
@@ -82,26 +104,36 @@ view: financials_v3{
   measure: amount {
     view_label: "Metrics"
     label: "Amount"
-    description: "This amount has been adjusted to consider payments from previously scheduled nights"
+    description: "This amount will automatically filter for only confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees)"
     type: number
     value_format: "$#,##0.00"
     sql: ${amount_original} + ${amount_outstanding};;
+  }
+
+  measure: amount_unfiltered {
+    view_label: "Metrics"
+    label: "Amount (Unfiltered)"
+    description: "This amount is unfiltered (all reservation status & financial types)"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${amount_original_unfiltered} + ${amount_outstanding_unfiltered};;
   }
 
 
   measure: adr {
     view_label: "Metrics"
     label: "ADR"
-    description: "Average daily rate: amount / reservation_night"
+    description: "Average daily rate: amount / reservation_night. This only applies to confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees)"
     type: number
     value_format: "$#,##0.00"
     sql: ${amount} / NULLIF(${reservations_v3.reservation_night}, 0) ;;
   }
 
+# This is the same as ADR - REQUEST MADE BY TAFT LANDLORD
   measure: revenue_per_booked_room {
     view_label: "Metrics"
     label: "Revenue per Booked Room"
-    description: "Average daily rate: amount / reservation_night"
+    description: "Average daily rate: amount / reservation_night. This only applies to confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees)"
     type: number
     value_format: "$#,##0.00"
     sql: ${amount} / NULLIF(${reservations_v3.reservation_night}, 0) ;;
@@ -111,7 +143,7 @@ view: financials_v3{
   measure: revpar {
     view_label: "Metrics"
     label: "RevPar"
-    description: "Revenue per available room: amount / capacity"
+    description: "Revenue per available room: amount / capacity. This only applies to confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees)"
     type: number
     value_format: "$#,##0.00"
     sql: ${amount} / NULLIF(${capacities_v3.capacity}, 0) ;;
@@ -153,14 +185,6 @@ view: financials_v3{
   }
 
 
-  dimension: weekend {
-    view_label: "Date Dimensions"
-    type:  yesno
-    sql:  ${capacities_v3.night_day_of_week} in ('Friday', 'Saturday') ;;
-
-  }
-
-
   dimension: _id {
     type: string
     primary_key: yes
@@ -174,10 +198,8 @@ view: financials_v3{
   }
 
   dimension_group: transaction {
-    view_label: "Date Dimensions"
-    group_label: "Transaction Date"
     description: "Date of a given financial transaction"
-    label: ""
+    label: "Transaction"
     type: time
     timeframes: [
       raw,
