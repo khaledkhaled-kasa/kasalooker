@@ -1,9 +1,13 @@
 view: capacities_v3 {
   label: "Capacities"
   derived_table: {
-    sql: SELECT *
-        FROM capacitydenorms
-          WHERE unit is not null
+    sql:
+    SELECT capacitydenorms.*, units.internaltitle
+    FROM capacitydenorms
+    LEFT JOIN units ON units._id = capacitydenorms.unit
+    LEFT JOIN Gsheets.blackout_dates ON (units.internaltitle = blackout_dates.Unit_InternalTitle AND DATE(capacitydenorms.night) = blackout_dates.blackout_dates)
+    WHERE blackout_dates.blackout_dates is null -- THIS WILL ENSURE THAT BLACKOUT DATES ARE EXCLUDED
+    AND capacitydenorms.unit is not null -- This will clean up redundant capacitydenorms rows
       ;;
 
     datagroup_trigger: capacities_v3_default_datagroup
