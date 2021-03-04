@@ -42,10 +42,15 @@ view: financials_v3{
   }
 
 
+  dimension: _id {
+    type: string
+    hidden: yes
+    primary_key: yes
+    sql: ${TABLE}._id ;;
+  }
 
   dimension: amount_revised {
     hidden: yes
-    view_label: "Metrics"
     label: "Amount Revised"
     description: "This will correct for unavailable amount__fl values"
     type: number
@@ -55,99 +60,6 @@ view: financials_v3{
           END;;
   }
 
-
-  measure: amount_original {
-    view_label: "Metrics"
-    label: "Original Amount"
-    hidden: yes
-    description: "This is amount as per payment received dates"
-    type: sum
-    value_format: "$#,##0.00"
-    sql: ${amount_revised} ;;
-    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", types_filtered: "yes"]
-    }
-
-  measure: amount_original_unfiltered {
-    view_label: "Metrics"
-    label: "Original Amount"
-    hidden: yes
-    description: "This is amount as per payment received dates"
-    type: sum
-    value_format: "$#,##0.00"
-    sql: ${amount_revised} ;;
-    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)"]
-  }
-
-
-  measure: amount_outstanding {
-    view_label: "Metrics"
-    hidden: yes
-    label: "Amount Outstanding"
-    description: "This is the amount missing from previous scheduled nights"
-    type: sum
-    value_format: "$#,##0.00"
-    sql: ${TABLE}.nightly_outstanding_amount;;
-    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", types_filtered: "yes"]
-  }
-
-  measure: amount_outstanding_unfiltered {
-    view_label: "Metrics"
-    hidden: yes
-    label: "Amount Outstanding"
-    description: "This is the amount missing from previous scheduled nights"
-    type: sum
-    value_format: "$#,##0.00"
-    sql: ${TABLE}.nightly_outstanding_amount;;
-    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)"]
-  }
-
-  measure: amount {
-    view_label: "Metrics"
-    label: "Amount"
-    description: "This amount will automatically filter for only confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees)"
-    type: number
-    value_format: "$#,##0.00"
-    sql: ${amount_original} + ${amount_outstanding};;
-  }
-
-  measure: amount_unfiltered {
-    view_label: "Metrics"
-    label: "Amount (Unfiltered)"
-    description: "This amount is unfiltered (all reservation status & financial types)"
-    type: number
-    value_format: "$#,##0.00"
-    sql: ${amount_original_unfiltered} + ${amount_outstanding_unfiltered};;
-  }
-
-
-  measure: adr {
-    view_label: "Metrics"
-    label: "ADR"
-    description: "Average daily rate: amount / reservation_night. This only applies to confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees)"
-    type: number
-    value_format: "$#,##0.00"
-    sql: ${amount} / NULLIF(${reservations_v3.reservation_night}, 0) ;;
-  }
-
-# This is the same as ADR - REQUEST MADE BY TAFT LANDLORD
-  measure: revenue_per_booked_room {
-    view_label: "Metrics"
-    label: "Revenue per Booked Room"
-    description: "Average daily rate: amount / reservation_night. This only applies to confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees)"
-    type: number
-    value_format: "$#,##0.00"
-    sql: ${amount} / NULLIF(${reservations_v3.reservation_night}, 0) ;;
-  }
-
-
-  measure: revpar {
-    view_label: "Metrics"
-    label: "RevPar"
-    description: "Revenue per available room: amount / capacity. This only applies to confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees)"
-    type: number
-    value_format: "$#,##0.00"
-    sql: ${amount} / NULLIF(${capacities_v3.capacity}, 0) ;;
-  }
 
   dimension: cashatbooking {
     type: yesno
@@ -168,7 +80,6 @@ view: financials_v3{
 
   dimension_group: night {
     hidden:  yes
-    view_label: "Date Dimensions"
     group_label: "Financial Night"
     description: "An occupied night at a Kasa"
     label: "Financial"
@@ -185,13 +96,8 @@ view: financials_v3{
   }
 
 
-  dimension: _id {
-    type: string
-    primary_key: yes
-    sql: ${TABLE}._id ;;
-  }
-
   dimension: reservation {
+    hidden: yes
     type: string
     # primary_key: yes
     sql: ${TABLE}.reservation ;;
@@ -211,11 +117,6 @@ view: financials_v3{
     sql: cast(${TABLE}.transactiondate as TIMESTAMP);;
   }
 
-  dimension: transactiondate {
-    type: string
-    hidden: yes
-    sql: ${TABLE}.transactiondate ;;
-  }
 
   dimension: type {
     type: string
@@ -244,6 +145,91 @@ view: financials_v3{
     WHEN (${night_date} < "2020-09-01") THEN "Older Booking"
     WHEN (${TABLE}.actualizedat is null and ${TABLE}._id is not null) THEN "Nonactualized (Historic)"
     END;;
+  }
+
+  measure: amount_original {
+    label: "Original Amount"
+    hidden: yes
+    description: "This is amount as per payment received dates"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${amount_revised} ;;
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", types_filtered: "yes"]
+  }
+
+  measure: amount_original_unfiltered {
+    view_label: "Metrics"
+    label: "Original Amount"
+    hidden: yes
+    description: "This is amount as per payment received dates"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${amount_revised} ;;
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)"]
+  }
+
+
+  measure: amount_outstanding {
+    hidden: yes
+    label: "Amount Outstanding"
+    description: "This is the amount missing from previous scheduled nights"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.nightly_outstanding_amount;;
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", types_filtered: "yes"]
+  }
+
+  measure: amount_outstanding_unfiltered {
+    hidden: yes
+    label: "Amount Outstanding"
+    description: "This is the amount missing from previous scheduled nights"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.nightly_outstanding_amount;;
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)"]
+  }
+
+  measure: amount {
+    label: "Amount"
+    description: "This amount will automatically filter for only confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees)"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${amount_original} + ${amount_outstanding};;
+  }
+
+  measure: amount_unfiltered {
+    label: "Amount (Unfiltered)"
+    description: "This amount is unfiltered (all reservation status, including cancellations & financial types)"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${amount_original_unfiltered} + ${amount_outstanding_unfiltered};;
+  }
+
+
+  measure: adr {
+    label: "ADR"
+    description: "Average daily rate: amount / reservation_night. This only applies to confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees)"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${amount} / NULLIF(${reservations_v3.reservation_night}, 0) ;;
+  }
+
+# This is the same as ADR - REQUEST MADE BY TAFT LANDLORD
+  measure: revenue_per_booked_room {
+    label: "Revenue per Booked Room"
+    description: "Average daily rate: amount / reservation_night. This only applies to confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees)"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${amount} / NULLIF(${reservations_v3.reservation_night}, 0) ;;
+  }
+
+
+  measure: revpar {
+    label: "RevPar"
+    description: "Revenue per available room: amount / capacity. This only applies to confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees)"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${amount} / NULLIF(${capacities_v3.capacity}, 0) ;;
   }
 
 
