@@ -114,6 +114,7 @@ view: financials_v3{
       month,
       day_of_week
     ]
+    convert_tz: no
     sql: cast(${TABLE}.transactiondate as TIMESTAMP);;
   }
 

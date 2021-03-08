@@ -135,11 +135,13 @@ view: financials_audit {
     timeframes: [
       raw,
       date,
+      day_of_month,
       week,
       month,
       day_of_week
     ]
     sql: cast(${TABLE}.transactiondate as TIMESTAMP);;
+    convert_tz: no
   }
 
   dimension: transactiondate {
