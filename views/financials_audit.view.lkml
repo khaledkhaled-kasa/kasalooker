@@ -146,9 +146,48 @@ view: financials_audit {
 
   dimension: transactiondate {
     type: string
-    hidden: yes
-    sql: ${TABLE}.transactiondate ;;
+    hidden: no
+    sql: ${TABLE}.transactiondate;;
   }
+
+  dimension_group: td_stlm {
+    label: "Same Time Last Month (Month)"
+    description: "This will provide the date from the same time last MONTH"
+    type: time
+    timeframes: [
+      raw,
+      date,
+      day_of_month,
+      week,
+      month,
+      day_of_week
+    ]
+    sql:
+    CASE WHEN EXTRACT(MONTH FROM CURRENT_TIMESTAMP()) IN (1,2,4,6,8,9,11) THEN DATE_SUB(DATE(DATETIME(CURRENT_TIMESTAMP(),'America/Los_Angeles')), INTERVAL 31 DAY)
+    WHEN EXTRACT(MONTH FROM CURRENT_TIMESTAMP()) IN (5,7,10,12) THEN DATE_SUB(DATE(DATETIME(CURRENT_TIMESTAMP(),'America/Los_Angeles')), INTERVAL 30 DAY)
+    ELSE DATE_SUB(DATE(DATETIME(CURRENT_TIMESTAMP(),'America/Los_Angeles')), INTERVAL 28 DAY)
+    END
+    ;;
+    convert_tz: no
+  }
+
+  dimension_group: td_stly {
+    label: "Same Time Last Year (STLY)"
+    description: "This will provide the date from the same time last YEAR"
+    type: time
+    timeframes: [
+      raw,
+      date,
+      day_of_month,
+      week,
+      month,
+      day_of_week
+    ]
+    sql: DATE_SUB(DATE(DATETIME(CURRENT_TIMESTAMP(),'America/Los_Angeles')), INTERVAL 1 YEAR)
+    ;;
+    convert_tz: no
+  }
+
 
   dimension: actualizedat {
     type: string
