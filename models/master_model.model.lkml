@@ -306,6 +306,11 @@ explore: okrs_test_gx {
   label: "GX"
 }
 
+explore: okrs_bizops_test {
+  group_label: "OKRs (WIP)"
+  label: "BizOps"
+}
+
 
 explore: ximble_master {
   group_label: "Software"

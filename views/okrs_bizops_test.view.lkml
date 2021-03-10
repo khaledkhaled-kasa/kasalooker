@@ -1,18 +1,7 @@
-view: okrs_test_gx {
-  sql_table_name: `bigquery-analytics-272822.Gsheets.OKRs_GX_Test`
+view: okrs_bizops_test {
+  sql_table_name: `bigquery-analytics-272822.Gsheets.OKRs_Bizops_Test`
     ;;
 
-  dimension: actual {
-    type: number
-    hidden: yes
-    sql: ${TABLE}.Actual ;;
-  }
-
-  dimension: target {
-    type: number
-    hidden: yes
-    sql: ${TABLE}.Target ;;
-  }
 
   measure: actual_measure {
     label: "Actual"
@@ -26,15 +15,21 @@ view: okrs_test_gx {
     sql: ${target} ;;
   }
 
-  dimension: department {
-    type: string
-    sql: ${TABLE}.Department ;;
+  dimension: actual {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.Actual ;;
   }
 
-  dimension: BHAG {
+  dimension: bhag {
     label: "BHAG"
     type: yesno
     sql: ${TABLE}.BHAG ;;
+  }
+
+  dimension: department {
+    type: string
+    sql: ${TABLE}.Department ;;
   }
 
   dimension: key_result {
@@ -57,9 +52,13 @@ view: okrs_test_gx {
     sql: ${TABLE}.Source__Manual___Looker_ ;;
   }
 
+  dimension: target {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.Target ;;
+  }
 
   dimension_group: time_period {
-    label: ""
     type: time
     timeframes: [
       raw,
@@ -73,6 +72,5 @@ view: okrs_test_gx {
     datatype: date
     sql: ${TABLE}.Time_Period ;;
   }
-
 
 }
