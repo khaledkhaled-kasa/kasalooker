@@ -129,6 +129,7 @@ view: financials_clean {
         day_of_week
       ]
       sql: cast(${TABLE}.transactiondate as TIMESTAMP);;
+      convert_tz: no
     }
 
     dimension: transactiondate {

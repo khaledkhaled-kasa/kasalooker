@@ -1,206 +1,101 @@
 view: capacities_v3 {
+  label: "Capacities"
   derived_table: {
-    sql: SELECT *
-        FROM capacitydenorms
-          WHERE unit is not null
+    sql:
+    SELECT capacitydenorms.*, units.internaltitle
+    FROM capacitydenorms
+    LEFT JOIN units ON units._id = capacitydenorms.unit
+    LEFT JOIN Gsheets.blackout_dates ON (units.internaltitle = blackout_dates.Unit_InternalTitle AND DATE(capacitydenorms.night) = blackout_dates.blackout_dates)
+    WHERE blackout_dates.blackout_dates is null -- THIS WILL ENSURE THAT BLACKOUT DATES ARE EXCLUDED
+    AND capacitydenorms.unit is not null -- This will clean up redundant capacitydenorms rows
       ;;
 
-    datagroup_trigger: capacities_v3_default_datagroup
-    # indexes: ["night","transaction"]
-    #publish_as_db_view: yes
+      datagroup_trigger: capacities_v3_default_datagroup
+      # indexes: ["night","transaction"]
+      #publish_as_db_view: yes
 
-  }
+    }
 
-  dimension: __v {
-    type: number
-    hidden: yes
-    sql: ${TABLE}.__v ;;
-  }
+    dimension: primary_key {
+      primary_key: yes
+      hidden: yes
+      sql: CONCAT(${TABLE}.night, ${TABLE}.unit) ;;
+    }
 
-  dimension: _id {
-    type: string
-    # primary_key: yes
-    hidden: yes
-    sql: ${TABLE}._id ;;
-  }
-
-  dimension_group: _sdc_batched {
-    type: time
-    hidden: yes
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}._sdc_batched_at ;;
-  }
-
-  dimension_group: _sdc_extracted {
-    type: time
-    hidden: yes
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}._sdc_extracted_at ;;
-  }
-
-  dimension_group: _sdc_received {
-    type: time
-    hidden: yes
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}._sdc_received_at ;;
-  }
-
-  dimension: _sdc_sequence {
-    type: number
-    hidden: yes
-    sql: ${TABLE}._sdc_sequence ;;
-  }
-
-  dimension: _sdc_table_version {
-    type: number
-    hidden: yes
-    sql: ${TABLE}._sdc_table_version ;;
-  }
-
-  dimension_group: createdat {
-    type: time
-    hidden: yes
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.createdat ;;
-  }
-
-
-  dimension_group: night {
-    view_label: "Date Dimensions"
-    group_label: "Occupied / Unoccupied Night"
-    description: "A night at a Kasa (Occupied / Unoccupied)"
-    label: ""
-    type: time
-    timeframes: [
-      date,
-      week,
-      month,
-      month_name,
-      week_of_year,
-      day_of_month,
-      day_of_week,
-      quarter,
-      year
-    ]
-    sql: CAST(${TABLE}.night as TIMESTAMP) ;;
-  }
-
-  dimension: night_only {
-    hidden: yes
-    view_label: "Date Dimensions"
-    group_label: "Night Only"
-    type: string
-    sql: ${TABLE}.night ;;
-  }
-
-
-  dimension: unit {
-    type: string
-    hidden: yes
-    sql: ${TABLE}.unit ;;
-  }
-
-  dimension_group: updatedat {
-    type: time
-    hidden: yes
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.updatedat ;;
-  }
-
-  dimension: capacity_dim {
-    type: number
-    hidden: yes
-    sql: CASE WHEN
-    ${night_date} >= cast(${units.availability_startdate} AS date)
-    AND ${night_date} <= cast(${units.availability_enddate} AS date) THEN 1
-    ELSE NULL
-    END;;
-  }
-
-  measure: capacity {
-    view_label: "Metrics"
-    label: "Capacity"
-    description: "Number of available room nights bookable"
-    type: count_distinct
-    sql: CASE WHEN ((${units.internaltitle} LIKE "%-XX") OR (${units.internaltitle} LIKE "%-RES")) THEN NULL
-    ELSE CONCAT(${units.internaltitle}, '-', ${night_date})
-    END;;
+    dimension: _id {
+      type: string
+      # primary_key: yes
+      hidden: yes
+      sql: ${TABLE}._id ;;
     }
 
 
-  measure: days_available {
-    view_label: "Metrics"
-    label: "Days Available"
-    description: "Number of available room nights bookable"
-    type: count_distinct
-    sql: CASE WHEN ((${units.internaltitle} LIKE "%-XX") OR (${units.internaltitle} LIKE "%-RES")) THEN NULL
-    ELSE CONCAT(${units.internaltitle}, '-', ${night_date})
-    END;;
-  }
+    dimension_group: night {
+      description: "This will return all dates for which the unit is available."
+      label: "Night Available "
+      type: time
+      timeframes: [
+        date,
+        week,
+        month,
+        month_name,
+        week_of_year,
+        day_of_month,
+        day_of_week,
+        quarter,
+        year
+      ]
+      sql: CAST(${TABLE}.night as TIMESTAMP) ;;
+    }
 
-  dimension: first_active_day {
-    label: "First active month day"
-    description: "This will pull the first day of the month after the units have been activated for the first full month"
-    type: string
-    hidden: yes
-    sql: DATE_TRUNC(DATE_ADD(DATE(TIMESTAMP(availability.startdate)), INTERVAL 1 MONTH), MONTH);;
-  }
+    dimension: weekend {
+      type:  yesno
+      sql:  ${capacities_v3.night_day_of_week} in ('Friday', 'Saturday') ;;
+    }
 
-  measure: capacity_after_first_active_month {
-    label: "Capacity after First Active Month"
-    description: "Number of available room nights bookable post first active month"
-    type: count_distinct
-    sql: CASE WHEN ((${units.internaltitle} LIKE "%-XX") OR (${units.internaltitle} LIKE "%-RES") OR (${night_date} < ${first_active_day})) THEN NULL
+    dimension: unit {
+      type: string
+      hidden: yes
+      sql: ${TABLE}.unit ;;
+    }
+
+
+    dimension: first_active_day {
+      label: "First active month day"
+      description: "This will pull the first day of the month after the units have been activated for the first full month"
+      type: string
+      hidden: yes
+      sql: DATE_TRUNC(DATE_ADD(DATE(TIMESTAMP(availability.startdate)), INTERVAL 1 MONTH), MONTH);;
+    }
+
+
+    measure: capacity {
+      label: "Total Capacity"
+      description: "Number of available room nights bookable"
+      type: count_distinct
+      sql: CASE WHEN ((${units.internaltitle} LIKE "%-XX") OR (${units.internaltitle} LIKE "%-RES")) THEN NULL
           ELSE CONCAT(${units.internaltitle}, '-', ${night_date})
           END;;
+    }
+
+# This is the same as capacity - REQUEST MADE BY TAFT LANDLORD
+    measure: days_available {
+      label: "Days Available"
+      description: "Number of available room nights bookable"
+      type: count_distinct
+      sql: CASE WHEN ((${units.internaltitle} LIKE "%-XX") OR (${units.internaltitle} LIKE "%-RES")) THEN NULL
+          ELSE CONCAT(${units.internaltitle}, '-', ${night_date})
+          END;;
+    }
+
+    measure: capacity_after_first_active_month {
+      label: "Capacity after First Active Month"
+      description: "Number of available room nights bookable post first active month"
+      type: count_distinct
+      sql: CASE WHEN ((${units.internaltitle} LIKE "%-XX") OR (${units.internaltitle} LIKE "%-RES") OR (${night_date} < ${first_active_day})) THEN NULL
+          ELSE CONCAT(${units.internaltitle}, '-', ${night_date})
+          END;;
+    }
+
+
   }
-
-  dimension: primary_key {
-    primary_key: yes
-    hidden: yes
-    sql: CONCAT(${TABLE}.night, ${TABLE}.unit) ;;
-  }
-
-
-
-}

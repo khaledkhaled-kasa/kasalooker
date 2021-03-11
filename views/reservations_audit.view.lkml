@@ -2,6 +2,12 @@ view: reservations_audit {
   sql_table_name: `bigquery-analytics-272822.mongo.reservations`
     ;;
 
+  dimension: confirmationcode {
+    type: string
+    primary_key: yes
+    sql: ${TABLE}.confirmationcode ;;
+    drill_fields: [reservation_details*]
+  }
 
   dimension: guest_type {
     hidden: no
@@ -21,12 +27,6 @@ view: reservations_audit {
     sql: ${TABLE}.additionalguests ;;
   }
 
-  measure: guestscount_sum {
-    label: "Total Number of Guests"
-    view_label: "Metrics"
-    type: sum
-    sql: guestscount ;;
-  }
 
   dimension_group: bookingdate {
     view_label: "Date Dimensions"
@@ -47,50 +47,13 @@ view: reservations_audit {
 
   dimension: lead_time {
     type:  number
-    sql:  date_diff(CAST(${checkindate} as DATE), CAST(${TABLE}.bookingdate as DATE), DAY) ;;
+    sql:  date_diff(${checkindate_date}, CAST(${TABLE}.bookingdate as DATE), DAY) ;;
   }
 
   dimension: length_of_stay {
     type:  number
-    sql:  date_diff(CAST(${checkoutdate} as DATE), CAST(${checkindate} as DATE), DAY) ;;
+    sql:  date_diff(${checkoutdate_date}, ${checkindate_date}, DAY) ;;
   }
-
-  measure: avg_lead_time {
-    view_label: "Metrics"
-    description: "Days between booking and checking in"
-    value_format: "0.0"
-    type:  average
-    sql: ${lead_time};;
-    drill_fields: [reservation_details*]
-  }
-
-  measure: median_lead_time {
-    view_label: "Metrics"
-    description: "Days between booking and checking in"
-    value_format: "0.0"
-    type:  median
-    sql: ${lead_time};;
-    drill_fields: [reservation_details*]
-  }
-
-  measure: avg_length_of_stay {
-    view_label: "Metrics"
-    description: "Number of days of stay"
-    value_format: "0.0"
-    type:  average
-    sql: ${length_of_stay};;
-    drill_fields: [reservation_details*]
-  }
-
-  measure: median_length_of_stay {
-    view_label: "Metrics"
-    description: "Number of days of stay"
-    value_format: "0.0"
-    type:  median
-    sql: ${length_of_stay};;
-    drill_fields: [reservation_details*]
-  }
-
 
   dimension: bringingpets {
     type: yesno
@@ -127,14 +90,8 @@ view: reservations_audit {
     sql: ${TABLE}.chargelogs ;;
   }
 
-  dimension: checkindate {
-    type: date
-    hidden: yes
-    sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
-  }
 
-
-  dimension_group: reservation_checkin {
+  dimension_group: checkindate {
     view_label: "Date Dimensions"
     group_label: "Checkin Date"
     label: "Checkin"
@@ -154,13 +111,8 @@ view: reservations_audit {
     sql: TIMESTAMP(${TABLE}.checkindate);;
   }
 
-  dimension: checkoutdate {
-    hidden: yes
-    type: date
-    sql: CAST(${TABLE}.checkoutdatelocal as TIMESTAMP);;
-  }
 
-  dimension_group: reservation_checkout {
+  dimension_group: checkoutdate {
     type: time
     view_label: "Date Dimensions"
     group_label: "Checkout Date"
@@ -177,12 +129,6 @@ view: reservations_audit {
     sql: TIMESTAMP(${TABLE}.checkoutdate);;
   }
 
-  dimension: confirmationcode {
-    type: string
-    primary_key: yes
-    sql: ${TABLE}.confirmationcode ;;
-    drill_fields: [reservation_details*]
-  }
 
   dimension_group: createdat {
     hidden:  yes
@@ -318,12 +264,6 @@ view: reservations_audit {
     sql: ${TABLE}.smartlockcodeisset ;;
   }
 
-  dimension: status_booked{
-    description: "Was this night booked?"
-    type: yesno
-    sql: ${TABLE}.status IN ("confirmed","checked_in");;
-
-  }
 
   dimension: source {
     type: string
@@ -383,10 +323,50 @@ view: reservations_audit {
     sql: ${TABLE}.updatedat ;;
   }
 
+
+  dimension: financial_night_part_of_res {
+    type:  yesno
+    hidden: yes
+    sql: ${financials_audit.night_date} < ${checkoutdate_date} and
+      ${financials_audit.night_date} >= ${checkindate_date};;
+  }
+
+  measure: guestscount_sum {
+    label: "Total Number of Guests"
+    view_label: "Metrics"
+    description: "Total number of guests for the reservation(s) filtered for only confirmed / checked in bookings."
+    type: sum
+    sql: guestscount ;;
+    filters: [status: "confirmed, checked_in"]
+  }
+
+  measure: avg_length_of_stay {
+    view_label: "Metrics"
+    label: "Average Length of Stay"
+    description: "Number of days of stay filtered for only confirmed / checked in bookings."
+    value_format: "0.0"
+    type:  average
+    sql: ${length_of_stay};;
+    filters: [status: "confirmed, checked_in"]
+    drill_fields: [reservation_details*]
+  }
+
+  measure: median_length_of_stay {
+    view_label: "Metrics"
+    label: "Median Length of Stay"
+    description: "Number of days of stay filtered for only confirmed / checked in bookings."
+    value_format: "0.0"
+    type:  median
+    sql: ${length_of_stay};;
+    filters: [status: "confirmed, checked_in"]
+    drill_fields: [reservation_details*]
+  }
+
+# - These numbers may be slightly higher than the Kasametrics model as they are also taking into account reservations that aren't mapped to units / active units
   measure: reservation_night {
     view_label: "Metrics"
     label: "Num ReservationNights"
-    description: "Reservation night stay"
+    description: "Reservation night stay filtered for only confirmed / checked in bookings."
     type:  count_distinct
     sql: CONCAT(${confirmationcode}, '-', ${financials_audit.night_date});;
     filters: [financial_night_part_of_res: "yes", status: "confirmed, checked_in"]
@@ -395,24 +375,19 @@ view: reservations_audit {
 
   measure: reservation_night_canceled {
     view_label: "Metrics"
-    label: "Num ReservationNights (Cancelled)"
+    label: "Num ReservationNights (Canceled)"
     description: "Reservation night stay for canceled bookings"
     type:  count_distinct
     sql: CONCAT(${confirmationcode}, '-', ${financials_audit.night_date});;
-    filters: [status: "canceled"]
+    filters: [status: "canceled, cancelled"]
     drill_fields: [financials_audit.night_date, reservation_details*]
   }
 
-  dimension: financial_night_part_of_res {
-    type:  yesno
-    sql: format_date('%Y-%m-%d', ${financials_audit.night_date}) < ${TABLE}.checkoutdatelocal and
-      format_date('%Y-%m-%d', ${financials_audit.night_date}) >= ${TABLE}.checkindatelocal;;
-  }
-
+# - These numbers may be slightly higher than the Kasametrics model as they are also taking into account reservations that aren't mapped to units / active units
   measure: num_reservations {
     view_label: "Metrics"
     label: "Num Reservations"
-    description: "Number of unique reservations - These numbers may be slightly higher than the Kasametrics model as they are also taking into account reservations that aren't mapped to units / active units"
+    description: "Number of unique reservations (confirmed / checked in bookings)"
     type: count_distinct
     sql: ${confirmationcode} ;;
     filters: [financial_night_part_of_res: "yes", status: "confirmed, checked_in"]
@@ -426,15 +401,13 @@ view: reservations_audit {
     description: "Number of unique reservations for canceled bookings"
     type: count_distinct
     sql: ${confirmationcode} ;;
-    filters: [status: "canceled"]
+    filters: [status: "canceled, cancelled"]
     drill_fields: [reservation_details*]
   }
 
 
-
-
   set:reservation_details {
-    fields: [confirmationcode, status, source, checkindate, checkoutdate, bookingdate_date]
+    fields: [confirmationcode, status, source, bookingdate_date]
   }
 
 }

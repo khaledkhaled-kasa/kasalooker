@@ -224,22 +224,22 @@ explore: capacities_v3 {
   from: capacities_v3
   join: units {
     type:  inner
-    relationship: many_to_one
+    relationship: one_to_one #one_to_one
     sql_on: ${capacities_v3.unit} = ${units._id} ;;
   }
   join: complexes {
     type:  inner
-    relationship: many_to_one
+    relationship: one_to_one #one_to_one
     sql_on: ${units.complex} = ${complexes._id} ;;
   }
   join: reservations_v3 {
     type:  left_outer
-    relationship: many_to_one
-    sql_on: ${reservations_v3.unit} = ${units._id} ;;
+    relationship: one_to_many # One_to_Many
+    sql_on: ${units._id} = ${reservations_v3.unit}  ;;
   }
   join: financials_v3 {
     type:  left_outer
-    relationship: one_to_many
+    relationship: one_to_many # One_to_Many
     sql_on: ${reservations_v3._id} = ${financials_v3.reservation}
       and ${capacities_v3.night_date} = ${financials_v3.night_date};;
   }
@@ -304,6 +304,16 @@ explore: guest_verification_form {
   group_label: "Product & Tech"
   label: "CSS (GV Verification)"
   persist_with: kasametrics_v3_default_datagroup
+}
+
+explore: okrs_test_gx {
+  group_label: "OKRs (WIP)"
+  label: "GX"
+}
+
+explore: okrs_bizops_test {
+  group_label: "OKRs (WIP)"
+  label: "BizOps"
 }
 
 
