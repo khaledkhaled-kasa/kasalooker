@@ -15,22 +15,34 @@ view: okrs_test_gx {
   }
 
   dimension: eoh_target {
-    type: number
+    type: string
     label: "H1 Target"
     hidden: no
     sql: ${TABLE}.EOH_Target ;;
   }
 
+  dimension: data_type {
+    type: string
+    hidden: no
+    sql: ${TABLE}.Data_Type ;;
+  }
+
   measure: actual_measure {
     label: "Actual"
     type: max
-    sql: ${actual} ;;
+    sql: CASE WHEN ${data_type} = "#" THEN ${actual}
+    WHEN ${data_type} = "$" THEN ${actual}
+    WHEN ${data_type} = "%" THEN ROUND(${actual}*100,0)
+    END;;
   }
 
   measure: target_measure {
     label: "Target"
     type: max
-    sql: ${target} ;;
+    sql: CASE WHEN ${data_type} = "#" THEN ${target}
+    WHEN ${data_type} = "$" THEN ${target}
+    WHEN ${data_type} = "%" THEN ROUND(${target}*100,1)
+    END;;
   }
 
 
