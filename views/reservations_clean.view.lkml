@@ -371,7 +371,7 @@ view: reservations_clean {
 
   measure: OQS {
     label: "Overall Quality Score (OQS)"
-    view_label: "Metrics"
+    # view_label: "Metrics"
     group_label: "OQS Metrics"
     type: number
     value_format: "0%"
