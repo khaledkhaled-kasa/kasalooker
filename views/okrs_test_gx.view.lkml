@@ -14,6 +14,13 @@ view: okrs_test_gx {
     sql: ${TABLE}.Target ;;
   }
 
+  dimension: eoh_target {
+    type: number
+    label: "H1 Target"
+    hidden: no
+    sql: ${TABLE}.EOH_Target ;;
+  }
+
   measure: actual_measure {
     label: "Actual"
     type: max
@@ -25,6 +32,7 @@ view: okrs_test_gx {
     type: max
     sql: ${target} ;;
   }
+
 
   dimension: department {
     type: string
