@@ -2,7 +2,7 @@ view: capacities_v3 {
   label: "Capacities"
   derived_table: {
     sql:
-    SELECT capacitydenorms.*, units.internaltitle
+    SELECT capacitydenorms.*, units.internaltitle, DATE(night) as partition_night
     FROM capacitydenorms
     LEFT JOIN units ON units._id = capacitydenorms.unit
     LEFT JOIN Gsheets.blackout_dates ON (units.internaltitle = blackout_dates.Unit_InternalTitle AND DATE(capacitydenorms.night) = blackout_dates.blackout_dates)
@@ -13,6 +13,8 @@ view: capacities_v3 {
       datagroup_trigger: capacities_v3_default_datagroup
       # indexes: ["night","transaction"]
       #publish_as_db_view: yes
+      partition_keys: ["partition_night"]
+      cluster_keys: ["night", "unit"]
 
     }
 

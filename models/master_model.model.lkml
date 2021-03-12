@@ -299,6 +299,11 @@ explore: capacities_v3 {
 
 }
 
+explore: okr_goals {
+  group_label: "Internal Goals"
+  label: "OKRs"
+}
+
 explore: guest_verification_form {
   group_label: "Product & Tech"
   label: "CSS (GV Verification)"

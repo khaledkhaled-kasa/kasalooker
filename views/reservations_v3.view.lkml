@@ -41,7 +41,7 @@ view: reservations_v3 {
           GROUP BY 1),
 
         reservations_new AS (
-          SELECT reservations.*, email
+          SELECT reservations.*, email, DATE(checkindate) as partition_date
           FROM reservations JOIN guests
           ON reservations.guest = guests._id)
 
@@ -71,6 +71,8 @@ view: reservations_v3 {
         datagroup_trigger: kasametrics_v3_default_datagroup
         # indexes: ["night","transaction"]
         publish_as_db_view: yes
+        partition_keys: ["partition_date"]
+        cluster_keys: ["partition_date"]
 
     }
 
