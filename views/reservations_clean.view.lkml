@@ -25,6 +25,11 @@ view: reservations_clean {
     sql: ${TABLE}.property ;;
   }
 
+  dimension: length_of_stay {
+    type:  number
+    sql:  date_diff(${checkoutdate_date}, ${checkindate_date}, DAY) ;;
+  }
+
   dimension_group: bookingdate {
     label: "Booking"
     type: time
