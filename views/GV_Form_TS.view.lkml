@@ -130,6 +130,20 @@ view: gv_form_ts {
           END;;
   }
 
+  dimension: day_bins {
+    label: "Days before Check-in (Bins)"
+    type: string
+    description: "Distribution of days ahead of check-in to submit the GV form (1 day, 3 days, 6 days, 15 days) before checkin"
+    sql: CASE
+          WHEN ${date_diff} < 24 THEN "b1: < 1 day"
+          WHEN ${date_diff} >= 24 AND ${date_diff} < 72 THEN "b2: 1 - 3 days"
+          WHEN ${date_diff} >= 72 AND ${date_diff} < 144 THEN "b3: 3 - 6 days"
+          WHEN ${date_diff} >= 144 AND ${date_diff} < 360 THEN "b4: 6 - 15 days"
+          WHEN ${date_diff} >= 360 THEN "b5: >= 15 days"
+          ELSE "b6: Not Submitted"
+          END;;
+  }
+
 
   measure: avg_number_of_hours {
     label: "Average Number of Hours"
