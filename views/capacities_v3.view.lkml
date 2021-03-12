@@ -29,6 +29,27 @@ view: capacities_v3 {
       sql: ${TABLE}._id ;;
     }
 
+  dimension_group: td_stlm {
+    label: "Same Time Last Month (STLM)"
+    description: "This will provide the date from the same time last MONTH"
+    type: time
+    timeframes: [
+      raw,
+      date,
+      day_of_month,
+      week,
+      month,
+      day_of_week
+    ]
+    sql:
+    CASE WHEN EXTRACT(MONTH FROM CURRENT_TIMESTAMP()) IN (1,2,4,6,8,9,11) THEN DATE_SUB(DATE(DATETIME(CURRENT_TIMESTAMP(),'America/Los_Angeles')), INTERVAL 31 DAY)
+    WHEN EXTRACT(MONTH FROM CURRENT_TIMESTAMP()) IN (5,7,10,12) THEN DATE_SUB(DATE(DATETIME(CURRENT_TIMESTAMP(),'America/Los_Angeles')), INTERVAL 30 DAY)
+    ELSE DATE_SUB(DATE(DATETIME(CURRENT_TIMESTAMP(),'America/Los_Angeles')), INTERVAL 28 DAY)
+    END
+    ;;
+    convert_tz: no
+  }
+
 
     dimension_group: night {
       description: "This will return all dates for which the unit is available."

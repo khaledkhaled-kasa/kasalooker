@@ -10,6 +10,13 @@ view: financials_clean {
 
     }
 
+  dimension: unit {
+    type: string
+    hidden: yes
+    sql: ${TABLE}.unit ;;
+  }
+
+
 
     dimension: amount_revised {
       hidden: yes

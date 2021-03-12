@@ -43,7 +43,6 @@ view: units {
 
   dimension: availability_startdate {
     label: "Unit Availability Start Date"
-    hidden: no
     type: date
     sql: TIMESTAMP(${TABLE}.availability.startdate);;
   }

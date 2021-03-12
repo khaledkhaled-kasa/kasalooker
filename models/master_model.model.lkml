@@ -192,12 +192,16 @@ explore: reservations_audit {
   }
   join: units {
     type:  left_outer
-    relationship: many_to_one
-    sql_on: ${units._id} = ${reservations_audit.unit} ;;
+    relationship: one_to_one
+    sql_on: ${units._id} =
+    (CASE WHEN ${reservations_audit.unit} IS NOT NULL THEN ${reservations_audit.unit}
+    ELSE ${financials_audit.unit}
+    END);;
+
   }
   join: complexes {
     type:  left_outer
-    relationship: many_to_one
+    relationship: one_to_one
     sql_on: ${complexes._id} = ${units.complex} ;;
 
   }
@@ -235,7 +239,7 @@ explore: capacities_v3 {
   join: reservations_v3 {
     type:  left_outer
     relationship: one_to_many # One_to_Many
-    sql_on: ${units._id} = ${reservations_v3.unit}  ;;
+    sql_on: ${units._id} = ${reservations_v3.unit};;
   }
   join: financials_v3 {
     type:  left_outer

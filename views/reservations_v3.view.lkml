@@ -349,6 +349,12 @@ view: reservations_v3 {
         ${capacities_v3.night_date} >= ${checkindate_date};;
     }
 
+  dimension: capacity_night_part_of_checkin {
+    type:  yesno
+    hidden: yes
+    sql: ${capacities_v3.night_date} = ${checkindate_date};;
+  }
+
   dimension: checkin_night {
     hidden: yes
     type:  yesno
@@ -477,6 +483,18 @@ view: reservations_v3 {
     drill_fields: [reservation_details*]
     filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in"]
   }
+
+  measure: median_lead_time_checkin {
+    description: "Days between booking and checking in. This metric will only consider confirmed / checked in bookings and only for reservations with available nights occurring on the check-in date."
+    label: "Median Lead Time (Available Nights @ Checkin)"
+    value_format: "0.0"
+    type:  median_distinct
+    sql_distinct_key: ${confirmationcode} ;;
+    sql: ${lead_time};;
+    drill_fields: [reservation_details*]
+    filters: [capacity_night_part_of_checkin: "yes", status: "confirmed, checked_in"]
+  }
+
 
   measure: avg_length_of_stay {
     description: "Number of days of stay. This metric will only consider confirmed / checked in bookings."

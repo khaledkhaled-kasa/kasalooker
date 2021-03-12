@@ -12,6 +12,12 @@ view: financials_audit {
 
   }
 
+  dimension: unit {
+    type: string
+    hidden: yes
+    sql: ${TABLE}.unit ;;
+  }
+
 
   dimension: amount_revised {
     hidden: no
@@ -151,7 +157,7 @@ view: financials_audit {
   }
 
   dimension_group: td_stlm {
-    label: "Same Time Last Month (Month)"
+    label: "Same Time Last Month (STLM)"
     description: "This will provide the date from the same time last MONTH"
     type: time
     timeframes: [

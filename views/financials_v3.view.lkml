@@ -60,6 +60,12 @@ view: financials_v3{
           END;;
   }
 
+  dimension: unit {
+    type: string
+    hidden: yes
+    sql: ${TABLE}.unit ;;
+  }
+
 
   dimension: cashatbooking {
     type: yesno
