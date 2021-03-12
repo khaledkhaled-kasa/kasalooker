@@ -1,7 +1,7 @@
 view: financials_v3{
   label: "Financials"
   derived_table: {
-    sql: SELECT financials.*,
+    sql: SELECT financials.*, DATE(financials.night) as partition_date,
         CASE WHEN CAST(financials.night as date) < '2021-01-01' THEN (t2.outstanding_amount / t3.count_nights_room_revenue)
         ELSE null
         END nightly_outstanding_amount
@@ -39,6 +39,7 @@ view: financials_v3{
     datagroup_trigger: kasametrics_v3_default_datagroup
     # indexes: ["night","transaction"]
     publish_as_db_view: yes
+    partition_keys: ["partition_date"]
   }
 
 
