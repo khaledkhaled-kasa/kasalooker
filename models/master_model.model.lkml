@@ -310,14 +310,10 @@ explore: guest_verification_form {
   persist_with: kasametrics_v3_default_datagroup
 }
 
-explore: okrs_test_gx {
-  group_label: "OKRs (WIP)"
-  label: "GX"
-}
 
-explore: okrs_bizops_test {
+explore: okrs_master {
   group_label: "OKRs (WIP)"
-  label: "BizOps"
+  label: "Kasa OKRs"
 }
 
 

@@ -1,5 +1,5 @@
-view: okrs_test_gx {
-  sql_table_name: `bigquery-analytics-272822.Gsheets.OKRs_GX_Test`
+view: okrs_master {
+  sql_table_name: `bigquery-analytics-272822.Gsheets.OKRs_Master`
     ;;
 
   dimension: actual {
@@ -31,18 +31,18 @@ view: okrs_test_gx {
     label: "Actual"
     type: max
     sql: CASE WHEN ${data_type} = "#" THEN ${actual}
-    WHEN ${data_type} = "$" THEN ${actual}
-    WHEN ${data_type} = "%" THEN ROUND(${actual}*100,0)
-    END;;
+          WHEN ${data_type} = "$" THEN ${actual}
+          WHEN ${data_type} = "%" THEN ROUND(${actual}*100,0)
+          END;;
   }
 
   measure: target_measure {
     label: "Target"
     type: max
     sql: CASE WHEN ${data_type} = "#" THEN ${target}
-    WHEN ${data_type} = "$" THEN ${target}
-    WHEN ${data_type} = "%" THEN ROUND(${target}*100,1)
-    END;;
+          WHEN ${data_type} = "$" THEN ${target}
+          WHEN ${data_type} = "%" THEN ROUND(${target}*100,1)
+          END;;
   }
 
 
@@ -93,6 +93,4 @@ view: okrs_test_gx {
     datatype: date
     sql: ${TABLE}.Time_Period ;;
   }
-
-
 }
