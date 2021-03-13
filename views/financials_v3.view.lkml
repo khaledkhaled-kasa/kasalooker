@@ -165,6 +165,36 @@ view: financials_v3{
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", types_filtered: "yes"]
   }
 
+  measure: amount_original_direct {
+    label: "Original Amount (Direct)"
+    hidden: yes
+    description: "This is amount as per payment received dates from direct, kasawebsite & website booking channels"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${amount_revised} ;;
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", types_filtered: "yes", reservations_v3.sourcedetail: "direct, kasawebsite, website"]
+  }
+
+  measure: amount_original_gx {
+    label: "Original Amount (GX)"
+    hidden: yes
+    description: "This is amount as per payment received dates from direct booking channels"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${amount_revised} ;;
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", types_filtered: "yes", reservations_v3.sourcedetail: "direct"]
+  }
+
+  measure: amount_original_website {
+    label: "Original Amount (Website)"
+    hidden: yes
+    description: "This is amount as per payment received dates from kasawebsite & website booking channels"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${amount_revised} ;;
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", types_filtered: "yes", reservations_v3.sourcedetail: "kasawebsite, website"]
+  }
+
   measure: amount_original_unfiltered {
     view_label: "Metrics"
     label: "Original Amount"
@@ -187,6 +217,36 @@ view: financials_v3{
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", types_filtered: "yes"]
   }
 
+  measure: amount_outstanding_direct {
+    hidden: yes
+    label: "Amount Outstanding (Direct)"
+    description: "This is the amount missing from previous scheduled nights from direct, kasawebsite & website booking channels"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.nightly_outstanding_amount;;
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", types_filtered: "yes", reservations_v3.sourcedetail: "direct, kasawebsite, website"]
+  }
+
+  measure: amount_outstanding_gx {
+    hidden: yes
+    label: "Amount Outstanding (GX)"
+    description: "This is the amount missing from previous scheduled nights from direct booking channels"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.nightly_outstanding_amount;;
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", types_filtered: "yes", reservations_v3.sourcedetail: "direct"]
+  }
+
+  measure: amount_outstanding_website {
+    hidden: yes
+    label: "Amount Outstanding (Website)"
+    description: "This is the amount missing from previous scheduled nights from kasawebsite & website booking channels"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.nightly_outstanding_amount;;
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", types_filtered: "yes", reservations_v3.sourcedetail: "kasawebsite, website"]
+  }
+
   measure: amount_outstanding_unfiltered {
     hidden: yes
     label: "Amount Outstanding"
@@ -204,6 +264,34 @@ view: financials_v3{
     value_format: "$#,##0.00"
     sql: ${amount_original} + ${amount_outstanding};;
   }
+
+
+  measure: direct_share {
+    label: "Total Direct Revenue Share"
+    description: "This will collect % revenue share from direct, kasawebsite & website booking channels"
+    type: number
+    value_format: "0.0%"
+    sql: (${amount_original_direct} + ${amount_outstanding_direct}) / ${amount};;
+  }
+
+
+  measure: gx_share {
+    label: "GX Revenue Share"
+    description: "This will collect % revenue share from direct booking channels"
+    type: number
+    value_format: "0.0%"
+    sql: (${amount_original_gx} + ${amount_outstanding_gx}) / ${amount};;
+  }
+
+
+  measure: website_share {
+    label: "Website Revenue Share"
+    description: "This will collect % revenue share from kasawebsite & website booking channels"
+    type: number
+    value_format: "0.0%"
+    sql: (${amount_original_website} + ${amount_outstanding_gx}) / ${amount};;
+  }
+
 
   measure: amount_unfiltered {
     label: "Amount (Unfiltered)"
