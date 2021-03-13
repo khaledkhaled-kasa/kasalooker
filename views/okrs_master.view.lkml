@@ -14,6 +14,13 @@ view: okrs_master {
     sql: ${TABLE}.Target ;;
   }
 
+  dimension: KR {
+    label: "KR #"
+    type: number
+    hidden: no
+    sql: ${TABLE}.KR__ ;;
+  }
+
   dimension: eoh_target {
     type: string
     label: "H1 Target"
