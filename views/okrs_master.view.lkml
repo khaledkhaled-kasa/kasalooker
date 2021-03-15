@@ -79,6 +79,11 @@ view: okrs_master {
     sql: ${TABLE}.Owner ;;
   }
 
+  dimension: comments {
+    type: string
+    sql: ${TABLE}.Comments ;;
+  }
+
   dimension: source__manual___looker_ {
     type: string
     sql: ${TABLE}.Source__Manual___Looker_ ;;
