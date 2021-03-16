@@ -91,6 +91,13 @@ explore: breezeway_export {
 
   }
 
+  join: survey {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: (${survey.timestamp_date} BETWEEN ${breezeway_export.assigned_date_date} AND ${reservations_clean.checkindate_date})
+    AND ${units.internaltitle} = ${survey.unit_number};;
+  }
+
   join: airbnb_reviews {
     type: left_outer
     relationship:  one_to_one
@@ -314,6 +321,12 @@ explore: guest_verification_form {
 explore: okrs_master {
   group_label: "Kasa Metrics"
   label: "Kasa OKRs"
+}
+
+
+explore: all_guest_alerts {
+  group_label: "Product & Tech"
+  label: "Guest Alerts (Smoke & Noise)"
 }
 
 
