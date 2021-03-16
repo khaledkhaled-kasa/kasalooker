@@ -312,7 +312,7 @@ explore: guest_verification_form {
 
 
 explore: okrs_master {
-  group_label: "OKRs (WIP)"
+  group_label: "Kasa Metrics"
   label: "Kasa OKRs"
 }
 
