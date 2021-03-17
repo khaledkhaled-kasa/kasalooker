@@ -8,6 +8,7 @@ view: capacities_v3 {
     LEFT JOIN Gsheets.blackout_dates ON (units.internaltitle = blackout_dates.Unit_InternalTitle AND DATE(capacitydenorms.night) = blackout_dates.blackout_dates)
     WHERE blackout_dates.blackout_dates is null -- THIS WILL ENSURE THAT BLACKOUT DATES ARE EXCLUDED
     AND capacitydenorms.unit is not null -- This will clean up redundant capacitydenorms rows
+    AND units.internaltitle NOT LIKE 'TST%' -- This will ensure that TST units are excluded
       ;;
 
       datagroup_trigger: capacities_v3_default_datagroup
@@ -96,7 +97,7 @@ view: capacities_v3 {
       label: "Total Capacity"
       description: "Number of available room nights bookable"
       type: count_distinct
-      sql: CASE WHEN ((${units.internaltitle} LIKE "%-XX") OR (${units.internaltitle} LIKE "%-RES") OR (${units.internaltitle} LIKE "TST%")) THEN NULL
+      sql: CASE WHEN ((${units.internaltitle} LIKE "%-XX") OR (${units.internaltitle} LIKE "%-RES")) THEN NULL
           ELSE CONCAT(${units.internaltitle}, '-', ${night_date})
           END;;
     }
@@ -106,7 +107,7 @@ view: capacities_v3 {
       label: "Days Available"
       description: "Number of available room nights bookable"
       type: count_distinct
-      sql: CASE WHEN ((${units.internaltitle} LIKE "%-XX") OR (${units.internaltitle} LIKE "%-RES") OR (${units.internaltitle} LIKE "TST%")) THEN NULL
+      sql: CASE WHEN ((${units.internaltitle} LIKE "%-XX") OR (${units.internaltitle} LIKE "%-RES")) THEN NULL
           ELSE CONCAT(${units.internaltitle}, '-', ${night_date})
           END;;
     }
@@ -115,7 +116,7 @@ view: capacities_v3 {
       label: "Capacity after First Active Month"
       description: "Number of available room nights bookable post first active month"
       type: count_distinct
-      sql: CASE WHEN ((${units.internaltitle} LIKE "%-XX") OR (${units.internaltitle} LIKE "%-RES") OR (${units.internaltitle} LIKE "TST%") OR (${night_date} < ${first_active_day})) THEN NULL
+      sql: CASE WHEN ((${units.internaltitle} LIKE "%-XX") OR (${units.internaltitle} LIKE "%-RES") OR (${night_date} < ${first_active_day})) THEN NULL
           ELSE CONCAT(${units.internaltitle}, '-', ${night_date})
           END;;
     }
