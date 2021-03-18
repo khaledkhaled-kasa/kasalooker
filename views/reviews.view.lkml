@@ -129,7 +129,8 @@ view_label: "Check-In Survey Data"
 
   measure: count {
     label: "Review Count"
-    type: count
-    drill_fields: []
+    type: count_distinct
+    sql: ${reservation};;
+    drill_fields: [reservations_clean.confirmation_code]
   }
 }
