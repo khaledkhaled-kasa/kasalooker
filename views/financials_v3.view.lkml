@@ -195,6 +195,16 @@ view: financials_v3{
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", types_filtered: "yes", reservations_v3.sourcedetail: "kasawebsite, website"]
   }
 
+  measure: amount_original_guestportal {
+    label: "Original Amount (Guest Portal)"
+    hidden: yes
+    description: "This is amount as per payment received dates from guest portal channels"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${amount_revised} ;;
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", types_filtered: "yes", reservations_v3.sourcedetail: "guestportal"]
+  }
+
   measure: amount_original_unfiltered {
     view_label: "Metrics"
     label: "Original Amount"
@@ -247,6 +257,16 @@ view: financials_v3{
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", types_filtered: "yes", reservations_v3.sourcedetail: "kasawebsite, website"]
   }
 
+  measure: amount_outstanding_guestportal {
+    hidden: yes
+    label: "Amount Outstanding (Guest Portal)"
+    description: "This is the amount missing from previous scheduled nights from guest portal booking channels"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.nightly_outstanding_amount;;
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", types_filtered: "yes", reservations_v3.sourcedetail: "guestportal"]
+  }
+
   measure: amount_outstanding_unfiltered {
     hidden: yes
     label: "Amount Outstanding"
@@ -289,7 +309,15 @@ view: financials_v3{
     description: "This will collect % revenue share from kasawebsite & website booking channels"
     type: number
     value_format: "0.0%"
-    sql: (${amount_original_website} + ${amount_outstanding_gx}) / ${amount};;
+    sql: (${amount_original_website} + ${amount_outstanding_website}) / ${amount};;
+  }
+
+  measure: guestportal_share {
+    label: "Guest Portal Revenue Share"
+    description: "This will collect % revenue share from guestportal booking channels"
+    type: number
+    value_format: "0.0%"
+    sql: (${amount_original_guestportal} + ${amount_outstanding_guestportal}) / ${amount};;
   }
 
 

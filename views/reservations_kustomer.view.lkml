@@ -1,4 +1,5 @@
 view: reservations_kustomer {
+  label: "Reservations"
   sql_table_name: `bigquery-analytics-272822.mongo.reservations`
   ;;
 
@@ -268,6 +269,12 @@ view: reservations_kustomer {
   dimension: specialrequest {
     type: string
     sql: ${TABLE}.specialrequest ;;
+  }
+
+  dimension: property {
+    type: string
+    hidden: yes
+    sql: ${TABLE}.property ;;
   }
 
   dimension: status {

@@ -1,14 +1,16 @@
 view: all_guest_alerts {
+  label: "Guest Alerts"
   derived_table: {
     sql:
-      SELECT createdat AS createdat, source AS eventtype, meta.reservationconfirmationcode AS reservation_id
-      FROM messages
-      -- where source IN ("kasa-automessages-production-smokeAlert","kasa-automessages-production-noiseBreach", "kasa-automessages-production-noiseBreach|kasa-airbnb-sync-production-sendAirbnbMessageWorker")
+      SELECT messages.createdat AS createdat, messages.source AS eventtype, meta.reservationconfirmationcode AS reservation_id, "messages" as source, reservations.unit
+      FROM messages JOIN reservations ON meta.reservationconfirmationcode = reservations.confirmationcode
+      -- where messages.source IN ("kasa-automessages-production-smokeAlert","kasa-automessages-production-noiseBreach", "kasa-automessages-production-noiseBreach|kasa-airbnb-sync-production-sendAirbnbMessageWorker")
 
       UNION DISTINCT
-      (SELECT createdat AS createdat, messagetype AS eventtype, reservation AS reservation_id
-      FROM textmessages)
-      -- where messagetype IN ("smokeAlert", "noiseBreach2", "noiseBreach"))
+      (SELECT textmessages.createdat AS createdat, messagetype AS eventtype, reservation AS reservation_id, "textmessages" as source, reservations.unit
+      FROM textmessages JOIN reservations ON reservation = reservations._id
+      -- where messagetype IN ("smokeAlert", "noiseBreach2", "noiseBreach")
+      )
 
       ;;
 
@@ -29,16 +31,33 @@ view: all_guest_alerts {
         year
       ]
       # convert_tz: no
-      datatype: date
       sql: ${TABLE}.createdat ;;
     }
 
     dimension: reservation_id {
-      primary_key: yes
-      hidden: yes
+      hidden: no
       type: string
       sql: ${TABLE}.reservation_id ;;
     }
+
+  dimension: source {
+    hidden: no
+    type: string
+    sql: ${TABLE}.source ;;
+  }
+
+  dimension: unit_ID {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.unit ;;
+  }
+
+  dimension: primary_key {
+    hidden: yes
+    description: "A primary key has been created to calculate distinct alert occurrences for different time periods / event types / reservation IDs"
+    type: string
+    sql: CONCAT(${TABLE}.createdat,${TABLE}.eventtype,${TABLE}.reservation_id) ;;
+  }
 
     dimension: eventtype {
       label: "Event Type"
@@ -64,24 +83,27 @@ view: all_guest_alerts {
       label: "# of Smoke Alerts"
       description: "This will pull all smoke alerts from the messages and textmessages table"
       type: count_distinct
-      sql: ${reservation_id} ;;
+      sql: ${primary_key}  ;;
       filters: [eventtype_smoke: "yes"]
+      drill_fields: [units.internaltitle]
     }
 
     measure: alerts_noise {
       label: "# of Noise Alerts"
       description: "This will pull all noise alerts from the messages and textmessages table"
       type: count_distinct
-      sql: ${reservation_id} ;;
+      sql: ${primary_key}  ;;
       filters: [eventtype_noise: "yes"]
     }
 
-    measure: alerts_smoke_noise {
-     label: "# of Smoke / Noise Alerts"
-     description: "This will pull all noise alerts from the messages and textmessages table"
-      type: count_distinct
-      sql: ${reservation_id} ;;
-      filters: [eventtype_noise: "yes", eventtype_smoke: "yes"]
-    }
+  measure: num_monitored_units {
+    label: "Num of Monitored Units"
+    description: "This will # of Unique Units by internaltitle"
+    type: count_distinct
+    sql: ${devices._id}  ;;
+    filters: [devices.active: "yes", devices.devicetype: "Minut_v1"]
+    drill_fields: [units.internaltitle]
+  }
+
 
   }
