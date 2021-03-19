@@ -43,7 +43,7 @@ datagroup: capacities_v3_default_datagroup {
 }
 
 datagroup: ximble_default_datagroup {
-  sql_trigger: SELECT MAX(date) FROM ximble.ximble_master`;;
+  sql_trigger: SELECT MAX(date) FROM ximble.ximble_master;;
   max_cache_age: "1 hour"
 }
 
