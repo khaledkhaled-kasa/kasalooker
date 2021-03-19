@@ -138,7 +138,7 @@ explore: reservations_clean {
   join: units {
     type:  left_outer
     relationship: one_to_one
-    sql_on: ${units._id} = ${reservations_clean.unit} ;;
+    sql_on: ${units._id} = ${reservations_clean.unit};;
   }
 
   join: complexes {
@@ -307,12 +307,6 @@ explore: capacities_v3 {
 }
 
 
-explore: guest_verification_form {
-  group_label: "Product & Tech"
-  label: "CSS (GV Verification)"
-  persist_with: kasametrics_v3_default_datagroup
-}
-
 
 explore: okrs_master {
   group_label: "Kasa Metrics"
@@ -320,90 +314,37 @@ explore: okrs_master {
 }
 
 
+
 explore: devices {
   group_label: "Product & Tech"
-  label: "Erm"
+  label: "Guest Alerts (Smoke & Noise)"
   from: devices
+
+  join: units {
+    type:  full_outer
+    relationship: one_to_one
+    sql_on: ${units._id} = ${devices.unit} AND (${units.propertyinternaltitle} != 'TST');;
+  }
+
+  join: complexes {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${complexes._id} = ${units.complex} ;;
+  }
 
   join: all_guest_alerts {
     type: full_outer
     relationship: many_to_one
-    sql_on: ${devices.unit} = ${all_guest_alerts.unit_ID};;
-  }
-
-  join: units {
-    type:  left_outer
-    relationship: one_to_one
-    sql_on: ${units._id} = ${devices.unit} ;;
-  }
-
-
-  join: complexes {
-    type:  left_outer
-    relationship: one_to_one
-    sql_on: ${complexes._id} = ${units.complex} ;;
-  }
-
-  # join: complexes__address {
-  #   from: complexes__address
-  #   type:  left_outer
-  #   relationship: one_to_one
-  #   sql_on: ${complexes__address._id} = ${reservations_kustomer.property};;
-  # }
-
-  # join: geo_location {
-  #   type:  left_outer
-  #   relationship: one_to_one
-  #   sql_on:  ${complexes__address.address_city_revised} = ${geo_location.city}
-  #     and ${complexes__address.address_state_revised} = ${geo_location.state};;
-  # }
-}
-
-
-explore: all_guest_alerts {
-  group_label: "Product & Tech"
-  label: "Guest Alerts (Smoke & Noise)"
-  from: all_guest_alerts
-  join: reservations_kustomer {
-    type:  inner
-    relationship: one_to_one
-    sql_on: ${all_guest_alerts.reservation_id} =
-    (CASE WHEN ${all_guest_alerts.source} = 'textmessages' THEN ${reservations_kustomer._id}
-    ELSE ${reservations_kustomer.confirmationcode}
-    END);;
-  }
-
-  join: units {
-    type:  left_outer
-    relationship: one_to_one
-    sql_on: ${units._id} = ${reservations_kustomer.unit} ;;
-  }
-
-  join: devices {
-    type: full_outer
-    relationship: many_to_one
-    sql_on: ${devices.unit} = ${units._id} ;;
-  }
-
-  join: complexes {
-    type:  left_outer
-    relationship: one_to_one
-    sql_on: ${complexes._id} = ${units.complex} ;;
-  }
-
-  join: complexes__address {
-    from: complexes__address
-    type:  left_outer
-    relationship: one_to_one
-    sql_on: ${complexes__address._id} = ${reservations_kustomer.property};;
+    sql_on: ${units._id} = ${all_guest_alerts.unit_ID};;
   }
 
   join: geo_location {
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${complexes__address.address_city_revised} = ${geo_location.city}
-      and ${complexes__address.address_state_revised} = ${geo_location.state};;
+    sql_on:  ${units.address_city} = ${geo_location.city}
+      and ${units.address_state} = ${geo_location.state};;
   }
+
 }
 
 
