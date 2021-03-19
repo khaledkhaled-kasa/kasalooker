@@ -1,7 +1,11 @@
-view: ximble_master {
-  sql_table_name: `bigquery-analytics-272822.ximble.ximble_master`
-    ;;
+  view: ximble_master {
+    derived_table: {
+      sql: SELECT *
+        FROM `bigquery-analytics-272822.ximble.ximble_master`;;
 
+      #datagroup_trigger: reviews_default_datagroup
+      persist_for: "12 hours"
+    }
 
   dimension_group: date {
     type: time

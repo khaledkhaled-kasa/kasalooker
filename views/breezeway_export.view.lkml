@@ -48,6 +48,26 @@ view: breezeway_export {
     sql: ${TABLE}.Assigned_Date ;;
   }
 
+  dimension_group: completed_date {
+    view_label: "Date Dimensions"
+    group_label: "BW Completed Date"
+    label: ""
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.Completed ;;
+  }
+
+
   dimension: assigned_employee_ids {
     hidden: yes
     type: string

@@ -92,10 +92,11 @@ explore: breezeway_export {
   }
 
   join: survey {
-    type: left_outer
+    type: full_outer
     relationship: one_to_one
-    sql_on: (${survey.timestamp_date} BETWEEN ${breezeway_export.assigned_date_date} AND ${reservations_clean.checkindate_date})
-    AND ${units.internaltitle} = ${survey.unit_number};;
+    sql_on: (${survey.timestamp_date} BETWEEN ${breezeway_export.completed_date_date} AND ${reservations_clean.checkindate_date})
+    AND ${units.internaltitle} = ${survey.unit_number}
+    ;;
   }
 
   join: airbnb_reviews {
