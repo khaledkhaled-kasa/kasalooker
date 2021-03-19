@@ -1,6 +1,6 @@
 view: financials_audit {
   derived_table: {
-    sql: SELECT financials.*
+    sql: SELECT financials.*, DATE(financials.night) as partition_date
         FROM financials
           WHERE isvalid is null or isvalid = true
       ;;
@@ -9,6 +9,7 @@ view: financials_audit {
     datagroup_trigger: kasametrics_audit_default_datagroup
     # indexes: ["night","transaction"]
     publish_as_db_view: yes
+    partition_keys: ["partition_date"]
 
   }
 

@@ -1,5 +1,6 @@
 view: reservations_audit {
   sql_table_name: `bigquery-analytics-272822.mongo.reservations`
+
     ;;
 
   dimension: confirmationcode {
