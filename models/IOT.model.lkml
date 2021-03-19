@@ -15,4 +15,10 @@ explore: devices {
     relationship: one_to_one
     sql_on: ${sensors.unit} = ${units._id} ;;
   }
+
+  join: sensorreadings {
+    relationship: one_to_many
+    sql_on: (sensors._id = sensorreadings.sensor
+    and sensors.unit = sensorreadings.unit);;
+  }
 }
