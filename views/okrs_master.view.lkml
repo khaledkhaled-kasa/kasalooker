@@ -39,7 +39,8 @@ view: okrs_master {
     type: max
     sql: CASE WHEN ${data_type} = "#" THEN ${actual}
           WHEN ${data_type} = "$" THEN ${actual}
-          WHEN ${data_type} = "%" THEN ROUND(${actual}*100,0)
+          WHEN ${data_type} = "%" THEN ROUND(${actual}*100,2)
+          WHEN ${data_type} = "Boolean" THEN ${actual}
           END;;
   }
 
@@ -48,7 +49,8 @@ view: okrs_master {
     type: max
     sql: CASE WHEN ${data_type} = "#" THEN ${target}
           WHEN ${data_type} = "$" THEN ${target}
-          WHEN ${data_type} = "%" THEN ROUND(${target}*100,1)
+          WHEN ${data_type} = "%" THEN ROUND(${target}*100,2)
+          WHEN ${data_type} = "Boolean" THEN ${actual}
           END;;
   }
 
