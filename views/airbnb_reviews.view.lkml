@@ -320,7 +320,7 @@ view: airbnb_reviews {
     label: "Count 4 Star Overall"
     type: count_distinct
     value_format: "0"
-    sql: $${reservation_code};;
+    sql: ${reservation_code};;
     filters: [
       overall_rating: "4"
     ]
@@ -876,5 +876,8 @@ view: airbnb_reviews {
     value_format: "0.0%"
     sql: 1 - (${percent_5_star} + ${percent_less_than_4_star});;
   }
+
+
+
 
 }

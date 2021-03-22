@@ -94,7 +94,7 @@ explore: breezeway_export {
   join: survey {
     type: full_outer
     relationship: one_to_one
-    sql_on: (${survey.timestamp_date} BETWEEN ${breezeway_export.completed_date_date} AND ${reservations_clean.checkindate_date})
+    sql_on: (DATE(${survey.timestamp_date}) BETWEEN DATE(${breezeway_export.completed_date_date}) AND DATE(${reservations_clean.checkindate_date}))
     AND ${units.internaltitle} = ${survey.unit_number}
     ;;
   }
@@ -130,6 +130,7 @@ explore: breezeway_export {
     sql_on: ${reservations_clean._id} = ${financials_clean.reservation} ;;
   }
 }
+
 
 explore: reservations_clean {
   persist_with: reviews_default_datagroup
