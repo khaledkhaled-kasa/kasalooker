@@ -22,7 +22,7 @@ view: capacities_v3 {
     dimension: primary_key {
       primary_key: yes
       hidden: yes
-      sql: CONCAT(${TABLE}.night, ${TABLE}.unit) ;;
+      sql: CONCAT(${TABLE}.night, ${TABLE}.unit)) ;;
     }
 
     dimension: _id {
