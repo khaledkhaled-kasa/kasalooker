@@ -31,6 +31,12 @@ explore: devices {
     sql_on: (${devices.unit} = ${noisebreachlogs.unit})
     and (${devices.devicetype} = 'Minut_v1');;
   }
+
+  join: sensorevents {
+    type: full_outer
+    relationship: one_to_many
+    sql_on: (${devices.deviceid} = ${sensorevents.deviceid});;
+  }
 }
 
 explore: sensorevents {
