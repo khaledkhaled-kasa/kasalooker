@@ -38,8 +38,3 @@ explore: devices {
     sql_on: (${devices.deviceid} = ${sensorevents.deviceid});;
   }
 }
-
-explore: sensorevents {
-  group_label: "Product & Tech"
-  label: "IoT Sensor Events"
-  }
