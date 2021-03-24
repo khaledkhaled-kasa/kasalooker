@@ -41,12 +41,7 @@ view: financials_clean {
       filters: [actualizedat_modified: "-Nonactualized (Historic)"]
     }
 
-    dimension: types_filtered{
-      description: "This will filter out Channel Fees / ToTs"
-      hidden: yes
-      type: yesno
-      sql: ${TABLE}.type is null or ${TABLE}.type not IN ("channelFee","ToT","ToTInflow","ToTOutflowNonLiability","ToTInflowNonLiability");;
-    }
+
 
     measure: cleaning_amount {
       type: sum

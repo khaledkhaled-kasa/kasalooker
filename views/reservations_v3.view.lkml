@@ -304,12 +304,6 @@ view: reservations_v3 {
       sql: ${TABLE}.status ;;
     }
 
-    dimension: status_booked{
-      description: "Was this night booked?"
-      type: yesno
-      sql: ${TABLE}.status is null or ${TABLE}.status IN ("confirmed","checked_in");;
-    }
-
     dimension: suspicious {
       type: yesno
       sql: ${TABLE}.suspicious ;;
