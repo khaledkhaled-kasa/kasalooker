@@ -19,15 +19,16 @@ view: gv_form_ts {
       FROM timestamped_GVs
       GROUP BY 1)
 
-      SELECT timestamped_GVs.*, timestamped_GVs_MAX.number_of_attempts
+      SELECT timestamped_GVs.*, timestamped_GVs_MAX.number_of_attempts, DATE(conversation_created) as partition_date
       FROM  timestamped_GVs JOIN timestamped_GVs_MAX ON timestamped_GVs.confirmationcode = timestamped_GVs_MAX.confirmationcode AND timestamped_GVs.conversation_created = timestamped_GVs_MAX.conversation_created
 
       ;;
 
-
-      # datagroup_trigger: kustomer_default_datagroup;;
-      # indexes: ["night","transaction"]
-      #publish_as_db_view: yes
+    # persist_for: "1 hour"
+    datagroup_trigger: gv_form_ts_default_datagroup
+    # indexes: ["night","transaction"]
+    publish_as_db_view: yes
+    partition_keys: ["partition_date"]
 
     }
 

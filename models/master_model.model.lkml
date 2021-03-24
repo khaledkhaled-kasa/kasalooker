@@ -32,6 +32,13 @@ datagroup: kasametrics_audit_default_datagroup {
   max_cache_age: "1 hours"
 }
 
+datagroup: gv_form_ts_default_datagroup {
+  # sql_trigger: SELECT MAX(id) FROM etl_log;;
+  sql_trigger: SELECT MAX(conversation_created) from timestamped_GVs ;;
+  max_cache_age: "1 hours"
+}
+
+
 datagroup: kasametrics_v3_default_datagroup {
   sql_trigger: SELECT MAX(createdat) from reservations;;
   max_cache_age: "1 hours"
