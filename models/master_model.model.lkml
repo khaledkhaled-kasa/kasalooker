@@ -315,8 +315,6 @@ explore: okrs_master {
   label: "Kasa OKRs"
 }
 
-
-
 explore: devices {
   group_label: "Product & Tech"
   label: "Guest Alerts (Smoke & Noise)"

@@ -177,8 +177,4 @@ view: sensorevents {
     sql: ${TABLE}.updatedat ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: []
-  }
 }
