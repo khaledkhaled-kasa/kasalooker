@@ -6,6 +6,7 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 
 
 
+
 datagroup: aircalls_default_datagroup {
   # sql_trigger: SELECT MAX(id) FROM etl_log;;
   max_cache_age: "1 hours"
@@ -17,8 +18,8 @@ datagroup: compliance_default_datagroup {
 }
 
 datagroup: breezeway_default_datagroup {
-  # sql_trigger: SELECT MAX(id) FROM etl_log;;
-  max_cache_age: "6 hours"
+  sql_trigger: SELECT count(*) FROM Breezeway_Data.export_summary ;;
+  max_cache_age: "1 hours"
 }
 
 datagroup: reviews_default_datagroup {
