@@ -22,6 +22,11 @@ datagroup: breezeway_default_datagroup {
   max_cache_age: "1 hours"
 }
 
+datagroup: pom_checklist_default_datagroup {
+  sql_trigger: SELECT count(*) FROM Gsheets.POM_QA_Walkthrough_Survey ;;
+  max_cache_age: "1 hours"
+}
+
 datagroup: reviews_default_datagroup {
   #sql_trigger: SELECT MAX(id) FROM etl_log;;
   max_cache_age: "6 hours"
@@ -57,14 +62,14 @@ datagroup: ximble_default_datagroup {
 
 explore: compliance_tracker {
   group_label: "Legal"
-  persist_with: aircalls_default_datagroup
+  persist_with: compliance_default_datagroup
   label: "Compliance Tracker"
 }
 
 
 explore: aircall_segment {
   group_label: "Software"
-  persist_with: compliance_default_datagroup
+  persist_with: aircalls_default_datagroup
   label: "Aircall"
 }
 
@@ -354,11 +359,15 @@ explore: devices {
 
 }
 
+explore: pom_qa_walkthrough_survey {
+  group_label: "Software"
+  label: "POM QA Walkthrough Checklist"
+}
+
 
 explore: ximble_master {
   group_label: "Software"
   label: "Ximble"
-  persist_with: kasametrics_v3_default_datagroup
 }
 
 # Project on Hold (Forecast Schedule)
