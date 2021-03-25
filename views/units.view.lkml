@@ -165,6 +165,18 @@ view: units {
     sql: ${TABLE}.propertyinternaltitle ;;
   }
 
+  dimension: unit_status {
+    description: "Status of Unit (Active/Deactivated/Expiring/Onboarding)"
+    type: string
+    sql: CASE  WHEN ${availability_enddate} IS NULL AND DATE(${availability_startdate}) < CURRENT_DATE THEN 'Active'
+            WHEN CURRENT_DATE >= DATE(${availability_startdate}) AND  EXTRACT( YEAR FROM SAFE_CAST(${availability_enddate} as DATE)) = 2099 Then 'Active'
+            WHEN CURRENT_DATE >= DATE(${availability_startdate}) AND CURRENT_DATE < SAFE_CAST(${availability_enddate} as DATE) AND EXTRACT( YEAR FROM SAFE_CAST(${availability_enddate}as DATE)) <> 2099 THEN 'Expiring'
+            WHEN CURRENT_DATE >= SAFE_CAST(${availability_enddate} as DATE) THEN 'Deactivated'
+            WHEN SAFE_CAST(${availability_startdate} AS DATE) > CURRENT_DATE THEN 'Onboarding'
+      ELSE NULL
+      END ;;
+  }
+
 
   dimension: title {
     type: string

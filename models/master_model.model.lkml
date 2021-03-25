@@ -7,13 +7,7 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 
 
 
-datagroup: aircalls_default_datagroup {
-  # sql_trigger: SELECT MAX(id) FROM etl_log;;
-  max_cache_age: "1 hours"
-}
-
-datagroup: compliance_default_datagroup {
-  # sql_trigger: SELECT MAX(id) FROM etl_log;;
+datagroup: default_datagroup {
   max_cache_age: "1 hours"
 }
 
@@ -28,7 +22,6 @@ datagroup: pom_checklist_default_datagroup {
 }
 
 datagroup: reviews_default_datagroup {
-  #sql_trigger: SELECT MAX(id) FROM etl_log;;
   max_cache_age: "6 hours"
 }
 
@@ -38,7 +31,6 @@ datagroup: kasametrics_audit_default_datagroup {
 }
 
 datagroup: gv_form_ts_default_datagroup {
-  # sql_trigger: SELECT MAX(timestamped_GVs.conversation_created) from timestamped_GVs ;;
   sql_trigger: SELECT extract(hour FROM current_timestamp) ;;
   max_cache_age: "1 hours"
 }
@@ -62,14 +54,14 @@ datagroup: ximble_default_datagroup {
 
 explore: compliance_tracker {
   group_label: "Legal"
-  persist_with: compliance_default_datagroup
+  persist_with: default_datagroup
   label: "Compliance Tracker"
 }
 
 
 explore: aircall_segment {
   group_label: "Software"
-  persist_with: aircalls_default_datagroup
+  persist_with: default_datagroup
   label: "Aircall"
 }
 

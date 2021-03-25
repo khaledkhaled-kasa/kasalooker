@@ -41,6 +41,14 @@ view: geo_location {
     sql: ${TABLE}.State ;;
   }
 
+  dimension: city_state {
+    type: string
+    view_label: "Building and Geographic Information"
+    description: "Appends together City and State in 1 column"
+    label: "City, State"
+    sql: ${city} || ', ' || ${state} ;;
+  }
+
 
 
 }
