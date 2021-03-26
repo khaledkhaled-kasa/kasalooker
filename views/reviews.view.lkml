@@ -66,7 +66,7 @@ view_label: "Check-In Survey Data"
   measure: avg_rating {
     type:  average
     value_format: "0.0"
-    label: "Averaage Real-time Review Rating"
+    label: "Average Real-time Review Rating"
     sql: ${TABLE}.overallratingstandardized ;;
   }
 
@@ -85,7 +85,7 @@ view_label: "Check-In Survey Data"
     }
 
   dimension: privatereviewtext {
-    label: "Private Revew Text"
+    label: "Private Review Text"
     type: string
     sql: ${TABLE}.privatereviewtext ;;
   }
