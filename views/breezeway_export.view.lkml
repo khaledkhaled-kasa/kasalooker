@@ -193,9 +193,31 @@ view: breezeway_export {
   }
 
   dimension: name {
-    hidden: yes
+    label: "Task Name (Breezeway)"
+    description: "This will pull the task name as entered on Breezeway"
+    hidden: no
     type: string
     sql: ${TABLE}.Name ;;
+  }
+
+  dimension: name_revised {
+    label: "Task Name"
+    description: "This will pull the associated task in-line with the hk cleaning pricing table"
+    type: string
+    sql:
+    CASE WHEN lower(${TABLE}.Name) LIKE "%turnover clean (spanish)%" THEN "Turnover Clean (Spanish)"
+    WHEN (lower(${TABLE}.Name) LIKE "%turnover clean %" OR lower(${TABLE}.Name) LIKE "turnover clean") THEN "Turnover Clean"
+    WHEN lower(${TABLE}.Name) LIKE "%deep%clean%(spanish)%" THEN "Deep Clean (Spanish)"
+    WHEN (lower(${TABLE}.Name) LIKE "deep clean" OR lower(${TABLE}.Name) LIKE "%deep clean checklist") THEN "Deep Clean"
+    WHEN lower(${TABLE}.Name) LIKE "%intra-stay%" THEN "Intra-Stay Clean"
+    WHEN lower(${TABLE}.Name) LIKE "%ad hoc clean%" THEN "Ad Hoc Clean (correction)"
+    WHEN lower(${TABLE}.Name) LIKE "%la monarca common areas%" THEN "La Monarca Common Areas"
+    WHEN (lower(${TABLE}.Name) LIKE "%carpet/upholstery%" OR lower(${TABLE}.Name) LIKE "carpet clean%") THEN "Carpet/Upholstery Cleaning"
+    WHEN lower(${TABLE}.Name) LIKE "%cleanliness review feedback%" THEN "Cleanliness Review Feedback"
+    WHEN lower(${TABLE}.Name) LIKE "%hk touch up or vip prep%" THEN "HK Touch Up - VIP Prep"
+    WHEN lower(${TABLE}.Name) LIKE "hk misc%" OR lower(${TABLE}.Name) LIKE "errand fee" THEN "HK Misc. Fee"
+    ELSE ${TABLE}.Name
+    END;;
   }
 
   dimension: past_due_by_ {
@@ -366,4 +388,6 @@ view: breezeway_export {
     sql: ${count_filter_count} / ${count} ;;
     value_format: "0.0%"
   }
+
+
 }

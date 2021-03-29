@@ -352,6 +352,39 @@ explore: devices {
 
 }
 
+explore: bw_cleaning {
+  group_label: "Software"
+  label: "BW Cleaning Pricing Schedule"
+  from: breezeway_export
+  view_label: "BW Export"
+  join: units {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${units.internaltitle} = ${bw_cleaning.property_internal_id} ;;
+  }
+
+  join: complexes {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${complexes._id} = ${units.complex} ;;
+  }
+
+  join: hk_cleaning_pricing {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${hk_cleaning_pricing.property_code} = ${units.propcode}
+    AND ${units.bedrooms} = ${hk_cleaning_pricing.br}
+    AND ${hk_cleaning_pricing.task} = ${bw_cleaning.name_revised};;
+  }
+
+  join: hk_pricing_companies {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units.propcode} = ${hk_pricing_companies.property_code} ;;
+  }
+
+}
+
 explore: pom_qa_walkthrough_survey {
   group_label: "Software"
   label: "POM QA Walkthrough Checklist"
