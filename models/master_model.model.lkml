@@ -132,8 +132,8 @@ explore: breezeway_export {
 }
 
 explore: units_buildings_information {
-  sql_always_where: ${units_buildings_information.availability_enddate} <> 'Invalid date' ;;
   from: units
+  # sql_always_where: ${units_buildings_information.availability_enddate_date} <> 'Invalid date' ;;
   label: "Units and Property Information"
   group_label: "Properties"
 
@@ -154,7 +154,7 @@ explore: units_buildings_information {
 
 
 explore: reservations_clean {
-  sql_always_where: ${units.availability_enddate} <> 'Invalid date' ;;
+  # sql_always_where: ${units.availability_enddate_date} <> 'Invalid date' ;;
   persist_with: reviews_default_datagroup
   group_label: "Kasa Metrics"
   label: "Reviews"
@@ -166,13 +166,13 @@ explore: reservations_clean {
     sql_on: ${units._id} = ${reservations_clean.unit};;
   }
 
-  join: pom_information {
-    view_label: "POM Information"
-    type: left_outer
-    relationship: many_to_one
-    sql_on: ${units.propcode} = ${pom_information.Prop_Code} ;;
+  # join: pom_information {
+  #   view_label: "POM Information"
+  #   type: left_outer
+  #   relationship: many_to_one
+  #   sql_on: ${units.propcode} = ${pom_information.Prop_Code} ;;
 
-  }
+  # }
 
   join: complexes {
     type:  left_outer
