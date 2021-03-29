@@ -52,6 +52,7 @@ view: pom_qa_walkthrough_survey {
       year
     ]
     sql: ${TABLE}.TIMESTAMP ;;
+    convert_tz: no
   }
 
   dimension: Email_address {
@@ -175,7 +176,8 @@ view: pom_qa_walkthrough_survey {
   measure: qs_count {
     label: "Number of Qs"
     description: "This will pull the number of Qs for integrity checks."
-    type: count
+    type: count_distinct
+    sql: ${Q} ;;
     drill_fields: [Question, section, survey_response, response_answer, weight_adjusted]
   }
 
