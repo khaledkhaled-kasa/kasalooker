@@ -68,7 +68,7 @@ view: reservations_v3 {
     ON reservations_new.email = guest_type_table.email ;;
 
         # persist_for: "1 hour"
-        datagroup_trigger: kasametrics_v3_default_datagroup
+        datagroup_trigger: kasametrics_reservations_datagroup
         # indexes: ["night","transaction"]
         publish_as_db_view: yes
         partition_keys: ["partition_date"]
