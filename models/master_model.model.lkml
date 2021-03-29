@@ -90,11 +90,12 @@ explore: breezeway_export {
 
   }
 
-  join: survey {
+  join: pom_qa_walkthrough_survey {
     type: full_outer
     relationship: one_to_one
-    sql_on: (DATE(${survey.timestamp_date}) BETWEEN DATE(${breezeway_export.completed_date_date}) AND DATE(${reservations_clean.checkindate_date}))
-    AND ${units.internaltitle} = ${survey.unit_number}
+    sql_on: (DATE(${pom_qa_walkthrough_survey.submitdate_date}) BETWEEN DATE(${breezeway_export.completed_date_date}) AND DATE(${reservations_clean.checkindate_date}))
+    AND ${units.internaltitle} = ${pom_qa_walkthrough_survey.Unit}
+    AND ${reservations_clean.status} IN ("confirmed","checked_in")
     ;;
   }
 

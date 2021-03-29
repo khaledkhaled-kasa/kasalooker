@@ -52,6 +52,7 @@ view: pom_qa_walkthrough_survey {
       year
     ]
     sql: ${TABLE}.TIMESTAMP ;;
+    convert_tz: no
   }
 
   dimension: Email_address {
@@ -125,11 +126,14 @@ view: pom_qa_walkthrough_survey {
 
     WHEN ${survey_response} = "Yes" AND ${Q} IN ("Living_Room___Carpet", "Balcony___Cleanliness", "Living_Room___Sofa", "Living_Room___Ceiling_Fan", "Kitchen___Glasses",
     "Kitchen___Dishwasher") THEN ${TABLE}.Weight
+
     WHEN ${survey_response} = "true" AND ${Q} IN ("Wall_to_Wall___Scuffs_and_Spots", "Living_Room___Vents", "Living_Room___Non_carpeted_Floors",
     "Living_Room___Dust", "Laundry_Room___Stocking_Supplies_Par_Levels", "Kitchen___Stocking_Supplies_Par_Levels", "Kitchen___Microwave",
     "Kitchen___Essential_Stocking_Items_", "Kitchen___Coffeemaker", "Bedroom___Bed_Stains", "Bathroom___Stocking_Supplies") THEN ${TABLE}.Weight
+
     WHEN ${survey_response} = "No" AND ${Q} IN ("Bathroom___Shower_Liner","Bathroom___Drawers", "Bedroom___Under_Bed", "Bedroom___Carpet", "Balcony___Smoking",
-    "Bedroom___Fan_Blades", "Kitchen___Drawers") THEN ${TABLE}.Weight
+    "Bedroom___Fan_Blades", "Kitchen___Drawers", "Living_Room___Fan_Blades") THEN ${TABLE}.Weight
+
     WHEN ${survey_response} = "false" AND ${Q} IN ("Bedroom___Linen_and_Pillow_Cases", "Bathroom___Vents", "Bathroom___Hair_Removal") THEN ${TABLE}.Weight
     WHEN ${survey_response} LIKE '%N/A%' OR ${survey_response} = "null" THEN NULL
     ELSE 0
@@ -149,7 +153,7 @@ view: pom_qa_walkthrough_survey {
     label: "Total Score"
     type: sum
     sql: ${response_answer} ;;
-    drill_fields: [section, Question, survey_response, response_answer, weight_adjusted]
+    drill_fields: [Question, section, survey_response, response_answer, weight_adjusted]
   }
 
 
@@ -158,7 +162,7 @@ view: pom_qa_walkthrough_survey {
     description: "This will calculate the total points that can be attained per checklist after excluding Qs that are N/A from the calculation"
     type: sum
     sql: ${weight_adjusted} ;;
-    drill_fields: [section, Question, survey_response, response_answer, weight_adjusted]
+    drill_fields: [Question, section, survey_response, response_answer, weight_adjusted]
   }
 
   measure: total_score {
@@ -166,7 +170,15 @@ view: pom_qa_walkthrough_survey {
     type: number
     value_format: "0.0%"
     sql: (${response_sum} / nullif(${weight_adjusted_sum},0));;
-    drill_fields: [section, Question, survey_response, response_answer, weight_adjusted]
+    drill_fields: [Question, section, survey_response, response_answer, weight_adjusted]
+  }
+
+  measure: qs_count {
+    label: "Number of Qs"
+    description: "This will pull the number of Qs for integrity checks."
+    type: count_distinct
+    sql: ${Q} ;;
+    drill_fields: [Question, section, survey_response, response_answer, weight_adjusted]
   }
 
 }

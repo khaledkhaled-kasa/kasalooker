@@ -100,7 +100,7 @@ view: reservations_clean {
 
   dimension_group: checkindate {
     type: time
-    timeframes: [raw, date, month, year, quarter]
+    timeframes: [raw, date, week,month, year, quarter]
     label: "Reservation Check-In"
     sql: CAST(${TABLE}.checkindate as TIMESTAMP);;
   }
@@ -108,7 +108,7 @@ view: reservations_clean {
   dimension_group: checkoutdate {
     label: "Reservation Check-Out"
     type: time
-    timeframes: [raw, date, month, year, quarter]
+    timeframes: [raw, date, week,month, year, quarter]
     sql: CAST(${TABLE}.checkoutdate as TIMESTAMP);;
   }
 

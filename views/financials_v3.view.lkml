@@ -167,7 +167,7 @@ view: financials_v3{
     type: sum
     value_format: "$#,##0.00"
     sql: ${amount_revised} ;;
-    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability", reservations_v3.sourcedetail: "direct, kasawebsite, website"]
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability", reservations_v3.sourcedetail: "direct, kasawebsite, website, guestportal"]
   }
 
   measure: amount_original_gx {
@@ -229,7 +229,7 @@ view: financials_v3{
     type: sum
     value_format: "$#,##0.00"
     sql: ${TABLE}.nightly_outstanding_amount;;
-    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability", reservations_v3.sourcedetail: "direct, kasawebsite, website"]
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability", reservations_v3.sourcedetail: "direct, kasawebsite, website, guestportal"]
   }
 
   measure: amount_outstanding_gx {
