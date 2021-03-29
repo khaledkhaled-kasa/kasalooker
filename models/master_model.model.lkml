@@ -25,19 +25,14 @@ datagroup: reviews_default_datagroup {
   max_cache_age: "6 hours"
 }
 
-datagroup: kasametrics_audit_default_datagroup {
+datagroup: kasametrics_reservations_datagroup {
   sql_trigger: SELECT MAX(createdat) from reservations ;;
   max_cache_age: "1 hours"
 }
 
+
 datagroup: gv_form_ts_default_datagroup {
   sql_trigger: SELECT extract(hour FROM current_timestamp) ;;
-  max_cache_age: "1 hours"
-}
-
-
-datagroup: kasametrics_v3_default_datagroup {
-  sql_trigger: SELECT MAX(createdat) from reservations;;
   max_cache_age: "1 hours"
 }
 
@@ -135,16 +130,47 @@ explore: breezeway_export {
   }
 }
 
+explore: units_buildings_information {
+  sql_always_where: ${units_buildings_information.availability_enddate} <> 'Invalid date' ;;
+  from: units
+  label: "Units and Property Information"
+  group_label: "Properties"
+
+  join: complexes {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: $(${complexes._id} = ${units_buildings_information.complex};;
+  }
+
+  join: pom_information {
+    view_label: "POM Information"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units_buildings_information.propcode} = ${pom_information.Prop_Code} ;;
+  }
+
+}
+
 
 explore: reservations_clean {
+  sql_always_where: ${units.availability_enddate} <> 'Invalid date' ;;
   persist_with: reviews_default_datagroup
   group_label: "Kasa Metrics"
   label: "Reviews"
   from: reservations_clean
+
   join: units {
     type:  left_outer
     relationship: one_to_one
     sql_on: ${units._id} = ${reservations_clean.unit};;
+  }
+
+  join: pom_information {
+    view_label: "POM Information"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${units.propcode} = ${pom_information.Prop_Code} ;;
+
   }
 
   join: complexes {
@@ -152,6 +178,7 @@ explore: reservations_clean {
     relationship: one_to_one
     sql_on: ${complexes._id} = ${units.complex} ;;
   }
+
 
   join: complexes__address {
     from: complexes__address
@@ -237,7 +264,7 @@ explore: reservations_audit {
 explore: capacities_v3 {
   group_label: "Kasa Metrics"
   label: "Reservations"
-  persist_with: kasametrics_v3_default_datagroup
+  persist_with: kasametrics_reservations_datagroup
   from: capacities_v3
   join: units {
     type:  inner

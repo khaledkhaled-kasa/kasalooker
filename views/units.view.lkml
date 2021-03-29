@@ -155,7 +155,7 @@ view: units {
 
   dimension: propertyexternaltitle {
     type: string
-    hidden: yes
+    hidden: no
     sql: ${TABLE}.propertyexternaltitle ;;
   }
 
