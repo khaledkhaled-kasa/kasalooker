@@ -413,13 +413,6 @@ explore: bw_cleaning {
     sql_on: ${units.internaltitle} = ${bw_cleaning.property_internal_id} ;;
   }
 
-  join: noiseaware {
-    fields: []
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${units.internaltitle} = ${noiseaware.building_unit} ;;
-  }
-
   join: complexes {
     type:  left_outer
     relationship: one_to_one
