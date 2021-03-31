@@ -71,13 +71,6 @@ explore: breezeway_export {
     sql_on: ${units.internaltitle} = ${breezeway_export.property_internal_id} ;;
   }
 
-  join: noiseaware {
-    fields: []
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${units.internaltitle} = ${noiseaware.building_unit} ;;
-  }
-
   join: complexes {
     type:  left_outer
     relationship: one_to_one
@@ -187,12 +180,6 @@ explore: reservations_clean {
     sql_on: ${units._id} = ${reservations_clean.unit};;
   }
 
-  join: noiseaware {
-    fields: []
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${units.internaltitle} = ${noiseaware.building_unit} ;;
-  }
 
   # join: pom_information {
   #   view_label: "POM Information"
@@ -268,12 +255,6 @@ explore: reservations_audit {
     END);;
     }
 
-  join: noiseaware {
-    fields: []
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${units.internaltitle} = ${noiseaware.building_unit} ;;
-  }
 
   join: complexes {
     type:  left_outer
@@ -308,12 +289,6 @@ explore: capacities_v3 {
     sql_on: ${capacities_v3.unit} = ${units._id} ;;
   }
 
-  join: noiseaware {
-    fields: []
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${units.internaltitle} = ${noiseaware.building_unit} ;;
-  }
 
   join: complexes {
     type:  inner
@@ -399,13 +374,6 @@ explore: devices {
     type:  full_outer
     relationship: one_to_one
     sql_on: ${units._id} = ${devices.unit} AND (${units.propertyinternaltitle} != 'TST');;
-  }
-
-  join: noiseaware {
-    fields: []
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${units.internaltitle} = ${noiseaware.building_unit} ;;
   }
 
   join: complexes {

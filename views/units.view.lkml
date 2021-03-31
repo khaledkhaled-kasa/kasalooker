@@ -184,14 +184,6 @@ view: units {
       END ;;
   }
 
-  dimension: noiseaware_status {
-    label: "NoiseAware Status"
-    type: string
-    sql:  CASE WHEN ${noiseaware.building_unit} IS NULL THEN 'Connected'
-              ELSE CAST(${noiseaware.disconnects} as STRING)
-          END;;
-  }
-
 
   dimension: title {
     type: string
