@@ -12,6 +12,13 @@ explore: devices {
     sql_on: ${devices.unit} = ${units._id} ;;
   }
 
+  join: noiseaware {
+    fields: []
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units.internaltitle} = ${noiseaware.building_unit} ;;
+  }
+
   join: sensors {
     type: left_outer
     relationship: one_to_one
