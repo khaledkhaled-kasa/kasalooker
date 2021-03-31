@@ -58,7 +58,10 @@ view: units {
   dimension: availability_enddate {
     type:  date
     label: "Unit Availability End Date"
-    sql: CAST(${TABLE}.availability.enddate as TIMESTAMP);;
+    sql:
+    CASE WHEN ${TABLE}.availability.enddate = 'Invalid date' THEN NULL
+    ELSE CAST(${TABLE}.availability.enddate as TIMESTAMP)
+    END;;
   }
 
   dimension: availability_enddate_string {

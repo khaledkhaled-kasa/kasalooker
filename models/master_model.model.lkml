@@ -168,7 +168,7 @@ explore: units_buildings_information {
 
 
 explore: reservations_clean {
-  sql_always_where: ${units.availability_enddate} <> 'Invalid date' ;;
+  # sql_always_where: ${units.availability_enddate} <> 'Invalid date' ;;
   persist_with: reviews_default_datagroup
   group_label: "Kasa Metrics"
   label: "Reviews"
@@ -295,6 +295,11 @@ explore: capacities_v3 {
     relationship: one_to_one #one_to_one
     sql_on: ${units.complex} = ${complexes._id} ;;
   }
+  join: pom_information {
+    type:  left_outer
+    relationship: one_to_one #one_to_one
+    sql_on: ${complexes.internaltitle} = ${pom_information.Prop_Code} ;;
+  }
   join: reservations_v3 {
     type:  left_outer
     relationship: one_to_many # One_to_Many
@@ -406,6 +411,13 @@ explore: bw_cleaning {
     type:  left_outer
     relationship: one_to_one
     sql_on: ${units.internaltitle} = ${bw_cleaning.property_internal_id} ;;
+  }
+
+  join: noiseaware {
+    fields: []
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units.internaltitle} = ${noiseaware.building_unit} ;;
   }
 
   join: complexes {
