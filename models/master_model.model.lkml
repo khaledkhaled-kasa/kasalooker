@@ -70,6 +70,14 @@ explore: breezeway_export {
     relationship: one_to_one
     sql_on: ${units.internaltitle} = ${breezeway_export.property_internal_id} ;;
   }
+
+  join: noiseaware {
+    fields: []
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units.internaltitle} = ${noiseaware.building_unit} ;;
+  }
+
   join: complexes {
     type:  left_outer
     relationship: one_to_one
@@ -133,7 +141,8 @@ explore: breezeway_export {
 
 explore: units_buildings_information {
   from: units
-  # sql_always_where: ${units_buildings_information.availability_enddate_date} <> 'Invalid date' ;;
+  view_label: "Unit Information"
+  sql_always_where: ${units_buildings_information.availability_enddate_string} <> 'Invalid date' ;;
   label: "Units and Property Information"
   group_label: "Properties"
 
@@ -150,11 +159,23 @@ explore: units_buildings_information {
     sql_on: ${units_buildings_information.propcode} = ${pom_information.Prop_Code} ;;
   }
 
+  join: unit_submission_data_final {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information.internaltitle} = ${unit_submission_data_final.buildingunit} ;;
+  }
+
+  join: noiseaware {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units_buildings_information.internaltitle} = ${noiseaware.building_unit} ;;
+  }
+
 }
 
 
 explore: reservations_clean {
-  # sql_always_where: ${units.availability_enddate_date} <> 'Invalid date' ;;
+  sql_always_where: ${units.availability_enddate} <> 'Invalid date' ;;
   persist_with: reviews_default_datagroup
   group_label: "Kasa Metrics"
   label: "Reviews"
@@ -164,6 +185,13 @@ explore: reservations_clean {
     type:  left_outer
     relationship: one_to_one
     sql_on: ${units._id} = ${reservations_clean.unit};;
+  }
+
+  join: noiseaware {
+    fields: []
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units.internaltitle} = ${noiseaware.building_unit} ;;
   }
 
   # join: pom_information {
@@ -238,8 +266,15 @@ explore: reservations_audit {
     (CASE WHEN ${reservations_audit.unit} IS NOT NULL THEN ${reservations_audit.unit}
     ELSE ${financials_audit.unit}
     END);;
+    }
 
+  join: noiseaware {
+    fields: []
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units.internaltitle} = ${noiseaware.building_unit} ;;
   }
+
   join: complexes {
     type:  left_outer
     relationship: one_to_one
@@ -272,6 +307,14 @@ explore: capacities_v3 {
     relationship: one_to_one #one_to_one
     sql_on: ${capacities_v3.unit} = ${units._id} ;;
   }
+
+  join: noiseaware {
+    fields: []
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units.internaltitle} = ${noiseaware.building_unit} ;;
+  }
+
   join: complexes {
     type:  inner
     relationship: one_to_one #one_to_one
@@ -361,6 +404,13 @@ explore: devices {
     type:  full_outer
     relationship: one_to_one
     sql_on: ${units._id} = ${devices.unit} AND (${units.propertyinternaltitle} != 'TST');;
+  }
+
+  join: noiseaware {
+    fields: []
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units.internaltitle} = ${noiseaware.building_unit} ;;
   }
 
   join: complexes {

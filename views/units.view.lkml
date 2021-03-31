@@ -58,7 +58,14 @@ view: units {
   dimension: availability_enddate {
     type:  date
     label: "Unit Availability End Date"
-    sql: SAFE_CAST(${TABLE}.availability.enddate as TIMESTAMP);;
+    sql: CAST(${TABLE}.availability.enddate as TIMESTAMP);;
+  }
+
+  dimension: availability_enddate_string {
+    hidden: yes
+    type:  string
+    label: "Unit Availability End Date"
+    sql: ${TABLE}.availability.enddate;;
   }
 
 
@@ -119,7 +126,7 @@ view: units {
 
 
   dimension: internaltitle {
-    view_label: "Units"
+    # view_label: "Units"
     label: "Unit #"
     type: string
     sql: ${TABLE}.internaltitle ;;
@@ -165,17 +172,25 @@ view: units {
     sql: ${TABLE}.propertyinternaltitle ;;
   }
 
-  # dimension: unit_status {
-  #   description: "Status of Unit (Active/Deactivated/Expiring/Onboarding)"
-  #   type: string
-  #   sql: CASE  WHEN ${availability_enddate} IS NULL AND DATE(${availability_startdate}) < CURRENT_DATE THEN 'Active'
-  #           WHEN CURRENT_DATE >= DATE(${availability_startdate}) AND  EXTRACT( YEAR FROM SAFE_CAST(${availability_enddate} as DATE)) = 2099 Then 'Active'
-  #           WHEN CURRENT_DATE >= DATE(${availability_startdate}) AND CURRENT_DATE < SAFE_CAST(${availability_enddate} as DATE) AND EXTRACT( YEAR FROM SAFE_CAST(${availability_enddate}as DATE)) <> 2099 THEN 'Expiring'
-  #           WHEN CURRENT_DATE >= SAFE_CAST(${availability_enddate} as DATE) THEN 'Deactivated'
-  #           WHEN SAFE_CAST(${availability_startdate} AS DATE) > CURRENT_DATE THEN 'Onboarding'
-  #     ELSE NULL
-  #     END ;;
-  # }
+  dimension: unit_status {
+    description: "Status of Unit (Active/Deactivated/Expiring/Onboarding)"
+    type: string
+    sql: CASE  WHEN ${availability_enddate} IS NULL AND DATE(${availability_startdate}) < CURRENT_DATE THEN 'Active'
+            WHEN CURRENT_DATE >= DATE(${availability_startdate}) AND  EXTRACT( YEAR FROM SAFE_CAST(${availability_enddate} as DATE)) = 2099 Then 'Active'
+            WHEN CURRENT_DATE >= DATE(${availability_startdate}) AND CURRENT_DATE < SAFE_CAST(${availability_enddate} as DATE) AND EXTRACT( YEAR FROM SAFE_CAST(${availability_enddate}as DATE)) <> 2099 THEN 'Expiring'
+            WHEN CURRENT_DATE >= SAFE_CAST(${availability_enddate} as DATE) THEN 'Deactivated'
+            WHEN SAFE_CAST(${availability_startdate} AS DATE) > CURRENT_DATE THEN 'Onboarding'
+      ELSE NULL
+      END ;;
+  }
+
+  dimension: noiseaware_status {
+    label: "NoiseAware Status"
+    type: string
+    sql:  CASE WHEN ${noiseaware.building_unit} IS NULL THEN 'Connected'
+              ELSE CAST(${noiseaware.disconnects} as STRING)
+          END;;
+  }
 
 
   dimension: title {
