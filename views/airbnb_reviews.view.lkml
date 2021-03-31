@@ -61,6 +61,7 @@ view: airbnb_reviews {
   }
 
   dimension_group: ds_checkin {
+    hidden: yes
     type: time
     label: "Checkin"
     timeframes: [
@@ -77,6 +78,7 @@ view: airbnb_reviews {
   }
 
   dimension_group: ds_checkout {
+    hidden: yes
     type: time
     #group_label: "Airbnb Check-out Date"
     #view_label: "Date Dimensions"
