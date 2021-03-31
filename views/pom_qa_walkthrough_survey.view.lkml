@@ -7,7 +7,7 @@ view: pom_qa_walkthrough_survey {
   -- Table T will be a recreation of the Survey while replacing commas in relevant columns with a hyphen to avoid issues in downstream analysis
   WITH t AS (
     SELECT * REPLACE(
-    REPLACE(Wrap_Up___New_Clean_Required_Areas,',','-') AS Wrap_Up___New_Clean_Required,
+    REPLACE(Wrap_Up___New_Clean_Required_Areas,',','-') AS Wrap_Up___New_Clean_Required_Areas,
     REPLACE(Kitchen___Glasses,',','-') AS Kitchen___Glasses,
     REPLACE(Bedroom___Closet_Stocking,',','-') AS Bedroom___Closet_Stocking,
     REPLACE(WO_Details___WO_Issues,',','-') AS WO_Details___WO_Issues)
@@ -36,7 +36,7 @@ view: pom_qa_walkthrough_survey {
   dimension: primary_key {
     primary_key: yes
     hidden: yes
-    sql: CONCAT(TIMESTAMP(${TABLE}.TIMESTAMP), ${TABLE}.Email_address) ;;
+    sql: ${submitdate_time} ;;
   }
 
   dimension_group: submitdate {
@@ -62,6 +62,7 @@ view: pom_qa_walkthrough_survey {
   }
 
   dimension: POM_Name {
+    label: "POM"
     type: string
     sql: ${TABLE}.POM_Name ;;
   }
@@ -179,6 +180,31 @@ view: pom_qa_walkthrough_survey {
     type: count_distinct
     sql: ${Q} ;;
     drill_fields: [Question, section, survey_response, response_answer, weight_adjusted]
+  }
+
+  measure: survey {
+    label: "Number of Surveys"
+    description: "This will pull the total number of surveys"
+    type: count_distinct
+    sql: ${primary_key} ;;
+    drill_fields: [submitdate_time, Email_address, POM_Name, Unit]
+  }
+
+  measure: resend_to_hk {
+    label: "QAs Resending to HK"
+    description: "This will pull the total number of surveys"
+    type: count_distinct
+    sql: ${primary_key} ;;
+    drill_fields: [submitdate_time, Email_address, POM_Name, Unit]
+    filters: [Q: "Wrap_Up___New_Clean_Required", survey_response: "Yes"]
+  }
+
+  measure: percent_resend {
+    label: "% of Tasks resent for HK"
+    description: "This will pull the percentage of the tasks which have undergone QA and have been resent for cleaning"
+    type: number
+    value_format: "0.0%"
+    sql: ${resend_to_hk} / nullif(${survey},0)  ;;
   }
 
 }

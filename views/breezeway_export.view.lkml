@@ -64,8 +64,8 @@ view: breezeway_export {
       year
     ]
     convert_tz: no
-    datatype: date
-    sql: ${TABLE}.Completed ;;
+    # datatype: date
+    sql: TIMESTAMP(${TABLE}.Completed) ;;
   }
 
 

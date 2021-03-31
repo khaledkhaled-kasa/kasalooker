@@ -277,6 +277,11 @@ explore: capacities_v3 {
     relationship: one_to_one #one_to_one
     sql_on: ${units.complex} = ${complexes._id} ;;
   }
+  join: pom_information {
+    type:  left_outer
+    relationship: one_to_one #one_to_one
+    sql_on: ${complexes.internaltitle} = ${pom_information.Prop_Code} ;;
+  }
   join: reservations_v3 {
     type:  left_outer
     relationship: one_to_many # One_to_Many

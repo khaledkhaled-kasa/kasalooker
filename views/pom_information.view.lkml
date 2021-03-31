@@ -16,6 +16,7 @@ view: pom_information {
   }
 
   dimension: pom {
+    label: "POM"
     type: string
     sql: ${TABLE}.POM ;;
   }

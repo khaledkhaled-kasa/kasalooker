@@ -271,6 +271,18 @@ view: reservations_audit {
     sql: ${TABLE}.source ;;
   }
 
+  dimension: sourcedata_channel {
+    label: "Source (Channel)"
+    type: string
+    sql: ${TABLE}.sourcedata.channel ;;
+  }
+
+  dimension: sourcedata_channel_manager {
+    label: "Source (Channel Manager)"
+    type: string
+    sql: ${TABLE}.sourcedata.channelmanager ;;
+  }
+
   dimension: sourcedetail {
     type: string
     sql: ${TABLE}.sourcedetail ;;
