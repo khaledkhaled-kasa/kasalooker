@@ -175,7 +175,7 @@ explore: units_buildings_information {
 
 
 explore: reservations_clean {
-  sql_always_where: ${units.availability_enddate} <> 'Invalid date' ;;
+  # sql_always_where: ${units.availability_enddate} <> 'Invalid date' ;;
   persist_with: reviews_default_datagroup
   group_label: "Kasa Metrics"
   label: "Reviews"
@@ -443,6 +443,13 @@ explore: bw_cleaning {
     type:  left_outer
     relationship: one_to_one
     sql_on: ${units.internaltitle} = ${bw_cleaning.property_internal_id} ;;
+  }
+
+  join: noiseaware {
+    fields: []
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units.internaltitle} = ${noiseaware.building_unit} ;;
   }
 
   join: complexes {
