@@ -7,7 +7,7 @@ view: pom_qa_walkthrough_survey {
   -- Table T will be a recreation of the Survey while replacing commas in relevant columns with a hyphen to avoid issues in downstream analysis
   WITH t AS (
     SELECT * REPLACE(
-    REPLACE(Wrap_Up___New_Clean_Required,',','-') AS Wrap_Up___New_Clean_Required,
+    REPLACE(Wrap_Up___New_Clean_Required_Areas,',','-') AS Wrap_Up___New_Clean_Required,
     REPLACE(Kitchen___Glasses,',','-') AS Kitchen___Glasses,
     REPLACE(Bedroom___Closet_Stocking,',','-') AS Bedroom___Closet_Stocking,
     REPLACE(WO_Details___WO_Issues,',','-') AS WO_Details___WO_Issues)
