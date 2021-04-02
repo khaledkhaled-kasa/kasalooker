@@ -143,7 +143,7 @@ explore: units_buildings_information {
   join: complexes {
     type: left_outer
     relationship: one_to_one
-    sql_on: $(${complexes._id} = ${units_buildings_information.complex};;
+    sql_on: ${complexes._id} = ${units_buildings_information.complex};;
   }
 
   join: pom_information {
@@ -154,15 +154,31 @@ explore: units_buildings_information {
   }
 
   join: unit_submission_data_final {
+    view_label: "POM Visit Information"
     type: left_outer
     relationship: one_to_many
     sql_on: ${units_buildings_information.internaltitle} = ${unit_submission_data_final.buildingunit} ;;
   }
 
   join: noiseaware {
+    view_label: "NoiseAware"
     type: left_outer
     relationship: one_to_one
     sql_on: ${units_buildings_information.internaltitle} = ${noiseaware.building_unit} ;;
+  }
+
+  join: freshair_data {
+    view_label: "FreshAir"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units_buildings_information.internaltitle} = ${freshair_data.uid} ;;
+  }
+
+  join: nexia_data {
+    view_label: "Nexia"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units_buildings_information.internaltitle} = ${nexia_data.uid} ;;
   }
 
 }

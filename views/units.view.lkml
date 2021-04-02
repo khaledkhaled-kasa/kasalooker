@@ -187,6 +187,12 @@ view: units {
       END ;;
   }
 
+  # dimension: routine_visit_status {
+  #   type: string
+  #   sql: CASE WHEN ${unit_status} = 'Deactivated' THEN 'N/A - Deactivated'
+  #             WHEN ;;
+  # }
+
 
   dimension: title {
     type: string

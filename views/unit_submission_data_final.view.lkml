@@ -99,7 +99,6 @@ view: unit_submission_data_final {
     sql: CASE
           WHEN ${units_buildings_information.availability_startdate} > ${most_recent_refresh} AND ${units_buildings_information.availability_startdate} > ${most_recent_routine_visit} THEN DATE_ADD(${units_buildings_information.availability_startdate}, INTERVAL 30 DAY)
           WHEN ${most_recent_refresh} > ${units_buildings_information.availability_startdate} AND ${most_recent_refresh} > ${most_recent_routine_visit} THEN DATE_ADD(${most_recent_refresh}, INTERVAL 30 DAY)
-          WHEN ${most_recent_routine_visit} > ${most_recent_refresh} AND ${most_recent_routine_visit} > ${units_buildings_information.availability_startdate} THEN DATE_ADD(${most_recent_routine_visit}, INTERVAL 30 DAY)
           WHEN ${most_recent_refresh} = ${most_recent_routine_visit} AND ${most_recent_refresh} > ${units_buildings_information.availability_startdate} THEN DATE_ADD(${most_recent_refresh}, INTERVAL 30 DAY)
           WHEN ${most_recent_refresh} IS NULL AND ${most_recent_routine_visit} IS NOT NULL AND ${most_recent_routine_visit} > ${units_buildings_information.availability_startdate} THEN DATE_ADD(${most_recent_routine_visit}, INTERVAL 30 DAY)
           WHEN ${most_recent_refresh} IS NULL AND ${most_recent_routine_visit} IS NOT NULL AND ${units_buildings_information.availability_startdate} > ${most_recent_routine_visit} THEN DATE_ADD(${units_buildings_information.availability_startdate}, INTERVAL 30 DAY)
@@ -107,8 +106,39 @@ view: unit_submission_data_final {
 
           WHEN ${most_recent_refresh} IS NOT NULL AND ${most_recent_routine_visit} IS NULL AND ${most_recent_refresh} > ${units_buildings_information.availability_startdate} THEN DATE_ADD(${most_recent_refresh}, INTERVAL 30 DAY)
           WHEN ${most_recent_refresh} IS NOT NULL AND ${most_recent_routine_visit} IS NULL AND ${units_buildings_information.availability_startdate} > ${most_recent_refresh} THEN DATE_ADD(${units_buildings_information.availability_startdate}, INTERVAL 30 DAY)
+          WHEN ${most_recent_routine_visit} >= ${most_recent_refresh} AND ${most_recent_routine_visit} > ${units_buildings_information.availability_startdate} THEN DATE_ADD(${most_recent_refresh}, INTERVAL 30 DAY)
 
         END;;
+  }
+
+  dimension: routine_visit_status {
+    type: string
+    sql: CASE WHEN ${units_buildings_information.unit_status} = 'Deactivated' THEN 'N/A - Deactivated'
+              WHEN ${next_visit} > CURRENT_DATE THEN 'All Good'
+              ELSE CONCAT(CAST(DATE_DIFF(CURRENT_DATE, ${next_visit}, DAY) as STRING), ' Days Overdue')
+          END;;
+  }
+
+  dimension: unit_refresh_status {
+    type: string
+    sql: CASE WHEN ${units_buildings_information.unit_status} = 'Deactivated' THEN 'N/A - Deactivated'
+              WHEN ${next_refresh} > CURRENT_DATE THEN 'All Good'
+              ELSE CONCAT(CAST(DATE_DIFF(CURRENT_DATE, ${next_refresh}, DAY) as STRING), ' Days Overdue')
+          END;;
+  }
+
+  dimension: pom_status {
+    type: string
+    sql: CASE WHEN ${units_buildings_information.unit_status} = 'Deactivated' THEN 'Decativated'
+              WHEN ${next_refresh} > CURRENT_DATE
+                    AND ${nexia_data.connection_status} IN ('Connected','No Nexia')
+                    AND ${freshair_data.status} NOT IN ('Sensor Issues', 'Offline')
+                    AND (${nexia_data.battery_level} IS NOT NULL OR ${nexia_data.battery_level} > 0.35)
+                    AND ${noiseaware.noise_aware_status} = 'Connected'
+                    THEN 'All Good'
+              ELSE 'Needs Attention'
+          END
+                    ;;
   }
 
   set: detail {
