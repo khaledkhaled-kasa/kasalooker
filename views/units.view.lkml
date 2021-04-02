@@ -204,8 +204,12 @@ view: units {
   measure: unit_count {
     label: "Total Unique Units"
     type: count_distinct
-    sql: ${TABLE}._id ;;
+    sql: CASE WHEN ((${internaltitle} LIKE "%-XX") OR (${internaltitle} LIKE "%-RES")) THEN NULL
+          ELSE ${TABLE}._id
+          END;;
   }
+
+
 
   measure: property_count {
     label: "Total Unique Properties"
