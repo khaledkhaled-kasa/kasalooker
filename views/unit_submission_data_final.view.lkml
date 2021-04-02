@@ -141,6 +141,16 @@ view: unit_submission_data_final {
                     ;;
   }
 
+  measure: count_visits_up_to_date {
+    type: count_distinct
+    sql: CASE WHEN ${routine_visit_status} = 'All Good' Then ${unit} ELSE NULL END;;
+  }
+
+  measure: count_refreshes_up_to_date {
+    type: count_distinct
+    sql: CASE WHEN ${unit_refresh_status} = 'All Good' THEN ${unit} ELSE NULL End ;;
+  }
+
   set: detail {
     fields: [
       visit_date,
