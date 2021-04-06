@@ -879,6 +879,15 @@ view: airbnb_reviews {
     sql: 1 - (${percent_5_star} + ${percent_less_than_4_star});;
   }
 
+  # measure: points_off_perfect_overall_nqs {
+  #   label: "Points Off Perfect Overall NQS"
+  #   description: "test"
+  #   type: number
+  #   sql: 100 * (${count_4_star} + ${count_less_than_4_star}*2) / NULLIF(${count},0) ;;
+  # }
+
+  # 100* (${airbnb_reviews.count_4_star} + ${airbnb_reviews.count_less_than_4_star}*2) / sum(${airbnb_reviews.count})
+
 
 
 
