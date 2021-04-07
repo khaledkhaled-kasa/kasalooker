@@ -17,7 +17,9 @@ view: hk_cleaning_pricing {
   dimension: pricing {
     label: "Task Price"
     type: number
-    sql: ${TABLE}.Pricing ;;
+    sql: CASE WHEN ${hk_pricing_unit_specific.pricing} IS NULL THEN ${TABLE}.Pricing
+    ELSE ${hk_pricing_unit_specific.pricing}
+    END ;;
   }
 
   dimension: property_code {

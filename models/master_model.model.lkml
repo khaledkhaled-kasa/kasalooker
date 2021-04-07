@@ -61,6 +61,11 @@ explore: aircall_segment {
 }
 
 explore: breezeway_export {
+  fields: [
+    ALL_FIELDS*,
+    -complexes.title,
+    -units.propcode
+  ]
   group_label: "Software"
   persist_with: breezeway_default_datagroup
   from: breezeway_export
@@ -420,6 +425,11 @@ explore: devices {
 }
 
 explore: bw_cleaning {
+  fields: [
+    ALL_FIELDS*,
+    -complexes.title,
+    -units.propcode
+  ]
   group_label: "Software"
   label: "BW Cleaning Pricing Schedule"
   from: breezeway_export
@@ -433,7 +443,7 @@ explore: bw_cleaning {
   join: complexes {
     type:  left_outer
     relationship: one_to_one
-    sql_on: ${complexes._id} = ${units.complex} ;;
+    sql_on: ${complexes._id} = ${units.complex};;
   }
 
   join: hk_cleaning_pricing {
@@ -444,10 +454,18 @@ explore: bw_cleaning {
     AND ${hk_cleaning_pricing.task} = ${bw_cleaning.name_revised};;
   }
 
+  join: hk_pricing_unit_specific {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${hk_pricing_unit_specific.property_code} = ${bw_cleaning.propcode}
+          AND ${bw_cleaning.property_internal_id} = ${hk_pricing_unit_specific.unit}
+          AND ${hk_pricing_unit_specific.task} = ${bw_cleaning.name_revised};;
+  }
+
   join: hk_pricing_companies {
     type: left_outer
     relationship: one_to_one
-    sql_on: ${units.propcode} = ${hk_pricing_companies.property_code} ;;
+    sql_on: LEFT(${bw_cleaning.property_internal_id},3) = ${hk_pricing_companies.property_code};;
   }
 
 }
