@@ -54,6 +54,13 @@ view: okrs_master {
           END;;
   }
 
+  measure: actual_null {
+    label: "Unreported Actuals"
+    type: count_distinct
+    sql: CONCAT(${TABLE}.Department,${TABLE}.KR__) ;;
+    filters: [actual: "null"]
+  }
+
 
   dimension: department {
     type: string
