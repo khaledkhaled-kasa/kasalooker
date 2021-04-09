@@ -298,7 +298,7 @@ view: breezeway_export {
   }
 
   dimension: tags {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}.Tags ;;
   }
