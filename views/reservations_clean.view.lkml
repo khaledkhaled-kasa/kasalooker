@@ -45,27 +45,27 @@ view: reservations_clean {
     sql: ${TABLE}.bookingdate ;;
   }
 
-  dimension_group: review_date {
-    label: "Review"
-    description: "If Airbnb Review Present, this date will reflect the Airbnb Review. Otherwise, date is grabbed from Post-Checkout Data"
-    type: time
-    datatype: date
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql:  case
-    when ${airbnb_reviews.review_raw} is not NULL then ${airbnb_reviews.review_raw}
-    when cast(${post_checkout_data.review_raw} as Date) is not NULL AND ${airbnb_reviews.review_raw} IS NULL then Cast(${post_checkout_data.review_raw} as Date)
-    else NULL
-    end;;
-    #sql: coalesce(${airbnb_reviews.review_raw},CAST(${post_checkout_data.review_raw} as DATE),${booking_reviews.review_raw}) ;;
-  }
+  # dimension_group: review_date {
+  #   label: "Review"
+  #   description: "If Airbnb Review Present, this date will reflect the Airbnb Review. Otherwise, date is grabbed from Post-Checkout Data"
+  #   type: time
+  #   datatype: date
+  #   timeframes: [
+  #     raw,
+  #     time,
+  #     date,
+  #     week,
+  #     month,
+  #     quarter,
+  #     year
+  #   ]
+  #   sql:  case
+  #   when ${airbnb_reviews.review_raw} is not NULL then ${airbnb_reviews.review_raw}
+  #   when cast(${post_checkout_data.review_raw} as Date) is not NULL AND ${airbnb_reviews.review_raw} IS NULL then Cast(${post_checkout_data.review_raw} as Date)
+  #   else NULL
+  #   end;;
+  #   #sql: coalesce(${airbnb_reviews.review_raw},CAST(${post_checkout_data.review_raw} as DATE),${booking_reviews.review_raw}) ;;
+  # }
 
   dimension: preceding_cleaning_task {
     hidden: no
@@ -100,7 +100,7 @@ view: reservations_clean {
 
   dimension_group: checkindate {
     type: time
-    timeframes: [raw, date, week,month, year, quarter]
+    timeframes: [raw, time, date, week,month, year, quarter]
     label: "Reservation Check-In"
     sql: CAST(${TABLE}.checkindate as TIMESTAMP);;
   }
@@ -108,7 +108,7 @@ view: reservations_clean {
   dimension_group: checkoutdate {
     label: "Reservation Check-Out"
     type: time
-    timeframes: [raw, date, week,month, year, quarter]
+    timeframes: [raw, time, date, week,month, year, quarter]
     sql: CAST(${TABLE}.checkoutdate as TIMESTAMP);;
   }
 

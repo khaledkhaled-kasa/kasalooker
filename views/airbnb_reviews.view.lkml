@@ -60,6 +60,23 @@ view: airbnb_reviews {
     sql: ${TABLE}.Value_Comments ;;
   }
 
+
+  # dimension_group: reservation_checkin {
+  #   type: time
+  #   timeframes: [raw, time, date, week, month, year, quarter]
+  #   label: "Reservation Check-In"
+  #   sql: timestamp(${reservations_clean.checkindate_time}) ;;
+  #   convert_tz: no
+  # }
+
+  dimension_group: reservation_checkout {
+    label: "Reservation Check-Out"
+    type: time
+    timeframes: [raw, time, date, week, month, year, quarter]
+    sql: timestamp(${reservations_clean.checkoutdate_time}) ;;
+    convert_tz: no
+  }
+
   dimension_group: ds_checkin {
     hidden: yes
     type: time
