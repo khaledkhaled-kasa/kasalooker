@@ -246,6 +246,14 @@ view: breezeway_export {
     END;;
   }
 
+  dimension: unit {
+    hidden: no
+    type: string
+    sql: CASE WHEN ${TABLE}.Property = 'La Monarca (Full Building)' THEN 'LMH-0'
+    ELSE ${units.internaltitle}
+    END ;;
+  }
+
   dimension: property_marketing_id {
     hidden: yes
     type: string
@@ -371,6 +379,7 @@ view: breezeway_export {
     ELSE ${complexes.title}
     END;;
   }
+
 
   dimension: propcode {
     hidden: no

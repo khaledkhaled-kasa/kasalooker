@@ -73,7 +73,7 @@ explore: breezeway_export {
   join: units {
     type:  left_outer
     relationship: one_to_one
-    sql_on: ${units.internaltitle} = ${breezeway_export.property_internal_id} ;;
+    sql_on: ${units.breezeway_id} = ${breezeway_export.property_internal_id} ;;
   }
 
   join: complexes {
@@ -84,7 +84,7 @@ explore: breezeway_export {
   join: hk_partners {
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${hk_partners.buildings} = LEFT(${breezeway_export.property_internal_id},3)
+    sql_on:  ${hk_partners.buildings} = ${breezeway_export.propcode}
           AND (${breezeway_export.assigned_date_date} BETWEEN ${hk_partners.start_date} AND ${hk_partners.end_date})
           AND ${breezeway_export.type} = "Cleaning";;
   }
@@ -437,7 +437,7 @@ explore: bw_cleaning {
   join: units {
     type:  left_outer
     relationship: one_to_one
-    sql_on: ${units.internaltitle} = ${bw_cleaning.property_internal_id} ;;
+    sql_on: ${units.breezeway_id} = ${bw_cleaning.property_internal_id} ;;
   }
 
   join: complexes {
@@ -465,7 +465,7 @@ explore: bw_cleaning {
   join: hk_pricing_companies {
     type: left_outer
     relationship: one_to_one
-    sql_on: LEFT(${bw_cleaning.property_internal_id},3) = ${hk_pricing_companies.property_code};;
+    sql_on: ${bw_cleaning.propcode} = ${hk_pricing_companies.property_code};;
   }
 
 }

@@ -114,16 +114,19 @@ view: aircall_segment {
     description: "These names have been adjusted to match what's shown on Kustomer"
     sql:
     CASE
-    WHEN ${user_name} = "Angela Gazdziak" THEN "Angie Gazdziak"
+    WHEN ${user_name} = 'Vida Charra Relato' THEN 'Vida Relato'
+    WHEN ${user_name} = 'Alfred James' THEN 'Alfred Sadueste'
+    WHEN ${user_name} = 'Roan ' THEN 'Roan Litz'
+    WHEN ${user_name} = "Sofie " THEN "Sofia Cruz"
+    WHEN ${user_name} = "Charmagne " THEN "Charmagne Coston"
+    WHEN ${user_name} = "Veronica " THEN "Veronica Hawkins"
+    WHEN ${user_name} = 'Hallie Muscente' THEN "Hallie Knudsen"
+    WHEN ${user_name} = "Mel  Doroteo" THEN "Mel Doroteo"
+    WHEN ${user_name} = "Mel Baker" THEN "Melissa Baker"
+    WHEN ${user_name} = 'Nikki Cardno' THEN 'Nicole Cardno'
+    WHEN ${user_name} = 'Suzie Hill' THEN 'Suzanne Hill'
     WHEN ${user_name} = "Infiniti " THEN "Infiniti"
     WHEN ${user_name} = 'Katherine Chappell' THEN "Kate Chappell"
-    WHEN ${user_name} = "Charmagne " THEN "Charmagne Coston"
-    WHEN ${user_name} = "Jeffrey Haas" THEN "Jeff Haas"
-    WHEN ${user_name} = "Jennifer Knight" THEN "Jen Knight"
-    WHEN ${user_name} = "Sheila Marie Cruz" THEN "Sheila Cruz"
-    WHEN ${user_name} = "Mel  Doroteo" THEN "Mel Doroteo"
-    WHEN ${user_name} = 'Nikki Cardno' THEN 'Nicole Cardno'
-    WHEN ${user_name} = 'Roan ' THEN 'Roan D'
     ELSE ${user_name}
     END
     ;;
