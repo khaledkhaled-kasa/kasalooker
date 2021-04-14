@@ -141,14 +141,29 @@ view: unit_submission_data_final {
                     ;;
   }
 
+  measure: total_unit_count {
+    hidden: yes
+    type: count_distinct
+    sql: ${unit} ;;
+  }
+
   measure: count_visits_up_to_date {
     type: count_distinct
+    description: "Counts all distinct units with a Routine Visit Status of All Good"
     sql: CASE WHEN ${routine_visit_status} = 'All Good' Then ${unit} ELSE NULL END;;
   }
 
   measure: count_refreshes_up_to_date {
     type: count_distinct
+    description: "Counts all the distinct units with a Refresh Status of All Good"
     sql: CASE WHEN ${unit_refresh_status} = 'All Good' THEN ${unit} ELSE NULL End ;;
+  }
+
+  measure: pct_refreshes_up_to_date {
+    type: number
+    description: "Returns the percentage of units with a Refresh Status of All Good"
+    sql: ${count_refreshes_up_to_date}/NULLIF(${total_unit_count},0) ;;
+    value_format_name: percent_2
   }
 
   set: detail {
