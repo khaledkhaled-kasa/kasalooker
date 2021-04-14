@@ -212,10 +212,11 @@ view: breezeway_export {
     WHEN lower(${TABLE}.Name) LIKE "%intra-stay%" THEN "Intra-Stay Clean"
     WHEN lower(${TABLE}.Name) LIKE "%ad hoc clean%" THEN "Ad Hoc Clean (correction)"
     WHEN lower(${TABLE}.Name) LIKE "%la monarca common areas%" THEN "La Monarca Common Areas"
-    WHEN (lower(${TABLE}.Name) LIKE "%carpet/upholstery%" OR lower(${TABLE}.Name) LIKE "carpet clean%") THEN "Carpet/Upholstery Cleaning"
+    WHEN lower(${TABLE}.Name) LIKE "%carpet/upholstery spot clean%" THEN "Carpet/Upholstery Spot Clean"
+    WHEN lower(${TABLE}.Name) LIKE "%carpet/upholstery: full unit%" THEN "Carpet/Upholstery Full Room"
     WHEN lower(${TABLE}.Name) LIKE "%cleanliness review feedback%" THEN "Cleanliness Review Feedback"
     WHEN lower(${TABLE}.Name) LIKE "%hk touch up or vip prep%" THEN "HK Touch Up - VIP Prep"
-    WHEN lower(${TABLE}.Name) LIKE "hk misc%" OR lower(${TABLE}.Name) LIKE "errand fee" THEN "HK Misc. Fee"
+    WHEN lower(${TABLE}.Name) LIKE "hk misc%" OR lower(${TABLE}.Name) LIKE "errand fee" THEN "HK Misc/Delayed Entry/False Arrival/Errand Fee"
     ELSE ${TABLE}.Name
     END;;
   }
@@ -238,9 +239,19 @@ view: breezeway_export {
   }
 
   dimension: property_internal_id {
-    hidden: yes
+    hidden: no
     type: string
-    sql: ${TABLE}.Property_Internal_ID ;;
+    sql: CASE WHEN ${TABLE}.Property = 'La Monarca (Full Building)' THEN 'LMH-0'
+    ELSE ${TABLE}.Property_Internal_ID
+    END;;
+  }
+
+  dimension: unit {
+    hidden: no
+    type: string
+    sql: CASE WHEN ${TABLE}.Property = 'La Monarca (Full Building)' THEN 'LMH-0'
+    ELSE ${units.internaltitle}
+    END ;;
   }
 
   dimension: property_marketing_id {
@@ -295,7 +306,7 @@ view: breezeway_export {
   }
 
   dimension: tags {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}.Tags ;;
   }
@@ -358,6 +369,26 @@ view: breezeway_export {
       year
     ]
     sql: ${TABLE}.Updated ;;
+  }
+
+  dimension: title {
+    view_label: "Building and Geographic Information"
+    label: "Building Title"
+    type: string
+    sql: CASE WHEN ${property} = 'La Monarca (Full Building)' THEN 'LaMonarcaH'
+    ELSE ${complexes.title}
+    END;;
+  }
+
+
+  dimension: propcode {
+    hidden: no
+    view_label: "Building and Geographic Information"
+    label: "Property Code"
+    type: string
+    sql: CASE WHEN ${property} = 'La Monarca (Full Building)' THEN 'LMH'
+    ELSE ${units.propcode}
+    END;;
   }
 
   measure: count {

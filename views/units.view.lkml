@@ -97,6 +97,12 @@ view: units {
     sql: ${TABLE}.buildinginternaltitle ;;
   }
 
+  dimension: breezeway_id {
+    label: "Breezeway ID"
+    type: string
+    sql: ${TABLE}.externalrefs.breezewayid;;
+  }
+
 
   dimension: door {
     hidden: no
@@ -162,6 +168,14 @@ view: units {
     sql: ${TABLE}.petsallowed ;;
   }
 
+
+  dimension: airbnbid {
+    label: "Airbnb ID"
+    description: "This airbnbid may be dedicated for a single listing or a parent listing (group of units)"
+    type: number
+    value_format: "0"
+    sql: ${TABLE}.externalrefs.airbnbid ;;
+  }
 
   dimension: propertyexternaltitle {
     type: string

@@ -86,7 +86,9 @@
   dimension: name {
     type: string
     hidden: yes
-    sql: CONCAT(${TABLE}.First_Name," ",${TABLE}.Last_Name) ;;
+    sql: CASE WHEN ${TABLE}.Last_Name is null THEN ${TABLE}.First_Name
+    ELSE CONCAT(${TABLE}.First_Name," ",${TABLE}.Last_Name)
+    END;;
   }
 
   dimension: name_adjusted {
@@ -102,7 +104,6 @@
     WHEN ${name} = "Sheila Marie Cruz" THEN "Sheila Cruz"
     WHEN ${name} = "Rommel Doroteo" THEN "Mel Doroteo"
     WHEN ${name} = "Katherine Chappell" THEN "Kate Chappell"
-    WHEN ${name} = "Roan Litz" THEN "Roan D"
     ELSE ${name}
     END
     ;;

@@ -61,6 +61,11 @@ explore: aircall_segment {
 }
 
 explore: breezeway_export {
+  fields: [
+    ALL_FIELDS*,
+    -complexes.title,
+    -units.propcode
+  ]
   group_label: "Software"
   persist_with: breezeway_default_datagroup
   from: breezeway_export
@@ -68,7 +73,7 @@ explore: breezeway_export {
   join: units {
     type:  left_outer
     relationship: one_to_one
-    sql_on: ${units.internaltitle} = ${breezeway_export.property_internal_id} ;;
+    sql_on: ${units.breezeway_id} = ${breezeway_export.property_internal_id} ;;
   }
 
   join: complexes {
@@ -79,7 +84,7 @@ explore: breezeway_export {
   join: hk_partners {
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${hk_partners.buildings} = LEFT(${breezeway_export.property_internal_id},3)
+    sql_on:  ${hk_partners.buildings} = ${breezeway_export.propcode}
           AND (${breezeway_export.assigned_date_date} BETWEEN ${hk_partners.start_date} AND ${hk_partners.end_date})
           AND ${breezeway_export.type} = "Cleaning";;
   }
@@ -420,6 +425,11 @@ explore: devices {
 }
 
 explore: bw_cleaning {
+  fields: [
+    ALL_FIELDS*,
+    -complexes.title,
+    -units.propcode
+  ]
   group_label: "Software"
   label: "BW Cleaning Pricing Schedule"
   from: breezeway_export
@@ -427,13 +437,13 @@ explore: bw_cleaning {
   join: units {
     type:  left_outer
     relationship: one_to_one
-    sql_on: ${units.internaltitle} = ${bw_cleaning.property_internal_id} ;;
+    sql_on: ${units.breezeway_id} = ${bw_cleaning.property_internal_id} ;;
   }
 
   join: complexes {
     type:  left_outer
     relationship: one_to_one
-    sql_on: ${complexes._id} = ${units.complex} ;;
+    sql_on: ${complexes._id} = ${units.complex};;
   }
 
   join: hk_cleaning_pricing {
@@ -444,10 +454,18 @@ explore: bw_cleaning {
     AND ${hk_cleaning_pricing.task} = ${bw_cleaning.name_revised};;
   }
 
+  join: hk_pricing_unit_specific {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${hk_pricing_unit_specific.property_code} = ${bw_cleaning.propcode}
+          AND ${bw_cleaning.property_internal_id} = ${hk_pricing_unit_specific.unit}
+          AND ${hk_pricing_unit_specific.task} = ${bw_cleaning.name_revised};;
+  }
+
   join: hk_pricing_companies {
     type: left_outer
     relationship: one_to_one
-    sql_on: ${units.propcode} = ${hk_pricing_companies.property_code} ;;
+    sql_on: ${bw_cleaning.propcode} = ${hk_pricing_companies.property_code};;
   }
 
 }
