@@ -73,7 +73,7 @@ explore: breezeway_export {
   join: units {
     type:  left_outer
     relationship: one_to_one
-    sql_on: ${units.breezeway_id} = ${breezeway_export.property_internal_id} ;;
+    sql_on: ${breezeway_export.property_internal_id} =  ${units.breezeway_id};;
   }
 
   join: complexes {
@@ -261,7 +261,7 @@ explore: reservations_clean {
 
 explore: reservations_audit {
   label: "Reservations (Finance Audit)"
-  group_label: "Kasa Metrics"
+  group_label: "Finance"
   from: reservations_audit
   join: financials_audit {
     type:  inner
@@ -437,7 +437,8 @@ explore: bw_cleaning {
   join: units {
     type:  left_outer
     relationship: one_to_one
-    sql_on: ${units.breezeway_id} = ${bw_cleaning.property_internal_id} ;;
+    sql_on: ${bw_cleaning.property_internal_id} =  ${units.breezeway_id} ;;
+
   }
 
   join: complexes {
@@ -458,7 +459,7 @@ explore: bw_cleaning {
     type: left_outer
     relationship: one_to_one
     sql_on: ${hk_pricing_unit_specific.property_code} = ${bw_cleaning.propcode}
-          AND ${bw_cleaning.property_internal_id} = ${hk_pricing_unit_specific.unit}
+          AND ${bw_cleaning.unit} = ${hk_pricing_unit_specific.unit}
           AND ${hk_pricing_unit_specific.task} = ${bw_cleaning.name_revised};;
   }
 
@@ -473,6 +474,36 @@ explore: bw_cleaning {
 explore: pom_qa_walkthrough_survey {
   group_label: "Software"
   label: "POM QA Walkthrough Checklist"
+}
+
+explore: disputes_tracker {
+  group_label: "Finance"
+  label: "Disputes Tracker"
+
+  join: reservations_clean {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${disputes_tracker.reservation_id} = ${reservations_clean.confirmation_code};;
+  }
+
+  join: units {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${units._id} = ${reservations_clean.unit};;
+  }
+
+  join: complexes {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${complexes._id} = ${units.complex} ;;
+  }
+
+  join: stripe_aggregated_balance {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${disputes_tracker.dispute_created_month} = ${stripe_aggregated_balance.created_month};;
+  }
+
 }
 
 

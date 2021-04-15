@@ -177,23 +177,23 @@ view: reservations_clean {
   }
 
 
-  measure: OQS {
-    label: "Overall Quality Score (OQS)"
-    # view_label: "Metrics"
-    group_label: "OQS Metrics"
-    type: number
-    value_format: "0%"
-    sql: (ifnull((${airbnb_reviews.overall_quality_score} * ${airbnb_reviews.count}),0) +  ifnull((${post_checkout_data.direct_oqs} * ${post_checkout_data.count_direct_reviews}),0)
-    + ifnull((${post_checkout_data.expedia_oqs} * ${post_checkout_data.count_expedia_reviews}),0) + ifnull((${post_checkout_data.booking_oqs} * ${post_checkout_data.count_booking_reviews}),0))
-    / nullif((ifnull(${airbnb_reviews.count},0) + ifnull(${post_checkout_data.count_direct_reviews},0) + ifnull(${post_checkout_data.count_expedia_reviews},0) + ifnull(${post_checkout_data.count_booking_reviews},0)),0);;
-  }
+  # measure: OQS {
+  #   label: "Overall Quality Score (OQS)"
+  #   # view_label: "Metrics"
+  #   group_label: "OQS Metrics"
+  #   type: number
+  #   value_format: "0%"
+  #   sql: (ifnull((${airbnb_reviews.overall_quality_score} * ${airbnb_reviews.count}),0) +  ifnull((${post_checkout_data.direct_oqs} * ${post_checkout_data.count_direct_reviews}),0)
+  #   + ifnull((${post_checkout_data.expedia_oqs} * ${post_checkout_data.count_expedia_reviews}),0) + ifnull((${post_checkout_data.booking_oqs} * ${post_checkout_data.count_booking_reviews}),0))
+  #   / nullif((ifnull(${airbnb_reviews.count},0) + ifnull(${post_checkout_data.count_direct_reviews},0) + ifnull(${post_checkout_data.count_expedia_reviews},0) + ifnull(${post_checkout_data.count_booking_reviews},0)),0);;
+  # }
 
-  measure: count_total {
-    type: number
-    label: "Total Reviews"
-    value_format: "0"
-    sql: ${airbnb_reviews.count} + ${post_checkout_data.count_direct_reviews} + ${post_checkout_data.count_expedia_reviews} + ${post_checkout_data.count_booking_reviews} ;;
-  }
+  # measure: count_total {
+  #   type: number
+  #   label: "Total Reviews"
+  #   value_format: "0"
+  #   sql: ${airbnb_reviews.count} + ${post_checkout_data.count_direct_reviews} + ${post_checkout_data.count_expedia_reviews} + ${post_checkout_data.count_booking_reviews} ;;
+  # }
 
   set:reservation_details {
     fields: [confirmation_code, status, source, checkindate_date, checkoutdate_date, bookingdate_date]
