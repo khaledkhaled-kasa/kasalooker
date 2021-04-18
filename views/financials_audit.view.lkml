@@ -136,7 +136,6 @@ view: financials_audit {
   dimension_group: transaction {
     view_label: "Date Dimensions"
     group_label: "Transaction Date"
-    label: ""
     description: "Date of a given financial transaction"
     type: time
     timeframes: [
