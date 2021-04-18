@@ -271,7 +271,7 @@ view: aircall_segment {
     description: "% Missed Calls (User Didn't Answer + No Avail User)"
     type: number
     value_format: "0.0%"
-    sql: ${num_of_missed_calls} / ${count_inbound};;
+    sql: ${num_of_missed_calls} / nullif(${count_inbound},0);;
   }
 
 
@@ -281,7 +281,7 @@ view: aircall_segment {
     description: "% Calls Accepted (not missed or declined)"
     type: number
     value_format: "0.0%"
-    sql: ${num_of_accepted_calls} / ${count_inbound};;
+    sql: ${num_of_accepted_calls} / nullif(${count_inbound},0);;
   }
 
 }

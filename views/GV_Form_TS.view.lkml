@@ -5,7 +5,8 @@ view: gv_form_ts {
       (SELECT name, REPLACE(REPLACE(REPLACE(SPLIT(name, '| ')[SAFE_OFFSET(ARRAY_LENGTH(SPLIT(name, '| ')) - 1)],"#",""),"✅","") ,"Same day reservation - ","")confirmationcode,
       CASE WHEN name LIKE "%Reservation Authorized%" THEN "Reservation Authorized"
       WHEN name LIKE "Virtual check-in%✅" THEN "Virtual checkin"
-      WHEN name LIKE "❌%Guest%" THEN "Background Failure"
+      WHEN name LIKE "❌%Guest Background%" THEN "Background Failure"
+      WHEN name LIKE "❌%Guest ID%" THEN "ID Check Failure"
       WHEN name LIKE "Same day reservation%" THEN "Same Day Reservation"
       END verification_type,
       conversation.created_at conversation_created,

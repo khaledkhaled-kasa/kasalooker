@@ -61,13 +61,13 @@ view: airbnb_reviews {
   }
 
 
-  # dimension_group: reservation_checkin {
-  #   type: time
-  #   timeframes: [raw, time, date, week, month, year, quarter]
-  #   label: "Reservation Check-In"
-  #   sql: timestamp(${reservations_clean.checkindate_time}) ;;
-  #   convert_tz: no
-  # }
+  dimension_group: reservation_checkin {
+    type: time
+    timeframes: [raw, time, date, week, month, year, quarter]
+    label: "Reservation Check-In"
+    sql: timestamp(${reservations_clean.checkindate_time}) ;;
+    convert_tz: no
+  }
 
   dimension_group: reservation_checkout {
     label: "Reservation Check-Out"
