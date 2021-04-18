@@ -263,11 +263,34 @@ explore: reservations_audit {
   label: "Reservations (Finance Audit)"
   group_label: "Finance"
   from: reservations_audit
+
   join: financials_audit {
     type:  inner
     relationship: one_to_many
     sql_on: ${reservations_audit._id} = ${financials_audit.reservation} ;;
   }
+
+  join: chargelogs {
+    view_label: "Charge Logs"
+    type: inner
+    relationship: one_to_one
+    sql_on: ${reservations_audit._id} = ${chargelogs.reservation} ;;
+  }
+
+  join: guests {
+    view_label: "Guest Information"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${reservations_audit.guest} = ${guests._id} ;;
+  }
+
+  join: paymentint {
+    view_label: "Payment Intent"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${reservations_audit._id} = ${paymentint.reservation} ;;
+  }
+
   join: units {
     type:  left_outer
     relationship: one_to_one

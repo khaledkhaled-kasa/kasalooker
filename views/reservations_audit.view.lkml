@@ -4,6 +4,7 @@ view: reservations_audit {
     ;;
 
   dimension: confirmationcode {
+    label: "Confirmation Code"
     type: string
     primary_key: yes
     sql: ${TABLE}.confirmationcode ;;
@@ -131,8 +132,10 @@ view: reservations_audit {
   }
 
 
-  dimension_group: createdat {
-    hidden:  yes
+  dimension_group: created {
+    view_label: "Date Dimensions"
+    group_label: "Created Date"
+    hidden:  no
     type: time
     timeframes: [
       raw,
