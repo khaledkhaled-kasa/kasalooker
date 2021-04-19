@@ -89,7 +89,7 @@ view: chargelogs {
 
   dimension: amount {
     type: number
-    sql: ${TABLE}.amount ;;
+    sql: ${TABLE}.amount/100.00 ;;
     value_format_name: usd
   }
 
@@ -135,6 +135,27 @@ view: chargelogs {
   dimension: reservation {
     type: string
     sql: ${TABLE}.reservation ;;
+  }
+
+  dimension: risk_level {
+    type: string
+    sql: ${TABLE}.risk.level ;;
+  }
+
+  dimension: risk_score {
+    type: number
+    sql: ${TABLE}.risk.score ;;
+  }
+
+  dimension: risk_score_tier {
+    type: tier
+    tiers: [9,20,30,40,50,60,70,80,90,100]
+    sql: ${risk_score} ;;
+    style: integer
+  }
+
+  measure: count_security_deposit {
+    type: count
   }
 
 }
