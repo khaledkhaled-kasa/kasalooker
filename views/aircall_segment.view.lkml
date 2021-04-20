@@ -178,7 +178,8 @@ view: aircall_segment {
       field: event
       value: "call.hungup"
     }
-    drill_fields: []
+    drill_fields: [aircall_details*]
+
   }
 
   measure: count_inbound {
@@ -198,6 +199,8 @@ view: aircall_segment {
     #   field: duration__total_
     #   value: ">0"
     # }
+    drill_fields: [aircall_details*]
+
   }
 
   measure: count_outbound {
@@ -217,6 +220,8 @@ view: aircall_segment {
     #   field: duration__total_
     #   value: ">0"
     # }
+    drill_fields: [aircall_details*]
+
   }
 
 
@@ -244,6 +249,8 @@ view: aircall_segment {
       field: event
       value: "call.hungup"
     }
+    drill_fields: [aircall_details*]
+
   }
 
   measure: num_of_accepted_calls {
@@ -263,6 +270,8 @@ view: aircall_segment {
       field: event
       value: "call.hungup"
     }
+    drill_fields: [aircall_details*]
+
   }
 
   measure: missed_calls_percentage {
@@ -272,6 +281,7 @@ view: aircall_segment {
     type: number
     value_format: "0.0%"
     sql: ${num_of_missed_calls} / nullif(${count_inbound},0);;
+    drill_fields: [aircall_details*]
   }
 
 
@@ -282,6 +292,12 @@ view: aircall_segment {
     type: number
     value_format: "0.0%"
     sql: ${num_of_accepted_calls} / nullif(${count_inbound},0);;
+    drill_fields: [aircall_details*]
+
   }
+
+  set: aircall_details {
+    fields: [id, total_duration, user_name, missed_call_reason, event, direction, answered, started_at_time, hold_duration, incall_duration]
+    }
 
 }
