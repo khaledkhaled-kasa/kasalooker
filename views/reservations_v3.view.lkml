@@ -381,6 +381,8 @@ view: reservations_v3 {
     type:  count_distinct
     sql: CONCAT(${confirmationcode}, '-', ${capacities_v3.night_date});;
     filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in"]
+    drill_fields: [reservation_details*]
+
   }
 
   measure: reservation_night_canceled {
@@ -389,6 +391,8 @@ view: reservations_v3 {
     type:  count_distinct
     sql: CONCAT(${confirmationcode}, '-', ${capacities_v3.night_date});;
     filters: [capacity_night_part_of_res: "yes", status: "cancelled, canceled"]
+    drill_fields: [reservation_details*]
+
   }
 
 
@@ -417,6 +421,8 @@ view: reservations_v3 {
       type: number
       value_format: "0.0%"
       sql:  ${reservation_night} / NULLIF(${capacities_v3.capacity}, 0) ;;
+      drill_fields: [reservation_details*, capacities_v3.capacity]
+
     }
 
 
@@ -426,6 +432,8 @@ view: reservations_v3 {
       type: count_distinct
       sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
       filters: [checkin_night: "yes", extended_booking: "no", status: "confirmed, checked_in"]
+      drill_fields: [reservation_details*]
+
     }
 
   measure: number_of_checkins_star {
@@ -434,6 +442,8 @@ view: reservations_v3 {
     type: count_distinct
     sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
     filters: [checkin_night: "yes", status: "confirmed, checked_in"]
+    drill_fields: [reservation_details*]
+
   }
 
     measure: number_of_checkouts {
@@ -442,6 +452,8 @@ view: reservations_v3 {
       type: count_distinct
       sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
       filters: [checkout_night: "yes", initial_booking: "no", status: "confirmed, checked_in"]
+      drill_fields: [reservation_details*]
+
     }
 
   measure: number_of_checkouts_star {
@@ -450,6 +462,8 @@ view: reservations_v3 {
     type: count_distinct
     sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
     filters: [checkout_night: "yes", status: "confirmed, checked_in"]
+    drill_fields: [reservation_details*]
+
   }
 
   measure: extended_booking_count {
@@ -458,6 +472,8 @@ view: reservations_v3 {
     type: count_distinct
     sql: CONCAT(${extended_booking}, ${confirmationcode}) ;;
     filters: [extended_booking: "yes", status: "confirmed, checked_in"]
+    drill_fields: [reservation_details*]
+
   }
 
   measure: avg_lead_time {
@@ -533,10 +549,12 @@ view: reservations_v3 {
     sql_distinct_key: ${confirmationcode} ;;
     sql: ${guestscount} ;;
     filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in"]
+    drill_fields: [reservation_details*, guestscount]
+
   }
 
     set:reservation_details {
-      fields: [confirmationcode, status, source, bookingdate_date]
+      fields: [confirmationcode, status, source, bookingdate_date, cancellationdate_date, checkindate_date, checkoutdate_date, reservation_night, reservation_night_canceled, num_reservations, num_reservations_canceled, sourcedata_channel, sourcedata_channel_manager]
     }
 
 }

@@ -278,6 +278,7 @@ view: financials_v3{
     type: number
     value_format: "$#,##0.00"
     sql: ${amount_original} + ${amount_outstanding};;
+    drill_fields: [reservations_v3.confirmationcode, reservations_v3.bookingdate_date, reservations_v3.checkindate_date, reservations_v3.checkoutdate_date, reservations_v3.status, reservations_v3.reservation_night, reservations_v3.num_reservations, amount]
   }
 
 
@@ -331,6 +332,7 @@ view: financials_v3{
     type: number
     value_format: "$#,##0.00"
     sql: ${amount} / NULLIF(${reservations_v3.reservation_night}, 0) ;;
+    drill_fields: [reservations_v3.confirmationcode, reservations_v3.bookingdate_date, reservations_v3.checkindate_date, reservations_v3.checkoutdate_date, reservations_v3.status, reservations_v3.reservation_night, reservations_v3.num_reservations, amount]
   }
 
 # This is the same as ADR - REQUEST MADE BY TAFT LANDLORD
@@ -349,6 +351,7 @@ view: financials_v3{
     type: number
     value_format: "$#,##0.00"
     sql: ${amount} / NULLIF(${capacities_v3.capacity}, 0) ;;
+    drill_fields: [reservations_v3.confirmationcode, reservations_v3.bookingdate_date, reservations_v3.checkindate_date, reservations_v3.checkoutdate_date, reservations_v3.status, reservations_v3.reservation_night, reservations_v3.num_reservations, amount, adr]
   }
 
 
