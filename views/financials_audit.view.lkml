@@ -219,4 +219,12 @@ view: financials_audit {
     sql: ${TABLE}.type ;;
   }
 
+  dimension: specified_types {
+    label: "Financial Types (RoomRevenue / Other)"
+    type: string
+    sql: CASE WHEN ${TABLE}.type IN ("Initial", "Mod", "Discounts", "Adj", "roomRevenue", "roomRevenueDeducted") THEN "roomRevenue"
+    ELSE "Other"
+    END;;
+  }
+
 }

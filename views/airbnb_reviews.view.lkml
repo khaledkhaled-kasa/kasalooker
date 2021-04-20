@@ -444,6 +444,7 @@ view: airbnb_reviews {
     type: number
     value_format: "0.0"
     sql: 100*(${percent_perfect_stay} - ${percent_bad_stay});;
+    drill_fields: [airbnb_details*]
   }
 
   measure: net_quality_score_accuracy {
@@ -453,6 +454,7 @@ view: airbnb_reviews {
     type: number
     value_format: "0.0"
     sql: 100*(${percent_5_star_accuracy} - ${percent_less_than_4_star_accuracy});;
+    drill_fields: [airbnb_details*]
   }
 
   measure: net_quality_score_value{
@@ -906,6 +908,8 @@ view: airbnb_reviews {
   # 100* (${airbnb_reviews.count_4_star} + ${airbnb_reviews.count_less_than_4_star}*2) / sum(${airbnb_reviews.count})
 
 
-
+  set:airbnb_details {
+    fields: [complexes.title, net_quality_score, count]
+  }
 
 }

@@ -203,14 +203,6 @@ explore: reservations_clean {
   }
 
 
-  # join: pom_information {
-  #   view_label: "POM Information"
-  #   type: left_outer
-  #   relationship: many_to_one
-  #   sql_on: ${units.propcode} = ${pom_information.Prop_Code} ;;
-
-  # }
-
   join: complexes {
     type:  left_outer
     relationship: one_to_one
@@ -249,6 +241,13 @@ explore: reservations_clean {
     type:  full_outer
     relationship: one_to_one
     sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_clean.confirmation_code} ;;
+  }
+
+  join: post_checkout_v2 {
+    view_label: "Post Checkout Surveys V2"
+    type:  full_outer
+    relationship: one_to_one
+    sql_on:  ${post_checkout_v2.confirmationcode} = ${reservations_clean.confirmation_code} ;;
   }
 
 # for marketing
