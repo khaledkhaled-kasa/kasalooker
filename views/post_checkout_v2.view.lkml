@@ -20,6 +20,7 @@ view: post_checkout_v2 {
     sql: ${TABLE}._Cleanliness___How_clean_was_the_Kasa_when_you_arrived_ ;;
   }
 
+
   dimension: how_did_we_miss_the_mark_on_cleanliness_ {
     group_label: "Comments"
     label: "Cleanliness Comments"
@@ -47,6 +48,7 @@ view: post_checkout_v2 {
     type: number
     sql: ${TABLE}._Communications___How_were_your_interactions_with_the_Kasa_team_ ;;
   }
+
 
   dimension: what_aspects_of_communications_fell_short_ {
     group_label: "Comments"
@@ -166,6 +168,7 @@ view: post_checkout_v2 {
   }
 
   dimension: confirmationcode {
+    label: "PSS_v2 Confirmation Code"
     hidden: no
     type: string
     sql: ${TABLE}.confirmationcode ;;
@@ -246,7 +249,70 @@ view: post_checkout_v2 {
     label: "PSS Review Count"
     type: count_distinct
     sql: ${confirmationcode} ;;
+  }
 
+  measure: overall_measure {
+    label: "Average Overall Rating"
+    group_label: "Ratings (Aggregated)"
+    type: average
+    value_format: "0.00"
+    sql: ${TABLE}.Overall__how_would_you_rate_your_Kasa_stay_ ;;
+  }
+
+  measure: cleanliness_measure {
+    label: "Average Cleanliness Rating"
+    group_label: "Ratings (Aggregated)"
+    type: average
+    value_format: "0.00"
+    sql: ${TABLE}._Cleanliness___How_clean_was_the_Kasa_when_you_arrived_ ;;
+  }
+
+  measure: accuracy_measure {
+    label: "Average Accuracy Rating"
+    group_label: "Ratings (Aggregated)"
+    type: average
+    value_format: "0.00"
+    sql: ${TABLE}._Accuracy___How_did_the_Kasa_compare_to_what_you_expected_ ;;
+  }
+
+  measure: communication_measure {
+    label: "Average Communication Rating"
+    group_label: "Ratings (Aggregated)"
+    type: average
+    value_format: "0.00"
+    sql: ${TABLE}._Communications___How_were_your_interactions_with_the_Kasa_team_ ;;
+  }
+
+  measure: location_measure {
+    label: "Average Location Rating"
+    group_label: "Ratings (Aggregated)"
+    type: average
+    value_format: "0.00"
+    sql: ${TABLE}._Location___How_would_you_rate_the_surrounding_neighborhood_and_nearby_offerings_ ;;
+  }
+
+  measure: checkin_measure {
+    label: "Average Checkin Rating"
+    group_label: "Ratings (Aggregated)"
+    type: average
+    value_format: "0.00"
+    sql: ${TABLE}._Check_in___How_smooth_was_your_check_in_and_arrival_process_ ;;
+  }
+
+  measure: value_measure {
+    label: "Average Value Rating"
+    group_label: "Ratings (Aggregated)"
+    type: average
+    value_format: "0.00"
+    sql: ${TABLE}._Value___Was_your_stay_a_good_value_for_the_price_ ;;
+  }
+
+  measure: nps_measure {
+    label: "Average NPS Rating"
+    group_label: "Ratings (Aggregated)"
+    type: average
+    value_format: "0.00"
+    sql: ${TABLE}.How_likely_are_you_to_recommend_Kasa_to_someone_else_ ;;
   }
 
   set: detail {
