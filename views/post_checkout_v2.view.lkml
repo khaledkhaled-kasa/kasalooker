@@ -3,7 +3,7 @@ view: post_checkout_v2 {
     sql: SELECT * FROM `bigquery-analytics-272822.Gsheets.post_checkout_v2`
       ;;
 
-    persist_for: "6 hours"
+    persist_for: "1 hours"
   }
 
   dimension: overall__how_would_you_rate_your_kasa_stay_ {

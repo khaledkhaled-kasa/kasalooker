@@ -4,7 +4,7 @@ view: airbnb_reviews {
           FROM `bigquery-analytics-272822.airbnb_review_master.Airbnb_Reviews`;;
 
   #datagroup_trigger: reviews_default_datagroup
-  persist_for: "6 hours"
+  persist_for: "1 hours"
   }
 
   dimension: first_45 {
