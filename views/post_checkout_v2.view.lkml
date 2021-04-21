@@ -315,6 +315,357 @@ view: post_checkout_v2 {
     sql: ${TABLE}.How_likely_are_you_to_recommend_Kasa_to_someone_else_ ;;
   }
 
+  measure: overall_count_5_star {
+    label: "Count 5 Star (Overall)"
+    group_label: "Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [overall__how_would_you_rate_your_kasa_stay_: "5"]
+  }
+
+  measure: cleanliness_5_star {
+    label: "Count 5 Star (Cleanliness)"
+    group_label: "Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [_cleanliness___how_clean_was_the_kasa_when_you_arrived_: "5"]
+  }
+
+  measure: accuracy_5_star {
+    label: "Count 5 Star (Accuracy)"
+    group_label: "Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [_accuracy___how_did_the_kasa_compare_to_what_you_expected_: "5"]
+  }
+
+  measure: communication_5_star {
+    label: "Count 5 Star (Communication)"
+    group_label: "Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [_communications___how_were_your_interactions_with_the_kasa_team_: "5"]
+  }
+
+  measure: location_5_star {
+    label: "Count 5 Star (Location)"
+    group_label: "Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [_location___how_would_you_rate_the_surrounding_neighborhood_and_nearby_offerings_: "5"]
+  }
+
+  measure: checkin_5_star {
+    label: "Count 5 Star (Checkin)"
+    group_label: "Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [_check_in___how_smooth_was_your_check_in_and_arrival_process_: "5"]
+  }
+
+  measure: value_5_star {
+    label: "Count 5 Star (Value)"
+    group_label: "Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [_value___was_your_stay_a_good_value_for_the_price_: "5"]
+  }
+
+  measure: overall_count_less_than_4_star {
+    label: "Count Less Than 4 Star (Overall)"
+    group_label: "Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [overall__how_would_you_rate_your_kasa_stay_: "<=3"]
+  }
+
+  measure: cleanliness_less_than_4_star {
+    label: "Count Less Than 4 Star (Cleanliness)"
+    group_label: "Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [_cleanliness___how_clean_was_the_kasa_when_you_arrived_: "<=3"]
+  }
+
+  measure: accuracy_less_than_4_star {
+    label: "Count Less Than 4 Star (Accuracy)"
+    group_label: "Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [_accuracy___how_did_the_kasa_compare_to_what_you_expected_: "<=3"]
+  }
+
+  measure: communication_less_than_4_star {
+    label: "Count Less Than 4 Star (Communication)"
+    group_label: "Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [_communications___how_were_your_interactions_with_the_kasa_team_: "<=3"]
+  }
+
+  measure: location_less_than_4_star {
+    label: "Count Less Than 4 Star (Location)"
+    group_label: "Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [_location___how_would_you_rate_the_surrounding_neighborhood_and_nearby_offerings_: "<=3"]
+  }
+
+  measure: checkin_less_than_4_star {
+    label: "Count Less Than 4 Star (Checkin)"
+    group_label: "Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [_check_in___how_smooth_was_your_check_in_and_arrival_process_: "<=3"]
+  }
+
+  measure: value_less_than_4_star {
+    label: "Count Less Than 4 Star (Value)"
+    group_label: "Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [_value___was_your_stay_a_good_value_for_the_price_: "<=3"]
+  }
+
+  measure: percent_5_star_overall {
+    group_label: "Review Percentages"
+    label: "Percent 5 Star (Overall)"
+    type: number
+    value_format: "0.0%"
+    sql: ${overall_count_5_star} / nullif(${count},0) ;;
+  }
+
+  measure: percent_5_star_cleanliness {
+    group_label: "Review Percentages"
+    label: "Percent 5 Star (Cleanliness)"
+    type: number
+    value_format: "0.0%"
+    sql: ${cleanliness_5_star} / nullif(${count},0) ;;
+  }
+
+  measure: percent_5_star_accuracy {
+    group_label: "Review Percentages"
+    label: "Percent 5 Star (Accuracy)"
+    type: number
+    value_format: "0.0%"
+    sql: ${accuracy_5_star} / nullif(${count},0) ;;
+  }
+
+  measure: percent_5_star_checkin {
+    group_label: "Review Percentages"
+    label: "Percent 5 Star (Checkin)"
+    type: number
+    value_format: "0.0%"
+    sql: ${checkin_5_star} / nullif(${count},0) ;;
+  }
+
+  measure: percent_5_star_communication {
+    group_label: "Review Percentages"
+    label: "Percent 5 Star (Communication)"
+    type: number
+    value_format: "0.0%"
+    sql: ${communication_5_star} / nullif(${count},0) ;;
+  }
+
+  measure: percent_5_star_location {
+    group_label: "Review Percentages"
+    label: "Percent 5 Star (Location)"
+    type: number
+    value_format: "0.0%"
+    sql: ${location_5_star} / nullif(${count},0) ;;
+  }
+
+  measure: percent_5_star_value {
+    group_label: "Review Percentages"
+    label: "Percent 5 Star (Value)"
+    type: number
+    value_format: "0.0%"
+    sql: ${value_5_star} / nullif(${count},0) ;;
+  }
+
+  measure: percent_less_than_4_star_overall {
+    group_label: "Review Percentages"
+    label: "Percent Less Than 4 Star (Overall)"
+    type: number
+    value_format: "0.0%"
+    sql: ${overall_count_less_than_4_star} / nullif(${count},0) ;;
+  }
+
+  measure: percent_less_than_4_star_cleanliness {
+    group_label: "Review Percentages"
+    label: "Percent Less Than 4 Star (Cleanliness)"
+    type: number
+    value_format: "0.0%"
+    sql: ${cleanliness_less_than_4_star} / nullif(${count},0) ;;
+  }
+
+  measure: percent_less_than_4_star_accuracy {
+    group_label: "Review Percentages"
+    label: "Percent Less Than 4 Star (Accuracy)"
+    type: number
+    value_format: "0.0%"
+    sql: ${accuracy_less_than_4_star} / nullif(${count},0) ;;
+  }
+
+  measure: percent_less_than_4_star_checkin {
+    group_label: "Review Percentages"
+    label: "Percent Less Than 4 Star (Checkin)"
+    type: number
+    value_format: "0.0%"
+    sql: ${checkin_less_than_4_star} / nullif(${count},0) ;;
+  }
+
+  measure: percent_less_than_4_star_communication {
+    group_label: "Review Percentages"
+    label: "Percent Less Than 4 Star (Communication)"
+    type: number
+    value_format: "0.0%"
+    sql: ${communication_less_than_4_star} / nullif(${count},0) ;;
+  }
+
+  measure: percent_less_than_4_star_location {
+    group_label: "Review Percentages"
+    label: "Percent Less Than 4 Star (Location)"
+    type: number
+    value_format: "0.0%"
+    sql: ${location_less_than_4_star} / nullif(${count},0) ;;
+  }
+
+  measure: percent_less_than_4_star_value {
+    group_label: "Review Percentages"
+    label: "Percent Less Than 4 Star (Value)"
+    type: number
+    value_format: "0.0%"
+    sql: ${value_less_than_4_star} / nullif(${count},0) ;;
+  }
+
+  measure: net_quality_score_overall {
+    group_label: "NQS Metrics"
+    label: "NQS (Overall)"
+    type: number
+    value_format: "0.0"
+    sql: 100*(${percent_5_star_overall} - ${percent_less_than_4_star_overall});;
+  }
+
+  measure: net_quality_score_accuracy {
+    group_label: "NQS Metrics"
+    label: "NQS (Accuracy)"
+    type: number
+    value_format: "0.0"
+    sql: 100*(${percent_5_star_accuracy} - ${percent_less_than_4_star_accuracy});;
+  }
+
+  measure: net_quality_score_checkin {
+    group_label: "NQS Metrics"
+    label: "NQS (Checkin)"
+    type: number
+    value_format: "0.0"
+    sql: 100*(${percent_5_star_checkin} - ${percent_less_than_4_star_checkin});;
+  }
+
+  measure: net_quality_score_cleanliness {
+    group_label: "NQS Metrics"
+    label: "NQS (Cleanliness)"
+    type: number
+    value_format: "0.0"
+    sql: 100*(${percent_5_star_cleanliness} - ${percent_less_than_4_star_cleanliness});;
+  }
+
+  measure: net_quality_score_communication {
+    group_label: "NQS Metrics"
+    label: "NQS (Communication)"
+    type: number
+    value_format: "0.0"
+    sql: 100*(${percent_5_star_communication} - ${percent_less_than_4_star_communication});;
+  }
+
+  measure: net_quality_score_location {
+    group_label: "NQS Metrics"
+    label: "NQS (Location)"
+    type: number
+    value_format: "0.0"
+    sql: 100*(${percent_5_star_location} - ${percent_less_than_4_star_location});;
+  }
+
+  measure: net_quality_score_value {
+    group_label: "NQS Metrics"
+    label: "NQS (Value)"
+    type: number
+    value_format: "0.0"
+    sql: 100*(${percent_5_star_value} - ${percent_less_than_4_star_value});;
+  }
+
+  measure: percent_4_star_overall {
+    group_label: "Review Percentages"
+    label: "Percent 4 Star (Overall)"
+    type: number
+    value_format: "0.0%"
+    sql: 1 - (${percent_5_star_overall} + ${percent_less_than_4_star_overall});;
+  }
+
+  measure: percent_4_star_cleanliness {
+    group_label: "Review Percentages"
+    label: "Percent 4 Star (Cleanliness)"
+    type: number
+    value_format: "0.0%"
+    sql: 1 - (${percent_5_star_cleanliness} + ${percent_less_than_4_star_cleanliness});;
+  }
+
+  measure: percent_4_star_checkin {
+    group_label: "Review Percentages"
+    label: "Percent 4 Star (Checkin)"
+    type: number
+    value_format: "0.0%"
+    sql: 1 - (${percent_5_star_checkin} + ${percent_less_than_4_star_checkin});;
+  }
+
+  measure: percent_4_star_communication {
+    group_label: "Review Percentages"
+    label: "Percent 4 Star (Communication)"
+    type: number
+    value_format: "0.0%"
+    sql: 1 - (${percent_5_star_communication} + ${percent_less_than_4_star_communication});;
+  }
+
+  measure: percent_4_star_location {
+    group_label: "Review Percentages"
+    label: "Percent 4 Star (Location)"
+    type: number
+    value_format: "0.0%"
+    sql: 1 - (${percent_5_star_location} + ${percent_less_than_4_star_location});;
+  }
+
+  measure: percent_4_star_value {
+    group_label: "Review Percentages"
+    label: "Percent 4 Star (Value)"
+    type: number
+    value_format: "0.0%"
+    sql: 1 - (${percent_5_star_value} + ${percent_less_than_4_star_value});;
+  }
+
+  measure: percent_4_star_accuracy {
+    group_label: "Review Percentages"
+    label: "Percent 4 Star (Accuracy)"
+    type: number
+    value_format: "0.0%"
+    sql: 1 - (${percent_5_star_accuracy} + ${percent_less_than_4_star_accuracy});;
+  }
+
+
   set: detail {
     fields: [
 
