@@ -274,7 +274,7 @@ view: financials_v3{
 
   measure: amount {
     label: "Amount"
-    description: "This amount will automatically filter for only confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees)"
+    description: "This amount will automatically filter for only confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees). Also, this includes extended bookings as a SEPARATE booking."
     type: number
     value_format: "$#,##0.00"
     sql: ${amount_original} + ${amount_outstanding};;
@@ -319,7 +319,7 @@ view: financials_v3{
 
   measure: amount_unfiltered {
     label: "Amount (Unfiltered)"
-    description: "This amount is unfiltered (all reservation status, including cancellations & financial types)"
+    description: "This amount is unfiltered (all reservation status, including cancellations & financial types). Also, this includes extended bookings as a SEPARATE booking."
     type: number
     value_format: "$#,##0.00"
     sql: ${amount_original_unfiltered} + ${amount_outstanding_unfiltered};;
@@ -328,7 +328,7 @@ view: financials_v3{
 
   measure: adr {
     label: "ADR"
-    description: "Average daily rate: amount / reservation_night. This only applies to confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees)"
+    description: "Average daily rate: amount / reservation_night. This only applies to confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees). Also, this includes extended bookings as a SEPARATE booking."
     type: number
     value_format: "$#,##0.00"
     sql: ${amount} / NULLIF(${reservations_v3.reservation_night}, 0) ;;
@@ -338,7 +338,7 @@ view: financials_v3{
 # This is the same as ADR - REQUEST MADE BY TAFT LANDLORD
   measure: revenue_per_booked_room {
     label: "Revenue per Booked Room"
-    description: "Average daily rate: amount / reservation_night. This only applies to confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees)"
+    description: "Average daily rate: amount / reservation_night. This only applies to confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees). Also, this includes extended bookings as a SEPARATE booking."
     type: number
     value_format: "$#,##0.00"
     sql: ${amount} / NULLIF(${reservations_v3.reservation_night}, 0) ;;
@@ -347,7 +347,7 @@ view: financials_v3{
 
   measure: revpar {
     label: "RevPar"
-    description: "Revenue per available room: amount / capacity. This only applies to confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees)"
+    description: "Revenue per available room: amount / capacity. This only applies to confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees)."
     type: number
     value_format: "$#,##0.00"
     sql: ${amount} / NULLIF(${capacities_v3.capacity}, 0) ;;

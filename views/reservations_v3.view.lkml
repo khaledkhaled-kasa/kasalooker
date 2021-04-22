@@ -382,7 +382,7 @@ view: reservations_v3 {
 
   measure: reservation_night {
     label: "Num ReservationNights"
-    description: "Reservation night stay. This metric will only consider confirmed / checked in bookings."
+    description: "Reservation night stay. This metric will only consider confirmed / checked in bookings. Also, this includes extended bookings as a SEPARATE booking."
     type:  count_distinct
     sql: CONCAT(${confirmationcode}, '-', ${capacities_v3.night_date});;
     filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in"]
@@ -392,7 +392,7 @@ view: reservations_v3 {
 
   measure: reservation_night_canceled {
     label: "Num ReservationNights (Canceled)"
-    description: "Reservation night stay. This metric will only filter for canceled bookings."
+    description: "Reservation night stay. This metric will only filter for canceled bookings. Also, this includes extended bookings as a SEPARATE booking."
     type:  count_distinct
     sql: CONCAT(${confirmationcode}, '-', ${capacities_v3.night_date});;
     filters: [capacity_night_part_of_res: "yes", status: "cancelled, canceled"]
@@ -403,7 +403,7 @@ view: reservations_v3 {
 
     measure: num_reservations {
       label: "Num Reservations"
-      description: "Number of unique reservations. This metric will only consider confirmed / checked in bookings."
+      description: "Number of unique reservations. This metric will only consider confirmed / checked in bookings. Also, this includes extended bookings as a SEPARATE booking."
       type: count_distinct
       sql: ${confirmationcode} ;;
       filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in"]
@@ -412,7 +412,7 @@ view: reservations_v3 {
 
   measure: num_reservations_canceled {
     label: "Num Reservations (Canceled)"
-    description: "Number of unique reservations. This metric will only filter for canceled bookings."
+    description: "Number of unique reservations. This metric will only filter for canceled bookings. Also, this includes extended bookings as a SEPARATE booking."
     type: count_distinct
     sql: ${confirmationcode} ;;
     filters: [capacity_night_part_of_res: "yes", status: "cancelled, canceled"]
@@ -483,7 +483,7 @@ view: reservations_v3 {
 
   measure: avg_lead_time {
     label: "Average Lead Time"
-    description: "Days between booking and checking in. This metric will only consider confirmed / checked in bookings."
+    description: "Days between booking and checking in. This metric will only consider confirmed / checked in bookings. Also, this includes extended bookings as a SEPARATE booking."
     value_format: "0.0"
     type:  average_distinct
     sql_distinct_key: ${confirmationcode} ;;
@@ -503,7 +503,7 @@ view: reservations_v3 {
   }
 
   measure: median_lead_time {
-    description: "Days between booking and checking in. This metric will only consider confirmed / checked in bookings."
+    description: "Days between booking and checking in. This metric will only consider confirmed / checked in bookings. Also, this includes extended bookings as a SEPARATE booking."
     label: "Median Lead Time"
     value_format: "0.0"
     type:  median_distinct
@@ -514,7 +514,7 @@ view: reservations_v3 {
   }
 
   measure: median_lead_time_checkin {
-    description: "Days between booking and checking in. This metric will only consider confirmed / checked in bookings and only for reservations with available nights occurring on the check-in date."
+    description: "Days between booking and checking in. This metric will only consider confirmed / checked in bookings and only for reservations with available nights occurring on the check-in date. Also, this includes extended bookings as a SEPARATE booking."
     label: "Median Lead Time (Available Nights @ Checkin)"
     value_format: "0.0"
     type:  median_distinct
@@ -526,7 +526,7 @@ view: reservations_v3 {
 
 
   measure: avg_length_of_stay {
-    description: "Number of days of stay. This metric will only consider confirmed / checked in bookings."
+    description: "Number of days of stay. This metric will only consider confirmed / checked in bookings. Also, this includes extended bookings as a SEPARATE booking."
     label: "Average Length of Stay"
     value_format: "0.0"
     type:  average_distinct
@@ -537,7 +537,7 @@ view: reservations_v3 {
   }
 
   measure: median_length_of_stay {
-    description: "Number of days of stay. This metric will only consider confirmed / checked in bookings."
+    description: "Number of days of stay. This metric will only consider confirmed / checked in bookings. Also, this includes extended bookings as a SEPARATE booking."
     label: "Median Length of Stay"
     value_format: "0.0"
     type:  median_distinct
@@ -549,7 +549,7 @@ view: reservations_v3 {
 
   measure: guestscount_sum {
     label: "Total Number of Guests"
-    description: "Number of guests within the reservation(s). This metric will only consider confirmed / checked in bookings."
+    description: "Number of guests within the reservation(s). This metric will only consider confirmed / checked in bookings. Also, this includes extended bookings as a SEPARATE booking."
     type: sum_distinct
     sql_distinct_key: ${confirmationcode} ;;
     sql: ${guestscount} ;;

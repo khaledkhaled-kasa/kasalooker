@@ -246,7 +246,7 @@ view: post_checkout_v2 {
   }
 
   measure: count {
-    label: "PSS Review Count"
+    label: "Post Checkout Survey Review Count"
     type: count_distinct
     sql: ${confirmationcode} ;;
   }
