@@ -836,7 +836,7 @@ view: airbnb_reviews {
 
 
   set:airbnb_details {
-    fields: [complexes.title, net_quality_score, count]
+    fields: [complexes.title, count, net_quality_score, net_quality_score_accuracy, net_quality_score_checkin, net_quality_score_clean, net_quality_score_communication, net_quality_score_location, net_quality_score_value]
   }
 
 }
