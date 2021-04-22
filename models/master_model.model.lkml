@@ -145,6 +145,13 @@ explore: units_buildings_information {
   label: "Units and Property Information"
   group_label: "Properties"
 
+  join: geo_location {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on:  ${units_buildings_information.address_city} = ${geo_location.city}
+      and ${units_buildings_information.address_state} = ${geo_location.state};;
+  }
+
   join: complexes {
     type: left_outer
     relationship: one_to_one
@@ -154,7 +161,7 @@ explore: units_buildings_information {
   join: pom_information {
     view_label: "POM Information"
     type: left_outer
-    relationship: one_to_one
+    relationship: many_to_one
     sql_on: ${units_buildings_information.propcode} = ${pom_information.Prop_Code} ;;
   }
 
@@ -200,6 +207,13 @@ explore: reservations_clean {
     type:  left_outer
     relationship: one_to_one
     sql_on: ${units._id} = ${reservations_clean.unit};;
+  }
+
+  join: pom_information {
+    view_label: "POM Information"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${units.propcode} = ${pom_information.Prop_Code} ;;
   }
 
 
