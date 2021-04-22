@@ -268,10 +268,6 @@ view: reservations_v3 {
       sql: ${TABLE}.planneddeparture ;;
     }
 
-    dimension: platform {
-      type: string
-      sql: ${TABLE}.platform ;;
-    }
 
     dimension: signeddoc {
       type: string
@@ -285,9 +281,22 @@ view: reservations_v3 {
 
 
     dimension: source {
+      hidden: yes
       type: string
       sql: ${TABLE}.source ;;
     }
+
+  dimension: sourcedetail {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.sourcedetail ;;
+  }
+
+  dimension: platform {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.platform ;;
+  }
 
   dimension: sourcedata_channel {
     label: "Source (Channel)"
@@ -301,10 +310,6 @@ view: reservations_v3 {
     sql: ${TABLE}.sourcedata.channelmanager ;;
   }
 
-    dimension: sourcedetail {
-      type: string
-      sql: ${TABLE}.sourcedetail ;;
-    }
 
     dimension: specialrequest {
       type: string

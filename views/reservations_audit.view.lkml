@@ -248,11 +248,6 @@ view: reservations_audit {
     sql: ${TABLE}.planneddeparture ;;
   }
 
-  dimension: platform {
-    type: string
-    sql: ${TABLE}.platform ;;
-  }
-
   dimension: signeddoc {
     type: string
     sql: ${TABLE}.signeddoc ;;
@@ -270,8 +265,21 @@ view: reservations_audit {
 
 
   dimension: source {
+    hidden: yes
     type: string
     sql: ${TABLE}.source ;;
+  }
+
+  dimension: sourcedetail {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.sourcedetail ;;
+  }
+
+  dimension: platform {
+    type: string
+    hidden: yes
+    sql: ${TABLE}.platform ;;
   }
 
   dimension: sourcedata_channel {
@@ -286,10 +294,6 @@ view: reservations_audit {
     sql: ${TABLE}.sourcedata.channelmanager ;;
   }
 
-  dimension: sourcedetail {
-    type: string
-    sql: ${TABLE}.sourcedetail ;;
-  }
 
   dimension: specialrequest {
     type: string
@@ -423,7 +427,7 @@ view: reservations_audit {
 
 
   set:reservation_details {
-    fields: [confirmationcode, status, source, bookingdate_date]
+    fields: [confirmationcode, status, sourcedata_channel, bookingdate_date]
   }
 
 }

@@ -15,10 +15,7 @@ view: reservations_clean {
     sql: ${TABLE}.additionalguests ;;
   }
 
-  dimension: sourcedetail {
-    type: string
-    sql: ${TABLE}.sourcedetail ;;
-  }
+
 
   dimension: property {
     type: string
@@ -142,9 +139,17 @@ view: reservations_clean {
 
 
   dimension: source {
+    hidden: yes
     type: string
     sql: ${TABLE}.source ;;
   }
+
+  dimension: sourcedetail {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.sourcedetail ;;
+  }
+
 
   dimension: sourcedata_channel {
     label: "Source (Channel)"
