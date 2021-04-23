@@ -74,6 +74,13 @@ view: pom_qa_walkthrough_survey {
     sql: ${TABLE}.Building ;;
   }
 
+  dimension: property_code_3_letter {
+    hidden: no
+    label: "Property Code (3 Letter)"
+    type: string
+    sql: LEFT(${TABLE}.Building,3) ;;
+  }
+
   dimension: Door {
     hidden: yes
     type: string

@@ -81,6 +81,14 @@ explore: breezeway_export {
     relationship: one_to_one
     sql_on: ${complexes._id} = ${units.complex} ;;
   }
+
+  join: pom_information {
+    view_label: "POM Information"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${units.propcode} = ${pom_information.Prop_Code} ;;
+  }
+
   join: hk_partners {
     type:  left_outer
     relationship: one_to_one
@@ -482,6 +490,7 @@ explore: bw_cleaning {
     relationship: one_to_one
     sql_on: ${complexes._id} = ${units.complex};;
   }
+
 
   join: hk_cleaning_pricing {
     type: left_outer
