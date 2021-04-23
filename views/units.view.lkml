@@ -48,13 +48,6 @@ view: units {
   }
 
 
-
-  dimension: availability_startdate_45day_mark {
-    hidden: no
-    type: date
-    sql: TIMESTAMP_ADD(TIMESTAMP(${TABLE}.availability.startdate), INTERVAL 45 DAY);;
-  }
-
   dimension: availability_enddate {
     type:  date
     label: "Unit Availability End Date"

@@ -7,16 +7,6 @@ view: airbnb_reviews {
   persist_for: "1 hours"
   }
 
-  dimension: first_45 {
-    hidden: no
-    type: string
-    sql: CASE WHEN ${airbnb_reviews.review_date} >= ${units.availability_startdate}
-          AND
-          ${airbnb_reviews.review_date} <= ${units.availability_startdate_45day_mark}
-          THEN "First 45 Days"
-          ELSE "Other Properties"
-          END;;
-  }
 
   dimension: accuracy_comments {
     group_label: "Comments"
