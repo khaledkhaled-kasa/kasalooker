@@ -166,6 +166,12 @@ view: unit_submission_data_final {
     value_format_name: percent_2
   }
 
+  measure: pct_visits_up_to_date {
+    type: number
+    sql: ${count_visits_up_to_date}/NULLIF(${total_unit_count},0) ;;
+    value_format_name: percent_2
+  }
+
   set: detail {
     fields: [
       visit_date,
