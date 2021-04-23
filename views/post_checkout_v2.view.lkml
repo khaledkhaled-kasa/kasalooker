@@ -167,6 +167,17 @@ view: post_checkout_v2 {
     sql: ${TABLE}.platform ;;
   }
 
+  dimension: nps {
+    hidden: no
+    label: "NPS"
+    type: string
+    sql: CASE WHEN ${how_likely_are_you_to_recommend_kasa_to_someone_else_} > 8 THEN "Promoter"
+    WHEN ${how_likely_are_you_to_recommend_kasa_to_someone_else_} > 6 THEN "Neutral"
+    WHEN ${how_likely_are_you_to_recommend_kasa_to_someone_else_} is null THEN null
+    ELSE "Detractor"
+    END ;;
+  }
+
   dimension: confirmationcode {
     label: "PSS_v2 Confirmation Code"
     hidden: no
@@ -307,12 +318,28 @@ view: post_checkout_v2 {
     sql: ${TABLE}._Value___Was_your_stay_a_good_value_for_the_price_ ;;
   }
 
+
+  measure: promotor_count {
+    type: count
+    value_format: "0"
+    filters: [
+      nps: "Promoter"
+    ]
+  }
+
+  measure: detractor_count {
+    type: count
+    value_format: "0"
+    filters: [
+      nps: "Detractor"
+    ]
+  }
+
   measure: nps_measure {
-    label: "Average NPS Rating"
-    group_label: "Ratings (Aggregated)"
-    type: average
-    value_format: "0.00"
-    sql: ${TABLE}.How_likely_are_you_to_recommend_Kasa_to_someone_else_ ;;
+    label: "NPS Rating"
+    type: number
+    value_format: "0.0"
+    sql: 100*((${promotor_count}-${detractor_count})/ NULLIF(count(${nps}),0));;
   }
 
   measure: overall_count_5_star {
