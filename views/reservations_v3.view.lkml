@@ -252,10 +252,11 @@ view: reservations_v3 {
     }
 
 
-    dimension: pets {
-      type: yesno
-      sql: ${TABLE}.pets ;;
-    }
+    # dimension: pets {
+    #   hidden: yes
+    #   type: yesno
+    #   sql: ${TABLE}.pets ;;
+    # }
 
 
     dimension: plannedarrival {
@@ -557,6 +558,28 @@ view: reservations_v3 {
     drill_fields: [reservation_details*, guestscount]
 
   }
+
+  measure: num_reservations_pets {
+    label: "Num Reservations (Pets)"
+    hidden: yes
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in", bringingpets: "yes"]
+
+  }
+
+  measure: percent_reservations_pets {
+    label: "% Reservations (Pets)"
+    description: "% of Reservations with Pets. This metric will only consider confirmed / checked in bookings. Also, this includes extended bookings as a SEPARATE booking."
+    hidden: no
+    value_format: "0.0%"
+    type: number
+    sql: ${num_reservations_pets} / nullif(${num_reservations},0);;
+    drill_fields: [reservation_details*, bringingpets]
+
+  }
+
+
 
     set:reservation_details {
       fields: [confirmationcode, status, source, bookingdate_date, cancellationdate_date, checkindate_date, checkoutdate_date, reservation_night, reservation_night_canceled, num_reservations, num_reservations_canceled, sourcedata_channel, sourcedata_channel_manager]
