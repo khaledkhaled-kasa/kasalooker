@@ -1,6 +1,11 @@
 view: chargelogs {
-  sql_table_name: `bigquery-analytics-272822.mongo.chargelogs`
-    ;;
+  derived_table: {
+    sql: SELECT *, striperesponse.value.balance_transaction as balance_transaction
+      FROM `bigquery-analytics-272822.mongo.chargelogs`
+        LEFT JOIN UNNEST(striperesponse.charges.data) as striperesponse
+       ;;
+    datagroup_trigger: kasametrics_reservations_datagroup
+  }
 
   dimension: __v {
     type: number
@@ -96,6 +101,11 @@ view: chargelogs {
   dimension: amount_fl {
     type: number
     sql: ${TABLE}.amount__fl ;;
+  }
+
+  dimension: balance_transaction {
+    type: string
+    sql: ${TABLE}.balance_transaction ;;
   }
 
   dimension: charge_id {
