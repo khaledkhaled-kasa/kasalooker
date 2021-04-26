@@ -824,6 +824,58 @@ view: airbnb_reviews {
     sql: 1 - (${percent_5_star} + ${percent_less_than_4_star});;
   }
 
+  measure: count_4_star_clean {
+    group_label: "Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      cleanliness_rating: "4"
+    ]
+  }
+
+  measure: count_4_star_value {
+    group_label: "Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      value_rating: "4"
+    ]
+  }
+
+  measure: count_4_star_location {
+    group_label: "Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      location_rating: "4"
+    ]
+  }
+
+  measure: count_4_star_communication {
+    group_label: "Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      communication_rating: "4"
+    ]
+  }
+
+
+  measure: count_4_star_checkin {
+    group_label: "Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [
+      checkin_rating: "4"
+    ]
+  }
+
+
 
   set:airbnb_details {
     fields: [complexes.title, count, net_quality_score, net_quality_score_accuracy, net_quality_score_checkin, net_quality_score_clean, net_quality_score_communication, net_quality_score_location, net_quality_score_value]
