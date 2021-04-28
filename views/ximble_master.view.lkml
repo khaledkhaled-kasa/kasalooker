@@ -207,6 +207,7 @@
     sql_distinct_key: CONCAT(${date_date},${name_adjusted},${start_time},${end_time}) ;;
     sql: ${TABLE}.Total_Hours;;
     filters: [shift_label_filtered: "yes"]
+    drill_fields: [date_date, shift_label, hours]
   }
 
 
