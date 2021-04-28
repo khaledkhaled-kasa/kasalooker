@@ -153,6 +153,19 @@ explore: units_buildings_information {
   label: "Units and Property Information"
   group_label: "Properties"
 
+  join: pom_walkthrough_with_reservations {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information.internaltitle} = ${pom_walkthrough_with_reservations.internaltitle} ;;
+  }
+
+  join: airbnb_reviews {
+    fields: [airbnb_reviews.avg_cleanliness_rating, airbnb_reviews.avg_accuracy_rating, airbnb_reviews.avg_checkin_rating, airbnb_reviews.avg_communication_rating, airbnb_reviews.avg_overall_rating]
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${pom_walkthrough_with_reservations.confirmation_code} = ${airbnb_reviews.reservation_code} ;;
+  }
+
   join: geo_location {
     type:  left_outer
     relationship: one_to_one
@@ -171,6 +184,13 @@ explore: units_buildings_information {
     type: left_outer
     relationship: many_to_one
     sql_on: ${units_buildings_information.propcode} = ${pom_information.Prop_Code} ;;
+  }
+
+  join: pom_meeting_attendance {
+    view_label: "POM Meeting Data"
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${pom_information.pom} = ${pom_meeting_attendance.pom} ;;
   }
 
   join: unit_submission_data_final {
