@@ -35,7 +35,7 @@ view: freshair_data {
     label: "Percent Units with Monitoring Status"
     type: number
     description: "Returns the percentage of units who's FreshAir device has a status of Monitoring"
-    sql: ${count_units_with_monitoring_status}/IFNULL(${count},0) ;;
+    sql: ${count_units_with_monitoring_status}/NULLIF(${count},0) ;;
     value_format_name: percent_2
   }
 }
