@@ -34,6 +34,68 @@ view: okrs_master {
     sql: ${TABLE}.Data_Type ;;
   }
 
+  dimension: department {
+    type: string
+    sql: ${TABLE}.Department ;;
+  }
+
+  dimension: BHAG {
+    label: "BHAG"
+    type: yesno
+    sql: ${TABLE}.BHAG ;;
+  }
+
+  dimension: key_result {
+    type: string
+    sql: ${TABLE}.Key_Result ;;
+  }
+
+  dimension: objective {
+    type: string
+    sql: ${TABLE}.Objective ;;
+  }
+
+  dimension: owner {
+    type: string
+    sql: ${TABLE}.Owner ;;
+  }
+
+  dimension: comments {
+    type: string
+    sql: ${TABLE}.Comments ;;
+  }
+
+  dimension: source__manual___looker_ {
+    type: string
+    label: "Source (Manual / Looker)"
+    description: "Source the data point is pulled from. It could be from a source living within Looker or manually entered from an external source. Looker (Potential) will show for metrics pulled manually with a potential of it being pulled from a Looker source."
+    sql: ${TABLE}.Source__Manual___Looker_ ;;
+  }
+
+  dimension: automated_looker {
+    label: "Automated on Looker (Yes/No)"
+    description: "This will return Yes for metrics living on Looker and are updated through Looker. No for metrics which live on Looker but are still not automated and returns a null value for manually pulled metrics."
+    type: string
+    sql: ${TABLE}.Automated_Looker ;;
+  }
+
+
+  dimension_group: time_period {
+    label: ""
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.Time_Period ;;
+  }
+
   measure: actual_measure {
     label: "Actual"
     type: max
@@ -74,56 +136,55 @@ view: okrs_master {
     sql: ${actual_null} / ${count_actual} ;;
   }
 
-  dimension: department {
-    type: string
-    sql: ${TABLE}.Department ;;
+  measure: count_source {
+    label: "Count (All Sources)"
+    type: count_distinct
+    sql: CONCAT(${TABLE}.Department,${TABLE}.KR__) ;;
+    drill_fields: [department, objective, key_result, source__manual___looker_, automated_looker]
   }
 
-  dimension: BHAG {
-    label: "BHAG"
-    type: yesno
-    sql: ${TABLE}.BHAG ;;
+  measure: count_looker_source {
+    label: "Count (Looker Source)"
+    type: count_distinct
+    sql: CONCAT(${TABLE}.Department,${TABLE}.KR__) ;;
+    filters: [source__manual___looker_: "Looker"]
+    drill_fields: [department, objective, key_result, source__manual___looker_, automated_looker]
   }
 
-  dimension: key_result {
-    type: string
-    sql: ${TABLE}.Key_Result ;;
+  measure: count_looker_source_potential {
+    label: "Count (Looker Potential)"
+    type: count_distinct
+    sql: CONCAT(${TABLE}.Department,${TABLE}.KR__) ;;
+    filters: [source__manual___looker_: "Looker (Potential)"]
+    drill_fields: [department, objective, key_result, source__manual___looker_, automated_looker]
   }
 
-  dimension: objective {
-    type: string
-    sql: ${TABLE}.Objective ;;
+  measure: count_looker_source_automated {
+    label: "Count (Looker) - Automated"
+    hidden: yes
+    type: count_distinct
+    sql: CONCAT(${TABLE}.Department,${TABLE}.KR__) ;;
+    filters: [source__manual___looker_: "Looker", automated_looker: "Yes"]
+    drill_fields: [department, objective, key_result, source__manual___looker_]
   }
 
-  dimension: owner {
-    type: string
-    sql: ${TABLE}.Owner ;;
+  measure: percent_looker_source {
+    label: "% OKRs Sourced from Looker"
+    description: "This will pull the % of OKRs which are a LOOKER SOURCE."
+    hidden: no
+    type: number
+    value_format: "0.0%"
+    sql: ${count_looker_source} / nullif(${count_source},0) ;;
+    drill_fields: [department, objective, key_result, source__manual___looker_]
   }
 
-  dimension: comments {
-    type: string
-    sql: ${TABLE}.Comments ;;
-  }
-
-  dimension: source__manual___looker_ {
-    type: string
-    sql: ${TABLE}.Source__Manual___Looker_ ;;
-  }
-
-
-  dimension_group: time_period {
-    label: ""
-    type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    convert_tz: no
-    datatype: date
-    sql: ${TABLE}.Time_Period ;;
+  measure: percent_looker_source_automated {
+    label: "% OKRs Automated"
+    description: "This will pull the % of OKRs which are a LOOKER SOURCE and already being updated automatically."
+    hidden: no
+    type: number
+    value_format: "0.0%"
+    sql: ${count_looker_source_automated} / nullif(${count_looker_source},0) ;;
+    drill_fields: [department, objective, key_result, source__manual___looker_]
   }
 }

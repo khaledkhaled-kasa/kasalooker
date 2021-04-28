@@ -162,7 +162,7 @@ view: post_checkout_v2 {
   }
 
   dimension: platform {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}.platform ;;
   }
