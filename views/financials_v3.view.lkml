@@ -113,6 +113,7 @@ view: financials_v3{
   dimension_group: transaction {
     description: "Date of a given financial transaction"
     label: "Transaction"
+    hidden: yes
     type: time
     timeframes: [
       raw,

@@ -34,7 +34,7 @@ view: capacities_v3 {
 
   dimension_group: td_stlm {
     label: "Same Time Last Month (STLM)"
-    description: "This will provide the date from the same time last MONTH"
+    description: "This will provide the date from the same time last MONTH as of today"
     type: time
     timeframes: [
       raw,
