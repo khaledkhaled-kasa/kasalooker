@@ -571,6 +571,11 @@ explore: disputes_tracker {
 
 }
 
+explore: trs_prs {
+  group_label: "T & S"
+  label: "TRS / PRS Violations"
+}
+
 
 explore: ximble_master {
   group_label: "Software"
