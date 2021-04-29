@@ -576,6 +576,16 @@ explore: trs_prs {
   label: "TRS / PRS Violations"
 }
 
+explore: t_s_security_deployment {
+  group_label: "T & S"
+  label: "Security Deployment Report"
+}
+
+explore: t_s_incident_report {
+  group_label: "T & S"
+  label: "Security Incident Report"
+}
+
 
 explore: ximble_master {
   group_label: "Software"
