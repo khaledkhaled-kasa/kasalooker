@@ -96,4 +96,11 @@
     sql: ${TABLE}.Status ;;
   }
 
+
+  measure: count_partners {
+    type: count_distinct
+    sql: ${TABLE}.Housekeeper ;;
+  }
+
+
 }

@@ -181,6 +181,18 @@ view: pom_qa_walkthrough_survey {
     drill_fields: [Question, section, survey_response, response_answer, weight_adjusted]
   }
 
+  # measure: score_category {
+  #   label: "Total Score (Category)"
+  #   type: string
+  #   sql:
+  #   CASE
+  #   WHEN ${total_score} >= 0.9 THEN "Pass"
+  #   WHEN ${total_score} < 0.9 AND ${total_score} >= 0.8 THEN "Needs Improvement"
+  #   WHEN ${total_score} < 0.8 THEN "Failed"
+  #   END;;
+  #   drill_fields: [Question, section, survey_response, response_answer, weight_adjusted]
+  # }
+
   measure: qs_count {
     label: "Number of Qs"
     description: "This will pull the number of Qs for integrity checks."
@@ -213,5 +225,10 @@ view: pom_qa_walkthrough_survey {
     value_format: "0.0%"
     sql: ${resend_to_hk} / nullif(${survey},0)  ;;
   }
+
+
+
+
+
 
 }

@@ -539,6 +539,13 @@ explore: bw_cleaning {
 explore: pom_qa_walkthrough_survey {
   group_label: "Software"
   label: "POM QA Walkthrough Checklist"
+
+  join: hk_partners {
+    type:  full_outer
+    relationship: one_to_one
+    sql_on:  ${hk_partners.buildings} = ${pom_qa_walkthrough_survey.property_code_3_letter}
+          AND (${pom_qa_walkthrough_survey.submitdate_date} BETWEEN ${hk_partners.start_date} AND ${hk_partners.end_date});;
+  }
 }
 
 explore: disputes_tracker {
