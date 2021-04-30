@@ -113,7 +113,7 @@ view: financials_v3{
   dimension_group: transaction {
     description: "Date of a given financial transaction"
     label: "Transaction"
-    hidden: yes
+    hidden: no
     type: time
     timeframes: [
       raw,
@@ -201,6 +201,26 @@ view: financials_v3{
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability", reservations_v3.sourcedata_channel: "virtual front desk, guest portal"]
   }
 
+  measure: amount_original_ota_nonairbnb {
+    label: "Original Amount (OTAs excluding Airbnb)"
+    hidden: yes
+    description: "This is amount as per payment received dates from all OTAs excluding Airbnb"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${amount_revised} ;;
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability", reservations_v3.sourcedata_channel: "-airbnb,-gx, -kasawebsite, -virtual front desk"]
+  }
+
+  measure: amount_original_ancillary {
+    label: "Original Amount (Ancillary)"
+    hidden: yes
+    description: "This is amount as per payment received dates from Ancillary financial types"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${amount_revised} ;;
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "AccessCharge,AddCleanCharge,DamageCharge,Fees,PetFees,SecurityFee,LateCheckoutCharge"]
+  }
+
   measure: amount_original_unfiltered {
     view_label: "Metrics"
     label: "Original Amount"
@@ -263,6 +283,27 @@ view: financials_v3{
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability", reservations_v3.sourcedata_channel: "virtual front desk, guest portal"]
   }
 
+  measure: amount_outstanding_ota_nonairbnb {
+    hidden: yes
+    label: "Amount Outstanding (OTA Excl. Airbnb)"
+    description: "This is the amount missing from previous scheduled nights from OTC Channels excluding Airbnb"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.nightly_outstanding_amount;;
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability", reservations_v3.sourcedata_channel: "-airbnb,-gx, -kasawebsite, -virtual front desk"]
+  }
+
+  measure: amount_outstanding_ancillary {
+    hidden: yes
+    label: "Amount Outstanding (Ancillary)"
+    description: "This is the amount missing from previous scheduled nights from Ancillary Revenues"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.nightly_outstanding_amount;;
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "AccessCharge,AddCleanCharge,DamageCharge,Fees,PetFees,SecurityFee,LateCheckoutCharge"]
+  }
+
+
   measure: amount_outstanding_unfiltered {
     hidden: yes
     label: "Amount Outstanding"
@@ -279,6 +320,15 @@ view: financials_v3{
     type: number
     value_format: "$#,##0.00"
     sql: ${amount_original} + ${amount_outstanding};;
+    drill_fields: [reservations_v3.confirmationcode, reservations_v3.bookingdate_date, reservations_v3.checkindate_date, reservations_v3.checkoutdate_date, reservations_v3.status, reservations_v3.reservation_night, reservations_v3.num_reservations, amount]
+  }
+
+  measure: amount_ancillary {
+    label: "Amount (Ancillary)"
+    description: "This amount will automatically filter for only confirmed / checked-in bookings and filtered financial types (AccessCharge,AddCleanCharge,DamageCharge,Fees,PetFees,SecurityFee,LateCheckoutCharge). Also, this includes extended bookings as a SEPARATE booking."
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${amount_original_ancillary} + ${amount_outstanding_ancillary};;
     drill_fields: [reservations_v3.confirmationcode, reservations_v3.bookingdate_date, reservations_v3.checkindate_date, reservations_v3.checkoutdate_date, reservations_v3.status, reservations_v3.reservation_night, reservations_v3.num_reservations, amount]
   }
 
@@ -315,6 +365,14 @@ view: financials_v3{
     type: number
     value_format: "0.0%"
     sql: (${amount_original_guestportal} + ${amount_outstanding_guestportal}) / ${amount};;
+  }
+
+  measure: ota_nonairbnb_share {
+    label: "OTA Channels (Excl. Airbnb) Revenue Share"
+    description: "This will collect % revenue share from all OTA Channels excl. Airbnb"
+    type: number
+    value_format: "0.0%"
+    sql: (${amount_original_ota_nonairbnb} + ${amount_outstanding_ota_nonairbnb}) / ${amount};;
   }
 
 

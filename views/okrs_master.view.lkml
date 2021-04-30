@@ -161,7 +161,7 @@ view: okrs_master {
 
   measure: count_looker_source_automated {
     label: "Count (Looker) - Automated"
-    hidden: yes
+    hidden: no
     type: count_distinct
     sql: CONCAT(${TABLE}.Department,${TABLE}.KR__) ;;
     filters: [source__manual___looker_: "Looker", automated_looker: "Yes"]
