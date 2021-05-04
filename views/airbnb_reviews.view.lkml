@@ -875,10 +875,86 @@ view: airbnb_reviews {
     ]
   }
 
+  ##### 90 Day Metrics
+
+  measure: count_clean_first90 {
+    #view_label: "Metrics"
+    group_label: "HK Onboarding Metrics (First 90 Days)"
+    type: count_distinct
+    label: "Count Reviews (Clean) First 90 Days of Onboarding"
+    sql: ${reservation_code} ;;
+    filters: [cleanliness_rating: "1,2,3,4,5", hk_partners.first_3_months: "Yes"]
+    drill_fields: [reservation_code, reservation_checkin_date, reservation_checkout_date, cleanliness_rating, cleanliness_comments]
+
+  }
+
+  measure: clean_count_5_star_first90 {
+    #view_label: "Metrics"
+    group_label: "HK Onboarding Metrics (First 90 Days)"
+    label: "Count 5 Star Clean - First 90 Days"
+    hidden: yes
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [cleanliness_rating: "5", hk_partners.first_3_months: "Yes"]
+    drill_fields: [reservation_code, reservation_checkin_date, reservation_checkout_date, cleanliness_rating, cleanliness_comments]
+
+  }
+
+  measure: clean_count_less_than_4_star_first90 {
+    #view_label: "Metrics"
+    group_label: "HK Onboarding Metrics (First 90 Days)"
+    label: "Count Less Than 4 Star Clean - First 90 Days"
+    hidden: yes
+    type: count_distinct
+    value_format: "0"
+    sql: ${reservation_code};;
+    filters: [cleanliness_rating: "<=3", hk_partners.first_3_months: "Yes"]
+    drill_fields: [reservation_code, reservation_checkin_date, reservation_checkout_date, cleanliness_rating, cleanliness_comments]
+
+  }
+
+  measure: percent_5_star_clean_first90 {
+    #view_label: "Metrics"
+    group_label: "HK Onboarding Metrics (First 90 Days)"
+    label: "% Good Quality Stays- First 90 Days"
+    description: "This refers to stays with 5 star ratings on cleanliness"
+    type: number
+    value_format: "0.0%"
+    sql: ${clean_count_5_star} / nullif(${count_clean},0);;
+    drill_fields: [reservation_code, reservation_checkin_date, reservation_checkout_date, cleanliness_rating, cleanliness_comments]
+
+  }
+
+  measure: percent_less_than_4_star_clean_first90 {
+    #view_label: "Metrics"
+    group_label: "HK Onboarding Metrics (First 90 Days)"
+    label: "% Bad Stays - First 90 Days"
+    description: "This refers to stays with less than 4 star ratings on cleanliness"
+    type: number
+    value_format: "0.0%"
+    sql: ${clean_count_less_than_4_star} / nullif(${count_clean},0);;
+    drill_fields: [reservation_code, reservation_checkin_date, reservation_checkout_date, cleanliness_rating, cleanliness_comments]
+
+  }
+
+  measure: net_quality_score_clean_first90 {
+    #view_label: "Metrics"
+    group_label: "HK Onboarding Metrics (First 90 Days)"
+    label: "NQS (Clean) - First 90 Days"
+    type: number
+    value_format: "0.0"
+    sql: 100*(${percent_5_star_clean} - ${percent_less_than_4_star_clean});;
+    drill_fields: [reservation_code, reservation_checkin_date, reservation_checkout_date, cleanliness_rating, cleanliness_comments]
+
+  }
+
+
 
 
   set:airbnb_details {
     fields: [complexes.title, count, net_quality_score, net_quality_score_accuracy, net_quality_score_checkin, net_quality_score_clean, net_quality_score_communication, net_quality_score_location, net_quality_score_value]
   }
+
 
 }
