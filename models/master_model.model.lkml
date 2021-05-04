@@ -550,6 +550,13 @@ explore: pom_qa_walkthrough_survey {
     sql_on:  ${hk_partners.buildings} = ${pom_qa_walkthrough_survey.property_code_3_letter}
           AND (${pom_qa_walkthrough_survey.submitdate_date} BETWEEN ${hk_partners.start_date} AND ${hk_partners.end_date});;
   }
+
+  join: pom_information {
+    view_label: "POM Information"
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${pom_qa_walkthrough_survey.property_code_3_letter} = ${pom_information.Prop_Code} ;;
+  }
 }
 
 explore: disputes_tracker {
