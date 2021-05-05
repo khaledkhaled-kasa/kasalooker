@@ -114,6 +114,7 @@ view: reservations_v3 {
 
 
     dimension: extended_booking {
+      description: "An extended booking is defined as two consecutive bookings by the same guest (e-mail id) within the same building (i.e. a unit swap would still be considered an extension). An extended booking will only return Yes for the extended reservation."
       type: yesno
       sql: ${TABLE}.extended_booking = 1 ;;
     }
@@ -121,7 +122,7 @@ view: reservations_v3 {
 
     dimension: initial_booking {
       label: "Initial Booking (For Extensions Only)"
-      description: "This will inform us if it's the original / initial booking of an extended stay."
+      description: "This will inform us if it's the original / initial booking of an extended stay. Will only show as Yes for the initial booking of an extended reservation."
       type: yesno
       sql: ${TABLE}.initial_booking = 1 ;;
     }
