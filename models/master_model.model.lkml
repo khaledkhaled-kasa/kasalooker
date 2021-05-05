@@ -540,7 +540,7 @@ explore: bw_cleaning {
 
 explore: pom_qa_walkthrough_survey {
   fields: [
-    ALL_FIELDS*, -hk_partners.first_3_months]
+    ALL_FIELDS*, -units*, -pom_information*,-hk_partners.first_3_months]
   group_label: "Software"
   label: "POM QA Walkthrough Checklist"
 
@@ -557,6 +557,26 @@ explore: pom_qa_walkthrough_survey {
     relationship: many_to_one
     sql_on: ${pom_qa_walkthrough_survey.property_code_3_letter} = ${pom_information.Prop_Code} ;;
   }
+
+  join: units {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${units.propcode} =  ${pom_information.Prop_Code} ;;
+  }
+
+  join: complexes {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${complexes._id} = ${units.complex} ;;
+  }
+
+  join: geo_location {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on:  ${units.address_city} = ${geo_location.city}
+      and ${units.address_state} = ${geo_location.state};;
+  }
+
 }
 
 explore: disputes_tracker {

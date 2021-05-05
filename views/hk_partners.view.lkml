@@ -28,7 +28,7 @@
     }
 
   dimension: buildings {
-    hidden: yes
+    hidden: no
     type: string
     sql: ${TABLE}.Buildings ;;
   }
