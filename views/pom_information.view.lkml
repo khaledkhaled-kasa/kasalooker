@@ -26,6 +26,12 @@ view: pom_information {
     sql: ${TABLE}.Property ;;
   }
 
+  dimension: property_type {
+    view_label: "Building and Geographic Information"
+    type: string
+    sql: ${TABLE}.PropertyType ;;
+  }
+
   measure: count {
     type: count
     drill_fields: []
