@@ -20,6 +20,82 @@
     sql: ${TABLE}.Building_quality___location ;;
   }
 
+    dimension: location {
+      group_label: "Ratings (Quantitative)"
+      type: number
+      sql: CASE
+      WHEN ${TABLE}.Building_quality___location = 'Did not meet expectations' THEN 1
+      WHEN ${TABLE}.Building_quality___location = 'Met some expectations' THEN 2
+      WHEN ${TABLE}.Building_quality___location = 'Met expectations' THEN 3
+      WHEN ${TABLE}.Building_quality___location = 'Greatly exceeded expectations' THEN 5
+      WHEN ${TABLE}.Building_quality___location = 'Exceeded expectations' THEN 4
+      ELSE NULL
+      END
+      ;;
+
+    }
+
+    dimension: checkin {
+      group_label: "Ratings (Quantitative)"
+      type: number
+      sql: CASE
+              WHEN ${TABLE}.check_in_experience = 'Did not meet expectations' THEN 1
+              WHEN ${TABLE}.check_in_experience = 'Met some expectations' THEN 2
+              WHEN ${TABLE}.check_in_experience = 'Met expectations' THEN 3
+              WHEN ${TABLE}.check_in_experience = 'Greatly exceeded expectations' THEN 5
+              WHEN ${TABLE}.check_in_experience = 'Exceeded expectations' THEN 4
+              ELSE NULL
+              END
+              ;;
+
+      }
+
+    dimension: communication {
+      group_label: "Ratings (Quantitative)"
+      type: number
+      sql: CASE
+              WHEN ${TABLE}.Guest_communications = 'Did not meet expectations' THEN 1
+              WHEN ${TABLE}.Guest_communications = 'Met some expectations' THEN 2
+              WHEN ${TABLE}.Guest_communications = 'Met expectations' THEN 3
+              WHEN ${TABLE}.Guest_communications = 'Greatly exceeded expectations' THEN 5
+              WHEN ${TABLE}.Guest_communications = 'Exceeded expectations' THEN 4
+              ELSE NULL
+              END
+              ;;
+
+      }
+
+    dimension: overall_quant {
+      group_label: "Ratings (Quantitative)"
+      label: "Overall"
+      type: number
+      sql: CASE
+              WHEN ${TABLE}.Overall = 'Did not meet expectations' THEN 1
+              WHEN ${TABLE}.Overall = 'Met some expectations' THEN 2
+              WHEN ${TABLE}.Overall = 'Met expectations' THEN 3
+              WHEN ${TABLE}.Overall = 'Greatly exceeded expectations' THEN 5
+              WHEN ${TABLE}.Overall = 'Exceeded expectations' THEN 4
+              ELSE NULL
+              END
+              ;;
+
+      }
+
+    dimension: cleanliness {
+      group_label: "Ratings (Quantitative)"
+      type: number
+      sql: CASE
+              WHEN ${TABLE}.Room_quality___cleanliness = 'Did not meet expectations' THEN 1
+              WHEN ${TABLE}.Room_quality___cleanliness = 'Met some expectations' THEN 2
+              WHEN ${TABLE}.Room_quality___cleanliness = 'Met expectations' THEN 3
+              WHEN ${TABLE}.Room_quality___cleanliness = 'Greatly exceeded expectations' THEN 5
+              WHEN ${TABLE}.Room_quality___cleanliness = 'Exceeded expectations' THEN 4
+              ELSE NULL
+              END
+              ;;
+
+      }
+
   dimension: check_in_experience {
     type: string
     sql: ${TABLE}.Check_in_Experience ;;
@@ -273,64 +349,55 @@
     ]
   }
 
+    measure: count_reviews {
+      group_label: "Review Counts"
+      type: count_distinct
+      sql: ${confirmationcode} ;;
+      value_format: "0"
+    }
 
-  #dimension: property {
-  #  type: string
-  #  sql: ${TABLE}.property ;;
-  #}
 
-  #dimension: reservationid {
-  #  type: string
-  #  sql: ${TABLE}.reservationid ;;
-  #}
+    measure: overall_measure {
+      label: "Average Overall Rating"
+      group_label: "Ratings (Aggregated)"
+      type: average
+      value_format: "0.00"
+      sql: ${overall_quant} ;;
+    }
 
-  #dimension: unitname {
-  #  type: string
-  #  sql: ${TABLE}.unitname ;;
-  #}
+    measure: cleanliness_measure {
+      label: "Average Cleanliness Rating"
+      group_label: "Ratings (Aggregated)"
+      type: average
+      value_format: "0.00"
+      sql: ${cleanliness} ;;
+    }
 
-  #dimension: we_love_feedback__is_there_anything_else_you_d_like_to_tell_us__ {
-  #  type: string
-  #  sql: ${TABLE}.We_love_feedback__Is_there_anything_else_you_d_like_to_tell_us__ ;;
-  #}
 
-  #dimension: what_best_describes_the_nature_of_your_trip_ {
-  #  type: string
-  #  sql: ${TABLE}.What_best_describes_the_nature_of_your_trip_ ;;
-  #}
+    measure: communication_measure {
+      label: "Average Communication Rating"
+      group_label: "Ratings (Aggregated)"
+      type: average
+      value_format: "0.00"
+      sql: ${communication} ;;
+    }
 
-  #dimension: what_best_describes_your_travel_party_ {
-  #  type: string
-  #  sql: ${TABLE}.What_best_describes_your_travel_party_ ;;
-  #}
+    measure: location_measure {
+      label: "Average Location Rating"
+      group_label: "Ratings (Aggregated)"
+      type: average
+      value_format: "0.00"
+      sql: ${location} ;;
+    }
 
-  #dimension: what_is_one_suggestion_for_improving_the_kasa_experience_ {
-  #  type: string
-  #  sql: ${TABLE}.What_is_one_suggestion_for_improving_the_Kasa_experience_ ;;
-  #}
+    measure: checkin_measure {
+      label: "Average Checkin Rating"
+      group_label: "Ratings (Aggregated)"
+      type: average
+      value_format: "0.00"
+      sql: ${checkin} ;;
+    }
 
-  #dimension: what_is_one_thing_you_loved_about_the_kasa_experience_ {
-  #  type: string
-  #  sql: ${TABLE}.What_is_one_thing_you_loved_about_the_Kasa_experience_ ;;
-  #}
 
-  #dimension: where_else_would_you_like_to_see_kasa_open_up_units__ {
-  #  type: string
-  #  sql: ${TABLE}.Where_else_would_you_like_to_see_Kasa_open_up_units__ ;;
-  #}
 
-  #dimension: where_else_would_you_like_to_see_kasa_open_up_units__v2 {
-  #  type: string
-  #  sql: ${TABLE}.Where_else_would_you_like_to_see_Kasa_open_up_units__v2 ;;
-  #}
-
-  #dimension: why_did_you_choose_to_stay_at_this_particular_property_ {
-  #  type: string
-  #  sql: ${TABLE}.Why_did_you_choose_to_stay_at_this_particular_property_ ;;
-  #}
-
-  measure: count {
-    type: count
-    drill_fields: []
-  }
 }
