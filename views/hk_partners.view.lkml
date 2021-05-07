@@ -3,7 +3,7 @@
       sql:   SELECT *
           FROM `bigquery-analytics-272822.Breezeway_Data.hk_partners`
        ;;
-      persist_for: "1 hours"
+      persist_for: "4 hours"
     }
 
     dimension: start_date {
