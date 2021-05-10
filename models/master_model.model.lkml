@@ -6,7 +6,6 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 
 
 
-
 datagroup: default_datagroup {
   max_cache_age: "1 hours"
 }
@@ -44,6 +43,16 @@ datagroup: capacities_v3_default_datagroup {
 datagroup: ximble_default_datagroup {
   sql_trigger: SELECT MAX(date) FROM ximble.ximble_master;;
   max_cache_age: "1 hour"
+}
+
+explore: pom_weighting_standards_initial {
+  group_label: "POM Weights"
+  label: "POM Weighting Test"
+}
+
+explore: pom_weighting_standards_final {
+  group_label: "POM Weights"
+  label: "POM Weighting Test 2"
 }
 
 
