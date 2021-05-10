@@ -296,7 +296,7 @@ view: t_s_incident_report {
   }
 
   dimension: guest_removed {
-    type: string
+    type: yesno
     sql: ${TABLE}.Guest_Removed ;;
   }
 

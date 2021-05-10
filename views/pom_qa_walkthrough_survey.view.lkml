@@ -1,8 +1,10 @@
 view: pom_qa_walkthrough_survey {
   derived_table: {
     sql:
-    -- Skinny POM Checklist will reshape the survey into a narrow table
-  WITH Skinny_POM_Checklist AS (
+
+  -- New derived table created on May-04 to add tiers to scores
+  WITH aggregated_survey AS (WITH pom_qa_walkthrough_survey AS (
+    WITH Skinny_POM_Checklist AS (
 
   -- Table T will be a recreation of the Survey while replacing commas in relevant columns with a hyphen to avoid issues in downstream analysis
   WITH t AS (
@@ -25,7 +27,69 @@ view: pom_qa_walkthrough_survey {
   WHERE NOT LOWER(column_name) IN ('timestamp', 'email_address', 'pom_name', 'building','door_no_'))
   select Skinny_POM_Checklist.*, checklist_weights.question, checklist_weights.Section, checklist_weights.Weight
   from Skinny_POM_Checklist JOIN `bigquery-analytics-272822.Gsheets.POM_QA_Walkthrough_Weights` checklist_weights
+  ON Skinny_POM_Checklist.column_name = checklist_weights.column_name)
+
+SELECT
+    (FORMAT_TIMESTAMP('%F %T', pom_qa_walkthrough_survey.TIMESTAMP )) AS pom_qa_walkthrough_survey_submitdate_time,
+    pom_qa_walkthrough_survey.POM_Name  AS pom_qa_walkthrough_survey_pom_name,
+    pom_qa_walkthrough_survey.Email_address  AS pom_qa_walkthrough_survey_email_address,
+        COALESCE(SUM(CASE
+    WHEN pom_qa_walkthrough_survey.value IN ('Yes- high dusting was completed','No - there were no items left behind from the previous guest under the bed.',
+    'Cabinets are organized and well stocked','Blanket- sheets and pillows for sofa bed are stocked properly.',
+    'Shower liner is clean and in good condition?','No there were not items left behind from the previous guest.',
+    'All appliances are clean', 'All areas have been sanitized', 'Windows are streak free and clear',
+    'The sink was cleaned out properly. Individually wrapped is present and clean.', "No Items were left behind from the previous guest") THEN pom_qa_walkthrough_survey.Weight
+
+    WHEN pom_qa_walkthrough_survey.value = "Yes" AND pom_qa_walkthrough_survey.column_name IN ("Living_Room___Carpet", "Balcony___Cleanliness", "Living_Room___Sofa", "Living_Room___Ceiling_Fan", "Kitchen___Glasses",
+    "Kitchen___Dishwasher") THEN pom_qa_walkthrough_survey.Weight
+
+    WHEN pom_qa_walkthrough_survey.value = "true" AND pom_qa_walkthrough_survey.column_name IN ("Wall_to_Wall___Scuffs_and_Spots", "Living_Room___Vents", "Living_Room___Non_carpeted_Floors",
+    "Living_Room___Dust", "Laundry_Room___Stocking_Supplies_Par_Levels", "Kitchen___Stocking_Supplies_Par_Levels", "Kitchen___Microwave",
+    "Kitchen___Essential_Stocking_Items_", "Kitchen___Coffeemaker", "Bedroom___Bed_Stains", "Bathroom___Stocking_Supplies") THEN pom_qa_walkthrough_survey.Weight
+
+    WHEN pom_qa_walkthrough_survey.value = "No" AND pom_qa_walkthrough_survey.column_name IN ("Bathroom___Shower_Liner","Bathroom___Drawers", "Bedroom___Under_Bed", "Bedroom___Carpet", "Balcony___Smoking",
+    "Bedroom___Fan_Blades", "Kitchen___Drawers", "Living_Room___Fan_Blades") THEN pom_qa_walkthrough_survey.Weight
+
+    WHEN pom_qa_walkthrough_survey.value = "false" AND pom_qa_walkthrough_survey.column_name IN ("Bedroom___Linen_and_Pillow_Cases", "Bathroom___Vents", "Bathroom___Hair_Removal") THEN pom_qa_walkthrough_survey.Weight
+    WHEN pom_qa_walkthrough_survey.value LIKE '%N/A%' OR pom_qa_walkthrough_survey.value = "null" THEN NULL
+    ELSE 0
+    END), 0) / nullif(COALESCE(SUM(( CASE WHEN pom_qa_walkthrough_survey.value LIKE '%N/A%' OR pom_qa_walkthrough_survey.value = "null" THEN NULL
+    ELSE pom_qa_walkthrough_survey.Weight
+    END ) ), 0), 0) AS pom_qa_walkthrough_survey_total_score
+FROM pom_qa_walkthrough_survey
+GROUP BY
+    1,
+    2,
+    3),
+    Skinny_POM_Checklist AS (
+
+  -- Table T will be a recreation of the Survey while replacing commas in relevant columns with a hyphen to avoid issues in downstream analysis
+  WITH t AS (
+    SELECT * REPLACE(
+    REPLACE(Wrap_Up___New_Clean_Required_Areas,',','-') AS Wrap_Up___New_Clean_Required_Areas,
+    REPLACE(Kitchen___Glasses,',','-') AS Kitchen___Glasses,
+    REPLACE(Bedroom___Closet_Stocking,',','-') AS Bedroom___Closet_Stocking,
+    REPLACE(WO_Details___WO_Issues,',','-') AS WO_Details___WO_Issues)
+    FROM `bigquery-analytics-272822.Gsheets.POM_QA_Walkthrough_Survey`)
+
+  SELECT TIMESTAMP, Email_address,POM_Name, Building, Door_No_,
+  column_name, value
+  FROM (
+  SELECT TIMESTAMP, Email_address,POM_Name, Building, Door_No_,
+    REGEXP_REPLACE(SPLIT(pair, ':')[SAFE_OFFSET(0)], r'^"|"$', '') column_name,
+    REGEXP_REPLACE(SPLIT(pair, ':')[SAFE_OFFSET(1)], r'^"|"$', '') value
+  FROM t,
+  UNNEST(SPLIT(REGEXP_REPLACE(to_json_string(t), r'{|}', ''))) pair
+  )
+  WHERE NOT LOWER(column_name) IN ('timestamp', 'email_address', 'pom_name', 'building','door_no_'))
+  select Skinny_POM_Checklist.*, checklist_weights.question, checklist_weights.Section, checklist_weights.Weight,
+  aggregated_survey.*
+  from Skinny_POM_Checklist JOIN `bigquery-analytics-272822.Gsheets.POM_QA_Walkthrough_Weights` checklist_weights
   ON Skinny_POM_Checklist.column_name = checklist_weights.column_name
+  LEFT JOIN aggregated_survey ON (FORMAT_TIMESTAMP('%F %T', Skinny_POM_Checklist.timestamp)) = aggregated_survey.pom_qa_walkthrough_survey_submitdate_time
+  AND Skinny_POM_Checklist.POM_Name = aggregated_survey.pom_qa_walkthrough_survey_pom_name
+  AND Skinny_POM_Checklist.Email_address = aggregated_survey.pom_qa_walkthrough_survey_email_address
+
     ;;
 
     datagroup_trigger: pom_checklist_default_datagroup
@@ -157,6 +221,51 @@ view: pom_qa_walkthrough_survey {
     END;;
   }
 
+  dimension: aggregated_score_dimension {
+    label: "Total Score (%)"
+    hidden: no
+    value_format: "0.0%"
+    type: number
+    sql: ${TABLE}.pom_qa_walkthrough_survey_total_score;;
+  }
+
+  dimension: aggregated_score_tier {
+    label: "Score Buckets"
+    description: "Create buckets for total score (%). Pass >= 90% | Needs Improvement Between 80% and 90% | Fail < 80%"
+    hidden: no
+    type: string
+    sql: CASE
+    WHEN ${aggregated_score_dimension} >= 0.9 THEN "Pass"
+    WHEN ${aggregated_score_dimension}  < 0.9 AND ${aggregated_score_dimension}  >= 0.8 THEN "Needs Improvement"
+    WHEN ${aggregated_score_dimension}  < 0.8 THEN "Failed"
+    END;;
+  }
+
+
+  measure: passed_QAs {
+    label: "# of QAs Passed"
+    description: "Create buckets for total score (%). Pass >= 90% | Needs Improvement Between 80% and 90% | Fail < 80%"
+    type: count_distinct
+    sql: ${primary_key} ;;
+    filters: [aggregated_score_tier: "Pass"]
+  }
+
+  measure: need_improvement_QAs {
+    label: "# of QAs Needs Improvement"
+    description: "Create buckets for total score (%). Pass >= 90% | Needs Improvement Between 80% and 90% | Fail < 80%"
+    type: count_distinct
+    sql: ${primary_key} ;;
+    filters: [aggregated_score_tier: "Needs Improvement"]
+  }
+
+  measure: failed_QAs {
+    label: "# of QAs Failed"
+    description: "Create buckets for total score (%). Pass >= 90% | Needs Improvement Between 80% and 90% | Fail < 80%"
+    type: count_distinct
+    sql: ${primary_key} ;;
+    filters: [aggregated_score_tier: "Failed"]
+  }
+
   measure: response_sum {
     label: "Total Score"
     type: sum
@@ -181,17 +290,6 @@ view: pom_qa_walkthrough_survey {
     drill_fields: [Question, section, survey_response, response_answer, weight_adjusted]
   }
 
-  # measure: score_category {
-  #   label: "Total Score (Category)"
-  #   type: string
-  #   sql:
-  #   CASE
-  #   WHEN ${total_score} >= 0.9 THEN "Pass"
-  #   WHEN ${total_score} < 0.9 AND ${total_score} >= 0.8 THEN "Needs Improvement"
-  #   WHEN ${total_score} < 0.8 THEN "Failed"
-  #   END;;
-  #   drill_fields: [Question, section, survey_response, response_answer, weight_adjusted]
-  # }
 
   measure: qs_count {
     label: "Number of Qs"

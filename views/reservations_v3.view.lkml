@@ -4,7 +4,7 @@ view: reservations_v3 {
     sql:
 
   WITH  guest_type_table AS (
-         SELECT email,
+         SELECT guests.email,
          CASE WHEN count(*) > 1 THEN "Multi Booker"
          ELSE "Single Booker"
          END guest_type,
@@ -15,25 +15,25 @@ view: reservations_v3 {
          GROUP BY 1),
 
         extensions AS (
-            with r1 AS (SELECT reservations.*, guests.email
+            with r1 AS (SELECT reservations.*, guests.email r1_email
             FROM reservations JOIN guests ON reservations.guest = guests._id),
-            r2 AS (SELECT reservations.*, guests.email
+            r2 AS (SELECT reservations.*, guests.email r2_email
             FROM reservations JOIN guests ON reservations.guest = guests._id)
           SELECT r1.confirmationcode AS initial_reservation_extensions,
           r2.confirmationcode AS reservation_extensions
-          FROM r1 JOIN r2 ON r1.email = r2.email
+          FROM r1 JOIN r2 ON r1.r1_email = r2.r2_email
           AND CAST(TIMESTAMP(r1.checkoutdate) AS DATE) = CAST(TIMESTAMP(r2.checkindate) AS DATE)
           AND r1.property = r2.property
           WHERE r1.status IN ('confirmed','checked_in')
           AND r2.status IN ('confirmed','checked_in')),
 
           number_of_extended_bookings AS (
-            with r1 AS (SELECT reservations.*, guests.email
+            with r1 AS (SELECT reservations.*, guests.email r1_email
             FROM reservations JOIN guests ON reservations.guest = guests._id),
-            r2 AS (SELECT reservations.*, guests.email
+            r2 AS (SELECT reservations.*, guests.email r2_email
             FROM reservations JOIN guests ON reservations.guest = guests._id)
-          SELECT r1.email, count(*) AS bookings_with_extensions
-          FROM r1 JOIN r2 ON r1.email = r2.email
+          SELECT r1.r1_email, count(*) AS bookings_with_extensions
+          FROM r1 JOIN r2 ON r1.r1_email = r2.r2_email
           AND CAST(TIMESTAMP(r1.checkoutdate) AS DATE) = CAST(TIMESTAMP(r2.checkindate) AS DATE)
           AND r1.property = r2.property
           WHERE r1.status IN ('confirmed','checked_in')
@@ -41,7 +41,7 @@ view: reservations_v3 {
           GROUP BY 1),
 
         reservations_new AS (
-          SELECT reservations.*, email, DATE(checkindate) as partition_date
+          SELECT reservations.*, guests.email guests_email, DATE(checkindate) as partition_date
           FROM reservations JOIN guests
           ON reservations.guest = guests._id)
 
@@ -63,9 +63,9 @@ view: reservations_v3 {
     LEFT JOIN extensions e2
     ON reservations_new.confirmationcode = e2.initial_reservation_extensions
     LEFT JOIN number_of_extended_bookings
-    ON reservations_new.email = number_of_extended_bookings.email
+    ON reservations_new.guests_email = number_of_extended_bookings.r1_email
     LEFT JOIN guest_type_table
-    ON reservations_new.email = guest_type_table.email ;;
+    ON reservations_new.guests_email = guest_type_table.email  ;;
 
         # persist_for: "1 hour"
         datagroup_trigger: kasametrics_reservations_datagroup
@@ -114,6 +114,7 @@ view: reservations_v3 {
 
 
     dimension: extended_booking {
+      description: "An extended booking is defined as two consecutive bookings by the same guest (e-mail id) within the same building (i.e. a unit swap would still be considered an extension). An extended booking will only return Yes for the extended reservation."
       type: yesno
       sql: ${TABLE}.extended_booking = 1 ;;
     }
@@ -121,7 +122,7 @@ view: reservations_v3 {
 
     dimension: initial_booking {
       label: "Initial Booking (For Extensions Only)"
-      description: "This will inform us if it's the original / initial booking of an extended stay."
+      description: "This will inform us if it's the original / initial booking of an extended stay. Will only show as Yes for the initial booking of an extended reservation."
       type: yesno
       sql: ${TABLE}.initial_booking = 1 ;;
     }
