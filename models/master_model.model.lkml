@@ -11,6 +11,12 @@ datagroup: default_datagroup {
   max_cache_age: "1 hours"
 }
 
+
+datagroup: units_kpo_overview_default_datagroup {
+  sql_trigger: SELECT COUNT(*) FROM `bigquery-analytics-272822.Gsheets.kpo_overview_clean` ;;
+  max_cache_age: "1 hours"
+}
+
 datagroup: breezeway_default_datagroup {
   sql_trigger: SELECT count(*) FROM Breezeway_Data.export_summary ;;
   max_cache_age: "1 hours"
@@ -146,6 +152,12 @@ explore: breezeway_export {
 }
 
 
+explore: units_kpo_overview {
+  group_label: "Properties"
+  label: "Kasa Portfolio Overview Unit Details"
+}
+
+
 explore: units_buildings_information {
   from: units
   view_label: "Unit Information"
@@ -220,6 +232,7 @@ explore: units_buildings_information {
     relationship: one_to_one
     sql_on: ${units_buildings_information.internaltitle} = ${nexia_data.uid} ;;
   }
+
 
 }
 
@@ -541,6 +554,7 @@ explore: bw_cleaning {
 explore: pom_qa_walkthrough_survey {
   fields: [
     ALL_FIELDS*, -units*, -pom_information*,-hk_partners.first_3_months]
+  persist_with: pom_checklist_default_datagroup
   group_label: "Software"
   label: "POM QA Walkthrough Checklist"
 
@@ -629,10 +643,3 @@ explore: ximble_master {
   group_label: "Software"
   label: "Ximble"
 }
-
-# Project on Hold (Forecast Schedule)
-# explore: ximble_hourly_schedule {
-#   group_label: "Ximble"
-#   persist_with: ximble_default_datagroup
-#   from: ximble_hourly_schedule
-# }

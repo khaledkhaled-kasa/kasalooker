@@ -250,6 +250,8 @@ view: airbnb_reviews {
     type: average
     value_format: "0.00"
     sql: ${TABLE}.Cleanliness_Rating ;;
+    drill_fields: [airbnb_details*, review_date, cleanliness_comments, value_comments, overall_comments]
+
   }
 
 
@@ -417,6 +419,7 @@ view: airbnb_reviews {
     type: number
     value_format: "0.0"
     sql: 100*(${percent_5_star_clean} - ${percent_less_than_4_star_clean});;
+    drill_fields: [airbnb_details*, review_date, cleanliness_comments, value_comments, overall_comments]
   }
 
   measure: net_quality_score_communication {
@@ -448,6 +451,7 @@ view: airbnb_reviews {
     type: number
     value_format: "0.0%"
     sql: ${count_less_than_4_star} / nullif(${count},0);;
+    drill_fields: [airbnb_details*, review_date, cleanliness_comments, value_comments, overall_comments]
   }
 
   measure: percent_less_than_4_star {

@@ -412,6 +412,7 @@ view: reservations_v3 {
       drill_fields: [reservation_details*]
     }
 
+
   measure: num_reservations_canceled {
     label: "Num Reservations (Canceled)"
     description: "Number of unique reservations. This metric will only filter for canceled bookings. Also, this includes extended bookings as a SEPARATE booking."
