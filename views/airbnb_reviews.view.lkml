@@ -252,6 +252,23 @@ view: airbnb_reviews {
     sql: ${TABLE}.Cleanliness_Rating ;;
   }
 
+  measure: cleaning_rating_score {
+    type: number
+    description: "POM Cleaning Rating Score"
+    sql:  CASE WHEN ${avg_cleanliness_rating} > ${pom_information.Cleaning_Score_Standard} THEN 1
+              ELSE ${avg_cleanliness_rating}/NULLIF(${pom_information.Cleaning_Score_Standard},0)
+          END;;
+    value_format_name: percent_2
+  }
+
+  measure: cleaning_rating_score_weighted {
+    type: number
+    label: "POM Cleaning Rating Score (Weighted)"
+    description: "POM Cleaning Rating Score (Weighted)"
+    sql: ${cleaning_rating_score} * ${pom_information.Cleaning_Score_Weighting} ;;
+    value_format_name: decimal_2
+  }
+
 
   measure: count_5_star {
     #view_label: "Metrics"

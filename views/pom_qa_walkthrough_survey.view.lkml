@@ -324,6 +324,34 @@ GROUP BY
     sql: ${resend_to_hk} / nullif(${survey},0)  ;;
   }
 
+  measure: total_qas_completed {
+    label: "Total QAs Completed"
+    description: "This metric should be used as an aggregate or on a per POM basis"
+    type: count_distinct
+    sql: CAST(${submitdate_date} as STRING) || ${POM_Name} || ${Building} || ${Door} ;;
+  }
+
+  measure: total_qas_completed_percentage {
+    label: "Pct QAs Completed"
+    description: "Total QAs completed as a percentage of check-ins. Should be used in conjunstion with a check-in date filter"
+    type: number
+    sql: ${total_qas_completed} / NULLIF(${reservations_v3.number_of_checkins},0) ;;
+  }
+
+  measure: total_qas_completed_score {
+    label: "Total QAs Completed Score"
+    type: number
+    sql:  CASE WHEN ${total_qas_completed_percentage} >= ${pom_information.PctQAsCompleted_Standard} THEN 1
+            ELSE ${total_qas_completed_percentage} / NULLIF(${pom_information.PctQAsCompleted_Standard},0)
+          END;;
+  }
+
+  measure: total_qas_completed_score_weighted {
+    label: "Total QAs Completed Score (Weighting)"
+    type: number
+    sql: ${total_qas_completed_score} * ${pom_information.QACompleted_Weighting} ;;
+  }
+
 
 
 

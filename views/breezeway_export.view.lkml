@@ -186,6 +186,24 @@ view: breezeway_export {
     sql: ${done_on_time}/nullif(${count},0);;
   }
 
+  measure: pct_on_time_pom_score {
+    type: number
+    label: "% BW Tasks On Time POM Score"
+    sql:  CASE WHEN ${pct_on_time} >= ${pom_information.BWTasksOnTimeStandard} Then 1
+          ELSE ${pct_on_time}/NULLIF(${pom_information.BWTasksOnTimeStandard},0)
+          END;;
+    value_format_name: percent_2
+  }
+
+  measure: pct_on_time_pom_score_weighted {
+    type: number
+    label: "% BW Tasks On Time POM Score (Weighted)"
+    sql: ${pct_on_time_pom_score} * ${pom_information.BWTasksOnTime_Weighting} ;;
+    value_format_name: percent_2
+  }
+
+
+
   dimension: estimate_time_to_complete {
     type: string
     hidden: yes

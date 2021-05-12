@@ -73,12 +73,14 @@ explore: breezeway_export {
   fields: [
     ALL_FIELDS*,
     -complexes.title,
-    -units.propcode
+    -units.propcode,
+    -pom_qa_walkthrough_survey.total_qas_completed_percentage
   ]
   group_label: "Software"
   persist_with: breezeway_default_datagroup
   from: breezeway_export
   label: "Breezeway (Exports)"
+
   join: units {
     type:  left_outer
     relationship: one_to_one
@@ -162,17 +164,48 @@ explore: units_buildings_information {
   label: "Units and Property Information"
   group_label: "Properties"
 
-  join: pom_walkthrough_with_reservations {
+  join: reservations_v3 {
+    view_label: "Reservations"
+    fields: [reservations_v3.confirmationcode]
     type: left_outer
     relationship: one_to_many
-    sql_on: ${units_buildings_information.internaltitle} = ${pom_walkthrough_with_reservations.internaltitle} ;;
+    sql_on: ${units_buildings_information._id} = ${reservations_v3.unit};;
   }
 
-  join: airbnb_reviews {
-    fields: [airbnb_reviews.avg_cleanliness_rating, airbnb_reviews.avg_accuracy_rating, airbnb_reviews.avg_checkin_rating, airbnb_reviews.avg_communication_rating, airbnb_reviews.avg_overall_rating]
+  join: check_in_data {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information.internaltitle} = ${check_in_data.internaltitle} ;;
+  }
+
+  # join: capacities_v3 {
+  #   fields: [capacities_v3.night_date]
+  #   type: left_outer
+  #   relationship: one_to_many
+  #   sql_on: ${units_buildings_information._id} = ${capacities_v3.unit} ;;
+  # }
+
+  join: pom_qa_walkthrough_survey_agg {
+    view_label: "QA Walkthrough Survey Data"
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information.internaltitle} = ${pom_qa_walkthrough_survey_agg.unit} ;;
+  }
+
+  join: breezeway_export {
+    fields: [breezeway_export.pct_on_time_pom_score, breezeway_export.pct_on_time_pom_score_weighted]
     type: left_outer
     relationship: one_to_one
-    sql_on: ${pom_walkthrough_with_reservations.confirmation_code} = ${airbnb_reviews.reservation_code} ;;
+    sql_on: ${breezeway_export.property_internal_id} =  ${units_buildings_information.breezeway_id};;
+
+  }
+
+
+  join: airbnb_reviews {
+    fields: [airbnb_reviews.avg_cleanliness_rating, airbnb_reviews.avg_accuracy_rating, airbnb_reviews.avg_checkin_rating, airbnb_reviews.avg_communication_rating, airbnb_reviews.avg_overall_rating, airbnb_reviews.cleaning_rating_score, airbnb_reviews.cleaning_rating_score_weighted]
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${reservations_v3.confirmationcode} = ${airbnb_reviews.reservation_code} ;;
   }
 
   join: geo_location {
@@ -503,7 +536,9 @@ explore: bw_cleaning {
   fields: [
     ALL_FIELDS*,
     -complexes.title,
-    -units.propcode
+    -units.propcode,
+    -bw_cleaning.pct_on_time_pom_score,
+    -bw_cleaning.pct_on_time_pom_score_weighted
   ]
   group_label: "Software"
   label: "BW Cleaning Pricing Schedule"
@@ -549,7 +584,12 @@ explore: bw_cleaning {
 
 explore: pom_qa_walkthrough_survey {
   fields: [
-    ALL_FIELDS*, -units*, -pom_information*,-hk_partners.first_3_months]
+    ALL_FIELDS*,
+    -units*,
+    -pom_information*,
+    -hk_partners.first_3_months,
+    -pom_qa_walkthrough_survey.total_qas_completed_percentage]
+
   group_label: "Software"
   label: "POM QA Walkthrough Checklist"
 

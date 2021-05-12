@@ -1,6 +1,10 @@
 view: pom_weighting_standards_final {
-  sql_table_name: `bigquery-analytics-272822.POM_Standards.POM_Weighting_Standards_Final`
-    ;;
+
+  derived_table: {
+    sql:  SELECT *
+          FROM `bigquery-analytics-272822.POM_Standards.POM_Weighting_Standards_Final`;;
+    datagroup_trigger: pom_checklist_default_datagroup
+  }
 
   dimension: standard_type {
     type: string

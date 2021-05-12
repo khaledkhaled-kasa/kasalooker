@@ -38,4 +38,19 @@ view: freshair_data {
     sql: ${count_units_with_monitoring_status}/NULLIF(${count},0) ;;
     value_format_name: percent_2
   }
+
+  measure: fresh_air_score {
+    type: number
+    sql:  CASE WHEN ${pct_units_with_monitoring_status} >= ${pom_information.FreshAirStandard} THEN 1
+          ELSE ${pct_units_with_monitoring_status} / NULLIF(${pom_information.FreshAirStandard},0)
+          END;;
+    value_format_name: percent_2
+  }
+
+  measure: fresh_air_score_weighted {
+    label: "Fresh Air Score (Weighted)"
+    type: number
+    sql: ${fresh_air_score} * ${pom_information.FreshAir_Weighting} ;;
+    value_format_name: percent_2
+  }
 }
