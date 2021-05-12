@@ -205,7 +205,7 @@ explore: units_buildings_information {
   }
 
   join: breezeway_export {
-    fields: [breezeway_export.pct_on_time_pom_score, breezeway_export.pct_on_time_pom_score_weighted]
+    fields: [breezeway_export.pct_on_time_pom_score, breezeway_export.pct_on_time_pom_score_weighted, breezeway_export.pct_on_time]
     type: left_outer
     relationship: one_to_one
     sql_on: ${breezeway_export.property_internal_id} =  ${units_buildings_information.breezeway_id};;
