@@ -43,7 +43,7 @@ view: pom_information {
   dimension: property_type {
     type: string
     view_label: "Building and Geographic Information"
-    sql: ${TABLE}.property_type ;;
+    sql: ${TABLE}.propertytype ;;
   }
 
   dimension: region {
