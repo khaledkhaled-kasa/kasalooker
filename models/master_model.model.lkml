@@ -239,7 +239,7 @@ explore: units_buildings_information {
 
 explore: reservations_clean {
   fields: [
-    ALL_FIELDS*, -airbnb_reviews.clean_count_5_star_first90, -airbnb_reviews.clean_count_less_than_4_star_first90, -airbnb_reviews.count_clean_first90, -airbnb_reviews.net_quality_score_clean_first90, -airbnb_reviews.percent_5_star_clean_first90, -airbnb_reviews.percent_less_than_4_star_clean_first90]
+    ALL_FIELDS*, -airbnb_reviews.clean_count_5_star_first90, -airbnb_reviews.clean_count_less_than_4_star_first90, -airbnb_reviews.count_clean_first90, -airbnb_reviews.net_quality_score_clean_first90, -airbnb_reviews.percent_5_star_clean_first90, -airbnb_reviews.percent_less_than_4_star_clean_first90, -complexes.title, -units.propcode]
   # sql_always_where: ${units.availability_enddate} <> 'Invalid date' ;;
   persist_with: reviews_default_datagroup
   group_label: "Kasa Metrics"
@@ -256,7 +256,7 @@ explore: reservations_clean {
     view_label: "POM Information"
     type: left_outer
     relationship: many_to_one
-    sql_on: ${units.propcode} = ${pom_information.Prop_Code} ;;
+    sql_on: ${complexes__address.propcode_revised} = ${pom_information.Prop_Code} ;;
   }
 
 
