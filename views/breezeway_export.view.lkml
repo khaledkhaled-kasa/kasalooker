@@ -14,7 +14,12 @@ view: breezeway_export {
     primary_key: yes
     type: number
     sql: ${TABLE}.ID ;;
+    link: {
+      label: "Breezeway"
+      url: "https://app.breezeway.io/task/{{ value }}"
+    }
   }
+
 
   dimension_group: assigned {
     hidden: yes
