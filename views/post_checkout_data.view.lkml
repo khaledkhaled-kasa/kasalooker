@@ -256,6 +256,7 @@
 
   measure: avg_overall_numerical {
     group_label: "Ratings (Aggregate)"
+    hidden: yes
     label: "Average Overall Rating"
     type: average
     value_format: "0.00"
@@ -264,6 +265,7 @@
 
   measure: avg_direct {
     group_label: "Ratings (Aggregate)"
+    hidden: yes
     label: "Average Direct Booking Rating"
     type: average
     value_format: "0.00"
@@ -275,6 +277,7 @@
 
   measure: avg_booking {
     group_label: "Ratings (Aggregate)"
+    hidden: yes
     label: "Average Booking.com Rating"
     type: average
     value_format: "0.00"
@@ -286,6 +289,7 @@
 
   measure: expedia_avg {
     group_label: "Ratings (Aggregate)"
+    hidden: yes
     label: "Average Expedia Rating"
     type: average
     value_format: "0.00"

@@ -10,6 +10,12 @@ datagroup: default_datagroup {
   max_cache_age: "1 hours"
 }
 
+
+datagroup: units_kpo_overview_default_datagroup {
+  sql_trigger: SELECT COUNT(*) FROM `bigquery-analytics-272822.Gsheets.kpo_overview_clean` ;;
+  max_cache_age: "1 hours"
+}
+
 datagroup: breezeway_default_datagroup {
   sql_trigger: SELECT count(*) FROM Breezeway_Data.export_summary ;;
   max_cache_age: "1 hours"
@@ -157,6 +163,12 @@ explore: breezeway_export {
 }
 
 
+explore: units_kpo_overview {
+  group_label: "Properties"
+  label: "Kasa Portfolio Overview Unit Details"
+}
+
+
 explore: units_buildings_information {
   from: units
   view_label: "Unit Information"
@@ -263,12 +275,13 @@ explore: units_buildings_information {
     sql_on: ${units_buildings_information.internaltitle} = ${nexia_data.uid} ;;
   }
 
+
 }
 
 
 explore: reservations_clean {
   fields: [
-    ALL_FIELDS*, -airbnb_reviews.clean_count_5_star_first90, -airbnb_reviews.clean_count_less_than_4_star_first90, -airbnb_reviews.count_clean_first90, -airbnb_reviews.net_quality_score_clean_first90, -airbnb_reviews.percent_5_star_clean_first90, -airbnb_reviews.percent_less_than_4_star_clean_first90]
+    ALL_FIELDS*, -airbnb_reviews.clean_count_5_star_first90, -airbnb_reviews.clean_count_less_than_4_star_first90, -airbnb_reviews.count_clean_first90, -airbnb_reviews.net_quality_score_clean_first90, -airbnb_reviews.percent_5_star_clean_first90, -airbnb_reviews.percent_less_than_4_star_clean_first90, -complexes.title, -units.propcode]
   # sql_always_where: ${units.availability_enddate} <> 'Invalid date' ;;
   persist_with: reviews_default_datagroup
   group_label: "Kasa Metrics"
@@ -285,7 +298,7 @@ explore: reservations_clean {
     view_label: "POM Information"
     type: left_outer
     relationship: many_to_one
-    sql_on: ${units.propcode} = ${pom_information.Prop_Code} ;;
+    sql_on: ${complexes__address.propcode_revised} = ${pom_information.Prop_Code} ;;
   }
 
 
@@ -588,8 +601,8 @@ explore: pom_qa_walkthrough_survey {
     -units*,
     -pom_information*,
     -hk_partners.first_3_months,
-    -pom_qa_walkthrough_survey.total_qas_completed_percentage]
-
+    -pom_qa_walkthrough_survey.total_qas_completed_percentage, -units*, -pom_information*,-hk_partners.first_3_months]
+  persist_with: pom_checklist_default_datagroup
   group_label: "Software"
   label: "POM QA Walkthrough Checklist"
 
@@ -678,10 +691,3 @@ explore: ximble_master {
   group_label: "Software"
   label: "Ximble"
 }
-
-# Project on Hold (Forecast Schedule)
-# explore: ximble_hourly_schedule {
-#   group_label: "Ximble"
-#   persist_with: ximble_default_datagroup
-#   from: ximble_hourly_schedule
-# }

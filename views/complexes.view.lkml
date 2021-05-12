@@ -88,8 +88,8 @@ view: complexes__address {
 
   dimension: title {
     view_label: "Building and Geographic Information"
-    label: "Building Title*"
-    description: "This is used in the reviews model to take into consideration units which are unmapped to reservations"
+    label: "Building Title"
+    description: "The building title in the reviews model will pull building information from the property field under the reservations table for reservations not tied to any unit IDs"
     type: string
     primary_key: yes
     sql: CASE WHEN ${complexes.title} IS NULL THEN ${TABLE}.title
@@ -143,11 +143,11 @@ dimension: address_city_revised {
   dimension: propcode_revised {
     hidden: no
     view_label: "Building and Geographic Information"
-    label: "Property Code*"
-    description: "This will pull the Property Code from complexes if the unit is returning null values"
+    label: "Property Code"
+    description: "The Property Code in the reviews model will pull building information from the property field under the reservations table for reservations not tied to any unit IDs"
     type: string
-    sql: CASE WHEN ${units.internaltitle} IS NULL THEN ${complexes__address.internaltitle}
-          ELSE substr(${TABLE}.internaltitle, 1, 3)
+    sql: CASE WHEN ${units.propcode} IS NULL THEN ${complexes__address.internaltitle}
+          ELSE ${units.propcode}
           END
           ;;
   }
