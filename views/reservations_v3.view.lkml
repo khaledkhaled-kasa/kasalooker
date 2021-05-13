@@ -438,7 +438,7 @@ view: reservations_v3 {
       label: "Number of Checkins"
       description: "Number of Check-ins EXCLUDING Extensions"
       type: count_distinct
-      sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
+      sql: CONCAT(${_id},${confirmationcode}) ;;
       filters: [checkin_night: "yes", extended_booking: "no", status: "confirmed, checked_in"]
       drill_fields: [reservation_details*]
 

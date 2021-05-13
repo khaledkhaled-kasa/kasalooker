@@ -162,7 +162,24 @@ view: unit_submission_data_final {
   measure: pct_refreshes_up_to_date {
     type: number
     description: "Returns the percentage of units with a Refresh Status of All Good"
-    sql: ${count_refreshes_up_to_date}/NULLIF(${total_unit_count},0) ;;
+    sql: 1.00*${count_refreshes_up_to_date}/NULLIF(${total_unit_count},0) ;;
+    value_format_name: percent_2
+  }
+
+  measure: refreshes_up_to_date_score {
+    type: number
+    description: "If Pct Refreshes Up To Date >82% Then 1, Else Divide by 82"
+    sql:  CASE WHEN ${pct_refreshes_up_to_date} > ${pom_information.Refreshes_Standard}        THEN 1
+           ELSE ${pct_refreshes_up_to_date}/NULLIF(${pom_information.Refreshes_Standard},0)
+          END;;
+    value_format_name: percent_2
+  }
+
+  measure: refreshes_up_to_date_score_weighted {
+    type: number
+    label: "Refreshes Up To Date Score (Weighted)"
+    description: "Multiplies Refreshed Up To Date Score by Designated Weight"
+    sql: ${refreshes_up_to_date_score}*${pom_information.Refreshes_Weighting} ;;
     value_format_name: percent_2
   }
 
