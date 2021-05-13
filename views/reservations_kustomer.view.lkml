@@ -14,9 +14,8 @@ view: reservations_kustomer {
     sql: ${TABLE}.additionalguests ;;
   }
 
-  dimension_group: bookingdate {
-    view_label: "Date Dimensions"
-    hidden: yes
+  dimension_group: booking {
+    hidden: no
     type: time
     timeframes: [
       raw,
@@ -32,12 +31,12 @@ view: reservations_kustomer {
 
   dimension: lead_time {
     type:  number
-    sql:  date_diff(${checkindate_date}, CAST(${TABLE}.bookingdate as DATE), DAY) ;;
+    sql:  date_diff(${checkin_date}, CAST(${TABLE}.bookingdate as DATE), DAY) ;;
   }
 
   dimension: length_of_stay {
     type:  number
-    sql:  date_diff(${checkoutdate_date}, ${checkindate_date}, DAY) ;;
+    sql:  date_diff(${checkout_date}, ${checkin_date}, DAY) ;;
   }
 
   dimension: bringingpets {
@@ -74,16 +73,10 @@ view: reservations_kustomer {
     sql: ${TABLE}.chargelogs ;;
   }
 
-  dimension: checkindate_local {
-    type: date
-    sql: CAST(${TABLE}.checkindatelocal as TIMESTAMP);;
-    convert_tz: no
-  }
 
-
-  dimension_group: checkindate {
+  dimension_group: checkin {
     type: time
-    hidden: yes
+    hidden: no
     timeframes: [
       raw,
       time,
@@ -94,17 +87,13 @@ view: reservations_kustomer {
       year
     ]
     sql: CAST(${TABLE}.checkindate as TIMESTAMP);;
+
   }
 
-  dimension: checkoutdate_local {
-    type: date
-    sql: CAST(${TABLE}.checkoutdatelocal as TIMESTAMP);;
-    convert_tz: no
-  }
 
-  dimension_group: checkoutdate {
+  dimension_group: checkout {
     type: time
-    hidden: yes
+    hidden: no
     timeframes: [
       raw,
       time,
@@ -339,7 +328,7 @@ view: reservations_kustomer {
 
 
   set:reservation_details {
-    fields: [confirmationcode, status, source, checkindate_local, checkoutdate_local, bookingdate_date]
+    fields: [confirmationcode, status, source, checkin_date, checkout_date, booking_date]
   }
 
 }
