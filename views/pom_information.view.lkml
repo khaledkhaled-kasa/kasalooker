@@ -42,13 +42,14 @@ view: pom_information {
 
   dimension: property_type {
     type: string
+    label: "Property Sub-Category (Property Type)"
     view_label: "Building and Geographic Information"
     sql: ${TABLE}.propertytype ;;
   }
 
   dimension: property_type_buckets {
     type: string
-    label: "Property Type (Special / Core)"
+    label: "Property Category (Special/Core)"
     view_label: "Building and Geographic Information"
     description: "Multifamily is classified as a core property; whereas hotel & student housings are classified as special properties"
     sql: CASE
