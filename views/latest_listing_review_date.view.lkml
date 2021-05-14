@@ -7,7 +7,7 @@ view: latest_listing_review_date {
         CAST(max((CAST(CAST(airbnb_reviews.Review_Date  AS TIMESTAMP) AS DATE)))  AS DATE) AS airbnb_reviews_latest_review_date
       FROM `bigquery-analytics-272822.mongo.reservations`
            AS reservations_clean
-      FULL OUTER JOIN `bigquery-analytics-272822.airbnb_review_master.Airbnb_Reviews`
+      FULL OUTER JOIN `bigquery-analytics-272822.airbnb_review_master.Master`
            AS airbnb_reviews ON reservations_clean.confirmationcode = airbnb_reviews.Reservation_Code
       where accuracy_rating is not null
       GROUP BY 1
