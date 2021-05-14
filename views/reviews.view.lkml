@@ -20,10 +20,7 @@
       group by 1,2,3,4,5,6,7,8,9,10,11;;
     }
 
-  # dimension: __v {
-  #   type: number
-  #   sql: ${TABLE}.__v ;;
-  # }
+
 
 view_label: "Check-In Survey Data"
 
@@ -51,12 +48,12 @@ view_label: "Check-In Survey Data"
     sql: ${TABLE}.overallrating ;;
   }
 
-  dimension: overallratingstandardized {
-    description: "Overall Rating (Standardized)"
-    label: "Overall Rating (Standardized)"
-    type: number
-    sql: ${TABLE}.overallratingstandardized ;;
-  }
+  # dimension: overallratingstandardized {
+  #   description: "Overall Rating (Standardized)"
+  #   label: "Overall Rating (Standardized)"
+  #   type: number
+  #   sql: ${TABLE}.overallratingstandardized ;;
+  # }
 
   dimension: review_tags {
     type: string
@@ -67,14 +64,14 @@ view_label: "Check-In Survey Data"
     type:  average
     value_format: "0.0"
     label: "Average Real-time Review Rating"
-    sql: ${TABLE}.overallratingstandardized ;;
+    sql: ${TABLE}.overallrating ;;
   }
 
   measure: count_thumbs_up {
     type: count
     hidden: yes
     view_label: "Metrics"
-    filters: [overallratingstandardized: "10"]
+    filters: [overallrating: "5"]
   }
 
     measure: percent_thumbs_up {
