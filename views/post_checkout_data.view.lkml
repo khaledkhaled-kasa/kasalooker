@@ -150,11 +150,6 @@
     sql: ${TABLE}.Overall ;;
   }
 
-  dimension: overall_numerical {
-    label: "Overall Score"
-    type: number
-    sql: ${TABLE}.Overall_Numerical ;;
-  }
 
   dimension: platform {
     hidden: yes
@@ -207,10 +202,6 @@
     sql: ${TABLE}.Trip_Type ;;
   }
 
-  #dimension: unitid {
-  #  type: string
-  #  sql: ${TABLE}.unitid ;;
-  #}
 
   dimension: unit_internal_title {
     type: string
@@ -252,105 +243,6 @@
     type: number
     value_format: "0.0"
     sql: 100*((${promotor_count}-${detractor_count})/NULLIF(count(${TABLE}.NPS),0));;
-  }
-
-  measure: avg_overall_numerical {
-    group_label: "Ratings (Aggregate)"
-    hidden: yes
-    label: "Average Overall Rating"
-    type: average
-    value_format: "0.00"
-    sql: ${TABLE}.Overall_Numerical ;;
-  }
-
-  measure: avg_direct {
-    group_label: "Ratings (Aggregate)"
-    hidden: yes
-    label: "Average Direct Booking Rating"
-    type: average
-    value_format: "0.00"
-    sql: ${TABLE}.Overall_Numerical;;
-    filters: [
-      platform_clean: "Direct"
-    ]
-  }
-
-  measure: avg_booking {
-    group_label: "Ratings (Aggregate)"
-    hidden: yes
-    label: "Average Booking.com Rating"
-    type: average
-    value_format: "0.00"
-    sql: ${TABLE}.Overall_Numerical;;
-    filters: [
-      platform_clean: "Booking.com"
-    ]
-  }
-
-  measure: expedia_avg {
-    group_label: "Ratings (Aggregate)"
-    hidden: yes
-    label: "Average Expedia Rating"
-    type: average
-    value_format: "0.00"
-    sql: ${TABLE}.Overall_Numerical;;
-    filters: [
-      platform_clean: "Expedia"
-    ]
-  }
-
-  measure: direct_oqs {
-    group_label: "OQS Metrics"
-    label: "Direct OQS"
-    type: number
-    value_format: "0%"
-    sql: (${avg_direct} - 3.115)/(4.365-3.115);;
-  }
-
-  measure: expedia_oqs {
-    group_label: "OQS Metrics"
-    label: "Expedia OQS"
-    type: number
-    value_format: "0%"
-    sql: (${expedia_avg} - 3.29)/(3.89-3.29);;
-  }
-
-  measure: booking_oqs {
-    group_label: "OQS Metrics"
-    label: "Booking OQS"
-    type: number
-    value_format: "0%"
-    sql: (${avg_booking} - 3.07)/(3.97-3.07);;
-  }
-
-  measure: count_direct_reviews {
-    group_label: "Review Counts"
-    label: "Direct Booking Review Count"
-    type: count
-    value_format: "0"
-    filters: [
-      platform_clean: "Direct"
-    ]
-  }
-
-  measure: count_booking_reviews {
-    group_label: "Review Counts"
-    label: "Booking.com Review Count"
-    type: count
-    value_format: "0"
-    filters: [
-      platform_clean: "Booking.com"
-    ]
-  }
-
-  measure: count_expedia_reviews {
-    group_label: "Review Counts"
-    label: "Expedia Review Count"
-    type: count
-    value_format: "0"
-    filters: [
-      platform_clean: "Expedia"
-    ]
   }
 
     measure: count_reviews {
@@ -401,6 +293,315 @@
       value_format: "0.00"
       sql: ${checkin} ;;
     }
+
+    measure: overall_count_5_star {
+      label: "Count 5 Star (Overall)"
+      group_label: "Review Counts"
+      type: count_distinct
+      value_format: "0"
+      sql: ${confirmationcode} ;;
+      filters: [overall_quant: "5"]
+    }
+
+    measure: cleanliness_5_star {
+      label: "Count 5 Star (Cleanliness)"
+      group_label: "Review Counts"
+      type: count_distinct
+      value_format: "0"
+      sql: ${confirmationcode} ;;
+      filters: [cleanliness: "5"]
+    }
+
+
+    measure: communication_5_star {
+      label: "Count 5 Star (Communication)"
+      group_label: "Review Counts"
+      type: count_distinct
+      value_format: "0"
+      sql: ${confirmationcode} ;;
+      filters: [communication: "5"]
+    }
+
+    measure: location_5_star {
+      label: "Count 5 Star (Location)"
+      group_label: "Review Counts"
+      type: count_distinct
+      value_format: "0"
+      sql: ${confirmationcode} ;;
+      filters: [location: "5"]
+    }
+
+    measure: checkin_5_star {
+      label: "Count 5 Star (Checkin)"
+      group_label: "Review Counts"
+      type: count_distinct
+      value_format: "0"
+      sql: ${confirmationcode} ;;
+      filters: [checkin: "5"]
+    }
+
+    measure: overall_count_4_star {
+      label: "Count 4 Star (Overall)"
+      group_label: "Review Counts"
+      type: count_distinct
+      value_format: "0"
+      sql: ${confirmationcode} ;;
+      filters: [overall_quant: "4"]
+    }
+
+    measure: cleanliness_4_star {
+      label: "Count 4 Star (Cleanliness)"
+      group_label: "Review Counts"
+      type: count_distinct
+      value_format: "0"
+      sql: ${confirmationcode} ;;
+      filters: [cleanliness: "4"]
+    }
+
+
+    measure: communication_4_star {
+      label: "Count 4 Star (Communication)"
+      group_label: "Review Counts"
+      type: count_distinct
+      value_format: "0"
+      sql: ${confirmationcode} ;;
+      filters: [communication: "4"]
+    }
+
+    measure: location_4_star {
+      label: "Count 4 Star (Location)"
+      group_label: "Review Counts"
+      type: count_distinct
+      value_format: "0"
+      sql: ${confirmationcode} ;;
+      filters: [location: "4"]
+    }
+
+    measure: checkin_4_star {
+      label: "Count 4 Star (Checkin)"
+      group_label: "Review Counts"
+      type: count_distinct
+      value_format: "0"
+      sql: ${confirmationcode} ;;
+      filters: [checkin: "4"]
+    }
+
+
+    measure: overall_count_less_than_4_star {
+      label: "Count Less Than 4 Star (Overall)"
+      group_label: "Review Counts"
+      type: count_distinct
+      value_format: "0"
+      sql: ${confirmationcode} ;;
+      filters: [overall_quant: "<=3"]
+    }
+
+    measure: cleanliness_less_than_4_star {
+      label: "Count Less Than 4 Star (Cleanliness)"
+      group_label: "Review Counts"
+      type: count_distinct
+      value_format: "0"
+      sql: ${confirmationcode} ;;
+      filters: [cleanliness: "<=3"]
+    }
+
+
+    measure: communication_less_than_4_star {
+      label: "Count Less Than 4 Star (Communication)"
+      group_label: "Review Counts"
+      type: count_distinct
+      value_format: "0"
+      sql: ${confirmationcode} ;;
+      filters: [communication: "<=3"]
+    }
+
+    measure: location_less_than_4_star {
+      label: "Count Less Than 4 Star (Location)"
+      group_label: "Review Counts"
+      type: count_distinct
+      value_format: "0"
+      sql: ${confirmationcode} ;;
+      filters: [location: "<=3"]
+    }
+
+    measure: checkin_less_than_4_star {
+      label: "Count Less Than 4 Star (Checkin)"
+      group_label: "Review Counts"
+      type: count_distinct
+      value_format: "0"
+      sql: ${confirmationcode} ;;
+      filters: [checkin: "<=3"]
+    }
+
+
+    measure: percent_5_star_overall {
+      group_label: "Review Percentages"
+      label: "Percent 5 Star (Overall)"
+      type: number
+      value_format: "0.0%"
+      sql: ${overall_count_5_star} / nullif(${count_reviews},0) ;;
+    }
+
+    measure: percent_5_star_cleanliness {
+      group_label: "Review Percentages"
+      label: "Percent 5 Star (Cleanliness)"
+      type: number
+      value_format: "0.0%"
+      sql: ${cleanliness_5_star} / nullif(${count_reviews},0) ;;
+    }
+
+
+    measure: percent_5_star_checkin {
+      group_label: "Review Percentages"
+      label: "Percent 5 Star (Checkin)"
+      type: number
+      value_format: "0.0%"
+      sql: ${checkin_5_star} / nullif(${count_reviews},0) ;;
+    }
+
+    measure: percent_5_star_communication {
+      group_label: "Review Percentages"
+      label: "Percent 5 Star (Communication)"
+      type: number
+      value_format: "0.0%"
+      sql: ${communication_5_star} / nullif(${count_reviews},0) ;;
+    }
+
+    measure: percent_5_star_location {
+      group_label: "Review Percentages"
+      label: "Percent 5 Star (Location)"
+      type: number
+      value_format: "0.0%"
+      sql: ${location_5_star} / nullif(${count_reviews},0) ;;
+    }
+
+
+    measure: percent_less_than_4_star_overall {
+      group_label: "Review Percentages"
+      label: "Percent Less Than 4 Star (Overall)"
+      type: number
+      value_format: "0.0%"
+      sql: ${overall_count_less_than_4_star} / nullif(${count_reviews},0) ;;
+    }
+
+    measure: percent_less_than_4_star_cleanliness {
+      group_label: "Review Percentages"
+      label: "Percent Less Than 4 Star (Cleanliness)"
+      type: number
+      value_format: "0.0%"
+      sql: ${cleanliness_less_than_4_star} / nullif(${count_reviews},0) ;;
+    }
+
+
+
+    measure: percent_less_than_4_star_checkin {
+      group_label: "Review Percentages"
+      label: "Percent Less Than 4 Star (Checkin)"
+      type: number
+      value_format: "0.0%"
+      sql: ${checkin_less_than_4_star} / nullif(${count_reviews},0) ;;
+    }
+
+    measure: percent_less_than_4_star_communication {
+      group_label: "Review Percentages"
+      label: "Percent Less Than 4 Star (Communication)"
+      type: number
+      value_format: "0.0%"
+      sql: ${communication_less_than_4_star} / nullif(${count_reviews},0) ;;
+    }
+
+    measure: percent_less_than_4_star_location {
+      group_label: "Review Percentages"
+      label: "Percent Less Than 4 Star (Location)"
+      type: number
+      value_format: "0.0%"
+      sql: ${location_less_than_4_star} / nullif(${count_reviews},0) ;;
+    }
+
+
+    measure: net_quality_score_overall {
+      group_label: "NQS Metrics"
+      label: "NQS (Overall)"
+      type: number
+      value_format: "0.0"
+      sql: 100*(${percent_5_star_overall} - ${percent_less_than_4_star_overall});;
+    }
+
+
+    measure: net_quality_score_checkin {
+      group_label: "NQS Metrics"
+      label: "NQS (Checkin)"
+      type: number
+      value_format: "0.0"
+      sql: 100*(${percent_5_star_checkin} - ${percent_less_than_4_star_checkin});;
+    }
+
+    measure: net_quality_score_cleanliness {
+      group_label: "NQS Metrics"
+      label: "NQS (Cleanliness)"
+      type: number
+      value_format: "0.0"
+      sql: 100*(${percent_5_star_cleanliness} - ${percent_less_than_4_star_cleanliness});;
+    }
+
+    measure: net_quality_score_communication {
+      group_label: "NQS Metrics"
+      label: "NQS (Communication)"
+      type: number
+      value_format: "0.0"
+      sql: 100*(${percent_5_star_communication} - ${percent_less_than_4_star_communication});;
+    }
+
+    measure: net_quality_score_location {
+      group_label: "NQS Metrics"
+      label: "NQS (Location)"
+      type: number
+      value_format: "0.0"
+      sql: 100*(${percent_5_star_location} - ${percent_less_than_4_star_location});;
+    }
+
+
+    measure: percent_4_star_overall {
+      group_label: "Review Percentages"
+      label: "Percent 4 Star (Overall)"
+      type: number
+      value_format: "0.0%"
+      sql: 1 - (${percent_5_star_overall} + ${percent_less_than_4_star_overall});;
+    }
+
+    measure: percent_4_star_cleanliness {
+      group_label: "Review Percentages"
+      label: "Percent 4 Star (Cleanliness)"
+      type: number
+      value_format: "0.0%"
+      sql: 1 - (${percent_5_star_cleanliness} + ${percent_less_than_4_star_cleanliness});;
+    }
+
+    measure: percent_4_star_checkin {
+      group_label: "Review Percentages"
+      label: "Percent 4 Star (Checkin)"
+      type: number
+      value_format: "0.0%"
+      sql: 1 - (${percent_5_star_checkin} + ${percent_less_than_4_star_checkin});;
+    }
+
+    measure: percent_4_star_communication {
+      group_label: "Review Percentages"
+      label: "Percent 4 Star (Communication)"
+      type: number
+      value_format: "0.0%"
+      sql: 1 - (${percent_5_star_communication} + ${percent_less_than_4_star_communication});;
+    }
+
+    measure: percent_4_star_location {
+      group_label: "Review Percentages"
+      label: "Percent 4 Star (Location)"
+      type: number
+      value_format: "0.0%"
+      sql: 1 - (${percent_5_star_location} + ${percent_less_than_4_star_location});;
+    }
+
+
 
 
 

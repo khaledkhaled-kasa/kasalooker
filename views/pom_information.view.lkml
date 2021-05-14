@@ -46,6 +46,18 @@ view: pom_information {
     sql: ${TABLE}.propertytype ;;
   }
 
+  dimension: property_type_buckets {
+    type: string
+    label: "Property Type (Special / Core)"
+    view_label: "Building and Geographic Information"
+    description: "Multifamily is classified as a core property; whereas hotel & student housings are classified as special properties"
+    sql: CASE
+    WHEN ${TABLE}.propertytype = "Multifamily" THEN "Core Properties"
+    WHEN ${TABLE}.propertytype IN ("Hotel", "Student Housing") THEN "Special Properties"
+    ELSE ${TABLE}.propertytype
+    END ;;
+  }
+
   dimension: region {
     type: string
     sql: ${TABLE}.region ;;
