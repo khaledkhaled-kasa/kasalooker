@@ -1,7 +1,7 @@
 view: airbnb_reviews {
   derived_table: {
     sql:  SELECT *
-          FROM `bigquery-analytics-272822.airbnb_review_master.Airbnb_Reviews`;;
+          FROM `bigquery-analytics-272822.airbnb_review_master.Master`;;
 
   #datagroup_trigger: reviews_default_datagroup
   persist_for: "1 hours"
@@ -12,6 +12,12 @@ view: airbnb_reviews {
     group_label: "Comments"
     type: string
     sql: ${TABLE}.Accuracy_Comments ;;
+  }
+
+  dimension: private_feedback {
+    group_label: "Comments"
+    type: string
+    sql: ${TABLE}.Private_Feedback ;;
   }
 
   dimension: checkin_comments {
