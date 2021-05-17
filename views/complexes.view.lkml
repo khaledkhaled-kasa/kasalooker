@@ -84,6 +84,7 @@ view: complexes__address {
     sql: SELECT address, _id, internaltitle, title
         FROM complexes
       ;;
+  datagroup_trigger: units_kpo_overview_default_datagroup
   }
 
   dimension: title {
