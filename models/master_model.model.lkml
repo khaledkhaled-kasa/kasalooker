@@ -686,6 +686,11 @@ explore: t_s_incident_report {
   label: "Security Incident Report"
 }
 
+explore: channel_cost_marketing {
+  group_label: "Kasa Metrics"
+  label: "Channel Cost Marketing"
+}
+
 
 explore: ximble_master {
   group_label: "Software"

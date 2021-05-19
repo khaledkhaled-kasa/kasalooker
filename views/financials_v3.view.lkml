@@ -413,5 +413,144 @@ view: financials_v3{
     drill_fields: [reservations_v3.confirmationcode, reservations_v3.bookingdate_date, reservations_v3.checkindate_date, reservations_v3.checkoutdate_date, reservations_v3.status, reservations_v3.reservation_night, reservations_v3.num_reservations, amount, adr]
   }
 
+# Channel Cost Dashboard Metrics
+
+  measure: amount_original_excluding_extensions {
+    label: "Original Amount"
+    hidden: yes
+    description: "This is amount as per payment received dates"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${amount_revised} ;;
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability",reservations_v3.extended_booking: "no"]
+  }
+
+  measure: amount_outstanding_excluding_extensions {
+    hidden: yes
+    label: "Amount Outstanding"
+    description: "This is the amount missing from previous scheduled nights"
+    type: sum
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.nightly_outstanding_amount;;
+    filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability",reservations_v3.extended_booking: "no"]
+  }
+
+  measure: amount_excluding_extensions {
+    label: "Booked Revenue"
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    description: "This amount will automatically filter for only confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees). Also, this EXCLUDES extended bookings."
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${amount_original_excluding_extensions} + ${amount_outstanding_excluding_extensions};;
+    drill_fields: [reservations_v3.confirmationcode, reservations_v3.bookingdate_date, reservations_v3.checkindate_date, reservations_v3.checkoutdate_date, reservations_v3.status, reservations_v3.reservation_night, reservations_v3.num_reservations, amount]
+  }
+
+
+  measure: adr_excluding_extensions {
+    label: "ADR"
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    description: "Average daily rate: amount / reservation_night. This only applies to confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees). Also, this EXCLUDES extended bookings. 12% Mark-up included for airbnb & vrbo channels."
+    type: number
+    value_format: "$#,##0.00"
+    sql:
+    CASE
+    WHEN ${reservations_v3.sourcedata_channel} IN ('airbnb','vrbo') THEN (1.12*(${amount_excluding_extensions}) / (NULLIF(${reservations_v3.reservation_night_excluding_extensions}, 0)))
+    ELSE ((${amount_excluding_extensions}) / (NULLIF(${reservations_v3.reservation_night_excluding_extensions}, 0)))
+    END;;
+    drill_fields: [reservations_v3.confirmationcode, reservations_v3.bookingdate_date, reservations_v3.checkindate_date, reservations_v3.checkoutdate_date, reservations_v3.status, reservations_v3.reservation_night, reservations_v3.num_reservations, amount]
+  }
+
+  measure: reservation_total_excluding_extensions {
+    label: "Reservation Total (Incl. Platform Fees)"
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    description: "Booked Revenue / Total Booking - Includes 15% platform fee for airbnb and 10% for vrbo."
+    type: number
+    value_format: "$#,##0.00"
+    sql:
+    CASE
+    WHEN ${reservations_v3.sourcedata_channel} = 'airbnb' THEN (1.15*(${amount_excluding_extensions}) / (NULLIF(${reservations_v3.num_reservations_excluding_extensions}, 0)))
+    WHEN ${reservations_v3.sourcedata_channel} = 'vrbo' THEN (1.1*(${amount_excluding_extensions}) / (NULLIF(${reservations_v3.num_reservations_excluding_extensions}, 0)))
+    ELSE ((${amount_excluding_extensions}) / (NULLIF(${reservations_v3.num_reservations_excluding_extensions}, 0)))
+    END;;
+    drill_fields: [reservations_v3.confirmationcode, reservations_v3.bookingdate_date, reservations_v3.checkindate_date, reservations_v3.checkoutdate_date, reservations_v3.status, reservations_v3.reservation_night, reservations_v3.num_reservations, amount]
+  }
+
+  measure: reservation_total_excluding_extensions_fees {
+    label: "Total Reservation Amount"
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    description: "Booked Revenue / Total Booking - Excluding Platform Fees"
+    type: number
+    value_format: "$#,##0.00"
+    sql: ((${amount_excluding_extensions}) / (NULLIF(${reservations_v3.num_reservations_excluding_extensions}, 0))) ;;
+    drill_fields: [reservations_v3.confirmationcode, reservations_v3.bookingdate_date, reservations_v3.checkindate_date, reservations_v3.checkoutdate_date, reservations_v3.status, reservations_v3.reservation_night, reservations_v3.num_reservations, amount]
+  }
+
+  measure: channel_fee_commission_dollar {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    description: "Channel Fees % * Reservation Total (Incl. Platform Fees)"
+    label: "Channel Fee / Commission $ (L3M)"
+    value_format: "$#,##0.00"
+    type:  number
+    sql: ${reservations_v3.channel_fee_commission} * ${reservation_total_excluding_extensions}  ;;
+  }
+
+  measure: channel_fee_revenue_dollar {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    description: "Channel Fee Revenue % * Reservation Total (Incl. Platform Fees)"
+    label: "Channel Fee Revenue for Kasa $ (L3M)"
+    value_format: "$#,##0.00"
+    type:  number
+    sql: ${reservations_v3.channel_fee_revenue} * ${reservation_total_excluding_extensions}  ;;
+  }
+
+  measure: payment_processing_Fees {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    description: "Channel Fees (Preset)"
+    label: "Payment Processing / Stripe Fees %"
+    value_format: "0.00%"
+    type:  number
+    sql:
+    CASE WHEN ${reservations_v3.sourcedata_channel} IN ('kasawebsite','gx','booking.com','expedia','vrbo','nestpick') THEN 0.0255
+    WHEN ${reservations_v3.sourcedata_channel} IN ('airbnb','zeus','oasis') THEN 0
+    ELSE null
+    END;;
+  }
+
+  measure: average_strip_fees {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    description: "Payment Processing Revenue % * Reservation Total (Excluding. Platform Fees)"
+    label: "Average Stripe Fees per Booking"
+    value_format: "$#,##0.00"
+    type:  number
+    sql: ${payment_processing_Fees} * ${reservation_total_excluding_extensions_fees}  ;;
+  }
+
+  measure: finance_time_spent_per_booking {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    description: "Channel Fees (Preset)"
+    label: "Finance Time Spent / Booking (hours) (L3M)"
+    value_format: "0.00"
+    type:  number
+    sql:
+    CASE WHEN ${reservations_v3.sourcedata_channel} IN ('kasawebsite','gx','expedia','vrbo','nestpick','zeus','oasis') THEN 0.08
+    WHEN ${reservations_v3.sourcedata_channel} = 'airbnb' THEN 0.05
+    WHEN ${reservations_v3.sourcedata_channel} = 'booking.com' THEN 0.15
+    ELSE null
+    END;;
+  }
+
+  measure: finance_time_spent_per_dispute {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    description: "Channel Fees (Preset)"
+    label: "Finance Time Spent spent per Dispute (hours)"
+    value_format: "0"
+    type:  number
+    sql:
+    CASE WHEN ${reservations_v3.sourcedata_channel} IN ('kasawebsite','gx','expedia','vrbo','nestpick','zeus','oasis','airbnb','booking.com') THEN 1
+    ELSE null
+    END;;
+  }
+
+
 
 }

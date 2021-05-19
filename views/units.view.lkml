@@ -151,7 +151,7 @@ view: units {
 
   dimension: nexiaid {
     type: string
-    sql: ${TABLE}.nexiaid ;;
+    sql: ${TABLE}.externalrefs.nexiaid ;;
   }
 
 

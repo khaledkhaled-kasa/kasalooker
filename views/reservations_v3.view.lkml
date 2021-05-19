@@ -581,6 +581,99 @@ view: reservations_v3 {
 
   }
 
+  # Channel Cost Dashboard Metrics
+
+
+  measure: num_reservations_excluding_extensions {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    label: "Total Confirmed Bookings"
+    description: "Number of unique reservations. This metric will only consider confirmed / checked in bookings. Also, this EXCLUDES extended bookings."
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    filters: [capacity_night_part_of_res: "yes", extended_booking: "no", status: "confirmed, checked_in"]
+    drill_fields: [reservation_details*]
+  }
+
+
+  measure: num_reservations_canceled_excluding_extensions {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    label: "Total Cancelled Bookings"
+    description: "Number of unique reservations. This metric will only filter for canceled bookings. Also, this EXCLUDES extended bookings."
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    filters: [capacity_night_part_of_res: "yes", extended_booking: "no", status: "cancelled, canceled"]
+    drill_fields: [reservation_details*]
+  }
+
+
+  measure: reservation_night_excluding_extensions {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    label: "Total Confirmed Room Nights"
+    description: "Reservation night stay. This metric will only consider confirmed / checked in bookings. Also, this EXCLUDES extended bookings."
+    type:  count_distinct
+    sql: CONCAT(${confirmationcode}, '-', ${capacities_v3.night_date});;
+    filters: [capacity_night_part_of_res: "yes",extended_booking: "no", status: "confirmed, checked_in"]
+    drill_fields: [reservation_details*]
+
+  }
+
+  measure: avg_lead_time_excluding_extensions {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    label: "Average Lead Time"
+    description: "Days between booking and checking in. This metric will only consider confirmed / checked in bookings. Also, this EXCLUDES extended bookings."
+    value_format: "0.0"
+    type:  average_distinct
+    sql_distinct_key: ${confirmationcode} ;;
+    sql: ${lead_time};;
+    drill_fields: [reservation_details*]
+    filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in",extended_booking: "no"]
+  }
+
+  measure: avg_length_of_stay_excluding_extensions {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    description: "Number of days of stay. This metric will only consider confirmed / checked in bookings. Also, this EXCLUDES extended bookings."
+    label: "Average Length of Stay"
+    value_format: "0.0"
+    type:  average_distinct
+    sql_distinct_key: ${confirmationcode} ;;
+    sql: ${length_of_stay};;
+    drill_fields: [reservation_details*]
+    filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in",extended_booking: "no"]
+  }
+
+  measure: channel_fee_commission {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    description: "Channel Fees (Preset)"
+    label: "Channel Fee / Commission % (L3M)"
+    value_format: "0.0%"
+    type:  number
+    sql:
+    CASE WHEN ${sourcedata_channel} = 'airbnb' THEN 0.03
+    WHEN ${sourcedata_channel} = 'booking.com' THEN 0.166
+    WHEN ${sourcedata_channel} = 'expedia' THEN 0.18
+    WHEN ${sourcedata_channel} = 'vrbo' THEN 0.05
+    WHEN ${sourcedata_channel} = 'nestpick' THEN 0.07
+    WHEN ${sourcedata_channel} IN ('zeus','oasis') THEN 0.15
+    WHEN ${sourcedata_channel} IN ('kasawebsite','gx') THEN 0
+    ELSE null
+    END;;
+  }
+
+  measure: channel_fee_revenue {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    description: "Channel Fees (Preset)"
+    label: "Channel Fee Revenue for Kasa"
+    value_format: "0.0%"
+    type:  number
+    sql:
+    CASE WHEN ${sourcedata_channel} IN ('airbnb','booking.com', 'expedia', 'vrbo', 'nestpick', 'zeus', 'oasis') THEN 0
+    WHEN ${sourcedata_channel} IN ('kasawebsite','gx') THEN 0.1
+    ELSE null
+    END;;
+  }
+
+
+
 
 
     set:reservation_details {
