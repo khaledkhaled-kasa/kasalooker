@@ -63,6 +63,21 @@ view: devices {
     sql:  ${TABLE}.metadata.mount_status ;;
   }
 
+  dimension: smoke_requires_new_sensor {
+    type:  string
+    sql:  ${TABLE}.smoke.requiresnewsensors ;;
+  }
+
+  dimension: noise_sound_level_high {
+    type:  string
+    sql:  ${TABLE}.noise.sound_level_high ;;
+  }
+
+  dimension: noise_sound_level_high_quiet_hours {
+    type:  string
+    sql:  ${TABLE}.noise.sound_level_high_quiet_hours ;;
+  }
+
   measure: count {
     type: count
     drill_fields: [deviceid]
