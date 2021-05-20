@@ -643,7 +643,7 @@ view: reservations_v3 {
 
   measure: channel_fee_commission {
     view_label: "Channel Cost Dashboard Metrics (Marketing)"
-    description: "Channel Fees (Preset)"
+    description: "Preset"
     label: "Channel Fee / Commission % (L3M)"
     value_format: "0.0%"
     type:  number
@@ -661,7 +661,7 @@ view: reservations_v3 {
 
   measure: channel_fee_revenue {
     view_label: "Channel Cost Dashboard Metrics (Marketing)"
-    description: "Channel Fees (Preset)"
+    description: "Preset"
     label: "Channel Fee Revenue for Kasa"
     value_format: "0.0%"
     type:  number
@@ -672,6 +672,79 @@ view: reservations_v3 {
     END;;
   }
 
+  measure: percentage_cancellations_kasa_initiated {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    description: "Preset - sample from 2/12-2/19"
+    label: "% Cancellations Kasa Initiated / Invalid Card"
+    value_format: "0.0%"
+    type:  number
+    sql:
+    CASE WHEN ${sourcedata_channel} = 'kasawebsite' THEN 0.306
+    WHEN ${sourcedata_channel} = 'gx' THEN 0.217
+    WHEN ${sourcedata_channel} = 'booking.com' THEN 0.434
+    WHEN ${sourcedata_channel} = 'vrbo' THEN 0.438
+    WHEN ${sourcedata_channel} IN ('airbnb', 'expedia', 'nestpick', 'zeus', 'oasis') THEN 0
+    ELSE null
+    END;;
+  }
+
+  measure: percentage_cancelled_bookings {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    label: "% Cancelled Bookings"
+    value_format: "0.0%"
+    type:  number
+    sql: ${num_reservations_canceled_excluding_extensions} / (${num_reservations_canceled_excluding_extensions} + ${num_reservations_excluding_extensions}) ;;
+  }
+
+  measure: percentage_cancellations_excluding_invalid_card {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    label: "% Cancellations Excluding Invalid Card"
+    value_format: "0.0%"
+    type:  number
+    sql: (1 - ${percentage_cancellations_kasa_initiated})*${percentage_cancelled_bookings} ;;
+  }
+
+  measure: avg_finance_time_spent_cancelled_reservation {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    label: "Average Finance Time Spent / Cancelled Reservation (hours)"
+    value_format: "0.00"
+    type:  number
+    sql: ((1 - ${percentage_cancellations_kasa_initiated})*${financials_v3.finance_time_spent_per_standard_cancellation}) + (${percentage_cancellations_kasa_initiated}*${financials_v3.finance_time_spent_per_invalid_card});;
+  }
+
+
+  measure: finance_personnel_cost_per_cancelled_reservation {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    description: "Finance Time Spent per Cancelled Reservation * $35"
+    label: "Finance Personnel Cost per Cancelled Reservation $"
+    value_format: "$#,##0.00"
+    type:  number
+    sql: ${avg_finance_time_spent_cancelled_reservation} * 35  ;;
+  }
+
+  measure: avg_cancellation_window_no_extensions {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    label: "Average Cancellation Window (days)"
+    description: "Days between cancelling and checking in. This EXCLUDES Extended Bookings."
+    value_format: "0.0"
+    type:  average_distinct
+    sql_distinct_key: ${confirmationcode} ;;
+    sql: ${cancellation_window};;
+    drill_fields: [reservation_details*]
+    filters: [capacity_night_part_of_res: "yes", extended_booking: "no"]
+  }
+
+  measure: avg_booking_window_cancelled_bookings {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    label: "Average Booking Window for Cancelled Bookings (days)"
+    description: "Days between booking and checking in. This metric will only consider confirmed / checked in bookings. Also, this EXCLUDES extended bookings."
+    value_format: "0.0"
+    type:  average_distinct
+    sql_distinct_key: ${confirmationcode} ;;
+    sql: ${lead_time};;
+    drill_fields: [reservation_details*]
+    filters: [capacity_night_part_of_res: "yes", status: "cancelled, canceled", extended_booking: "no"]
+  }
 
 
 

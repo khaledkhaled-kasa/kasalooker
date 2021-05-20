@@ -21,7 +21,6 @@ view: channel_cost_marketing {
       and r2.status != 'canceled')
       left join financials_f1 f1 on r1._id = f1.reservation left join financials_f1 f2 on r2._id = f2.reservation
       where r1.status = 'canceled'
-      -- and r1.checkoutdatelocal BETWEEN '2021-04-01' AND '2021-04-30'
       and r1.confirmationcode is not null
        ;;
   }
@@ -189,9 +188,66 @@ view: channel_cost_marketing {
     label: "% Cancelled Bookings not Rebooked"
     type: number
     value_format: "0.0%"
-    sql: ${count_not_rebooked} / ${count_total} ;;
+    sql: ${count_not_rebooked} / nullif(${count_total},0) ;;
 
   }
 
+
+}
+
+view: missing_cost_channel_metrics {
+  derived_table: {
+    sql: SELECT * FROM `bigquery-analytics-272822.Gsheets.cost_channel_dash_metrics`
+      ;;
+  }
+
+
+  dimension: channel {
+    type: string
+    sql: ${TABLE}.Channel ;;
+  }
+
+  # dimension: month {
+  #   type: date
+  #   datatype: date
+  #   sql: ${TABLE}.Month ;;
+  # }
+
+  dimension_group: month {
+    label: ""
+    hidden: no
+    type: time
+    timeframes: [
+      month,
+      month_name,
+      quarter,
+      year
+    ]
+    sql: TIMESTAMP(${TABLE}.month) ;;
+    convert_tz: no
+  }
+
+  dimension: metric {
+    type: string
+    sql: ${TABLE}.Metric ;;
+  }
+
+  dimension: value {
+    type: number
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    label: "Marketing Fees (ex: TravelAds) (L3M)"
+    description: "Preset from Marketing Sheet"
+    value_format: "$#,##0.00"
+    sql: ${TABLE}.Value ;;
+  }
+
+  measure: value_measure {
+    type: max
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    label: "Marketing Fees (ex: TravelAds) (L3M)"
+    description: "Preset from Marketing Sheet"
+    value_format: "$#,##0.00"
+    sql: coalesce(${TABLE}.Value,0) ;;
+  }
 
 }

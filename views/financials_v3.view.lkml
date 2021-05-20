@@ -505,7 +505,7 @@ view: financials_v3{
 
   measure: payment_processing_Fees {
     view_label: "Channel Cost Dashboard Metrics (Marketing)"
-    description: "Channel Fees (Preset)"
+    description: "Preset"
     label: "Payment Processing / Stripe Fees %"
     value_format: "0.00%"
     type:  number
@@ -527,7 +527,7 @@ view: financials_v3{
 
   measure: finance_time_spent_per_booking {
     view_label: "Channel Cost Dashboard Metrics (Marketing)"
-    description: "Channel Fees (Preset)"
+    description: "Preset"
     label: "Finance Time Spent / Booking (hours) (L3M)"
     value_format: "0.00"
     type:  number
@@ -541,7 +541,7 @@ view: financials_v3{
 
   measure: finance_time_spent_per_dispute {
     view_label: "Channel Cost Dashboard Metrics (Marketing)"
-    description: "Channel Fees (Preset)"
+    description: "Preset"
     label: "Finance Time Spent spent per Dispute (hours)"
     value_format: "0"
     type:  number
@@ -551,6 +551,51 @@ view: financials_v3{
     END;;
   }
 
+  measure: finance_time_spent_per_standard_cancellation {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    description: "Preset"
+    label: "Finance Time Spent / Standard Cancellation (hours)"
+    value_format: "0.00"
+    type:  number
+    sql:
+    CASE WHEN ${reservations_v3.sourcedata_channel} IN ('kasawebsite','gx','booking.com','vrbo') THEN 0.20
+    WHEN ${reservations_v3.sourcedata_channel} IN ('expedia','nestpick','zeus','oasis','airbnb') THEN 0
+    ELSE null
+    END;;
+  }
+
+  measure: finance_personnel_cost_per_standard_cancellation {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    description: "Finance Time Spent per Standard Cancellation * $35"
+    label: "Finance Personnel Cost per Standard Cancellation $"
+    value_format: "$#,##0.00"
+    type:  number
+    sql: ${finance_time_spent_per_standard_cancellation} * 35  ;;
+  }
+
+  measure: finance_time_spent_per_invalid_card {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    description: "Preset"
+    label: "Finance Time Spent / Invalid Card Reservation (hours)"
+    value_format: "0.00"
+    type:  number
+    sql:
+    CASE WHEN ${reservations_v3.sourcedata_channel} = 'booking.com' THEN 1
+    WHEN ${reservations_v3.sourcedata_channel} IN ('kasawebsite','gx') THEN 0.5
+    WHEN ${reservations_v3.sourcedata_channel} = 'vrbo' THEN 0.25
+    WHEN ${reservations_v3.sourcedata_channel} IN ('airbnb','expedia','nestpick','zeus','oasis') THEN 0
+    ELSE null
+    END;;
+  }
+
+  measure: finance_personnel_cost_per_invalid_card_cancellation {
+    view_label: "Channel Cost Dashboard Metrics (Marketing)"
+    description: "Finance Time Spent per Invalid Card * $35"
+    label: "Finance Personnel Cost per Invalid Card Cancellation $"
+    value_format: "$#,##0.00"
+    type:  number
+    sql: ${finance_time_spent_per_invalid_card} * 35  ;;
+  }
 
 
 }

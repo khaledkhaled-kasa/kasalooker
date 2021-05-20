@@ -476,6 +476,7 @@ explore: capacities_v3 {
   }
 
 
+
   # join: reviews {
   #   type:  full_outer
   #   relationship:  one_to_one
@@ -503,6 +504,7 @@ explore: capacities_v3 {
 #     relationship: one_to_one
 #     sql_on: ${latest_listing_review_date.airbnb_reviews_listing_id} = ${airbnb_reviews.listing_id} ;;
 #   }
+
 
 }
 
@@ -689,6 +691,15 @@ explore: t_s_incident_report {
 explore: channel_cost_marketing {
   group_label: "Kasa Metrics"
   label: "Channel Cost Marketing"
+
+  join: missing_cost_channel_metrics {
+    type: full_outer
+    relationship: one_to_one
+    sql_on: ${channel_cost_marketing.source_channel_booking_1} = ${missing_cost_channel_metrics.channel}
+      AND ${channel_cost_marketing.checkoutdate_1_month} = ${missing_cost_channel_metrics.month_month};;
+  }
+
+
 }
 
 
