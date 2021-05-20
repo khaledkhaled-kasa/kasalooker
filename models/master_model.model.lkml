@@ -699,6 +699,59 @@ explore: channel_cost_marketing {
       AND ${channel_cost_marketing.checkoutdate_1_month} = ${missing_cost_channel_metrics.month_month};;
   }
 
+}
+
+explore: slack_bugs_tech {
+  fields: [
+    ALL_FIELDS*,
+    -pom_information*,
+    -airbnb_reviews.cleaning_rating_score, -airbnb_reviews.cleaning_rating_score_weighted,
+    -airbnb_reviews.clean_count_5_star_first90,
+    -airbnb_reviews.clean_count_less_than_4_star_first90,
+    -airbnb_reviews.count_clean_first90,
+    -airbnb_reviews.net_quality_score_clean_first90,
+    -airbnb_reviews.percent_5_star_clean_first90,
+    -airbnb_reviews.percent_less_than_4_star_clean_first90]
+  group_label: "Product & Tech"
+  label: "Slack Bugs"
+
+  join: reservations_clean {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${reservations_clean.confirmation_code} = ${slack_bugs_tech.confirmation_code};;
+  }
+
+  join: units {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${reservations_clean.unit} = ${units._id};;
+  }
+
+  join: complexes {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${complexes._id} = ${units.complex};;
+  }
+
+  join: airbnb_reviews {
+    type: left_outer
+    relationship:  one_to_one
+    sql_on: ${reservations_clean.confirmation_code} = ${airbnb_reviews.reservation_code} ;;
+  }
+
+  join: post_checkout_v2 {
+    view_label: "Post Checkout Surveys V2"
+    type:  left_outer
+    relationship: one_to_one
+    sql_on:  ${post_checkout_v2.confirmationcode} = ${reservations_clean.confirmation_code} ;;
+  }
+
+  join: geo_location {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on:  ${units.address_city} = ${geo_location.city}
+      and ${units.address_state} = ${geo_location.state};;
+  }
 
 }
 
