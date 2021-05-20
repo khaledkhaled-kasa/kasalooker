@@ -133,7 +133,7 @@ view: disputes_tracker {
   }
 
   measure: dispute_percent {
-    label: "Dispute %"
+    label: "Dispute % of Revenue"
     type: number
     value_format: "0.00%"
     sql: ${dispute_total} / nullif(${stripe_aggregated_balance.gross_sum},0) ;;
@@ -221,6 +221,14 @@ view: disputes_tracker {
     type: count
     hidden: no
     filters: [resolution: "Won"]
+    drill_fields: [detail*]
+  }
+
+  measure: dispute_count_lost {
+    label: "Total Lost Disputes"
+    type: count
+    hidden: no
+    filters: [resolution: "Lost"]
     drill_fields: [detail*]
   }
 
