@@ -689,8 +689,8 @@ explore: t_s_incident_report {
 }
 
 explore: channel_cost_marketing {
-  group_label: "Kasa Metrics"
-  label: "Channel Cost Marketing"
+  group_label: "Marketing Analytics"
+  label: "Channel Cost Dashboard"
 
   join: missing_cost_channel_metrics {
     type: full_outer
