@@ -43,17 +43,20 @@ view_label: "Check-In Survey Data"
 
   dimension: overallrating {
     label: "Overall Rating"
-    hidden: yes
+    hidden: no
     type: number
     sql: ${TABLE}.overallrating ;;
   }
 
-  # dimension: overallratingstandardized {
-  #   description: "Overall Rating (Standardized)"
-  #   label: "Overall Rating (Standardized)"
-  #   type: number
-  #   sql: ${TABLE}.overallratingstandardized ;;
-  # }
+    dimension: overallrating_bucket {
+      label: "Overall Rating (Bad/Neutral/Perfect)"
+      hidden: no
+      type: string
+      sql: CASE WHEN ${TABLE}.overallrating = 5 THEN "Perfect"
+      WHEN ${TABLE}.overallrating = 4 THEN "Neutral"
+      WHEN ${TABLE}.overallrating BETWEEN 1 AND 3 THEN "Bad"
+      END;;
+    }
 
   dimension: review_tags {
     type: string
@@ -77,6 +80,7 @@ view_label: "Check-In Survey Data"
     measure: percent_thumbs_up {
       type: number
       label: "% Thumbs Up"
+      description: "This will pull the % of ratings which scored a 5 for either cleanliness or checkin."
       value_format: "0%"
       sql: ${count_thumbs_up} / nullif(${count},0) ;;
     }
@@ -125,9 +129,79 @@ view_label: "Check-In Survey Data"
   }
 
   measure: count {
-    label: "Review Count"
+    label: "Review Count (Total)"
+    description: "This will pull the # of reviews for either cleanliness or checkin."
     type: count_distinct
     sql: ${reservation};;
     drill_fields: [reservations_clean.confirmation_code]
   }
+
+    measure: count_bad {
+      group_label: "NQS Metrics"
+      label: "Review Count (Bad)"
+      description: "This will pull the # of 1-3 star reviews for either cleanliness or checkin."
+      type: count_distinct
+      sql: ${reservation};;
+      drill_fields: [reservations_clean.confirmation_code]
+      filters: [overallrating_bucket: "Bad"]
+    }
+
+    measure: count_neutral {
+      group_label: "NQS Metrics"
+      label: "Review Count (Neutral)"
+      description: "This will pull the # of 4 star reviews for either cleanliness or checkin."
+      type: count_distinct
+      sql: ${reservation};;
+      filters: [overallrating_bucket: "Neutral"]
+      drill_fields: [reservations_clean.confirmation_code]
+    }
+
+    measure: count_perfect {
+      group_label: "NQS Metrics"
+      label: "Review Count (Perfect)"
+      description: "This will pull the # of 5 star reviews for either cleanliness or checkin."
+      type: count_distinct
+      sql: ${reservation};;
+      filters: [overallrating_bucket: "Perfect"]
+      drill_fields: [reservations_clean.confirmation_code]
+    }
+
+    measure: percent_bad {
+      group_label: "NQS Metrics"
+      description: "This will pull the % Bad Stays for either cleanliness or checkin."
+      label: "% Bad Stays"
+      value_format: "0.0%"
+      type: number
+      sql: ${count_bad} / nullif(${count},0);;
+    }
+
+    measure: percent_neutral {
+      group_label: "NQS Metrics"
+      description: "This will pull the % Neutral Stays for either cleanliness or checkin."
+      label: "% Neutral Stays"
+      value_format: "0.0%"
+      type: number
+      sql: ${count_neutral} / nullif(${count},0);;
+    }
+
+    measure: percent_perfect {
+      group_label: "NQS Metrics"
+      description: "This will pull the % Perfect Stays for either cleanliness or checkin."
+      label: "% Perfect Stays"
+      value_format: "0.0%"
+      type: number
+      sql: ${count_perfect} / nullif(${count},0);;
+    }
+
+    measure: net_quality_score {
+      group_label: "NQS Metrics"
+      description: "This will pull the NQS for either cleanliness or checkin."
+      value_format: "0.0"
+      type: number
+      sql: 100*(${percent_perfect} - ${percent_bad});;
+    }
+
+
+
+
 }

@@ -1,5 +1,7 @@
 view: channel_cost_marketing {
   derived_table: {
+
+    # This table is created to pull cancelled bookings which have / have never been rebooked
     sql: WITH financials_f1 as (
       select reservation, round(sum(amount__fl),2) amount
       from financials
