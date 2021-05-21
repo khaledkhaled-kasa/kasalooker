@@ -10,6 +10,7 @@ view: issue_categories {
   }
 
   dimension: access_io_tinfluenced {
+    label: "Access/IOT Influenced"
     type: string
     sql: ${TABLE}.AccessIoTInfluenced ;;
   }
@@ -20,6 +21,7 @@ view: issue_categories {
   }
 
   dimension: kfcinfluenced {
+    label: "KFC Influenced"
     type: string
     sql: ${TABLE}.KFCInfluenced ;;
   }
