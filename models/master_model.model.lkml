@@ -102,7 +102,7 @@ explore: breezeway_export {
   join: pom_information {
     view_label: "POM Information"
     type: left_outer
-    relationship: many_to_one
+    relationship: one_to_one
     sql_on: ${units.propcode} = ${pom_information.Prop_Code} ;;
   }
 
@@ -236,7 +236,7 @@ explore: units_buildings_information {
   join: pom_information {
     view_label: "POM Information"
     type: left_outer
-    relationship: many_to_one
+    relationship: one_to_one
     sql_on: ${units_buildings_information.propcode} = ${pom_information.Prop_Code} ;;
   }
 
@@ -618,7 +618,7 @@ explore: pom_qa_walkthrough_survey {
   join: pom_information {
     view_label: "POM Information"
     type: left_outer
-    relationship: many_to_one
+    relationship: one_to_one
     sql_on: ${pom_qa_walkthrough_survey.property_code_3_letter} = ${pom_information.Prop_Code} ;;
   }
 
