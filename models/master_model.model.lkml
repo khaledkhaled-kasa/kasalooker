@@ -755,6 +755,19 @@ explore: slack_bugs_tech {
 
 }
 
+explore: guests {
+  group_label: "Guests Information"
+  label: "Guests (Testing)"
+
+  # join: reservations_v3 {
+  #   type: left_outer
+  #   relationship: one_to_many
+  #   sql_on: ${guests._id} = ${reservations_v3.guest};;
+  # }
+
+}
+
+
 
 explore: ximble_master {
   group_label: "Software"
