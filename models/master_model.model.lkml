@@ -297,7 +297,7 @@ explore: reservations_clean {
   join: pom_information {
     view_label: "POM Information"
     type: left_outer
-    relationship: many_to_one
+    relationship: one_to_one
     sql_on: ${complexes__address.propcode_revised} = ${pom_information.Prop_Code} ;;
   }
 
