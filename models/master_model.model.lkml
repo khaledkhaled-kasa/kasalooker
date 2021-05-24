@@ -1,8 +1,8 @@
 connection: "bigquery"
 
-include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
-# include: "/**/*.view.lkml"                 # include all views in this project
-# include: "/dashboards/*.dashboard.lookml"               # include a LookML dashboard called my_dashboard
+include: "/views/*.view.lkml"                 # include all views in the views/ folder in this project
+# include: "/**/*.view.lkml"                  # include all views in this project
+# include: "/dashboards/*.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
 
 
@@ -27,7 +27,7 @@ datagroup: pom_checklist_default_datagroup {
 }
 
 datagroup: reviews_default_datagroup {
-  max_cache_age: "6 hours"
+  max_cache_age: "1 hours"
 }
 
 datagroup: kasametrics_reservations_datagroup {
@@ -43,7 +43,7 @@ datagroup: gv_form_ts_default_datagroup {
 
 datagroup: capacities_v3_default_datagroup {
   sql_trigger: SELECT MAX(createdat) from capacitydenorms;;
-  max_cache_age: "24 hours"
+  max_cache_age: "1 hours"
 }
 
 datagroup: ximble_default_datagroup {

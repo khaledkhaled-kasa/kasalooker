@@ -1,6 +1,12 @@
 view: issue_categories {
-  sql_table_name: `bigquery-analytics-272822.Gsheets.issue_categories`
-    ;;
+
+  derived_table: {
+    sql:   SELECT *
+          FROM `bigquery-analytics-272822.Gsheets.issue_categories`
+       ;;
+    persist_for: "24 hours"
+  }
+
 
   dimension: primary_key {
     type: string
@@ -9,45 +15,106 @@ view: issue_categories {
     sql: ${parent_category} || ${sub_category} ;;
   }
 
+  dimension: kustomer_issue_label {
+    label: "Issue Category (API Name)"
+    description: "This will pull the issue category in the same name format shown from Kustomer's API"
+    type: string
+    sql: ${TABLE}.Kustomer_Issue_Label ;;
+  }
+
   dimension: access_io_tinfluenced {
     label: "Access/IOT Influenced"
-    type: string
-    sql: ${TABLE}.AccessIoTInfluenced ;;
+    type: yesno
+    sql: ${TABLE}.Access___IoT_Influenced  ;;
+  }
+
+
+  dimension: tech_influenced {
+    type: yesno
+    sql: ${TABLE}.Tech_Influenced  ;;
   }
 
   dimension: external_influenced {
-    type: string
-    sql: ${TABLE}.ExternalInfluenced ;;
+    type: yesno
+    sql: ${TABLE}.External_Influenced ;;
   }
 
   dimension: kfcinfluenced {
     label: "KFC Influenced"
-    type: string
-    sql: ${TABLE}.KFCInfluenced ;;
+    type: yesno
+    sql: ${TABLE}.KFC_Influenced   ;;
   }
 
   dimension: kontrol_influenced {
-    type: string
-    sql: ${TABLE}.KontrolInfluenced ;;
+    type: yesno
+    sql: ${TABLE}.Kontrol_Influenced ;;
   }
 
   dimension: parent_category {
     type: string
-    sql: ${TABLE}.ParentCategory ;;
+    sql: ${TABLE}.Parent ;;
   }
 
   dimension: sub_category {
     type: string
-    sql: ${TABLE}.SubCategory ;;
+    sql: ${TABLE}.Sub ;;
   }
 
-  dimension: tech_influenced {
+  dimension: airbnb_subcategory {
     type: string
-    sql: ${TABLE}.TechInfluenced ;;
+    label: "Airbnb Subcategory"
+    sql: ${TABLE}.Airbnb_Subcategory ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: []
+
+  measure: unique_conversations_kfc {
+    label: "Unique Conversations (KFC Influenced)"
+    description: "Unique # of conversations (doesn't contain at least one message sent by that agent)"
+    type: count_distinct
+    sql: ${conversation.id} ;;
+    value_format: "###"
+    drill_fields: [conversation.customer_id, conversation.id, conversation.created_date, message.created_date]
+    filters: [kfcinfluenced: "yes"]
   }
+
+  measure: unique_conversations_iot {
+    label: "Unique Conversations (Access & IoT Influenced)"
+    description: "Unique # of conversations (doesn't contain at least one message sent by that agent)"
+    type: count_distinct
+    sql: ${conversation.id} ;;
+    value_format: "###"
+    drill_fields: [conversation.customer_id, conversation.id, conversation.created_date, message.created_date]
+    filters: [access_io_tinfluenced: "yes"]
+  }
+
+  measure: unique_conversations_external {
+    label: "Unique Conversations (External Influenced)"
+    description: "Unique # of conversations (doesn't contain at least one message sent by that agent)"
+    type: count_distinct
+    sql: ${conversation.id} ;;
+    value_format: "###"
+    drill_fields: [conversation.customer_id, conversation.id, conversation.created_date, message.created_date]
+    filters: [external_influenced: "yes"]
+  }
+
+  measure: unique_conversations_kontrol {
+    label: "Unique Conversations (Kontrol Influenced)"
+    description: "Unique # of conversations (doesn't contain at least one message sent by that agent)"
+    type: count_distinct
+    sql: ${conversation.id} ;;
+    value_format: "###"
+    drill_fields: [conversation.customer_id, conversation.id, conversation.created_date, message.created_date]
+    filters: [kontrol_influenced: "yes"]
+  }
+
+  measure: unique_conversations_tech {
+    label: "Unique Conversations (Tech Influenced)"
+    description: "Unique # of conversations (doesn't contain at least one message sent by that agent)"
+    type: count_distinct
+    sql: ${conversation.id} ;;
+    value_format: "###"
+    drill_fields: [conversation.customer_id, conversation.id, conversation.created_date, message.created_date]
+    filters: [tech_influenced: "yes"]
+  }
+
 }
