@@ -67,12 +67,21 @@ view: issue_categories {
   }
 
 
+  measure: unique_conversations {
+    label: "Unique Conversations (All)"
+    description: "Unique # of conversations (doesn't contain at least one message sent by that agent)"
+    type: count_distinct
+    sql: ${conversation.id} ;;
+    value_format: "#,##0"
+    drill_fields: [conversation.customer_id, conversation.id, conversation.created_date, message.created_date, reservations_kustomer.confirmationcode]
+  }
+
   measure: unique_conversations_kfc {
     label: "Unique Conversations (KFC Influenced)"
     description: "Unique # of conversations (doesn't contain at least one message sent by that agent)"
     type: count_distinct
     sql: ${conversation.id} ;;
-    value_format: "###"
+    value_format: "#,##0"
     drill_fields: [conversation.customer_id, conversation.id, conversation.created_date, message.created_date]
     filters: [kfcinfluenced: "yes"]
   }
@@ -112,7 +121,7 @@ view: issue_categories {
     description: "Unique # of conversations (doesn't contain at least one message sent by that agent)"
     type: count_distinct
     sql: ${conversation.id} ;;
-    value_format: "###"
+    value_format: "#,##0"
     drill_fields: [conversation.customer_id, conversation.id, conversation.created_date, message.created_date]
     filters: [tech_influenced: "yes"]
   }
