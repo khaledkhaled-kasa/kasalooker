@@ -78,6 +78,12 @@ view: devices {
     sql:  ${TABLE}.noise.sound_level_high_quiet_hours ;;
   }
 
+  measure: avg_minut_health {
+    type: average
+    sql: ${rssi} ;;
+    value_format_name: decimal_2
+  }
+
   measure: count {
     type: count
     drill_fields: [deviceid]
