@@ -6,6 +6,7 @@ include: "/views/*.view.lkml"                # include all views in the views/ f
 explore: devices {
   group_label: "Product & Tech"
   label: "IoT Devices"
+
   join: units {
     type: left_outer
     relationship: many_to_one
