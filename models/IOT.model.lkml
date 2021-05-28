@@ -2,6 +2,10 @@ connection: "bigquery"
 
 include: "/views/*.view.lkml"                # include all views in the views/ folder in this project
 
+datagroup: pom_checklist_default_datagroup {
+  sql_trigger: SELECT count(*) FROM Gsheets.POM_QA_Walkthrough_Survey ;;
+  max_cache_age: "1 hours"
+}
 
 explore: devices {
   group_label: "Product & Tech"
@@ -11,6 +15,13 @@ explore: devices {
     type: left_outer
     relationship: many_to_one
     sql_on: ${devices.unit} = ${units._id} ;;
+  }
+
+  join: pom_information {
+    view_label: "POM Information"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units.propcode} = ${pom_information.Prop_Code} ;;
   }
 
   join: noiseaware {
