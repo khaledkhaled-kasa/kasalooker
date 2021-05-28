@@ -786,6 +786,28 @@ explore: kasa_kredit_reimbursement {
     relationship: one_to_one
     sql_on: ${reservations_clean.confirmation_code} = ${kasa_kredit_reimbursement.confirmation_code} ;;
   }
+
+  join: units {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${units._id} = ${reservations_clean.unit} ;;
+  }
+
+
+  join: complexes {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${complexes._id} = ${units.complex} ;;
+
+  }
+
+  join: geo_location {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on:  ${units.address_city} = ${geo_location.city}
+      and ${units.address_state} = ${geo_location.state};;
+  }
+
 }
 
 

@@ -9,6 +9,7 @@ view: kasa_stay_employee_feedback {
   dimension_group: feedback {
     type: time
     sql: ${TABLE}.Timestamp ;;
+    convert_tz: no
   }
 
   dimension: email {

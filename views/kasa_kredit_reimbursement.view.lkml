@@ -9,6 +9,7 @@ view: kasa_kredit_reimbursement {
   dimension_group: form_received {
     type: time
     sql: ${TABLE}.Timestamp ;;
+    convert_tz: no
   }
 
   dimension: email_address {
@@ -23,9 +24,13 @@ view: kasa_kredit_reimbursement {
   }
 
   dimension: feedback_received {
-    label: "Feedback Completed?"
-    type: yesno
-    sql: ${kasa_stay_employee_feedback.reservation_code} is not null ;;
+    label: "Feedback Completed? (Yes/No/NA)"
+    view_label: "Kasa Stay Employee Feedback"
+    type: string
+    sql: CASE WHEN (${kasa_stay_employee_feedback.reservation_code} is not null) OR  ${feedback_override} = "Y" THEN "Yes"
+    WHEN ${feedback_override} = "N/A" THEN "NA"
+    ELSE "No"
+    END;;
   }
 
   dimension: booking_amount {
@@ -74,6 +79,13 @@ view: kasa_kredit_reimbursement {
     label: "Exclude?"
     type: yesno
     sql: ${TABLE}.Exclude ;;
+  }
+
+  dimension: feedback_override {
+    view_label: "Kasa Stay Employee Feedback"
+    label: "Override Feedback"
+    type: string
+    sql: ${TABLE}.Feedback_Override ;;
   }
 
   measure: booking_amount_sum {
