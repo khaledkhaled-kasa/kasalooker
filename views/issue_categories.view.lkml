@@ -18,6 +18,7 @@ view: issue_categories {
   dimension: kustomer_issue_label {
     label: "Issue Category (API Name)"
     description: "This will pull the issue category in the same name format shown from Kustomer's API"
+    hidden: yes
     type: string
     sql: ${TABLE}.Kustomer_Issue_Label ;;
   }
