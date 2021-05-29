@@ -53,8 +53,9 @@ view: devices {
     sql: ${TABLE}.connectionstatus ;;
   }
 
-  dimension: laststatusupdate {
-    type: date_time
+  dimension_group: laststatusupdate {
+    type: time
+    timeframes: [time, date, month, year, quarter, week]
     sql: ${TABLE}.laststatusupdate ;;
   }
 
@@ -87,5 +88,11 @@ view: devices {
   measure: count {
     type: count
     drill_fields: [deviceid]
+  }
+
+  measure: total_smartthings_devices {
+    type: count_distinct
+    sql: ${deviceid} ;;
+    filters: [devicetype: "Schlage Door Lock", active: "yes, Yes"]
   }
 }
