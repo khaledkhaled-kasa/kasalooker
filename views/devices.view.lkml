@@ -91,6 +91,8 @@ view: devices {
   }
 
   measure: total_smartthings_devices {
+    label: "Total SmartThings Devices"
+    description: "Returns a count of all ACTIVE SmartThings devices."
     type: count_distinct
     sql: ${deviceid} ;;
     filters: [devicetype: "Schlage Door Lock", active: "yes, Yes"]
