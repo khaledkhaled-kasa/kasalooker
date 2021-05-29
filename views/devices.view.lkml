@@ -97,4 +97,12 @@ view: devices {
     sql: ${deviceid} ;;
     filters: [devicetype: "Schlage Door Lock", active: "yes, Yes"]
   }
+
+  measure: total_minut_devices {
+    label: "Total Minut Devices"
+    description: "Returns a count of all ACTIVE Minut devices."
+    type: count_distinct
+    sql: ${deviceid} ;;
+    filters: [devicetype: "%Minut%", active: "yes, Yes"]
+  }
 }
