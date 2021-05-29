@@ -170,6 +170,7 @@ explore: units_kpo_overview {
 
 
 explore: units_buildings_information {
+  fields: [-geo_location.city_full_uid]
   from: units
   view_label: "Unit Information"
   sql_always_where: ${units_buildings_information.availability_enddate_string} <> 'Invalid date' ;;
@@ -764,6 +765,50 @@ explore: slack_bugs_tech {
 
 }
 
+explore: kasa_kredit_reimbursement {
+  group_label: "People Ops"
+  label: "Kasa Kredits"
+
+  join: kasa_team_summary {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${kasa_kredit_reimbursement.email_address} = ${kasa_team_summary.email};;
+  }
+
+  join: kasa_stay_employee_feedback {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${kasa_kredit_reimbursement.confirmation_code} = ${kasa_stay_employee_feedback.reservation_code} ;;
+  }
+
+  join: reservations_clean {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${reservations_clean.confirmation_code} = ${kasa_kredit_reimbursement.confirmation_code} ;;
+  }
+
+  join: units {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${units._id} = ${reservations_clean.unit} ;;
+  }
+
+
+  join: complexes {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${complexes._id} = ${units.complex} ;;
+
+  }
+
+  join: geo_location {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on:  ${units.address_city} = ${geo_location.city}
+      and ${units.address_state} = ${geo_location.state};;
+  }
+
+}
 
 
 
