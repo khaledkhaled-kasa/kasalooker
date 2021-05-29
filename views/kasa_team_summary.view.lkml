@@ -42,7 +42,7 @@ view: kasa_team_summary {
     type: date
     datatype: date
     sql:  CASE
-          WHEN DATE_SUB(${latest_kasaversary}, INTERVAL 1 YEAR) < ${kasaversary} THEN ${kasaversary}
+          WHEN DATE_SUB(${latest_kasaversary}, INTERVAL 1 YEAR) < ${kasaversary} THEN NULL
           ELSE DATE_SUB(${latest_kasaversary}, INTERVAL 1 YEAR)
           END;;
   }

@@ -103,6 +103,7 @@ view: kasa_kredit_reimbursement {
     value_format: "$#,##0.00"
     sql: ${TABLE}.Amount_to_reimburse ;;
     filters: [exclude: "no", reservations_clean.status: "confirmed, checked_in"]
+    drill_fields: [kasa_team_summary.kasa_employee, email_address, confirmation_code, reservations_clean.bookingdate_date, reservations_clean.checkindate_date, reservations_clean.checkoutdate_date, reservations_clean.status, processed_date, booking_amount, reimbursement_amount]
   }
 
   measure: booking_amount_latest {
@@ -111,7 +112,9 @@ view: kasa_kredit_reimbursement {
     value_format: "$#,##0.00"
     sql: ${TABLE}.What_is_the_total_amount_of_your_booking__including_all_taxes_and_fees_ ;;
     filters: [booking_latest_kasaverary: "yes", new_hire_stay__: "no", exclude: "no", reservations_clean.status: "confirmed, checked_in"]
+    drill_fields: [kasa_team_summary.kasa_employee, email_address, confirmation_code, reservations_clean.bookingdate_date, reservations_clean.checkindate_date, reservations_clean.checkoutdate_date, reservations_clean.status, processed_date, booking_amount, reimbursement_amount]
   }
+
 
   measure: remaining_booking_kredit {
     label: "Remaining Booking Credit (Latest Kasaversary)"
@@ -128,6 +131,7 @@ view: kasa_kredit_reimbursement {
     value_format: "$#,##0.00"
     sql: ${TABLE}.What_is_the_total_amount_of_your_booking__including_all_taxes_and_fees_ ;;
     filters: [booking_previous_kasaverary: "yes", new_hire_stay__: "no", exclude: "no", reservations_clean.status: "confirmed, checked_in"]
+    drill_fields: [kasa_team_summary.kasa_employee, email_address, confirmation_code, reservations_clean.bookingdate_date, reservations_clean.checkindate_date, reservations_clean.checkoutdate_date, reservations_clean.status, processed_date, booking_amount, reimbursement_amount]
   }
 
   measure: remaining_booking_kredit_previous {
