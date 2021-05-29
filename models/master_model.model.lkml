@@ -221,6 +221,13 @@ explore: units_buildings_information {
     sql_on: ${reservations_v3.confirmationcode} = ${airbnb_reviews.reservation_code} ;;
   }
 
+  join: accesses {
+    fields: [total_backup_code_used]
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${reservations_v3.confirmationcode} = ${accesses.confirmationcode} ;;
+  }
+
   join: geo_location {
     type:  left_outer
     relationship: one_to_one
