@@ -1,5 +1,5 @@
 view: reservations_v3 {
-  sql_table_name: `bigquery-analytics-272822.dbt_bizops.reservations_v3`  ;;
+  sql_table_name: `bigquery-analytics-272822.dbt.reservations_v3`  ;;
   label: "Reservations"
 
 
