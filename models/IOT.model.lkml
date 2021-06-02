@@ -7,34 +7,35 @@ datagroup: pom_checklist_default_datagroup {
   max_cache_age: "1 hours"
 }
 
-explore: devices {
+explore: units_and_devices {
+  from: units
   group_label: "Product & Tech"
   label: "IoT Devices"
 
-  join: units {
+  join: devices {
     type: left_outer
-    relationship: many_to_one
-    sql_on: ${devices.unit} = ${units._id} ;;
+    relationship: one_to_many
+    sql_on: ${devices.unit} = ${units_and_devices._id} ;;
   }
 
   join: pom_information {
     view_label: "POM Information"
     type: left_outer
     relationship: one_to_one
-    sql_on: ${units.propcode} = ${pom_information.Prop_Code} ;;
+    sql_on: ${units_and_devices.propcode} = ${pom_information.Prop_Code} ;;
   }
 
   join: noiseaware {
     fields: []
     type: left_outer
     relationship: one_to_one
-    sql_on: ${units.internaltitle} = ${noiseaware.building_unit} ;;
+    sql_on: ${units_and_devices.internaltitle} = ${noiseaware.building_unit} ;;
   }
 
   join: sensors {
     type: left_outer
     relationship: one_to_one
-    sql_on: ${sensors.unit} = ${units._id} ;;
+    sql_on: ${sensors.unit} = ${units_and_devices._id} ;;
   }
 
   join: sensorreadings {

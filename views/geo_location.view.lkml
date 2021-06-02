@@ -49,6 +49,19 @@ view: geo_location {
     sql: ${city} || ', ' || ${state} ;;
   }
 
+  dimension: city_code {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.Package_Recipient ;;
+  }
+
+  dimension: city_full_uid {
+    label: "UID (Full)"
+    view_label: "Units"
+    type: string
+    sql: CONCAT(${city_code},"-",${units.internaltitle}) ;;
+  }
+
 
 
 }
