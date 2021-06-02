@@ -1,11 +1,10 @@
-view: unittest {
+view: units_test {
   derived_table: {
-    sql:  SELECT * , KPO_table.FirstAvailableDate, KPO_table.DeactivatedDate,KPO_table.UID FROM
-    units
-    LEFT JOIN `bigquery-analytics-272822.Gsheets.kpo_overview_clean` KPO_table
-    ON internaltitle =KPO_table.UID
- ;;
-    datagroup_trigger: units_kpo_overview_default_datagroup
+    sql:  SELECT *  FROM
+          `bigquery-analytics-272822.mongo.units`
+          LEFT JOIN  `bigquery-analytics-272822.Gsheets.kpo_overview_clean` KPO_table
+          ON internaltitle =KPO_table.UID
+       ;;
   }
 
   dimension: _id {
@@ -14,8 +13,9 @@ view: unittest {
     type: string
     sql: ${TABLE}._id ;;
   }
+
   dimension: UID {
-    hidden:  yes
+    hidden:  no # yes
     type: string
     sql: ${TABLE}.UID ;;
   }
@@ -43,7 +43,7 @@ view: unittest {
     sql: CASE
           WHEN ${TABLE}.address.state IN ("TX") THEN "Texas"
           WHEN ${TABLE}.address.state IN ("WA","CA","UT","CO") THEN "West"
-          WHEN ${TABLE}.address.state IN ("FL","DC","PA","CT","NJ","SC","NC","GA","VA","TN") THEN "East"
+          WHEN ${TABLE}.address.state IN ("FL","DC","PA","CT","NJ","SC","NC","GA","VA","TN","NY") THEN "East"
           WHEN ${TABLE}.address.state IN ("IL","IA","WI","MO","MN","AZ") THEN "Central"
           ELSE "Other"
           END ;;
@@ -53,18 +53,107 @@ view: unittest {
   {
     label: "Unit Availability Start Date"
     type: date
-    sql: TIMESTAMP(${TABLE}.availability.startdate);;
+    sql:CASE WHEN TIMESTAMP(${KPO_firstAvailableDate_date}) IS NULL THEN TIMESTAMP(${TABLE}.availability.startdate)
+    ELSE TIMESTAMP(${KPO_firstAvailableDate_date}) END ;;
+    convert_tz: no
   }
-
-
   dimension: unit_availability_enddate {
     type:  date
     label: "Unit Availability End Date"
     sql:
+    CASE WHEN TIMESTAMP(${KPO_revised_deactivatedDate_date}) IS NULL THEN TIMESTAMP(${TABLE}.availability.enddate)
+    ELSE TIMESTAMP(${KPO_revised_deactivatedDate_date})END;;
+    convert_tz: no
+  }
+
+  dimension: unitTable_availability_startdate
+  {
+    label: "Unit Table Availability Start Date"
+    hidden: yes
+    type: date
+    sql: TIMESTAMP(${TABLE}.availability.startdate);;
+    convert_tz: no
+  }
+  dimension: unitTable_availability_enddate {
+    type:  date
+    hidden: yes
+    label: "Unit Table  Availability End Date"
+    sql:
     CASE WHEN ${TABLE}.availability.enddate = 'Invalid date' THEN NULL
     ELSE CAST(${TABLE}.availability.enddate as TIMESTAMP)
     END;;
+    convert_tz: no
   }
+
+  dimension_group: KPO_firstAvailableDate {
+    type: time
+    hidden: yes
+    datatype: date
+    timeframes: [
+      date,
+      week,
+      week_of_year,
+      month,
+      month_name,
+      quarter,
+      year
+    ]
+    sql: PARSE_DATE('%m/%d/%Y',${TABLE}.FirstAvailableDate) ;;
+    convert_tz: no
+  }
+
+  dimension_group: KPO_revised_deactivatedDate {
+    type: time
+    datatype: date
+    timeframes: [
+      date,
+      week,
+      week_of_year,
+      month,
+      month_name,
+      quarter,
+      year
+    ]
+    #sql: PARSE_DATE('%m/%d/%Y',${TABLE}.DeactivatedDate) ;;
+    sql: CASE WHEN safe.parse_date('%m/%d/%Y',${TABLE}.DeactivatedDate) IS NULL
+    THEN DATE_SUB(DATE(DATETIME(CURRENT_TIMESTAMP(),'America/Los_Angeles')), INTERVAL -18 MONTH)
+    ELSE safe.parse_date('%m/%d/%Y',deactivateddate)
+    END ;;
+    convert_tz: no
+    hidden: yes
+  }
+
+  dimension_group: KPO_deactivatedDate {
+    type: time
+    datatype: date
+    timeframes: [
+      date,
+      week,
+      week_of_year,
+      month,
+      month_name,
+      quarter,
+      year
+    ]
+    sql: PARSE_DATE('%m/%d/%Y',${TABLE}.DeactivatedDate) ;;
+    convert_tz: no
+    hidden: yes
+  }
+
+  dimension: start_date_matched{
+    description: "start date KPO match Unit table"
+    type: string
+    sql: CASE WHEN TIMESTAMP(${KPO_firstAvailableDate_date}) = TIMESTAMP(${unitTable_availability_startdate}) THEN 'Yes' ELSE 'No'
+      END ;;
+    hidden: yes
+  }
+
+  dimension: KPO_status {
+    type: string
+    sql: ${TABLE}.Status ;;
+    hidden: yes
+  }
+
 
   dimension: availability_enddate_string {
     hidden: yes
@@ -73,30 +162,6 @@ view: unittest {
     sql: ${TABLE}.availability.enddate;;
   }
 
-  dimension: kpo_FirstAvailableDate {
-    hidden: no
-    label: "Avalible Date KPO"
-    sql: ${TABLE}.FirstAvailableDate ;;
-    type: date
-  }
-  dimension: kpo_DeactivatedDate {
-    hidden: no
-    label: "Deactivate Date KPO"
-    sql: ${TABLE}.DeactivatedDate ;;
-    type: date
-  }
-  dimension: start_date {
-    hidden: no
-    label: "Avalible Date"
-    sql: CASE WHEN ${TABLE}.FirstAvailableDate is NULL THEN  ${TABLE}.availability_startdate ELSE ${TABLE}.FirstAvailableDate   ;;
-    type: date
-  }
-  dimension: end_date {
-    hidden: no
-    label: "Deactivate Date"
-    sql: CASE WHEN ${TABLE}.DeactivatedDate is NULL THEN  ${TABLE}.availability_enddate ELSE ${TABLE}.DeactivatedDate  ;;
-    type: date
-  }
 
   dimension: bathrooms {
     type: number
@@ -128,13 +193,10 @@ view: unittest {
     sql: ${TABLE}.externalrefs.breezewayid;;
   }
 
-
   dimension: door {
     hidden: no
     sql: ${TABLE}.door ;;
   }
-
-
 
   dimension: floor {
     type: string
@@ -158,14 +220,12 @@ view: unittest {
     sql: ${TABLE}.hassmartlock ;;
   }
 
-
   dimension: internaltitle {
     # view_label: "Units"
     label: "Unit #"
     type: string
     sql: ${TABLE}.internaltitle ;;
   }
-
 
   dimension: propcode {
     hidden: no
@@ -174,7 +234,6 @@ view: unittest {
     type: string
     sql: substr(${TABLE}.internaltitle, 1, 3);;
   }
-
 
   dimension: lock_id {
     type: string
@@ -186,13 +245,11 @@ view: unittest {
     sql: ${TABLE}.externalrefs.nexiaid ;;
   }
 
-
   dimension: petsallowed {
     label: "Pets Allowed?"
     type: yesno
     sql: ${TABLE}.petsallowed ;;
   }
-
 
   dimension: airbnbid {
     label: "Airbnb ID"
@@ -256,6 +313,11 @@ view: unittest {
     sql: ${TABLE}.complex ;;
   }
 
+  measure: night_available {
+    label: "Total available nights for specific unit"
+    type: number
+    sql: DATE_DIFF(${unit_availability_enddate},${unit_availability_startdate}, DAY) ;;
+  }
+
 
 }
-
