@@ -7,6 +7,11 @@ view: chargelogs {
     datagroup_trigger: kasametrics_reservations_datagroup
   }
 
+  dimension: confirmation_code {
+    type: string
+    sql: ${TABLE}.metadata.confirmationcode ;;
+  }
+
   dimension: __v {
     type: number
     hidden: yes
@@ -166,6 +171,12 @@ view: chargelogs {
 
   measure: count_security_deposit {
     type: count
+  }
+
+  measure: total_amount {
+    type: sum
+    sql: ${amount} ;;
+    value_format_name: usd
   }
 
 }
