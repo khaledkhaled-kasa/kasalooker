@@ -8,11 +8,14 @@ view: sensorevents {
   }
 
   dimension: _id {
+    primary_key: yes
+    hidden: yes
     type: string
     sql: ${TABLE}._id ;;
   }
 
   dimension_group: _sdc_batched {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -27,6 +30,7 @@ view: sensorevents {
   }
 
   dimension_group: _sdc_extracted {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -41,6 +45,7 @@ view: sensorevents {
   }
 
   dimension_group: _sdc_received {
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -55,6 +60,7 @@ view: sensorevents {
   }
 
   dimension: _sdc_sequence {
+    hidden: yes
     type: number
     sql: ${TABLE}._sdc_sequence ;;
   }
@@ -65,6 +71,7 @@ view: sensorevents {
   }
 
   dimension_group: createdat {
+    label: "Created"
     type: time
     timeframes: [
       raw,
@@ -175,6 +182,12 @@ view: sensorevents {
       year
     ]
     sql: ${TABLE}.updatedat ;;
+  }
+
+  measure: total_tampering_events {
+    type: count_distinct
+    sql: ${_id} ;;
+    filters: [type: "tamper"]
   }
 
 }
