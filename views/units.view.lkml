@@ -41,9 +41,10 @@ view: units {
 
 
 
-  dimension: availability_startdate {
+  dimension_group: availability_startdate {
     label: "Unit Availability Start Date"
-    type: date
+    type: time
+    timeframes: [date, week, month, year]
     sql: TIMESTAMP(${TABLE}.availability.startdate);;
   }
 
@@ -185,11 +186,11 @@ view: units {
   dimension: unit_status {
     description: "Status of Unit (Active/Deactivated/Expiring/Onboarding)"
     type: string
-    sql: CASE  WHEN ${availability_enddate} IS NULL AND DATE(${availability_startdate}) < CURRENT_DATE THEN 'Active'
-            WHEN CURRENT_DATE >= DATE(${availability_startdate}) AND  EXTRACT( YEAR FROM SAFE_CAST(${availability_enddate} as DATE)) = 2099 Then 'Active'
-            WHEN CURRENT_DATE >= DATE(${availability_startdate}) AND CURRENT_DATE < SAFE_CAST(${availability_enddate} as DATE) AND EXTRACT( YEAR FROM SAFE_CAST(${availability_enddate}as DATE)) <> 2099 THEN 'Expiring'
+    sql: CASE  WHEN ${availability_enddate} IS NULL AND DATE(${availability_startdate_date}) < CURRENT_DATE THEN 'Active'
+            WHEN CURRENT_DATE >= DATE(${availability_startdate_date}) AND  EXTRACT( YEAR FROM SAFE_CAST(${availability_enddate} as DATE)) = 2099 Then 'Active'
+            WHEN CURRENT_DATE >= DATE(${availability_startdate_date}) AND CURRENT_DATE < SAFE_CAST(${availability_enddate} as DATE) AND EXTRACT( YEAR FROM SAFE_CAST(${availability_enddate}as DATE)) <> 2099 THEN 'Expiring'
             WHEN CURRENT_DATE >= SAFE_CAST(${availability_enddate} as DATE) THEN 'Deactivated'
-            WHEN SAFE_CAST(${availability_startdate} AS DATE) > CURRENT_DATE THEN 'Onboarding'
+            WHEN SAFE_CAST(${availability_startdate_date} AS DATE) > CURRENT_DATE THEN 'Onboarding'
       ELSE NULL
       END ;;
   }
@@ -214,6 +215,15 @@ view: units {
     sql: CASE WHEN ((${internaltitle} LIKE "%-XX") OR (${internaltitle} LIKE "%-RES")) THEN NULL
           ELSE ${TABLE}._id
           END;;
+  }
+
+  measure: active_unit_count {
+    label: "Total Active Unique Units"
+    type: count_distinct
+    sql: CASE WHEN ((${internaltitle} LIKE "%-XX") OR (${internaltitle} LIKE "%-RES")) THEN NULL
+          ELSE ${TABLE}._id
+          END ;;
+    filters: [unit_status: "Active, Expiring"]
   }
 
 

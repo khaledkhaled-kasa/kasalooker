@@ -43,6 +43,13 @@ view: devices {
     END;;
   }
 
+  dimension_group: install {
+    type: time
+    timeframes: [date, week, month, year]
+    sql: CAST(LEFT(${TABLE}.metadata.first_seen_at,10) as TIMESTAMP) ;;
+    convert_tz: no
+  }
+
   dimension: unit {
     type: string
     sql: ${TABLE}.unit ;;
@@ -104,5 +111,12 @@ view: devices {
     type: count_distinct
     sql: ${deviceid} ;;
     filters: [devicetype: "%Minut%", active: "yes, Yes"]
+  }
+
+  measure: running_total_minut_devices {
+    label: "Running Total Minut Devices"
+    type: running_total
+    sql: CASE WHEN ${devicetype} LIKE '%Minut%' THEN ${deviceid} ELSE NULL END ;;
+    # filters: [devicetype: "%Minut%"]
   }
 }

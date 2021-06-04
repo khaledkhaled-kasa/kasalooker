@@ -7,7 +7,8 @@ include: "/views/*.view.lkml"                 # include all views in the views/ 
 
 
 datagroup: default_datagroup {
-  max_cache_age: "1 hours"
+  sql_trigger: SELECT CURRENT_DATE() ;;
+  max_cache_age: "24 hours"
 }
 
 
@@ -173,9 +174,15 @@ explore: units_buildings_information {
   fields: [ALL_FIELDS*, -geo_location.city_full_uid]
   from: units
   view_label: "Unit Information"
-  sql_always_where: ${units_buildings_information.availability_enddate_string} <> 'Invalid date' ;;
+  sql_always_where: ${units_buildings_information.availability_enddate_string} <> 'Invalid date' OR ${units_buildings_information.availability_enddate_string} IS NULL ;;
   label: "Units and Property Information"
   group_label: "Properties"
+
+  join: active_unit_counts {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information._id} = ${active_unit_counts._id} ;;
+  }
 
   join: reservations_v3 {
     view_label: "Reservations"
