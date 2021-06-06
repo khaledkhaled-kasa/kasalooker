@@ -65,14 +65,12 @@ explore: pom_weighting_standards_final {
 
 explore: compliance_tracker {
   group_label: "Legal"
-  persist_with: default_datagroup
   label: "Compliance Tracker"
 }
 
 
 explore: aircall_segment {
   group_label: "Software"
-  persist_with: default_datagroup
   label: "Aircall"
 }
 
