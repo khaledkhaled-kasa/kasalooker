@@ -215,8 +215,7 @@ explore: units_buildings_information {
     type: left_outer
     relationship: one_to_one
     sql_on: ${breezeway_export.property_internal_id} =  ${units_buildings_information.breezeway_id};;
-
-  }
+    }
 
 
   join: airbnb_reviews {
@@ -281,14 +280,12 @@ explore: units_buildings_information {
     sql_on: ${units_buildings_information.internaltitle} = ${nexia_data.uid} ;;
   }
 
-  join: minut_data {
-    view_label: "Minut Data"
-    from: devices
+  join: devices {
     type: left_outer
     relationship: one_to_many
-    sql_on: ${units_buildings_information._id} = ${minut_data.unit}
-      AND ${minut_data.devicetype} = 'Minut_v1' AND ${minut_data.rssi} IS NOT NULL;;
+    sql_on: ${units_buildings_information._id} = ${devices.unit};;
   }
+
 
 
 }
