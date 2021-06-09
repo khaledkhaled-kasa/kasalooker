@@ -231,6 +231,7 @@ view: gx_scorecard {
       type: string
     }
 
+
     filter: team_name {
       type: string
     }
@@ -279,6 +280,7 @@ view: gx_scorecard {
             <p style="color: black; font-size:100%">{{ rendered_value }}</p>
             {% endif %} ;;
     }
+
 
     dimension: rank {
       label: "Individual Metric Rank"
