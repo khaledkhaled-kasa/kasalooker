@@ -80,11 +80,11 @@ view: reservations_v3 {
       sql: ${TABLE}.bookingdate ;;
     }
 
-    dimension: lead_time {
-      description: "This will pull the time between the booking date and checkin date."
-      type:  number
-      sql:  date_diff(${checkindate_date}, CAST(${TABLE}.bookingdate as DATE), DAY) ;;
-    }
+  dimension: lead_time {
+    description: "This will pull the time between the booking date and checkin date."
+    type:  number
+    sql:  date_diff(${checkindate_date}, CAST(${TABLE}.bookingdate as DATE), DAY) ;;
+  }
 
   dimension: cancellation_window {
     description: "This will pull the time between the cancellation date and checkin date."
@@ -92,32 +92,36 @@ view: reservations_v3 {
     sql:  date_diff(${checkindate_date}, CAST(${TABLE}.cancellationdate as DATE), DAY) ;;
   }
 
-    dimension: length_of_stay {
-      type:  number
-      sql:  date_diff(${checkoutdate_date}, ${checkindate_date}, DAY) ;;
-    }
+  dimension: length_of_stay {
+    type:  number
+    sql:  date_diff(${checkoutdate_date}, ${checkindate_date}, DAY) ;;
+  }
+
+  dimension: late_checkout_status {
+    type: string
+    description: "Returns whether a late checkout was approved or not. If late checkout wasn't requested, this returns a NULL or notRequested."
+    sql: ${TABLE}.latecheckout.status ;;
+  }
+
+  dimension: bringingpets {
+    type: yesno
+    sql: ${TABLE}.bringingpets ;;
+  }
 
 
 
-    dimension: bringingpets {
-      type: yesno
-      sql: ${TABLE}.bringingpets ;;
-    }
-
-
-
-    dimension_group: cancellationdate {
-      label: "Cancellation"
-      type: time
-      timeframes: [
-        time,
-        date,
-        week,
-        month,
-        year
-      ]
-      sql: ${TABLE}.cancellationdate ;;
-    }
+  dimension_group: cancellationdate {
+    label: "Cancellation"
+    type: time
+    timeframes: [
+      time,
+      date,
+      week,
+      month,
+      year
+    ]
+    sql: ${TABLE}.cancellationdate ;;
+  }
 
 
     dimension_group: checkindate {
@@ -347,6 +351,14 @@ view: reservations_v3 {
     sql: ${confirmationcode} ;;
     filters: [capacity_night_part_of_res: "yes", status: "cancelled, canceled"]
     drill_fields: [reservation_details*]
+  }
+
+  measure: num_reservations_late_checkout {
+    label: "Num Resevations (w/ Late Checkout)"
+    description: "Returns the count of reservations who had an approved late checkout"
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in", late_checkout_status: "approved"]
   }
 
 
