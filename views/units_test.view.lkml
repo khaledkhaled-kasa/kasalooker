@@ -3,7 +3,7 @@ view: units_test {
     sql:  SELECT *  FROM
           `bigquery-analytics-272822.mongo.units`
           LEFT JOIN  `bigquery-analytics-272822.Gsheets.kpo_overview_clean` KPO_table
-          ON internaltitle =KPO_table.UID
+          ON internaltitle = KPO_table.UID
        ;;
   }
 

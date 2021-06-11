@@ -1,28 +1,11 @@
 view: capacities_v3 {
   label: "Capacities"
-  derived_table: {
-    sql:
-    SELECT capacitydenorms.*, units.internaltitle, DATE(night) as partition_night
-    FROM capacitydenorms
-    LEFT JOIN units ON units._id = capacitydenorms.unit
-    LEFT JOIN Gsheets.blackout_dates ON (units.internaltitle = blackout_dates.Unit_InternalTitle AND DATE(capacitydenorms.night) = blackout_dates.blackout_dates)
-    WHERE blackout_dates.blackout_dates is null -- THIS WILL ENSURE THAT BLACKOUT DATES ARE EXCLUDED
-    AND capacitydenorms.unit is not null -- This will clean up redundant capacitydenorms rows
-    AND units.internaltitle NOT LIKE 'TST%' -- This will ensure that TST units are excluded
-      ;;
-
-      datagroup_trigger: capacities_v3_default_datagroup
-      # indexes: ["night","transaction"]
-      #publish_as_db_view: yes
-      partition_keys: ["partition_night"]
-      cluster_keys: ["night", "unit"]
-
-    }
+  sql_table_name: `bigquery-analytics-272822.dbt.capacities_v3`  ;;
 
     dimension: primary_key {
       primary_key: yes
       hidden: yes
-      sql: CONCAT(${TABLE}.night, ${TABLE}.unit) ;;
+      sql: ${TABLE}.primary_key ;;
     }
 
     dimension: _id {
