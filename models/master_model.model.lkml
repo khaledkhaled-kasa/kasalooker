@@ -184,7 +184,7 @@ explore: units_buildings_information {
 
   join: reservations_v3 {
     view_label: "Reservations"
-    fields: [reservations_v3.confirmationcode]
+    fields: [reservations_v3.confirmationcode, reservations_v3.checkindate_date]
     type: left_outer
     relationship: one_to_many
     sql_on: ${units_buildings_information._id} = ${reservations_v3.unit};;
