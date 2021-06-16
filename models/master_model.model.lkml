@@ -438,11 +438,14 @@ explore: capacities_v3 {
   from: capacities_v3
   join: units {
     type:  inner
-    relationship: one_to_one #one_to_one
+    relationship: one_to_one
     sql_on: ${capacities_v3.unit} = ${units._id} ;;
   }
-
-
+  join: iot_alerts {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units._id} =${iot_alerts.unit} AND ${capacities_v3.night_date}=${iot_alerts.event_create_date_date};;
+  }
   join: complexes {
     type:  inner
     relationship: one_to_one #one_to_one
@@ -458,6 +461,7 @@ explore: capacities_v3 {
     relationship: one_to_many # One_to_Many
     sql_on: ${units._id} = ${reservations_v3.unit};;
   }
+
 
   join: accesses {
     type: left_outer
@@ -523,8 +527,6 @@ explore: capacities_v3 {
 
 
 }
-
-
 
 explore: okrs_master {
   group_label: "Kasa Metrics"
@@ -815,16 +817,6 @@ explore: kasa_kredit_reimbursement {
   }
 
 }
-
-# explore: units_test {
-#   group_label: "test"
-#   label: "testunit"
-# }
-
-# # explore: capacities_v3_test {
-# #   group_label: "test"
-# #   label: "testunit"
-# # }
 
 explore: ximble_master {
   group_label: "Software"
