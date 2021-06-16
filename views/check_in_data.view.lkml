@@ -34,6 +34,12 @@ view: check_in_data {
     sql: ${TABLE}.POM ;;
   }
 
+  dimension_group: check_in {
+    type: time
+    timeframes: [month, year]
+    sql: ${checkin_date_month} || '-01-' || ${checkin_date_year} ;;
+  }
+
   dimension: checkin_date_month {
     type: number
     sql: ${TABLE}.CheckinDateMonth ;;

@@ -382,7 +382,7 @@ explore: reservations_audit {
 
   join: chargelogs {
     view_label: "Charge Logs"
-    type: inner
+    type: left_outer
     relationship: one_to_one
     sql_on: ${reservations_audit._id} = ${chargelogs.reservation} ;;
   }
