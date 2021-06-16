@@ -2,18 +2,20 @@ view: capacities_v3 {
   label: "Capacities"
   sql_table_name: `bigquery-analytics-272822.dbt.capacities_v3`  ;;
 
-  dimension: primary_key {
-    primary_key: yes
-    hidden: yes
-    sql: ${TABLE}.primary_key ;;
-  }
 
-  dimension: _id {
-    type: string
-    # primary_key: yes
-    hidden: yes
-    sql: ${TABLE}._id ;;
-  }
+    dimension: primary_key {
+      primary_key: yes
+      hidden: yes
+      sql: ${TABLE}.primary_key ;;
+    }
+
+    dimension: _id {
+      type: string
+      # primary_key: yes
+      hidden: yes
+      sql: ${TABLE}._id ;;
+    }
+
 
   dimension_group: td_stlm {
     label: "Same Time Last Month (STLM)"

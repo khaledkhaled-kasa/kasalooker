@@ -7,7 +7,8 @@ include: "/views/*.view.lkml"                 # include all views in the views/ 
 
 
 datagroup: default_datagroup {
-  max_cache_age: "1 hours"
+  sql_trigger: SELECT CURRENT_DATE() ;;
+  max_cache_age: "24 hours"
 }
 
 
@@ -64,14 +65,12 @@ explore: pom_weighting_standards_final {
 
 explore: compliance_tracker {
   group_label: "Legal"
-  persist_with: default_datagroup
   label: "Compliance Tracker"
 }
 
 
 explore: aircall_segment {
   group_label: "Software"
-  persist_with: default_datagroup
   label: "Aircall"
 }
 
@@ -173,13 +172,19 @@ explore: units_buildings_information {
   fields: [ALL_FIELDS*, -geo_location.city_full_uid]
   from: units
   view_label: "Unit Information"
-  sql_always_where: ${units_buildings_information.availability_enddate_string} <> 'Invalid date' ;;
+  sql_always_where: ${units_buildings_information.availability_enddate_string} <> 'Invalid date' OR ${units_buildings_information.availability_enddate_string} IS NULL ;;
   label: "Units and Property Information"
   group_label: "Properties"
 
+  join: active_unit_counts {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information._id} = ${active_unit_counts._id} ;;
+  }
+
   join: reservations_v3 {
     view_label: "Reservations"
-    fields: [reservations_v3.confirmationcode]
+    fields: [reservations_v3.confirmationcode, reservations_v3.checkoutdate_date]
     type: left_outer
     relationship: one_to_many
     sql_on: ${units_buildings_information._id} = ${reservations_v3.unit};;
@@ -210,8 +215,7 @@ explore: units_buildings_information {
     type: left_outer
     relationship: one_to_one
     sql_on: ${breezeway_export.property_internal_id} =  ${units_buildings_information.breezeway_id};;
-
-  }
+    }
 
 
   join: airbnb_reviews {
@@ -276,14 +280,12 @@ explore: units_buildings_information {
     sql_on: ${units_buildings_information.internaltitle} = ${nexia_data.uid} ;;
   }
 
-  join: minut_data {
-    view_label: "Minut Data"
-    from: devices
+  join: devices {
     type: left_outer
     relationship: one_to_many
-    sql_on: ${units_buildings_information._id} = ${minut_data.unit}
-      AND ${minut_data.devicetype} = 'Minut_v1' AND ${minut_data.rssi} IS NOT NULL;;
+    sql_on: ${units_buildings_information._id} = ${devices.unit};;
   }
+
 
 
 }
