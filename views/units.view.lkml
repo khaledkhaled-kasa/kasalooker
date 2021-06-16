@@ -1,4 +1,3 @@
-
 view: units {
   sql_table_name: `bigquery-analytics-272822.mongo.units`
     ;;
