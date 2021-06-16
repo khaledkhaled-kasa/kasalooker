@@ -1462,6 +1462,15 @@ view: conversation {
         filters: [conversation.direction: "in"]
       }
 
+      # measure: total_tech_related_issues {
+      #   type: sum
+      #   sql: CASE WHEN ${issue_categories_1.tech_influenced}
+      #             OR ${issue_categories_2.tech_influenced}
+      #             OR ${issue_categories_3.tech_influenced} THEN ${issues}
+      #       ELSE NULL
+      #       END;;
+      # }
+
 
 
 
