@@ -1217,6 +1217,17 @@ view: conversation {
         sql: ${TABLE}.updated_at ;;
       }
 
+  dimension: issues {
+    type: number
+    sql: CASE
+            WHEN ${custom_issue_category_1_tree} IS NOT NULL AND ${custom_issue_category_2_tree} IS NOT NULL AND ${custom_issue_category_3_tree} IS NOT NULL THEN 3
+            WHEN ${custom_issue_category_1_tree} IS NOT NULL AND ${custom_issue_category_2_tree} IS NOT NULL AND ${custom_issue_category_3_tree} IS NULL THEN 2
+            WHEN ${custom_issue_category_1_tree} IS NOT NULL AND ${custom_issue_category_2_tree} IS NULL AND ${custom_issue_category_3_tree} IS NULL THEN 1
+          ELSE 0
+          END;;
+
+    }
+
 
 
 ####################### Average / Median First Response Time Required Dimensions
@@ -1462,14 +1473,19 @@ view: conversation {
         filters: [conversation.direction: "in"]
       }
 
-      # measure: total_tech_related_issues {
-      #   type: sum
-      #   sql: CASE WHEN ${issue_categories_1.tech_influenced}
-      #             OR ${issue_categories_2.tech_influenced}
-      #             OR ${issue_categories_3.tech_influenced} THEN ${issues}
-      #       ELSE NULL
-      #       END;;
-      # }
+      measure: total_issues {
+        type: sum
+        sql: ${issues} ;;
+      }
+
+      measure: total_tech_related_issues {
+        type: sum
+        sql: CASE WHEN ${issue_categories_1.tech_influenced}
+                  OR ${issue_categories_2.tech_influenced}
+                  OR ${issue_categories_3.tech_influenced} THEN ${issues}
+            ELSE NULL
+            END;;
+      }
 
 
 

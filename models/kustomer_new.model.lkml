@@ -140,7 +140,9 @@ explore: customer {
 explore: gx_cost_allocation {
   from: customer
   label: "GX Cost Allocation"
+
   join: conversation {
+    fields: [-conversation.total_tech_related_issues]
     type: inner
     sql_on: ${gx_cost_allocation.id} = ${conversation.customer_id};;
     relationship: one_to_many
@@ -230,6 +232,7 @@ explore: customer_csat {
   from: customer
   always_join: [team_member,conversation_assigned_user, user]
   label: "Kustomer CSAT"
+
   join: conversation_csat {
     type: inner
     sql_on: ${customer_csat.id} = ${conversation_csat.customer_id};;
