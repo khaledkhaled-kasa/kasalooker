@@ -65,6 +65,7 @@ view: gx_scorecard {
                   AS STRING))), 16, 8)) as int64) as numeric)) * 0.000000001) )  / (1/1000*1.0) AS FLOAT64), 0), 6) AS ximble_master_hours
                   FROM `ximble.ximble_master` AS ximble_master
                   WHERE {% condition review_month %} TIMESTAMP(ximble_master.Date) {% endcondition %}
+                  AND ximble_master.Date <= current_date()
                   GROUP BY 1),
 
                   Messages_sent AS
