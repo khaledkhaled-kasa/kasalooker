@@ -40,37 +40,6 @@
     sql: ${TABLE}.Employee_Number ;;
   }
 
-  dimension_group: enddate {
-    hidden: yes
-    type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    convert_tz: no
-    datatype: date
-    sql: ${TABLE}.EndDate ;;
-  }
-
-  dimension_group: endtime {
-    hidden: yes
-    type: time
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.EndTime ;;
-  }
-
   dimension: end_time {
     hidden: yes
     type: string
@@ -156,37 +125,6 @@
     AND (LOWER(${TABLE}.Shift_Label) NOT LIKE '%training class%')
     AND (LOWER(${TABLE}.Shift_Label) NOT LIKE "%culture amp%"))
     ;;
-  }
-
-  dimension_group: startdate {
-    type: time
-    hidden: yes
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    convert_tz: no
-    datatype: date
-    sql: ${TABLE}.StartDate ;;
-  }
-
-  dimension_group: starttime {
-    type: time
-    hidden: yes
-    timeframes: [
-      raw,
-      time,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    sql: ${TABLE}.StartTime ;;
   }
 
   dimension: start_time {

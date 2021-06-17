@@ -924,7 +924,7 @@ view: conversation {
 
       dimension_group: last_message {
         type: time
-        hidden: yes
+        hidden: no
         timeframes: [
           raw,
           time,
@@ -1027,6 +1027,11 @@ view: conversation {
         type: number
         sql: ${TABLE}.outbound_message_count ;;
       }
+
+  dimension: inbound_message_count {
+    type: number
+    sql: ${message_count} - ${outbound_message_count} ;;
+  }
 
       dimension: priority {
         type: number
@@ -1258,6 +1263,7 @@ view: conversation {
         value_format: "###"
         filters: [is_auto_false: "yes", is_direction_out: "yes"]
       }
+
 
       measure: messages_sent_allocated {
         view_label: "Metrics"
