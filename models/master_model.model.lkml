@@ -184,7 +184,7 @@ explore: units_buildings_information {
 
   join: reservations_v3 {
     view_label: "Reservations"
-    fields: [reservations_v3.confirmationcode]
+    fields: [reservations_v3.confirmationcode, reservations_v3.checkoutdate_date]
     type: left_outer
     relationship: one_to_many
     sql_on: ${units_buildings_information._id} = ${reservations_v3.unit};;
@@ -280,10 +280,12 @@ explore: units_buildings_information {
     sql_on: ${units_buildings_information.internaltitle} = ${nexia_data.uid} ;;
   }
 
-  join: devices {
+  join: minut_data {
+    from: devices
     type: left_outer
     relationship: one_to_many
-    sql_on: ${units_buildings_information._id} = ${devices.unit};;
+    sql_on: ${units_buildings_information._id} = ${minut_data.unit}
+            AND ${minut_data.devicetype} LIKE '%Minut%';;
   }
 
 
@@ -382,7 +384,7 @@ explore: reservations_audit {
 
   join: chargelogs {
     view_label: "Charge Logs"
-    type: inner
+    type: left_outer
     relationship: one_to_one
     sql_on: ${reservations_audit._id} = ${chargelogs.reservation} ;;
   }
@@ -440,11 +442,14 @@ explore: capacities_v3 {
   from: capacities_v3
   join: units {
     type:  inner
-    relationship: one_to_one #one_to_one
+    relationship: one_to_one
     sql_on: ${capacities_v3.unit} = ${units._id} ;;
   }
-
-
+  join: iot_alerts {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units._id} =${iot_alerts.unit} AND ${capacities_v3.night_date}=${iot_alerts.event_create_date_date};;
+  }
   join: complexes {
     type:  inner
     relationship: one_to_one #one_to_one
@@ -460,6 +465,7 @@ explore: capacities_v3 {
     relationship: one_to_many # One_to_Many
     sql_on: ${units._id} = ${reservations_v3.unit};;
   }
+
 
   join: accesses {
     type: left_outer
@@ -525,8 +531,6 @@ explore: capacities_v3 {
 
 
 }
-
-
 
 explore: okrs_master {
   group_label: "Kasa Metrics"
@@ -817,16 +821,6 @@ explore: kasa_kredit_reimbursement {
   }
 
 }
-
-# explore: units_test {
-#   group_label: "test"
-#   label: "testunit"
-# }
-
-# # explore: capacities_v3_test {
-# #   group_label: "test"
-# #   label: "testunit"
-# # }
 
 explore: ximble_master {
   group_label: "Software"

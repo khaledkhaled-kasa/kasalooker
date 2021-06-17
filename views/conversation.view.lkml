@@ -1222,6 +1222,17 @@ view: conversation {
         sql: ${TABLE}.updated_at ;;
       }
 
+  dimension: issues {
+    type: number
+    sql: CASE
+            WHEN ${custom_issue_category_1_tree} IS NOT NULL AND ${custom_issue_category_2_tree} IS NOT NULL AND ${custom_issue_category_3_tree} IS NOT NULL THEN 3
+            WHEN ${custom_issue_category_1_tree} IS NOT NULL AND ${custom_issue_category_2_tree} IS NOT NULL AND ${custom_issue_category_3_tree} IS NULL THEN 2
+            WHEN ${custom_issue_category_1_tree} IS NOT NULL AND ${custom_issue_category_2_tree} IS NULL AND ${custom_issue_category_3_tree} IS NULL THEN 1
+          ELSE 0
+          END;;
+
+    }
+
 
 
 ####################### Average / Median First Response Time Required Dimensions
@@ -1467,6 +1478,47 @@ view: conversation {
         sql: CONCAT(${conversation_channel.conversation_id},${conversation_channel.name}) ;;
         filters: [conversation.direction: "in"]
       }
+
+      measure: total_issues {
+        type: sum
+        sql: ${issues} ;;
+      }
+
+      measure: total_tech_related_issues {
+        type: sum
+        sql: CASE WHEN ${issue_categories_1.tech_influenced}
+                  OR ${issue_categories_2.tech_influenced}
+                  OR ${issue_categories_3.tech_influenced} THEN ${issues}
+            ELSE NULL
+            END;;
+      }
+
+  measure: total_kontrol_related_issues {
+    type: sum
+    sql:  CASE WHEN ${issue_categories_1.kontrol_influenced}
+              OR ${issue_categories_2.kontrol_influenced}
+              OR ${issue_categories_3.kontrol_influenced} THEN ${issues}
+        ELSE NULL
+        END;;
+  }
+
+  measure: issues_per_reservation {
+    type: number
+    sql: ${total_issues} / NULLIF(${reservations_count},0) ;;
+    value_format_name: decimal_2
+  }
+
+  measure: total_tech_related_issues_per_reservation {
+    type: number
+    sql: ${total_tech_related_issues} / NULLIF(${reservations_kustomer.total_reservations},0) ;;
+    value_format_name: decimal_2
+  }
+
+  measure: total_kontrol_related_issues_per_reservation {
+    type: number
+    sql: ${total_kontrol_related_issues} / NULLIF(${reservations_kustomer.total_reservations},0) ;;
+    value_format_name: decimal_2
+  }
 
 
 
