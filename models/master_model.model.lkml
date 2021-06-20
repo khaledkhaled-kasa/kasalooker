@@ -470,6 +470,13 @@ explore: capacities_v3 {
     relationship: one_to_many
     sql_on: ${reservations_v3.confirmationcode} = ${accesses.confirmationcode} ;;
   }
+  join: codejobs_v2 {
+    view_label: "Codejobs"
+    type: full_outer
+    relationship: one_to_many
+    sql_on:${reservations_v3.confirmationcode} = ${codejobs_v2.confirmationcode} ;;
+  }
+
 
   join: financials_v3 {
     type:  left_outer
