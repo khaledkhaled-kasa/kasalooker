@@ -280,10 +280,12 @@ explore: units_buildings_information {
     sql_on: ${units_buildings_information.internaltitle} = ${nexia_data.uid} ;;
   }
 
-  join: devices {
+  join: minut_data {
+    from: devices
     type: left_outer
     relationship: one_to_many
-    sql_on: ${units_buildings_information._id} = ${devices.unit};;
+    sql_on: ${units_buildings_information._id} = ${minut_data.unit}
+            AND ${minut_data.devicetype} LIKE '%Minut%';;
   }
 
 
@@ -382,7 +384,7 @@ explore: reservations_audit {
 
   join: chargelogs {
     view_label: "Charge Logs"
-    type: inner
+    type: left_outer
     relationship: one_to_one
     sql_on: ${reservations_audit._id} = ${chargelogs.reservation} ;;
   }
