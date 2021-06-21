@@ -140,9 +140,9 @@ explore: customer {
 explore: gx_cost_allocation {
   from: customer
   label: "GX Cost Allocation"
-
+  fields: [ALL_FIELDS*, -conversation.total_tech_related_issues, -conversation.total_kontrol_related_issues ]
   join: conversation {
-    fields: [-conversation.total_tech_related_issues]
+
     type: inner
     sql_on: ${gx_cost_allocation.id} = ${conversation.customer_id};;
     relationship: one_to_many

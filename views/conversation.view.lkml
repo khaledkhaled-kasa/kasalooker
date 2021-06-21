@@ -4,58 +4,79 @@ view: conversation {
   derived_table: {
     sql:
 
-    WITH conversation_reservation_mapped as
-    (WITH prioritized_table AS (SELECT distinct customer_id, conversation_id, kobject_id_mapped, priority, row_number() OVER(PARTITION BY customer_id, conversation_id ORDER BY priority asc) AS rank
-    FROM
-    (SELECT c.id AS customer_id, custom_complex_title_str AS complex, custom_confirmation_code_str AS confirmationcode, cast(custom_booking_date_at AS DATE) AS booking_date,
-    cast(custom_check_in_date_local_at AS DATE) AS checkin_date, cast(custom_check_out_date_local_at AS DATE) AS checkout_date, t1.conversation_id, t1.conversation_created, t1.conversation_text,
+WITH conversation_reservation_mapped as
+(WITH prioritized_table AS (SELECT distinct customer_id, conversation_id, kobject_id_mapped, priority, row_number() OVER(PARTITION BY customer_id, conversation_id ORDER BY priority asc) AS rank
+FROM
+(SELECT c.id AS customer_id, custom_complex_title_str AS complex, custom_confirmation_code_str AS confirmationcode, cast(custom_booking_date_at AS DATE) AS booking_date,
+cast(custom_check_in_date_local_at AS DATE) AS checkin_date, cast(custom_check_out_date_local_at AS DATE) AS checkout_date, t1.conversation_id, t1.conversation_created, t1.conversation_text,
 
-    CASE WHEN ((t1.conversation_created >= cast(custom_check_in_date_local_at AS DATE) AND t1.conversation_created < cast(custom_check_out_date_local_at AS DATE))
-    AND custom_status_str IN ("confirmed","checked_in")) THEN kor.id
-    WHEN (t1.conversation_created >= cast(custom_check_in_date_local_at AS DATE) AND t1.conversation_created < cast(custom_check_out_date_local_at AS DATE)) THEN kor.id
-    WHEN (t1.conversation_created = cast(custom_check_out_date_local_at AS DATE)) THEN kor.id
-    WHEN (t1.conversation_created = cast(custom_booking_date_at AS DATE)) THEN kor.id
-    WHEN (t1.conversation_created BETWEEN cast(custom_booking_date_at AS DATE) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
-    WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 5)) AND custom_status_str IN ("confirmed","checked_in")) THEN kor.id
-    WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 15)) AND custom_status_str IN ("confirmed","checked_in")) THEN kor.id
-    WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 30)) AND custom_status_str IN ("confirmed","checked_in")) THEN kor.id
-    WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 45)) AND custom_status_str IN ("confirmed","checked_in")) THEN kor.id
-    WHEN (t1.conversation_created BETWEEN (cast(custom_booking_date_at AS DATE)-10) AND cast(custom_booking_date_at AS DATE)) THEN kor.id
-    ELSE "No Reservation in Range"
-    END kobject_id_mapped,
+CASE WHEN ((t1.conversation_created >= cast(custom_check_in_date_local_at AS DATE) AND t1.conversation_created < cast(custom_check_out_date_local_at AS DATE))
+AND custom_status_str IN ("confirmed","checked_in")) THEN kor.id
+WHEN (t1.conversation_created >= cast(custom_check_in_date_local_at AS DATE) AND t1.conversation_created < cast(custom_check_out_date_local_at AS DATE)) THEN kor.id
+WHEN (t1.conversation_created = cast(custom_check_out_date_local_at AS DATE)) THEN kor.id
+WHEN (t1.conversation_created = cast(custom_booking_date_at AS DATE)) THEN kor.id
+WHEN (t1.conversation_created BETWEEN cast(custom_booking_date_at AS DATE) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 5)) AND custom_status_str IN ("confirmed","checked_in")) THEN kor.id
+WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 15)) AND custom_status_str IN ("confirmed","checked_in")) THEN kor.id
+WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 30)) AND custom_status_str IN ("confirmed","checked_in")) THEN kor.id
+WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 45)) AND custom_status_str IN ("confirmed","checked_in")) THEN kor.id
+WHEN (t1.conversation_created BETWEEN (cast(custom_booking_date_at AS DATE)-10) AND cast(custom_booking_date_at AS DATE)) THEN kor.id
+WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-10) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-20) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-30) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-45) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-60) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-90) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-120) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-150) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-180) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-210) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+ELSE "No Reservation in Range"
+END kobject_id_mapped,
 
-    CASE WHEN ((t1.conversation_created >= cast(custom_check_in_date_local_at AS DATE) AND t1.conversation_created < cast(custom_check_out_date_local_at AS DATE))
-    AND custom_status_str IN ("confirmed","checked_in")) THEN "a"
-    WHEN (t1.conversation_created >= cast(custom_check_in_date_local_at AS DATE) AND t1.conversation_created < cast(custom_check_out_date_local_at AS DATE)) THEN "b"
-    WHEN (t1.conversation_created = cast(custom_check_out_date_local_at AS DATE)) THEN "c"
-    WHEN (t1.conversation_created = cast(custom_booking_date_at AS DATE)) THEN "d"
-    WHEN (t1.conversation_created BETWEEN cast(custom_booking_date_at AS DATE) AND cast(custom_check_in_date_local_at AS DATE)) THEN "e"
-    WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 5)) AND custom_status_str IN ("confirmed","checked_in")) THEN "f"
-    WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 15)) AND custom_status_str IN ("confirmed","checked_in")) THEN "g"
-    WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 30)) AND custom_status_str IN ("confirmed","checked_in")) THEN "h"
-    WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 45)) AND custom_status_str IN ("confirmed","checked_in")) THEN "i"
-    WHEN (t1.conversation_created BETWEEN (cast(custom_booking_date_at AS DATE)-10) AND cast(custom_booking_date_at AS DATE)) THEN "j"
-    ELSE "k"
-    END priority
+CASE WHEN ((t1.conversation_created >= cast(custom_check_in_date_local_at AS DATE) AND t1.conversation_created < cast(custom_check_out_date_local_at AS DATE))
+AND custom_status_str IN ("confirmed","checked_in")) THEN "a"
+WHEN (t1.conversation_created >= cast(custom_check_in_date_local_at AS DATE) AND t1.conversation_created < cast(custom_check_out_date_local_at AS DATE)) THEN "b"
+WHEN (t1.conversation_created = cast(custom_check_out_date_local_at AS DATE)) THEN "c"
+WHEN (t1.conversation_created = cast(custom_booking_date_at AS DATE)) THEN "d"
+WHEN (t1.conversation_created BETWEEN cast(custom_booking_date_at AS DATE) AND cast(custom_check_in_date_local_at AS DATE)) THEN "e"
+WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 5)) AND custom_status_str IN ("confirmed","checked_in")) THEN "f"
+WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 15)) AND custom_status_str IN ("confirmed","checked_in")) THEN "g"
+WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 30)) AND custom_status_str IN ("confirmed","checked_in")) THEN "h"
+WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 45)) AND custom_status_str IN ("confirmed","checked_in")) THEN "i"
+WHEN (t1.conversation_created BETWEEN (cast(custom_booking_date_at AS DATE)-10) AND cast(custom_booking_date_at AS DATE)) THEN "j"
+WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-10) AND cast(custom_check_in_date_local_at AS DATE)) THEN "k"
+WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-20) AND cast(custom_check_in_date_local_at AS DATE)) THEN "l"
+WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-30) AND cast(custom_check_in_date_local_at AS DATE)) THEN "m"
+WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-45) AND cast(custom_check_in_date_local_at AS DATE)) THEN "n"
+WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-60) AND cast(custom_check_in_date_local_at AS DATE)) THEN "o"
+WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-90) AND cast(custom_check_in_date_local_at AS DATE)) THEN "p"
+WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-120) AND cast(custom_check_in_date_local_at AS DATE)) THEN "q"
+WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-150) AND cast(custom_check_in_date_local_at AS DATE)) THEN "r"
+WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-180) AND cast(custom_check_in_date_local_at AS DATE)) THEN "s"
+WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-210) AND cast(custom_check_in_date_local_at AS DATE)) THEN "t"
+ELSE "u"
+END priority
 
-    FROM kustomer.customer c
-    join kustomer.kobject_reservation kor on c.id = kor.customer_id
-    join
-    (SELECT conv.customer_id AS cust_id, conv.id AS conversation_id, cast(conv.created_at AS DATE) AS conversation_created, conv.name AS conversation_text
-    FROM kustomer.conversation conv
-    )t1
-    ON c.id = t1.cust_id
-    AND custom_confirmation_code_str is not null)t2
-    ORDER BY 1,2,4)
-    SELECT prioritized_table.*
-    FROM prioritized_table
-    WHERE prioritized_table.rank = 1)
-    SELECT conversation.*, conversation_reservation_mapped.kobject_id_mapped, DATE(_fivetran_synced) as partition_date
-    FROM kustomer.conversation left join conversation_reservation_mapped
-    ON conversation.customer_id = conversation_reservation_mapped.customer_id
-    AND conversation.id = conversation_reservation_mapped.conversation_id
+FROM kustomer.customer c
+join kustomer.kobject_reservation kor on c.id = kor.customer_id
+join
+(SELECT conv.customer_id AS cust_id, conv.id AS conversation_id, cast(conv.created_at AS DATE) AS conversation_created, conv.name AS conversation_text
+FROM kustomer.conversation conv
+)t1
+ON c.id = t1.cust_id
+--AND custom_confirmation_code_str is not null
+)t2
+ORDER BY 1,2,4)
+SELECT prioritized_table.*
+FROM prioritized_table
+WHERE prioritized_table.rank = 1)
+SELECT conversation.*, conversation_reservation_mapped.kobject_id_mapped, DATE(_fivetran_synced) as partition_date
+FROM kustomer.conversation left join conversation_reservation_mapped
+ON conversation.customer_id = conversation_reservation_mapped.customer_id
+AND conversation.id = conversation_reservation_mapped.conversation_id
 
-    ;;
+;;
 
 
       datagroup_trigger: kustomer_default_datagroup
@@ -1478,6 +1499,7 @@ view: conversation {
         sql: CONCAT(${conversation_channel.conversation_id},${conversation_channel.name}) ;;
         filters: [conversation.direction: "in"]
       }
+
 
       measure: total_issues {
         type: sum
