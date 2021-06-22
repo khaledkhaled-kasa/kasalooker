@@ -97,6 +97,15 @@ view: reservations_v3 {
     sql:  date_diff(${checkoutdate_date}, ${checkindate_date}, DAY) ;;
   }
 
+  dimension: length_of_stay_type {
+    label: "Length of Stay (Short-term/Long-term)"
+    description: "Short-term stays are stays with < 28 nights; whereas long-term stays are >= 28 nights"
+    type:  string
+    sql:  CASE WHEN ${length_of_stay} < 28 THEN "Short-term stay"
+    WHEN ${length_of_stay} >= 28 THEN "Long-term stay"
+    END ;;
+  }
+
   dimension: late_checkout_status {
     type: string
     description: "Returns whether a late checkout was approved or not. If late checkout wasn't requested, this returns a NULL or notRequested."

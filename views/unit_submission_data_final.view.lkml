@@ -8,21 +8,23 @@ view: unit_submission_data_final {
           Email,
           Building,
           Unit,
-          VisitType
+          VisitType,
+          RANK() OVER (PARTITION BY CONCAT(Building,Unit,VisitType) ORDER BY VisitTime desc) visit_recency_rank
         FROM `bigquery-analytics-272822.Gsheets.unit_submission_data_raw`
       ),
 
-      MostRecentRefr as (SELECT Building, Unit, MAX(VisitDate) as MostRecentRefresh
+      MostRecentRefr as (SELECT Building, Unit, name POM_Refresh, MAX(VisitDate) as MostRecentRefresh
       FROM c1
       Where VisitType = 'Unit Refresh'
-      Group By 1,2),
+      and visit_recency_rank = 1
+      Group By 1,2,3),
 
       MostRecentRoutine as (SELECT Building, Unit, MAX(VisitDate) as MostRecentRoutineVisit
       FROM c1
       Where visitType = 'Routine Visit'
       Group By 1,2)
 
-      SELECT c.*, ref.MostRecentRefresh, rout.MostRecentRoutineVisit
+      SELECT c.*, ref.MostRecentRefresh, ref.POM_Refresh, rout.MostRecentRoutineVisit
       FROM c1 c
         LEFT JOIN MostRecentRefr ref
         ON c.Building = ref.Building and c.Unit = ref.Unit
@@ -78,6 +80,12 @@ view: unit_submission_data_final {
     sql: ${TABLE}.MostRecentRefresh ;;
   }
 
+  dimension: om_refresh {
+    label: "Refresh POM"
+    type: string
+    sql: ${TABLE}.POM_Refresh ;;
+  }
+
   dimension: most_recent_routine_visit {
     type: date
     datatype: date
@@ -127,19 +135,19 @@ view: unit_submission_data_final {
           END;;
   }
 
-  dimension: pom_status {
-    type: string
-    sql: CASE WHEN ${units_buildings_information.unit_status} = 'Deactivated' THEN 'Decativated'
-              WHEN ${next_refresh} > CURRENT_DATE
-                    AND ${nexia_data.connection_status} IN ('Connected','No Nexia')
-                    AND ${freshair_data.status} NOT IN ('Sensor Issues', 'Offline')
-                    AND (${nexia_data.battery_level} IS NOT NULL OR ${nexia_data.battery_level} > 0.35)
-                    AND ${noiseaware.noise_aware_status} = 'Connected'
-                    THEN 'All Good'
-              ELSE 'Needs Attention'
-          END
-                    ;;
-  }
+  # dimension: pom_status {
+  #   type: string
+  #   sql: CASE WHEN ${units_buildings_information.unit_status} = 'Deactivated' THEN 'Decativated'
+  #             WHEN ${next_refresh} > CURRENT_DATE
+  #                   AND ${nexia_data.connection_status} IN ('Connected','No Nexia')
+  #                   AND ${freshair_data.status} NOT IN ('Sensor Issues', 'Offline')
+  #                   AND (${nexia_data.battery_level} IS NOT NULL OR ${nexia_data.battery_level} > 0.35)
+  #                   AND ${noiseaware.noise_aware_status} = 'Connected'
+  #                   THEN 'All Good'
+  #             ELSE 'Needs Attention'
+  #         END
+  #                   ;;
+  # }
 
   measure: total_unit_count {
     hidden: yes
