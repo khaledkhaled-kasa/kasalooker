@@ -9,7 +9,9 @@ view: unit_submission_data_final {
           Building,
           Unit,
           VisitType,
-          RANK() OVER (PARTITION BY CONCAT(Building,Unit,VisitType) ORDER BY VisitTime desc) visit_recency_rank
+          RANK() OVER (PARTITION BY CONCAT(Building,Unit,VisitType) ORDER BY (CASE  WHEN LENGTH(VisitTime) > 9 THEN DATE(PARSE_DATETIME('%m/%d/%Y %H:%M:%S',  VisitTime))
+                WHEN LENGTH(VisitTime) <= 9 THEN DATE(PARSE_DATETIME('%m/%d/%Y', VisitTime))
+          END) desc) visit_recency_rank
         FROM `bigquery-analytics-272822.Gsheets.unit_submission_data_raw`
       ),
 
