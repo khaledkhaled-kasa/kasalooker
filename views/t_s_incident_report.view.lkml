@@ -261,7 +261,7 @@ view: t_s_incident_report {
   }
 
   dimension: booking_lead_time {
-    type: string
+    type: number
     sql: ${TABLE}.Booking_Lead_Time ;;
   }
 
