@@ -124,6 +124,18 @@ view: disputes_tracker {
     sql: ${TABLE}.Action_Taken ;;
   }
 
+  dimension: Win_Likelihood_in_Stripe {
+    type: number
+    sql: ${TABLE}.Win_Likelihood_in_Stripe ;;
+  }
+
+  dimension: Date_of_Resolution {
+    type: date
+    datatype: date
+    sql: ${TABLE}.Date_of_Resolution ;;
+    convert_tz: no
+  }
+
   measure: dispute_total {
     label: "Disputed Amount"
     type: sum
