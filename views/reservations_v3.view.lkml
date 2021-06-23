@@ -641,7 +641,7 @@ view: reservations_v3 {
     label: "% Cancelled Bookings"
     value_format: "0.0%"
     type:  number
-    sql: ${num_reservations_canceled_excluding_extensions} / (${num_reservations_canceled_excluding_extensions} + ${num_reservations_excluding_extensions}) ;;
+    sql: ${num_reservations_canceled_excluding_extensions} / nullif((${num_reservations_canceled_excluding_extensions} + ${num_reservations_excluding_extensions}),0) ;;
   }
 
   measure: percentage_cancellations_excluding_invalid_card {
