@@ -237,22 +237,22 @@ view: units {
 
 }
 
-
 ## Test one
 # view: units {
 #   derived_table: {
-#     sql:  SELECt *,
-#           CASE WHEN SAFE.PARSE_DATE('%m/%d/%Y',KPO_table.FirstAvailableDate) IS NULL THEN SAFE.PARSE_DATE('%m/%d/%Y',units.availability.startdate)
+#     sql:  SELECt *,KPO_table.Status as statuskpo,
+#           CASE WHEN SAFE.PARSE_DATE('%m/%d/%Y',KPO_table.FirstAvailableDate) IS NULL THEN DATE(units.availability.startdate)
 #           ELSE SAFE.PARSE_DATE('%m/%d/%Y',KPO_table.FirstAvailableDate) END as unit_availability_startdate,
 
-#           CASE WHEN safe.parse_date('%m/%d/%Y',KPO_table.DeactivatedDate) IS NULL
-#           THEN DATE_SUB(DATE(DATETIME(CURRENT_TIMESTAMP(),'America/Los_Angeles')), INTERVAL -18 MONTH)
-#           ELSE safe.parse_date('%m/%d/%Y',KPO_table.DeactivatedDate)
-#           END as unit_availability_enddate
+#           CASE WHEN SAFE.PARSE_DATE('%m/%d/%Y',KPO_table.DeactivatedDate) is NULL
+#             AND (DATE(units.availability.enddate) is  NULL OR (EXTRACT(YEAR from SAFE_CAST(availability.enddate as DATE)) = 2099))
+#             THEN DATE_SUB(DATE(DATETIME(CURRENT_TIMESTAMP(),'America/Los_Angeles')), INTERVAL -18 MONTH)
+#           WHEN SAFE.PARSE_DATE('%m/%d/%Y',KPO_table.DeactivatedDate) is NOT null THEN SAFE.PARSE_DATE('%m/%d/%Y',KPO_table.DeactivatedDate)
+#           ELSE DATE(units.availability.enddate) END AS unit_availability_enddate
 #           FROM
 #         `bigquery-analytics-272822.mongo.units` units
 #         LEFT JOIN  `bigquery-analytics-272822.Gsheets.kpo_overview_clean` KPO_table
-#         ON units.internaltitle =KPO_table.UID
+#         ON units.internaltitle =KPO_table.UID WHERE units.internaltitle is NOT NULL AND units.internaltitle NOT LIKE "%TST-%"
 #             ;;
 
 #     }
@@ -385,18 +385,20 @@ view: units {
 #       convert_tz: no
 #     }
 
-#     dimension: start_date_matched{
-#       description: "start date KPO match Unit table"
-#       type: yesno
-#       sql: TIMESTAMP(${KPO_firstAvailableDate_date}) = TIMESTAMP(${mongo_availability_startdate_date})
-#         ;;
+#     dimension: status_matched{
+#       description: "Return No if unit's status does'not match with status in KPO  "
+#       type: string
+#       sql:  CASE WHEN ${TABLE}.statuskpo IS NULL Then NULL
+#       WHEN ${unit_status} =${TABLE}.statuskpo Then "✅ "
+#       ELSE "❌ "
+#       END;;
 #       hidden: no
 #     }
 
 #     dimension: KPO_status {
 #       type: string
-#       sql: ${TABLE}.Status ;;
-#       hidden: yes
+#       sql: ${TABLE}.statuskpo ;;
+#       hidden: no
 #     }
 
 #     dimension: unit_status {

@@ -1,6 +1,6 @@
 view: chargelogs {
   derived_table: {
-    sql: SELECT *, striperesponse.value.balance_transaction as balance_transaction
+    sql: SELECT *, striperesponse.value.balance_transaction as balance_transaction , striperesponse.value.transfer_data.destination as destination
       FROM `bigquery-analytics-272822.mongo.chargelogs`
         LEFT JOIN UNNEST(striperesponse.charges.data) as striperesponse
        ;;
@@ -111,6 +111,12 @@ view: chargelogs {
   dimension: balance_transaction {
     type: string
     sql: ${TABLE}.balance_transaction ;;
+  }
+
+  dimension: destination {
+    label: "Destination Account"
+    type: string
+    sql: ${TABLE}.destination ;;
   }
 
   dimension: charge_id {

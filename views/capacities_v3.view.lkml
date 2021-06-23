@@ -116,9 +116,11 @@ view: capacities_v3 {
 #   label: "Capacities"
 #   derived_table: {
 #     sql: Select units.internaltitle, units.unit_availability_startdate, units.unit_availability_enddate ,night_available_date
-#       from ${units.SQL_TABLE_NAME}  units,
-#       unnest(generate_date_array(cast(units.unit_availability_startdate as date), cast(units.unit_availability_enddate as date), INTERVAL 1 DAY)) night_available_date;;
-
+#       from ${units.SQL_TABLE_NAME}  units,unnest(generate_date_array(cast(units.unit_availability_startdate as date), cast(units.unit_availability_enddate as date), INTERVAL 1 DAY)) night_available_date
+#       LEFT JOIN Gsheets.blackout_dates
+#     ON (units.internaltitle = blackout_dates.Unit_InternalTitle AND DATE(night_available_date) = blackout_dates.blackout_dates)
+# WHERE blackout_dates.blackout_dates is null -- THIS WILL ENSURE THAT BLACKOUT DATES ARE EXCLUDED
+# AND units.internaltitle NOT LIKE 'TST%' ;;
 #     }
 
 #     dimension: primary_key {
