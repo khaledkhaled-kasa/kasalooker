@@ -93,7 +93,7 @@ view: guests {
 
   dimension: idcheckstatus{
     type: string
-    description: "Status of Selfie/Govt ID"
+    label: "Selfie/Govt ID Submission Status"
     sql: ${TABLE}.verification.idcheckstatus;;
   }
 
