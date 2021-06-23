@@ -102,6 +102,21 @@ view: channel_cost_marketing {
     sql: CAST(${TABLE}.checkoutdate_booking_1 as TIMESTAMP);;
   }
 
+  dimension: length_of_stay {
+    hidden: yes
+    type:  number
+    sql:  date_diff(${checkoutdate_1_date}, ${checkindate_1_date}, DAY) ;;
+  }
+
+  dimension: length_of_stay_type {
+    label: "Length of Stay (Short-term/Long-term)"
+    description: "Short-term stays are stays with < 28 nights; whereas long-term stays are >= 28 nights"
+    type:  string
+    sql:  CASE WHEN ${length_of_stay} < 28 THEN "Short-term stay"
+          WHEN ${length_of_stay} >= 28 THEN "Long-term stay"
+          END ;;
+  }
+
   dimension: status_booking_1 {
     type: string
     hidden: yes

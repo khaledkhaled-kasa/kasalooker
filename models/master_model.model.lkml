@@ -176,7 +176,7 @@ explore: units_buildings_information {
   label: "Units and Property Information"
   group_label: "Properties"
 
-  join: active_unit_counts {
+  join: active_unit_counts { # This could be avoided by using the capacities table!
     type: left_outer
     relationship: one_to_many
     sql_on: ${units_buildings_information._id} = ${active_unit_counts._id} ;;
@@ -196,12 +196,6 @@ explore: units_buildings_information {
     sql_on: ${units_buildings_information.internaltitle} = ${check_in_data.internaltitle} ;;
   }
 
-  # join: capacities_v3 {
-  #   fields: [capacities_v3.night_date]
-  #   type: left_outer
-  #   relationship: one_to_many
-  #   sql_on: ${units_buildings_information._id} = ${capacities_v3.unit} ;;
-  # }
 
   join: pom_qa_walkthrough_survey_agg {
     view_label: "QA Walkthrough Survey Data"
@@ -273,12 +267,6 @@ explore: units_buildings_information {
     sql_on: ${units_buildings_information.internaltitle} = ${freshair_data.uid} ;;
   }
 
-  join: nexia_data {
-    view_label: "Nexia"
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${units_buildings_information.internaltitle} = ${nexia_data.uid} ;;
-  }
 
   join: minut_data {
     from: devices
@@ -286,6 +274,14 @@ explore: units_buildings_information {
     relationship: one_to_many
     sql_on: ${units_buildings_information._id} = ${minut_data.unit}
             AND ${minut_data.devicetype} LIKE '%Minut%';;
+  }
+
+  join: lock_data {
+    from: devices
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information._id} = ${lock_data.unit}
+      AND lower(${lock_data.devicetype}) LIKE '%lock%';;
   }
 
 

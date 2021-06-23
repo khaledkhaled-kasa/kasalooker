@@ -121,31 +121,6 @@ view: units_kpo_overview {
     convert_tz: no
   }
 
-  dimension: jan_21 {
-    type: string
-    sql:
-    CASE
-    WHEN (${first_available_date} <= '2021-01-31' AND (${deactivated_date} > "2021-01-31" OR ${deactivated_date} is NULL)) THEN "Jan_21"
-    WHEN (${first_available_date} <= '2021-02-28' AND (${deactivated_date} > "2021-02-28" OR ${deactivated_date} is NULL)) THEN "Feb_21"
-    WHEN (${first_available_date} <= '2021-03-31' AND (${deactivated_date} > "2021-03-31" OR ${deactivated_date} is NULL)) THEN "Mar_21"
-    WHEN (${first_available_date} <= '2021-04-30' AND (${deactivated_date} > "2021-04-30" OR ${deactivated_date} is NULL)) THEN "Apr_21"
-    WHEN (${first_available_date} <= '2021-05-31' AND (${deactivated_date} > "2021-05-31" OR ${deactivated_date} is NULL)) THEN "May_21"
-    WHEN (${first_available_date} <= '2021-06-30' AND (${deactivated_date} > "2021-06-30" OR ${deactivated_date} is NULL)) THEN "June_21"
-    WHEN (${first_available_date} <= '2021-07-31' AND (${deactivated_date} > "2021-07-31" OR ${deactivated_date} is NULL)) THEN "Jul_21"
-    WHEN (${first_available_date} <= '2021-08-31' AND (${deactivated_date} > "2021-08-31" OR ${deactivated_date} is NULL)) THEN "Aug_21"
-    WHEN (${first_available_date} <= '2021-09-30' AND (${deactivated_date} > "2021-09-30" OR ${deactivated_date} is NULL)) THEN "Sep_21"
-    WHEN (${first_available_date} <= '2021-10-31' AND (${deactivated_date} > "2021-10-31" OR ${deactivated_date} is NULL)) THEN "Nov_21"
-    WHEN (${first_available_date} <= '2021-11-30' AND (${deactivated_date} > "2021-11-30" OR ${deactivated_date} is NULL)) THEN "Dec_21"
-    ELSE "Other Months"
-    END;;
-  }
-
-  measure: count {
-    label: "# of Units"
-    type: count_distinct
-    sql: ${jan_21} ;;
-  }
-
 
 
 }
