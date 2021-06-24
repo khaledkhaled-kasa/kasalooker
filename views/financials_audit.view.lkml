@@ -182,6 +182,7 @@ view: financials_audit {
     label: "Same Time Last Year (STLY)"
     description: "This will provide the date from the same time last YEAR"
     type: time
+    datatype: date
     timeframes: [
       raw,
       date,
