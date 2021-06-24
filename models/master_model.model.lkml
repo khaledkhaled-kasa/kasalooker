@@ -136,9 +136,17 @@ explore: breezeway_export {
   }
 
   join: post_checkout_data {
+    view_label: "Post Checkout Surveys"
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_clean.confirmation_code}code} ;;
+    sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_clean.confirmation_code} ;;
+  }
+
+  join: post_checkout_v2 {
+    view_label: "Post Checkout Surveys V2"
+    type:  left_outer
+    relationship: one_to_one
+    sql_on:  ${post_checkout_v2.confirmationcode} = ${reservations_clean.confirmation_code} ;;
   }
 
   join: geo_location {
@@ -504,34 +512,6 @@ explore: capacities_v3 {
   }
 
 
-  # join: reviews {
-  #   type:  full_outer
-  #   relationship:  one_to_one
-  #   sql_on:  ${reviews.reservation} = ${reservations_v3._id} ;;
-  # }
-  # join: airbnb_reviews {
-  #   type: full_outer
-  #   relationship:  one_to_one
-  #   sql_on: ${reservations_v3.confirmationcode} = ${airbnb_reviews.reservation_code} ;;
-  # }
-  # join: booking_reviews {
-  #   type: full_outer
-  #   relationship: one_to_many
-  #   sql_on: ${units.propcode} = ${booking_reviews.building} ;;
-  # }
-  # join: post_checkout_data {
-  #   type:  full_outer
-  #   relationship: one_to_one
-  #   sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_v3.confirmationcode} ;;
-  # }
-
-# # for marketing
-#   join: latest_listing_review_date {
-#     type: full_outer
-#     relationship: one_to_one
-#     sql_on: ${latest_listing_review_date.airbnb_reviews_listing_id} = ${airbnb_reviews.listing_id} ;;
-#   }
-
 
 }
 
@@ -762,6 +742,13 @@ explore: slack_bugs_tech {
     type: left_outer
     relationship:  one_to_one
     sql_on: ${reservations_clean.confirmation_code} = ${airbnb_reviews.reservation_code} ;;
+  }
+
+  join: post_checkout_data {
+    view_label: "Post Checkout Surveys"
+    type:  left_outer
+    relationship: one_to_one
+    sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_clean.confirmation_code} ;;
   }
 
   join: post_checkout_v2 {

@@ -126,6 +126,13 @@ explore: customer {
     sql_on: ${reservations_kustomer.confirmationcode} = ${airbnb_reviews.reservation_code} ;;
   }
 
+  join: post_checkout_data {
+    view_label: "Post Checkout Surveys"
+    type:  left_outer
+    relationship: one_to_one
+    sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_kustomer.confirmationcode} ;;
+  }
+
   join: post_checkout_v2 {
     view_label: "Post Checkout Surveys V2"
     type:  left_outer
