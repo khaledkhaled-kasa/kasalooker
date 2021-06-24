@@ -1,10 +1,12 @@
 view: guests {
-  derived_table: {
-    sql: SELECT *, auditlog.value.reason  AS reason FROM `bigquery-analytics-272822.mongo.guests`
-    LEFT JOIN UNNEST(verification.idcheckstatusaudit) as auditlog
-        ;;
-    datagroup_trigger: kasametrics_reservations_datagroup
-  }
+
+  sql_table_name:`bigquery-analytics-272822.mongo.guests`;;
+  # derived_table: {
+  #   sql: SELECT *, auditlog.value.reason  AS reason FROM `bigquery-analytics-272822.mongo.guests`
+  #   LEFT JOIN UNNEST(verification.idcheckstatusaudit) as auditlog
+  #       ;;
+  #   datagroup_trigger: kasametrics_reservations_datagroup
+
 
   dimension: _id {
     type: string
@@ -83,18 +85,27 @@ view: guests {
   }
 
 
-  dimension: isDeclined {
-    type: yesno
-    label: "Selfie/Govt ID Declined"
-    description: "Selfie/Govt ID failed or got declined"
-    sql: ${TABLE}.reason like "%id_check.declined%";;
-    drill_fields: [auditlog_value_reason]
-}
+#   dimension: isDeclined {
+#     type: yesno
+#     label: "Selfie/Govt ID Declined"
+#     description: "Selfie/Govt ID failed or got declined"
+#     sql: ${TABLE}.reason like "%id_check.declined%";;
+#     drill_fields: [auditlog_value_reason]
+# }
+
 
   dimension: idcheckstatus{
     type: string
-    description: "Status of Selfie/Govt ID"
+    label: "ID Status"
+    description: "Selfie/Govt ID Submission Status"
     sql: ${TABLE}.verification.idcheckstatus;;
+  }
+
+  dimension: backgroundCheckStatus{
+    type: string
+    label: "BGC Status"
+    description: "Background Check Status"
+    sql: ${TABLE}.verification.backgroundcheckstatus;;
   }
 
 
