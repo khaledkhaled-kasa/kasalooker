@@ -445,6 +445,7 @@ view: airbnb_reviews {
     drill_fields: [airbnb_details*, review_date, cleanliness_comments, value_comments, overall_comments]
   }
 
+
   measure: net_quality_score_communication {
     #view_label: "Metrics"
     group_label: "NQS Metrics"
