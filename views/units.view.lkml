@@ -115,7 +115,7 @@ view: units {
     }
 
     dimension: status_matched{
-      description: "Check KPO unit status with "
+      description: "Check KPO unit status with System unit status"
       type: string
       sql:  CASE WHEN ${TABLE}.statuskpo IS NULL Then NULL
       WHEN ${unit_status} =${TABLE}.statuskpo Then "✅ "
@@ -123,6 +123,26 @@ view: units {
       END;;
       hidden: no
     }
+
+  dimension: StartDate_matched{
+    description: "Check KPO unit StartDate with System unit StartDate"
+    type: string
+    sql:  CASE WHEN ${KPO_firstAvailableDate_date} = ${availability_startdate_date}
+       Then "✅ "
+      ELSE "❌ "
+      END;;
+    hidden: no
+  }
+
+  dimension: EndDate_matched{
+    description: "Check KPO unit StartDate with System unit EndDate"
+    type: string
+    sql:  CASE WHEN ${KPO_deactivatedDate_date} = ${availability_enddate}
+       Then "✅ "
+      ELSE "❌ "
+      END;;
+    hidden: no
+  }
 
     dimension: KPO_status {
       type: string
