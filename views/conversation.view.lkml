@@ -1313,7 +1313,7 @@ AND conversation.id = conversation_reservation_mapped.conversation_id
         label: "Unique Reservations from Messages Sent"
         description: "Number of unique reservations for messages sent"
         sql: ${kobject_reservation.id} ;;
-        filters: [is_auto_false: "yes", is_direction_out: "yes"]
+        filters: [is_auto_false: "yes", message.direction: "out"]
       }
 
       measure: messages_sent_per_reservation {
