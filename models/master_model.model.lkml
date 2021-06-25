@@ -439,7 +439,7 @@ explore: capacities_v3 {
   join: units {
     type:  inner
     relationship: one_to_one
-    sql_on: ${capacities_v3.unit} = ${units._id} ;;
+    sql_on: ${capacities_v3.unit} = ${units.internaltitle} ;;
   }
   join: iot_alerts {
     type: left_outer
