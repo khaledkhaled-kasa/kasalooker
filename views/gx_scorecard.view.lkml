@@ -487,6 +487,7 @@ view: gx_scorecard {
           {% endif %} ;;
       }
 
+
       dimension: GX_category_score_weighted {
         label: "Category Score (Weighted)"
         type: number

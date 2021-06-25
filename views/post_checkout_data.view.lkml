@@ -133,11 +133,22 @@
     sql: ${TABLE}.How_likely_are_you_to_recommend_Kasa_to_someone_else_ ;;
   }
 
-  dimension: how_often_do_you_plan_to_return_to_this_location_ {
-    label: "Plan to Return"
+    dimension: how_often_do_you_plan_to_return_to_this_location_ {
+      label: "Plan to Return"
+      type: string
+      sql: ${TABLE}.How_often_do_you_plan_to_return_to_this_location_ ;;
+    }
+
+  dimension: overall_feedback {
     type: string
-    sql: ${TABLE}.How_often_do_you_plan_to_return_to_this_location_ ;;
+    sql: ${TABLE}.We_love_feedback__Is_there_anything_else_you_d_like_to_tell_us__  ;;
   }
+
+    dimension: suggestion {
+      type: string
+      sql: ${TABLE}.What_is_one_suggestion_for_improving_the_Kasa_experience_  ;;
+    }
+
 
   dimension: NPS {
     type: string

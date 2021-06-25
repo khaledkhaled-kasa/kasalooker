@@ -7,13 +7,6 @@ view: airbnb_reviews {
   persist_for: "1 hours"
   }
 
-  # dimension: aggregated_comments {
-  #   group_label: "Comments"
-  #   type: string
-  #   sql: CONCAT(COALESCE(${TABLE}.Private_Feedback,"PC: Null")," | ",COALESCE(${TABLE}.Communication_Comments,"CC: Null")," | ",
-  #   COALESCE(${TABLE}.Overall_Comments,"OC: Null")," | ",
-  #   COALESCE(${post_checkout_v2.what_else_could_kasa_have_done_to_improve_your_stay_},"O-PSS2: Null")," | ",COALESCE(${post_checkout_v2.what_aspects_of_communications_fell_short_},"C-PSS2: Null")) ;;
-  # }
 
   dimension: accuracy_comments {
     group_label: "Comments"
@@ -263,7 +256,7 @@ view: airbnb_reviews {
     type: average
     value_format: "0.00"
     sql: ${TABLE}.Cleanliness_Rating ;;
-    drill_fields: [airbnb_details*, review_date, cleanliness_comments, value_comments, overall_comments]
+    drill_fields: [airbnb_details*, review_date, ds_checkout_date , units.internaltitle, cleanliness_comments, value_comments, overall_comments]
 
   }
 

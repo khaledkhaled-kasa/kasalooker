@@ -6,6 +6,26 @@ view: post_checkout_v2 {
     persist_for: "1 hours"
   }
 
+  dimension: aggregated_comments {
+    group_label: "Comments"
+    type: string
+    sql: CONCAT(COALESCE(${airbnb_reviews.private_feedback},"PC: Null")," | ",COALESCE(${airbnb_reviews.communication_comments},"CC: Null")," | ",
+          COALESCE(${airbnb_reviews.overall_comments},"OC: Null")," | ",
+          COALESCE(${post_checkout_data.overall_feedback},"O-PSS: Null")," | ",COALESCE(${post_checkout_data.suggestion},"S-PSS: Null")," | ",
+          COALESCE(${what_else_could_kasa_have_done_to_improve_your_stay_},"O-PSS2: Null")," | ",COALESCE(${what_aspects_of_communications_fell_short_},"C-PSS2: Null")) ;;
+  }
+
+
+  dimension: contains_buzzword {
+    label: "Contains Buzz Word (Communication)"
+    description: "This field has been created to display all aggregated comments which contain one of the defined buzzwords pertinent to overcommunication such as communication, text, email, etc."
+    type: yesno
+    sql: lower(${aggregated_comments}) LIKE "%communicat%" OR lower(${aggregated_comments}) LIKE "%automat%" OR lower(${aggregated_comments}) LIKE "%email%"
+          OR lower(${aggregated_comments}) LIKE "%text%" OR lower(${aggregated_comments}) LIKE "%e-mail%" OR lower(${aggregated_comments}) LIKE "%phone%"
+          OR lower(${aggregated_comments}) LIKE "%talk%" ;;
+  }
+
+
   dimension: overall__how_would_you_rate_your_kasa_stay_ {
     label: "Overall Rating"
     group_label: "Ratings"
