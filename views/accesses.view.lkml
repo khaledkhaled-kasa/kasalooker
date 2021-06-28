@@ -51,6 +51,13 @@ view: accesses {
     sql: ${TABLE}.value ;;
   }
 
+
+  dimension_group: smartThingsInstalled{
+    type: time
+    timeframes: [date, week, month, year]
+    sql: PARSE_TIMESTAMP('%Y/%d/%m', ${TABLE}.smartThingsInstalled);;
+    convert_tz: no
+  }
   measure: total_code{
     label: "Totale Accesses"
     type: count_distinct
