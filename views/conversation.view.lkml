@@ -4,79 +4,79 @@ view: conversation {
   derived_table: {
     sql:
 
-WITH conversation_reservation_mapped as
-(WITH prioritized_table AS (SELECT distinct customer_id, conversation_id, kobject_id_mapped, priority, row_number() OVER(PARTITION BY customer_id, conversation_id ORDER BY priority asc) AS rank
-FROM
-(SELECT c.id AS customer_id, custom_complex_title_str AS complex, custom_confirmation_code_str AS confirmationcode, cast(custom_booking_date_at AS DATE) AS booking_date,
-cast(custom_check_in_date_local_at AS DATE) AS checkin_date, cast(custom_check_out_date_local_at AS DATE) AS checkout_date, t1.conversation_id, t1.conversation_created, t1.conversation_text,
+    WITH conversation_reservation_mapped as
+    (WITH prioritized_table AS (SELECT distinct customer_id, conversation_id, kobject_id_mapped, priority, row_number() OVER(PARTITION BY customer_id, conversation_id ORDER BY priority asc) AS rank
+    FROM
+    (SELECT c.id AS customer_id, custom_complex_title_str AS complex, custom_confirmation_code_str AS confirmationcode, cast(custom_booking_date_at AS DATE) AS booking_date,
+    cast(custom_check_in_date_local_at AS DATE) AS checkin_date, cast(custom_check_out_date_local_at AS DATE) AS checkout_date, t1.conversation_id, t1.conversation_created, t1.conversation_text,
 
-CASE WHEN ((t1.conversation_created >= cast(custom_check_in_date_local_at AS DATE) AND t1.conversation_created < cast(custom_check_out_date_local_at AS DATE))
-AND custom_status_str IN ("confirmed","checked_in")) THEN kor.id
-WHEN (t1.conversation_created >= cast(custom_check_in_date_local_at AS DATE) AND t1.conversation_created < cast(custom_check_out_date_local_at AS DATE)) THEN kor.id
-WHEN (t1.conversation_created = cast(custom_check_out_date_local_at AS DATE)) THEN kor.id
-WHEN (t1.conversation_created = cast(custom_booking_date_at AS DATE)) THEN kor.id
-WHEN (t1.conversation_created BETWEEN cast(custom_booking_date_at AS DATE) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
-WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 5)) AND custom_status_str IN ("confirmed","checked_in")) THEN kor.id
-WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 15)) AND custom_status_str IN ("confirmed","checked_in")) THEN kor.id
-WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 30)) AND custom_status_str IN ("confirmed","checked_in")) THEN kor.id
-WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 45)) AND custom_status_str IN ("confirmed","checked_in")) THEN kor.id
-WHEN (t1.conversation_created BETWEEN (cast(custom_booking_date_at AS DATE)-10) AND cast(custom_booking_date_at AS DATE)) THEN kor.id
-WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-10) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
-WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-20) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
-WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-30) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
-WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-45) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
-WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-60) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
-WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-90) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
-WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-120) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
-WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-150) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
-WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-180) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
-WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-210) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
-ELSE "No Reservation in Range"
-END kobject_id_mapped,
+    CASE WHEN ((t1.conversation_created >= cast(custom_check_in_date_local_at AS DATE) AND t1.conversation_created < cast(custom_check_out_date_local_at AS DATE))
+    AND custom_status_str IN ("confirmed","checked_in")) THEN kor.id
+    WHEN (t1.conversation_created >= cast(custom_check_in_date_local_at AS DATE) AND t1.conversation_created < cast(custom_check_out_date_local_at AS DATE)) THEN kor.id
+    WHEN (t1.conversation_created = cast(custom_check_out_date_local_at AS DATE)) THEN kor.id
+    WHEN (t1.conversation_created = cast(custom_booking_date_at AS DATE)) THEN kor.id
+    WHEN (t1.conversation_created BETWEEN cast(custom_booking_date_at AS DATE) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+    WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 5)) AND custom_status_str IN ("confirmed","checked_in")) THEN kor.id
+    WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 15)) AND custom_status_str IN ("confirmed","checked_in")) THEN kor.id
+    WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 30)) AND custom_status_str IN ("confirmed","checked_in")) THEN kor.id
+    WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 45)) AND custom_status_str IN ("confirmed","checked_in")) THEN kor.id
+    WHEN (t1.conversation_created BETWEEN (cast(custom_booking_date_at AS DATE)-10) AND cast(custom_booking_date_at AS DATE)) THEN kor.id
+    WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-10) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+    WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-20) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+    WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-30) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+    WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-45) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+    WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-60) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+    WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-90) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+    WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-120) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+    WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-150) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+    WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-180) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+    WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-210) AND cast(custom_check_in_date_local_at AS DATE)) THEN kor.id
+    ELSE "No Reservation in Range"
+    END kobject_id_mapped,
 
-CASE WHEN ((t1.conversation_created >= cast(custom_check_in_date_local_at AS DATE) AND t1.conversation_created < cast(custom_check_out_date_local_at AS DATE))
-AND custom_status_str IN ("confirmed","checked_in")) THEN "a"
-WHEN (t1.conversation_created >= cast(custom_check_in_date_local_at AS DATE) AND t1.conversation_created < cast(custom_check_out_date_local_at AS DATE)) THEN "b"
-WHEN (t1.conversation_created = cast(custom_check_out_date_local_at AS DATE)) THEN "c"
-WHEN (t1.conversation_created = cast(custom_booking_date_at AS DATE)) THEN "d"
-WHEN (t1.conversation_created BETWEEN cast(custom_booking_date_at AS DATE) AND cast(custom_check_in_date_local_at AS DATE)) THEN "e"
-WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 5)) AND custom_status_str IN ("confirmed","checked_in")) THEN "f"
-WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 15)) AND custom_status_str IN ("confirmed","checked_in")) THEN "g"
-WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 30)) AND custom_status_str IN ("confirmed","checked_in")) THEN "h"
-WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 45)) AND custom_status_str IN ("confirmed","checked_in")) THEN "i"
-WHEN (t1.conversation_created BETWEEN (cast(custom_booking_date_at AS DATE)-10) AND cast(custom_booking_date_at AS DATE)) THEN "j"
-WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-10) AND cast(custom_check_in_date_local_at AS DATE)) THEN "k"
-WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-20) AND cast(custom_check_in_date_local_at AS DATE)) THEN "l"
-WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-30) AND cast(custom_check_in_date_local_at AS DATE)) THEN "m"
-WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-45) AND cast(custom_check_in_date_local_at AS DATE)) THEN "n"
-WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-60) AND cast(custom_check_in_date_local_at AS DATE)) THEN "o"
-WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-90) AND cast(custom_check_in_date_local_at AS DATE)) THEN "p"
-WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-120) AND cast(custom_check_in_date_local_at AS DATE)) THEN "q"
-WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-150) AND cast(custom_check_in_date_local_at AS DATE)) THEN "r"
-WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-180) AND cast(custom_check_in_date_local_at AS DATE)) THEN "s"
-WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-210) AND cast(custom_check_in_date_local_at AS DATE)) THEN "t"
-ELSE "u"
-END priority
+    CASE WHEN ((t1.conversation_created >= cast(custom_check_in_date_local_at AS DATE) AND t1.conversation_created < cast(custom_check_out_date_local_at AS DATE))
+    AND custom_status_str IN ("confirmed","checked_in")) THEN "a"
+    WHEN (t1.conversation_created >= cast(custom_check_in_date_local_at AS DATE) AND t1.conversation_created < cast(custom_check_out_date_local_at AS DATE)) THEN "b"
+    WHEN (t1.conversation_created = cast(custom_check_out_date_local_at AS DATE)) THEN "c"
+    WHEN (t1.conversation_created = cast(custom_booking_date_at AS DATE)) THEN "d"
+    WHEN (t1.conversation_created BETWEEN cast(custom_booking_date_at AS DATE) AND cast(custom_check_in_date_local_at AS DATE)) THEN "e"
+    WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 5)) AND custom_status_str IN ("confirmed","checked_in")) THEN "f"
+    WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 15)) AND custom_status_str IN ("confirmed","checked_in")) THEN "g"
+    WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 30)) AND custom_status_str IN ("confirmed","checked_in")) THEN "h"
+    WHEN ((t1.conversation_created BETWEEN cast(custom_check_in_date_local_at AS DATE) AND (cast(custom_check_out_date_local_at AS DATE) + 45)) AND custom_status_str IN ("confirmed","checked_in")) THEN "i"
+    WHEN (t1.conversation_created BETWEEN (cast(custom_booking_date_at AS DATE)-10) AND cast(custom_booking_date_at AS DATE)) THEN "j"
+    WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-10) AND cast(custom_check_in_date_local_at AS DATE)) THEN "k"
+    WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-20) AND cast(custom_check_in_date_local_at AS DATE)) THEN "l"
+    WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-30) AND cast(custom_check_in_date_local_at AS DATE)) THEN "m"
+    WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-45) AND cast(custom_check_in_date_local_at AS DATE)) THEN "n"
+    WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-60) AND cast(custom_check_in_date_local_at AS DATE)) THEN "o"
+    WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-90) AND cast(custom_check_in_date_local_at AS DATE)) THEN "p"
+    WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-120) AND cast(custom_check_in_date_local_at AS DATE)) THEN "q"
+    WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-150) AND cast(custom_check_in_date_local_at AS DATE)) THEN "r"
+    WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-180) AND cast(custom_check_in_date_local_at AS DATE)) THEN "s"
+    WHEN (t1.conversation_created BETWEEN (cast(custom_check_in_date_local_at AS DATE)-210) AND cast(custom_check_in_date_local_at AS DATE)) THEN "t"
+    ELSE "u"
+    END priority
 
-FROM kustomer.customer c
-join kustomer.kobject_reservation kor on c.id = kor.customer_id
-join
-(SELECT conv.customer_id AS cust_id, conv.id AS conversation_id, cast(conv.created_at AS DATE) AS conversation_created, conv.name AS conversation_text
-FROM kustomer.conversation conv
-)t1
-ON c.id = t1.cust_id
---AND custom_confirmation_code_str is not null
-)t2
-ORDER BY 1,2,4)
-SELECT prioritized_table.*
-FROM prioritized_table
-WHERE prioritized_table.rank = 1)
-SELECT conversation.*, conversation_reservation_mapped.kobject_id_mapped, DATE(_fivetran_synced) as partition_date
-FROM kustomer.conversation left join conversation_reservation_mapped
-ON conversation.customer_id = conversation_reservation_mapped.customer_id
-AND conversation.id = conversation_reservation_mapped.conversation_id
+    FROM kustomer.customer c
+    join kustomer.kobject_reservation kor on c.id = kor.customer_id
+    join
+    (SELECT conv.customer_id AS cust_id, conv.id AS conversation_id, cast(conv.created_at AS DATE) AS conversation_created, conv.name AS conversation_text
+    FROM kustomer.conversation conv
+    )t1
+    ON c.id = t1.cust_id
+    --AND custom_confirmation_code_str is not null
+    )t2
+    ORDER BY 1,2,4)
+    SELECT prioritized_table.*
+    FROM prioritized_table
+    WHERE prioritized_table.rank = 1)
+    SELECT conversation.*, conversation_reservation_mapped.kobject_id_mapped, DATE(_fivetran_synced) as partition_date
+    FROM kustomer.conversation left join conversation_reservation_mapped
+    ON conversation.customer_id = conversation_reservation_mapped.customer_id
+    AND conversation.id = conversation_reservation_mapped.conversation_id
 
-;;
+    ;;
 
 
       datagroup_trigger: kustomer_default_datagroup
@@ -1049,10 +1049,10 @@ AND conversation.id = conversation_reservation_mapped.conversation_id
         sql: ${TABLE}.outbound_message_count ;;
       }
 
-  dimension: inbound_message_count {
-    type: number
-    sql: ${message_count} - ${outbound_message_count} ;;
-  }
+      dimension: inbound_message_count {
+        type: number
+        sql: ${message_count} - ${outbound_message_count} ;;
+      }
 
       dimension: priority {
         type: number
@@ -1243,211 +1243,212 @@ AND conversation.id = conversation_reservation_mapped.conversation_id
         sql: ${TABLE}.updated_at ;;
       }
 
-  dimension: issues {
-    type: number
-    sql: CASE
+      dimension: issues {
+        type: number
+        sql: CASE
             WHEN ${custom_issue_category_1_tree} IS NOT NULL AND ${custom_issue_category_2_tree} IS NOT NULL AND ${custom_issue_category_3_tree} IS NOT NULL THEN 3
             WHEN ${custom_issue_category_1_tree} IS NOT NULL AND ${custom_issue_category_2_tree} IS NOT NULL AND ${custom_issue_category_3_tree} IS NULL THEN 2
             WHEN ${custom_issue_category_1_tree} IS NOT NULL AND ${custom_issue_category_2_tree} IS NULL AND ${custom_issue_category_3_tree} IS NULL THEN 1
           ELSE 0
           END;;
 
-    }
+        }
 
 
 
 ####################### Average / Median First Response Time Required Dimensions
 
-      dimension: is_first_message {
-        hidden: yes
-        type: yesno
-        sql: message.sent_at = ${TABLE}.first_response_sent_at ;;
-      }
+        dimension: is_first_message {
+          hidden: yes
+          type: yesno
+          sql: message.sent_at = ${TABLE}.first_response_sent_at ;;
+        }
 
-      dimension: is_auto_false {
-        hidden: yes
-        type: yesno
-        sql: message.auto = false ;;
-      }
+        dimension: is_auto_false {
+          hidden: yes
+          type: yesno
+          sql: message.auto = false ;;
+        }
 
-      dimension: is_direction_out {
-        hidden: yes
-        type: yesno
-        sql: message.direction = 'out' ;;
-      }
+        dimension: is_direction_out {
+          hidden: yes
+          type: yesno
+          sql: message.direction = 'out' ;;
+        }
 
-      dimension: is_direction_response_out {
-        hidden: yes
-        type: yesno
-        sql: message.direction_type = 'response-out' ;;
-      }
+        dimension: is_direction_response_out {
+          hidden: yes
+          type: yesno
+          sql: message.direction_type = 'response-out' ;;
+        }
 
 ######## Team Metrics - THESE MEASURES ONLY APPLY TO KUSTOMETRICS
 
-      ###### Messages Sent
+        ###### Messages Sent
 
-      measure: messages_sent {
-        view_label: "Metrics"
-        label: "Messages Sent"
-        description: "Outbound messages sent during the time period."
-        type: count_distinct
-        sql: ${message.id} ;;
-        value_format: "###"
-        filters: [is_auto_false: "yes", is_direction_out: "yes"]
-      }
+        measure: messages_sent {
+          view_label: "Metrics"
+          label: "Messages Sent"
+          description: "Outbound messages sent during the time period."
+          type: count_distinct
+          sql: ${message.id} ;;
+          value_format: "###"
+          filters: [is_auto_false: "yes", is_direction_out: "yes"]
+        }
 
 
-      measure: messages_sent_allocated {
-        view_label: "Metrics"
-        label: "Messages Sent (Allocated to Reservations)"
-        description: "Outbound messages sent during the time period."
-        type: count_distinct
-        sql: ${message.id} ;;
-        value_format: "###"
-        filters: [is_auto_false: "yes", is_direction_out: "yes", kobject_reservation.id: "-NULL"]
-      }
+        measure: messages_sent_allocated {
+          view_label: "Metrics"
+          label: "Messages Sent (Allocated to Reservations)"
+          description: "Outbound messages sent during the time period."
+          type: count_distinct
+          sql: ${message.id} ;;
+          value_format: "###"
+          filters: [is_auto_false: "yes", is_direction_out: "yes", kobject_reservation.id: "-NULL"]
+        }
 
-      measure: reservations_count {
-        type: count_distinct
-        view_label: "Metrics"
-        label: "Unique Reservations from Messages Sent"
-        description: "Number of unique reservations for messages sent"
-        sql: ${kobject_reservation.id} ;;
-        filters: [is_auto_false: "yes", message.direction: "out"]
-      }
 
-      measure: messages_sent_per_reservation {
-        type: number
-        view_label: "Metrics"
-        label: "Messages Sent (Allocated) / Reservations"
-        description: "Number of outbound messages sent per unique reservations"
-        value_format: "0.0"
-        sql: ${messages_sent_allocated} / ${reservations_count} ;;
-      }
+        measure: reservations_count {
+          type: count_distinct
+          view_label: "Metrics"
+          label: "Unique Reservations from Messages Sent"
+          description: "Number of unique reservations for messages sent"
+          sql: ${kobject_reservation.id} ;;
+          filters: [is_auto_false: "yes", message.direction: "out"]
+        }
+
+        measure: messages_sent_per_reservation {
+          type: number
+          view_label: "Metrics"
+          label: "Messages Sent (Allocated) / Reservations"
+          description: "Number of outbound messages sent per unique reservations"
+          value_format: "0.0"
+          sql: ${messages_sent_allocated} / ${reservations_count} ;;
+        }
 
 ###### Unique Conversations Messaged
 
-      measure: unique_conversations_messaged {
-        view_label: "Metrics"
-        label: "Unique Conversations Messaged"
-        description: "Unique # of conversations which contain at least one message sent by that agent."
-        type: count_distinct
-        sql: ${message.conversation_id} ;;
-        value_format: "###"
-        filters: [is_auto_false: "yes", is_direction_out: "yes"]
-      }
+        measure: unique_conversations_messaged {
+          view_label: "Metrics"
+          label: "Unique Conversations Messaged"
+          description: "Unique # of conversations which contain at least one message sent by that agent."
+          type: count_distinct
+          sql: ${message.conversation_id} ;;
+          value_format: "###"
+          filters: [is_auto_false: "yes", is_direction_out: "yes"]
+        }
 
 
 ###### Unique Conversations
 
-      measure: unique_conversations {
-        view_label: "Metrics"
-        label: "Unique Conversations"
-        description: "Unique # of conversations (doesn't contain at least one message sent by that agent)"
-        type: count_distinct
-        sql: ${message.conversation_id} ;;
-        value_format: "###"
-        drill_fields: [customer_id, id, created_date, message.created_date]
-      }
+        measure: unique_conversations {
+          view_label: "Metrics"
+          label: "Unique Conversations"
+          description: "Unique # of conversations (doesn't contain at least one message sent by that agent)"
+          type: count_distinct
+          sql: ${message.conversation_id} ;;
+          value_format: "###"
+          drill_fields: [customer_id, id, created_date, message.created_date]
+        }
 
 
 ###### Unique Conversations including notes
 
-      measure: unique_conversations_star {
-        view_label: "Metrics"
-        label: "Unique Conversations (Incl. Notes)"
-        description: "Unique # of conversations (including notes). This is used for issue categorization."
-        type: count_distinct
-        sql: ${id} ;;
-        value_format: "###"
-        drill_fields: [conversation.name]
-      }
+        measure: unique_conversations_star {
+          view_label: "Metrics"
+          label: "Unique Conversations (Incl. Notes)"
+          description: "Unique # of conversations (including notes). This is used for issue categorization."
+          type: count_distinct
+          sql: ${id} ;;
+          value_format: "###"
+          drill_fields: [conversation.name]
+        }
 
 
 
 ###### Unique Customers Messaged
 
-      measure: unique_customers_messaged {
-        view_label: "Metrics"
-        label: "Unique Customers Messaged"
-        description: "Unique # of customers which received at least one message FROM the agent."
-        type: count_distinct
-        sql: ${message.customer_id} ;;
-        value_format: "###"
-        filters: [message_count: ">0", is_auto_false: "yes", is_direction_out: "yes"]
-      }
+        measure: unique_customers_messaged {
+          view_label: "Metrics"
+          label: "Unique Customers Messaged"
+          description: "Unique # of customers which received at least one message FROM the agent."
+          type: count_distinct
+          sql: ${message.customer_id} ;;
+          value_format: "###"
+          filters: [message_count: ">0", is_auto_false: "yes", is_direction_out: "yes"]
+        }
 
 
 
 ###### Average Sent Messages per Conversation
 
-      measure: messages_per_conversation {
-        view_label: "Metrics"
-        label: "Average Sent Messages per Conversation"
-        description: "Total number of messages this agent sent divided by the number of conversations they are in."
-        type: number
-        sql: ${messages_sent} /  nullif(${unique_conversations},0);;
-        value_format: "###.0"
-      }
+        measure: messages_per_conversation {
+          view_label: "Metrics"
+          label: "Average Sent Messages per Conversation"
+          description: "Total number of messages this agent sent divided by the number of conversations they are in."
+          type: number
+          sql: ${messages_sent} /  nullif(${unique_conversations},0);;
+          value_format: "###.0"
+        }
 
 ###### Average Sent Messages per Customer
 
-      measure: messages_per_customer {
-        view_label: "Metrics"
-        label: "Average Sent Messages per Customer"
-        description: "Total number of messages this agent sent divided by the number of customers they were sent to."
-        type: number
-        sql: ${messages_sent} /  nullif(${unique_customers_messaged},0);;
-        value_format: "###.0"
-      }
+        measure: messages_per_customer {
+          view_label: "Metrics"
+          label: "Average Sent Messages per Customer"
+          description: "Total number of messages this agent sent divided by the number of customers they were sent to."
+          type: number
+          sql: ${messages_sent} /  nullif(${unique_customers_messaged},0);;
+          value_format: "###.0"
+        }
 
 
 ##### Average Response Time - In Progress
 
-      measure: average_response_time_hrs {
-        view_label: "Metrics"
-        label: "Average Response Time (hrs)"
-        description: "Average time between each inbound message and the corresponding outbound agent's response."
-        type: average
-        value_format: "###0.0"
-        sql: ${conversation.first_response_time} /(60*1000*60);;
-        filters: [first_response_time: ">0", is_auto_false: "yes", is_direction_out: "yes"]
-      }
+        measure: average_response_time_hrs {
+          view_label: "Metrics"
+          label: "Average Response Time (hrs)"
+          description: "Average time between each inbound message and the corresponding outbound agent's response."
+          type: average
+          value_format: "###0.0"
+          sql: ${conversation.first_response_time} /(60*1000*60);;
+          filters: [first_response_time: ">0", is_auto_false: "yes", is_direction_out: "yes"]
+        }
 
 ###### Average First Response Time
 
-      measure: average_first_response_time_mins {
-        view_label: "Metrics"
-        label: "Average First Response Time (mins)"
-        description: "Average time between the customer's first inbound message and the agent's response."
-        type: average
-        value_format: "###0.0"
-        sql: ${conversation.first_response_time} /(60*1000);;
-        filters: [first_response_time: ">0", is_first_message: "yes", is_auto_false: "yes", is_direction_out: "yes"]
-      }
+        measure: average_first_response_time_mins {
+          view_label: "Metrics"
+          label: "Average First Response Time (mins)"
+          description: "Average time between the customer's first inbound message and the agent's response."
+          type: average
+          value_format: "###0.0"
+          sql: ${conversation.first_response_time} /(60*1000);;
+          filters: [first_response_time: ">0", is_first_message: "yes", is_auto_false: "yes", is_direction_out: "yes"]
+        }
 
-      measure: average_first_response_time_hrs {
-        view_label: "Metrics"
-        label: "Average First Response Time (hrs)"
-        description: "Average time between the customer's first inbound message and the agent's response."
-        type: average
-        value_format: "###0.0"
-        sql: ${conversation.first_response_time} /(60*1000*60);;
-        filters: [first_response_time: ">0", is_first_message: "yes", is_auto_false: "yes", is_direction_out: "yes"]
-      }
+        measure: average_first_response_time_hrs {
+          view_label: "Metrics"
+          label: "Average First Response Time (hrs)"
+          description: "Average time between the customer's first inbound message and the agent's response."
+          type: average
+          value_format: "###0.0"
+          sql: ${conversation.first_response_time} /(60*1000*60);;
+          filters: [first_response_time: ">0", is_first_message: "yes", is_auto_false: "yes", is_direction_out: "yes"]
+        }
 
 
 ####### Median First Response Time
 
-      measure: median_first_response_time {
-        view_label: "Metrics"
-        label: "Median First Response Time (mins)"
-        description: "Median time between the customer's first inbound message and the agent's response. (Message Level)"
-        type: median
-        value_format: "###0.0"
-        sql: ${conversation.first_response_time} /(60*1000);;
-        filters: [first_response_time: ">0", is_first_message: "yes", is_auto_false: "yes", is_direction_out: "yes"]
-      }
+        measure: median_first_response_time {
+          view_label: "Metrics"
+          label: "Median First Response Time (mins)"
+          description: "Median time between the customer's first inbound message and the agent's response. (Message Level)"
+          type: median
+          value_format: "###0.0"
+          sql: ${conversation.first_response_time} /(60*1000);;
+          filters: [first_response_time: ">0", is_first_message: "yes", is_auto_false: "yes", is_direction_out: "yes"]
+        }
 
 
 ###### Average Time to First Resolution - STILL IN PROGRESS
@@ -1458,91 +1459,91 @@ AND conversation.id = conversation_reservation_mapped.conversation_id
 
 ###### Messages Sent WITH Shortcuts
 
-      measure: messages_with_shortcuts {
-        view_label: "Metrics"
-        label: "Messages WITH Shortcuts"
-        description: "Outbound messages sent WITH shortcuts during the time period."
-        type: count_distinct
-        sql: CASE WHEN ${message_shortcut.shortcut_id} is not null
-          THEN ${message.id}
-          ELSE NULL
-          END;;
-        value_format: "###"
-        filters: [is_auto_false: "yes", is_direction_out: "yes"]
-      }
+        measure: messages_with_shortcuts {
+          view_label: "Metrics"
+          label: "Messages WITH Shortcuts"
+          description: "Outbound messages sent WITH shortcuts during the time period."
+          type: count_distinct
+          sql: CASE WHEN ${message_shortcut.shortcut_id} is not null
+                      THEN ${message.id}
+                      ELSE NULL
+                      END;;
+          value_format: "###"
+          filters: [is_auto_false: "yes", is_direction_out: "yes"]
+        }
 
 ###### Percentage of Messages Sent WITH Shortcuts
 
 
-      measure: count_messages {
-        view_label: "Metrics"
-        hidden: yes
-        type: count_distinct
-        sql: ${message.id} ;;
-        value_format: "###"
-        filters: [is_auto_false: "yes", is_direction_out: "yes"]
-      }
+        measure: count_messages {
+          view_label: "Metrics"
+          hidden: yes
+          type: count_distinct
+          sql: ${message.id} ;;
+          value_format: "###"
+          filters: [is_auto_false: "yes", is_direction_out: "yes"]
+        }
 
-      measure: percentage_message_with_shortcuts {
-        view_label: "Metrics"
-        label: "Percentage of Message Sent WITH Shortcuts"
-        description: "Percentage of messages that were sent WITH a shortcut."
-        type: number
-        sql: ${messages_with_shortcuts} /  NULLIF(${count_messages},0);;
-        value_format: "0.0%"
-      }
+        measure: percentage_message_with_shortcuts {
+          view_label: "Metrics"
+          label: "Percentage of Message Sent WITH Shortcuts"
+          description: "Percentage of messages that were sent WITH a shortcut."
+          type: number
+          sql: ${messages_with_shortcuts} /  NULLIF(${count_messages},0);;
+          value_format: "0.0%"
+        }
 
-      measure: count_by_channel {
-        view_label: "Metrics"
-        label: "Conversation by Channel Count"
-        type: count_distinct
-        sql: CONCAT(${conversation_channel.conversation_id},${conversation_channel.name}) ;;
-        filters: [conversation.direction: "in"]
-      }
+        measure: count_by_channel {
+          view_label: "Metrics"
+          label: "Conversation by Channel Count"
+          type: count_distinct
+          sql: CONCAT(${conversation_channel.conversation_id},${conversation_channel.name}) ;;
+          filters: [conversation.direction: "in"]
+        }
 
 
-      measure: total_issues {
-        type: sum
-        sql: ${issues} ;;
-      }
+        measure: total_issues {
+          type: sum
+          sql: ${issues} ;;
+        }
 
-      measure: total_tech_related_issues {
-        type: sum
-        sql: CASE WHEN ${issue_categories_1.tech_influenced}
+        measure: total_tech_related_issues {
+          type: sum
+          sql: CASE WHEN ${issue_categories_1.tech_influenced}
                   OR ${issue_categories_2.tech_influenced}
                   OR ${issue_categories_3.tech_influenced} THEN ${issues}
             ELSE NULL
             END;;
-      }
+        }
 
-  measure: total_kontrol_related_issues {
-    type: sum
-    sql:  CASE WHEN ${issue_categories_1.kontrol_influenced}
+        measure: total_kontrol_related_issues {
+          type: sum
+          sql:  CASE WHEN ${issue_categories_1.kontrol_influenced}
               OR ${issue_categories_2.kontrol_influenced}
               OR ${issue_categories_3.kontrol_influenced} THEN ${issues}
         ELSE NULL
         END;;
-  }
+        }
 
-  measure: issues_per_reservation {
-    type: number
-    sql: ${total_issues} / NULLIF(${reservations_count},0) ;;
-    value_format_name: decimal_2
-  }
+        measure: issues_per_reservation {
+          type: number
+          sql: ${total_issues} / NULLIF(${reservations_count},0) ;;
+          value_format_name: decimal_2
+        }
 
-  measure: total_tech_related_issues_per_reservation {
-    type: number
-    sql: ${total_tech_related_issues} / NULLIF(${reservations_kustomer.total_reservations},0) ;;
-    value_format_name: decimal_2
-  }
+        measure: total_tech_related_issues_per_reservation {
+          type: number
+          sql: ${total_tech_related_issues} / NULLIF(${reservations_kustomer.total_reservations},0) ;;
+          value_format_name: decimal_2
+        }
 
-  measure: total_kontrol_related_issues_per_reservation {
-    type: number
-    sql: ${total_kontrol_related_issues} / NULLIF(${reservations_kustomer.total_reservations},0) ;;
-    value_format_name: decimal_2
-  }
-
-
+        measure: total_kontrol_related_issues_per_reservation {
+          type: number
+          sql: ${total_kontrol_related_issues} / NULLIF(${reservations_kustomer.total_reservations},0) ;;
+          value_format_name: decimal_2
+        }
 
 
-    }
+
+
+      }

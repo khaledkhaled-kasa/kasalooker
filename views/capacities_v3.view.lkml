@@ -6,7 +6,7 @@ view: capacities_v3 {
     dimension: primary_key {
       primary_key: yes
       hidden: yes
-      sql: CONCAT(${TABLE}.night_available_date, ${TABLE}.internaltitle) ;;
+      sql: ${TABLE}.primary_key ;;
     }
 
     dimension: _id {
@@ -73,7 +73,7 @@ view: capacities_v3 {
       description: "This will pull the first day of the month after the units have been activated for the first full month"
       type: string
       hidden: yes
-      sql: DATE_TRUNC(DATE_ADD(DATE(TIMESTAMP(${TABLE}.unit_availablility_startdata)), INTERVAL 1 MONTH), MONTH);;
+      sql: DATE_TRUNC(DATE_ADD(DATE(TIMESTAMP(${TABLE}.unit_availability_startdate)), INTERVAL 1 MONTH), MONTH);;
     }
 
 
@@ -96,14 +96,20 @@ view: capacities_v3 {
         END;;
     }
 
-    measure: capacity_after_first_active_month {
-      label: "Capacity after First Active Month"
-      description: "Number of available room nights bookable post first active month"
-      type: count_distinct
-      sql: CASE WHEN ((${_id}  LIKE "%-XX") OR (${_id}  LIKE "%-RES") OR (${_id} LIKE "%-S" ) OR (${night_date} < ${first_active_day})) THEN NULL
-          ELSE CONCAT(${_id} , '-', ${night_date})
+  measure: capacity_after_first_active_month {
+    label: "Capacity after First Active Month"
+    description: "Number of available room nights bookable post first active month"
+    type: count_distinct
+    sql: CASE WHEN ((${TABLE}.internaltitle LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%-RES") OR (${night_date} < ${first_active_day})) THEN NULL
+          ELSE CONCAT(${TABLE}.internaltitle, '-', ${night_date})
           END;;
-    }
+  }
+  # measure: total_active_units {
+  #   view_label: "Unit Information"
+  #   description: "Brings back the count of active units. Best practice is to use in conjunction with a date dimension"
+  #   type: count_distinct
+  #   sql: ${unit} ;;
+  # }
 
 
   }
