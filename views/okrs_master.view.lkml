@@ -76,7 +76,7 @@ view: okrs_master {
     label: "Automated on Looker (Yes/No)"
     description: "This will return Yes for metrics living on Looker and are updated through Looker. No for metrics which live on Looker but are still not automated and returns a null value for manually pulled metrics."
     type: string
-    sql: ${TABLE}.Automated_Looker ;;
+    sql: ${TABLE}.Automated__Yes_No_ ;;
   }
 
 
