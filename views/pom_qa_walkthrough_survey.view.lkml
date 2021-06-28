@@ -241,6 +241,18 @@ GROUP BY
     END;;
   }
 
+  dimension: real_time_POM_Walkthrough {
+    label: "Real-time Checkin Survey Received POM Walkthrough"
+    type: yesno
+    sql: ${reviews.submitdate_date} is not null AND ${pom_qa_walkthrough_survey.submitdate_date} is not null ;;
+  }
+
+  dimension: airbnb_reviews_POM_Walkthrough {
+    label: "Airbnb Review Received POM Walkthrough"
+    type: yesno
+    sql: ${airbnb_reviews.reservation_checkout_date} is not null AND ${pom_qa_walkthrough_survey.submitdate_date} is not null ;;
+  }
+
 
   measure: passed_QAs {
     label: "# of QAs Passed"

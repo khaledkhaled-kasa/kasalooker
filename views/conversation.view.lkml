@@ -1307,6 +1307,7 @@ view: conversation {
           filters: [is_auto_false: "yes", is_direction_out: "yes", kobject_reservation.id: "-NULL"]
         }
 
+
         measure: reservations_count {
           type: count_distinct
           view_label: "Metrics"
