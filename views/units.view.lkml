@@ -98,10 +98,11 @@ view: units {
     }
 
 
-    dimension: availability_enddate {
-      type:  date
-      label: "Unit Availability End Date"
-      sql:${TABLE}.unit_availability_enddate;;
+    dimension_group: availability_enddate {
+      label: "Unit Availability End"
+      type: time
+      timeframes: [date, week, month, year]
+      sql: TIMESTAMP(${TABLE}.unit_availability_enddate);;
       convert_tz: no
     }
 
@@ -137,7 +138,7 @@ view: units {
   dimension: EndDate_matched{
     description: "Check KPO unit StartDate with System unit EndDate"
     type: string
-    sql:  CASE WHEN ${KPO_deactivatedDate_date} = ${availability_enddate}
+    sql:  CASE WHEN ${KPO_deactivatedDate_date} = ${availability_enddate_date}
        Then "✅ "
       ELSE "❌ "
       END;;
@@ -165,8 +166,8 @@ view: units {
     description: "Status of Unit (Active/Deactivated/Expiring/Onboarding)"
     type: string
     sql: CASE
-            WHEN CURRENT_DATE >= SAFE_CAST(${availability_enddate} as DATE)  THEN 'Deactivated'
-            WHEN ${KPO_deactivatedDate_date} IS NOT NULL AND CURRENT_DATE <= SAFE_CAST(${availability_enddate} as DATE)  THEN 'Expiring'
+            WHEN CURRENT_DATE >= SAFE_CAST(${availability_enddate_date} as DATE)  THEN 'Deactivated'
+            WHEN ${KPO_deactivatedDate_date} IS NOT NULL AND CURRENT_DATE <= SAFE_CAST(${availability_enddate_date} as DATE)  THEN 'Expiring'
             WHEN ${KPO_deactivatedDate_date} IS NULL and SAFE_CAST(${availability_startdate_date} AS DATE) > CURRENT_DATE THEN 'Onboarding'
             WHEN ${KPO_deactivatedDate_date} IS NULL and ${availability_startdate_date} <= CURRENT_DATE  THEN "Active"
             ELSE NULL

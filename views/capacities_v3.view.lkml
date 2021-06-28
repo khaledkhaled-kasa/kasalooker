@@ -54,6 +54,7 @@ view: capacities_v3 {
         year
       ]
       sql: CAST(${TABLE}.night_available_date as TIMESTAMP) ;;
+      convert_tz: no
     }
 
     dimension: weekend {
