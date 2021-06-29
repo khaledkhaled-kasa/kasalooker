@@ -184,10 +184,10 @@ explore: units_buildings_information {
   label: "Units and Property Information"
   group_label: "Properties"
 
-  join: active_unit_counts { # This could be avoided by using the capacities table!
+  join: capacities_v3 { # This could be avoided by using the capacities table!
     type: left_outer
     relationship: one_to_many
-    sql_on: ${units_buildings_information._id} = ${active_unit_counts._id} ;;
+    sql_on: ${units_buildings_information._id} = ${capacities_v3._id} ;;
   }
 
   join: reservations_v3 {
@@ -447,7 +447,7 @@ explore: capacities_v3 {
   join: units {
     type:  inner
     relationship: one_to_one
-    sql_on: ${capacities_v3.unit} = ${units.internaltitle} ;;
+    sql_on: ${capacities_v3._id} = ${units._id} ;;
   }
   join: iot_alerts {
     type: left_outer
