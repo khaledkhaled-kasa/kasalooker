@@ -151,6 +151,12 @@ view: units {
       hidden: yes
     }
 
+  dimension: KPO_contract_type {
+    type: string
+    label: "Contract Type"
+    sql: ${TABLE}.ContractType ;;
+  }
+
     # dimension: unit_status {
     #   description: "Status of Unit (Active/Deactivated/Expiring/Onboarding)"
     #   type: string
