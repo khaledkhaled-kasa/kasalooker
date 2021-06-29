@@ -68,6 +68,15 @@ view: capacities_v3 {
       sql: ${TABLE}.internaltitle ;;
     }
 
+    dimension: EOM {
+      label: "End of Month"
+      hidden: yes
+      type: yesno
+      sql: extract(day from date_sub(${night_date},interval -1 day)) = 1 ;;
+    }
+
+
+
 
     dimension: first_active_day {
       label: "First active month day"
@@ -104,6 +113,17 @@ view: capacities_v3 {
     sql: CASE WHEN ((${TABLE}.internaltitle LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%-RES") OR (${night_date} < ${first_active_day})) THEN NULL
           ELSE CONCAT(${TABLE}.internaltitle, '-', ${night_date})
           END;;
+  }
+
+  measure: unit_count_EOM {
+    label: "Total Unique Units (EOM)"
+    description: "Pulls the total number of Unique Units by end of month"
+    type: count_distinct
+    sql: CASE WHEN ((${units.internaltitle} LIKE "%-XX") OR (${units.internaltitle} LIKE "%-RES") OR (${units.internaltitle} LIKE "%-S")) THEN NULL
+          ELSE ${units._id}
+          END;;
+    filters: [EOM: "Yes"]
+    drill_fields: [units.internaltitle, units.availability_startdate_date, units.availability_enddate_date, units.unit_status]
   }
   # measure: total_active_units {
   #   view_label: "Unit Information"

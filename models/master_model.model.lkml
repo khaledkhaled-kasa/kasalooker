@@ -177,7 +177,7 @@ explore: units_kpo_overview {
 
 
 explore: units_buildings_information {
-  fields: [ALL_FIELDS*, -geo_location.city_full_uid]
+  fields: [ALL_FIELDS*, -geo_location.city_full_uid, -capacities_v3.unit_count_EOM]
   from: units
   view_label: "Unit Information"
   sql_always_where: ${units_buildings_information.availability_enddate_string} <> 'Invalid date' OR ${units_buildings_information.availability_enddate_string} IS NULL ;;

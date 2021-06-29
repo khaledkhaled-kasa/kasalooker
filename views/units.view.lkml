@@ -312,7 +312,9 @@ view: units {
       sql: CASE WHEN ((${TABLE}.internaltitle LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%-RES") OR (${TABLE}.internaltitle LIKE "%-S")) THEN NULL
           ELSE ${TABLE}._id
           END;;
+          drill_fields: [internaltitle, availability_startdate_date, availability_enddate_date, unit_status]
     }
+
 
   measure: active_unit_count {
     label: "Total Active Unique Units"
