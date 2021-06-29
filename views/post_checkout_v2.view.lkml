@@ -7,6 +7,7 @@ view: post_checkout_v2 {
   }
 
   dimension: aggregated_comments {
+    description: "This will aggregate all communication related comments into one block which was utilized for the Over-Communication Analysis."
     group_label: "Comments"
     type: string
     sql: CONCAT(COALESCE(${airbnb_reviews.private_feedback},"PC: Null")," | ",COALESCE(${airbnb_reviews.communication_comments},"CC: Null")," | ",
