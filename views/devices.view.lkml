@@ -119,4 +119,10 @@ view: devices {
     sql: CASE WHEN ${devicetype} LIKE '%Minut%' THEN ${deviceid} ELSE NULL END ;;
     # filters: [devicetype: "%Minut%"]
   }
+  measure: running_total_snartthings_devices {
+    label: "Running Total SmartThings Devices"
+    type: running_total
+    sql: CASE WHEN ${devicetype} LIKE "Schlage Door Lock" THEN ${deviceid} ELSE NULL END ;;
+    # filters: [devicetype: "%Minut%"]
+  }
 }

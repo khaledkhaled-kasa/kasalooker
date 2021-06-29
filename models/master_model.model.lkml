@@ -189,6 +189,11 @@ explore: units_buildings_information {
     relationship: one_to_many
     sql_on: ${units_buildings_information._id} = ${capacities_v3._id} ;;
   }
+  join: accesses {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information._id} = ${accesses.unitid} ;;
+  }
 
   join: reservations_v3 {
     view_label: "Reservations"
