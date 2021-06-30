@@ -42,10 +42,6 @@ datagroup: gv_form_ts_default_datagroup {
   max_cache_age: "1 hours"
 }
 
-datagroup: capacities_v3_default_datagroup {
-  sql_trigger: SELECT MAX(createdat) from capacitydenorms;;
-  max_cache_age: "1 hours"
-}
 
 datagroup: ximble_default_datagroup {
   sql_trigger: SELECT MAX(date) FROM ximble.ximble_master;;
@@ -461,6 +457,17 @@ explore: reservations_audit {
 }
 
 explore: capacities_v3 {
+  aggregate_table: capacities_by_month_and_metrics {
+    query: {
+      dimensions: [complexes.title, capacities_v3.night_month, financials_v3.night_month]
+      measures: [financials_v3.adr, financials_v3.revpar, capacities_v3.capacity, reservations_v3.occupancy,
+        financials_v3.amount, reservations_v3.num_reservations, reservations_v3.number_of_checkins]
+    }
+
+    materialization: {
+      sql_trigger_value: SELECT MAX(createdat) from reservations ;;
+    }
+  }
   group_label: "Kasa Metrics"
   label: "Reservations"
   persist_with: kasametrics_reservations_datagroup
