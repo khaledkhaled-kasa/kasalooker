@@ -227,6 +227,5 @@ view: financials_audit {
     sql: CASE WHEN ${TABLE}.type IN ("Initial", "Mod", "Discounts", "Adj", "roomRevenue", "roomRevenueDeducted") THEN "roomRevenue"
     ELSE "Other"
     END;;
-  }
-
+ }
 }

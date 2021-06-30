@@ -296,6 +296,13 @@ explore: units_buildings_information {
     sql_on: ${units_buildings_information._id} = ${lock_data.unit}
       AND lower(${lock_data.devicetype}) LIKE '%lock%';;
   }
+  join: hub_devices {
+    from: devices
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information._id} = ${hub_devices.unit}
+     AND ${hub_devices.devicetype} IN ('Nexia_v1', 'Smartthings_v1');;
+  }
 
   join: fresh_air_data {
     view_label: "Fresh Air Data"
