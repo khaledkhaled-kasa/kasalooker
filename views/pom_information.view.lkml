@@ -40,6 +40,28 @@ view: pom_information {
     sql: ${TABLE}.Property ;;
   }
 
+  dimension: building_start_date {
+    description: "Building Start Date as per KPO Properties Tab (Col R)"
+    view_label: "Building and Geographic Information"
+    type: date
+    sql: TIMESTAMP(PARSE_DATE('%m/%d/%Y', ${TABLE}.BuildingStart)) ;;
+    convert_tz: no
+  }
+
+  dimension: building_cohort {
+    description: "Based on Building Start Date"
+    view_label: "Building and Geographic Information"
+    type: string
+    sql:
+    CASE WHEN extract(year from ${building_start_date}) < 2018 THEN "Pre-2018 Cohort"
+    WHEN extract(year from ${building_start_date}) = 2018 THEN "2018 Cohort"
+    WHEN extract(year from ${building_start_date}) = 2019 THEN "2019 Cohort"
+    WHEN extract(year from ${building_start_date}) = 2020 THEN "2020 Cohort"
+    WHEN extract(year from ${building_start_date}) = 2021 THEN "2021 Cohort"
+    WHEN extract(year from ${building_start_date}) = 2022 THEN "2022 Cohort"
+    END;;
+  }
+
   dimension: property_type {
     type: string
     label: "Property Sub-Category (Property Type)"
