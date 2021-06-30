@@ -274,7 +274,7 @@ explore: units_buildings_information {
   }
 
   join: freshair_data {
-    view_label: "FreshAir"
+    view_label: "Fresh Air Data (Export)"
     type: left_outer
     relationship: one_to_one
     sql_on: ${units_buildings_information.internaltitle} = ${freshair_data.uid} ;;
@@ -295,6 +295,15 @@ explore: units_buildings_information {
     relationship: one_to_many
     sql_on: ${units_buildings_information._id} = ${lock_data.unit}
       AND lower(${lock_data.devicetype}) LIKE '%lock%';;
+  }
+
+  join: fresh_air_data {
+    view_label: "Fresh Air Data"
+    from: devices
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information._id} = ${fresh_air_data.unit}
+      AND ${fresh_air_data.devicetype} = "FreshAir_v1";;
   }
 
 
