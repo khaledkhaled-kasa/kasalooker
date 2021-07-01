@@ -42,10 +42,6 @@ datagroup: gv_form_ts_default_datagroup {
   max_cache_age: "1 hours"
 }
 
-datagroup: capacities_v3_default_datagroup {
-  sql_trigger: SELECT MAX(createdat) from capacitydenorms;;
-  max_cache_age: "1 hours"
-}
 
 datagroup: ximble_default_datagroup {
   sql_trigger: SELECT MAX(date) FROM ximble.ximble_master;;
@@ -274,7 +270,7 @@ explore: units_buildings_information {
   }
 
   join: freshair_data {
-    view_label: "FreshAir"
+    view_label: "Fresh Air Data (Export)"
     type: left_outer
     relationship: one_to_one
     sql_on: ${units_buildings_information.internaltitle} = ${freshair_data.uid} ;;
@@ -302,6 +298,15 @@ explore: units_buildings_information {
     relationship: one_to_many
     sql_on: ${units_buildings_information._id} = ${hub_devices.unit}
      AND ${hub_devices.devicetype} IN ('Nexia_v1', 'Smartthings_v1');;
+  }
+
+  join: fresh_air_data {
+    view_label: "Fresh Air Data"
+    from: devices
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information._id} = ${fresh_air_data.unit}
+      AND ${fresh_air_data.devicetype} = "FreshAir_v1";;
   }
 
 
@@ -452,6 +457,17 @@ explore: reservations_audit {
 }
 
 explore: capacities_v3 {
+  aggregate_table: capacities_by_month_and_metrics {
+    query: {
+      dimensions: [complexes.title, capacities_v3.night_month, financials_v3.night_month]
+      measures: [financials_v3.adr, financials_v3.revpar, capacities_v3.capacity, reservations_v3.occupancy,
+        financials_v3.amount, reservations_v3.num_reservations, reservations_v3.number_of_checkins]
+    }
+
+    materialization: {
+      sql_trigger_value: SELECT MAX(createdat) from reservations ;;
+    }
+  }
   group_label: "Kasa Metrics"
   label: "Reservations"
   persist_with: kasametrics_reservations_datagroup

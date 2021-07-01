@@ -53,7 +53,7 @@ view: pom_information {
     view_label: "Building and Geographic Information"
     type: string
     sql:
-    CASE WHEN extract(year from ${building_start_date}) < 2018 THEN "Pre-2018 Cohort"
+    CASE WHEN extract(year from ${building_start_date}) < 2018 THEN "< 2018 Cohort"
     WHEN extract(year from ${building_start_date}) = 2018 THEN "2018 Cohort"
     WHEN extract(year from ${building_start_date}) = 2019 THEN "2019 Cohort"
     WHEN extract(year from ${building_start_date}) = 2020 THEN "2020 Cohort"
