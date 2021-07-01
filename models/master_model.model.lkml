@@ -309,12 +309,23 @@ explore: units_buildings_information {
       AND ${fresh_air_data.devicetype} = "FreshAir_v1";;
   }
 
-
-
 }
 
 
 explore: reservations_clean {
+  aggregate_table: reviews_by_week_and_metrics {
+    query: {
+      dimensions: [complexes__address.title, airbnb_reviews.reservation_checkout_week]
+      measures: [airbnb_reviews.count, airbnb_reviews.net_quality_score, airbnb_reviews.avg_overall_rating, airbnb_reviews.avg_cleanliness_rating,
+        airbnb_reviews.count_clean, airbnb_reviews.avg_accuracy_rating, airbnb_reviews.net_quality_score_clean, airbnb_reviews.avg_checkin_rating,
+        airbnb_reviews.avg_communication_rating, airbnb_reviews.net_quality_score_accuracy, airbnb_reviews.net_quality_score_checkin, airbnb_reviews.net_quality_score_communication]
+      timezone: America/Los_Angeles
+    }
+
+    materialization: {
+      sql_trigger_value: SELECT MAX(createdat) from reservations ;;
+    }
+  }
   fields: [
     ALL_FIELDS*, -airbnb_reviews.clean_count_5_star_first90, -airbnb_reviews.clean_count_less_than_4_star_first90, -airbnb_reviews.count_clean_first90, -airbnb_reviews.net_quality_score_clean_first90, -airbnb_reviews.percent_5_star_clean_first90, -airbnb_reviews.percent_less_than_4_star_clean_first90, -complexes.title, -units.propcode]
   # sql_always_where: ${units.availability_enddate} <> 'Invalid date' ;;
@@ -459,9 +470,9 @@ explore: reservations_audit {
 explore: capacities_v3 {
   aggregate_table: capacities_by_month_and_metrics {
     query: {
-      dimensions: [complexes.title, capacities_v3.night_month, financials_v3.night_month]
-      measures: [financials_v3.adr, financials_v3.revpar, capacities_v3.capacity, reservations_v3.occupancy,
-        financials_v3.amount, reservations_v3.num_reservations, reservations_v3.number_of_checkins]
+      dimensions: [capacities_v3.night_month,  complexes.title]
+      measures: [capacities_v3.capacity,financials_v3.adr, financials_v3.revpar, financials_v3.amount, reservations_v3.occupancy, reservations_v3.num_reservations, reservations_v3.reservation_night, reservations_v3.number_of_checkins]
+      timezone: America/Los_Angeles
     }
 
     materialization: {
@@ -524,6 +535,13 @@ explore: capacities_v3 {
     relationship: one_to_one
     sql_on: ${str_index.market} = ${complexes.city}
       and ${capacities_v3.night_date} = ${str_index.str_night_date};;
+  }
+
+  join: seasonality_chart {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${seasonality_chart.metro_area} = ${geo_location.metro}
+      and ${capacities_v3.night_month_name} = ${seasonality_chart.month};;
   }
 
   join: guests {
@@ -845,4 +863,9 @@ explore: kasa_kredit_reimbursement {
 explore: ximble_master {
   group_label: "Software"
   label: "Ximble"
+}
+
+explore: seasonality_chart {
+  group_label: "Software"
+  label: "season"
 }
