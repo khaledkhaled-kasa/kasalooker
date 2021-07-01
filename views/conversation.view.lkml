@@ -1508,21 +1508,24 @@ view: conversation {
         }
 
         measure: total_tech_related_issues {
-          type: sum
-          sql: CASE WHEN ${issue_categories_1.tech_influenced}
-                  OR ${issue_categories_2.tech_influenced}
-                  OR ${issue_categories_3.tech_influenced} THEN ${issues}
-            ELSE NULL
-            END;;
+          type: number
+          sql:${issue_categories_1.unique_conversations_tech}+${issue_categories_2.unique_conversations_tech}+${issue_categories_3.unique_conversations_tech};;
+          # CASE WHEN ${issue_categories_1.tech_influenced}
+          #         OR ${issue_categories_2.tech_influenced}
+          #         OR ${issue_categories_3.tech_influenced} THEN ${issues}
+          #   ELSE NULL
+          #   END;;
+            drill_fields: [issue_categories_1.tech_influenced,custom_issue_category_1_tree,issue_categories_2.tech_influenced,custom_issue_category_2_tree,issue_categories_3.tech_influenced,custom_issue_category_3_tree,issues]
         }
 
         measure: total_kontrol_related_issues {
-          type: sum
-          sql:  CASE WHEN ${issue_categories_1.kontrol_influenced}
-              OR ${issue_categories_2.kontrol_influenced}
-              OR ${issue_categories_3.kontrol_influenced} THEN ${issues}
-        ELSE NULL
-        END;;
+          type: number
+          sql:  ${issue_categories_1.unique_conversations_kontrol}+${issue_categories_2.unique_conversations_kontrol}+${issue_categories_3.unique_conversations_kontrol};;
+        #   CASE WHEN ${issue_categories_1.kontrol_influenced}
+        #       OR ${issue_categories_2.kontrol_influenced}
+        #       OR ${issue_categories_3.kontrol_influenced} THEN ${issues}
+        # ELSE NULL
+        # END
         }
 
         measure: issues_per_reservation {
