@@ -1,7 +1,7 @@
 view: reservations_kustomer {
   label: "Reservations"
-  sql_table_name: `bigquery-analytics-272822.mongo.reservations`
-  ;;
+  sql_table_name: `bigquery-analytics-272822.mongo.reservations`;;
+
 
   dimension: _id {
     hidden: yes
@@ -336,11 +336,12 @@ view: reservations_kustomer {
     sql: ${TABLE}.updatedat ;;
   }
 
+
   measure: total_reservations {
     description: "Total Reservations (with a status of Confirmed or Checked-In"
-    type: count
-    # sql: ${confirmationcode} ;;
-    filters: [status: "confirmed, checked_in"]
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    filters: [ status: "confirmed, checked_in"]
   }
 
 
