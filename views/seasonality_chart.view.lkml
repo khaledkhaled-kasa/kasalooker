@@ -30,25 +30,6 @@ view: seasonality_chart {
     sql: ${TABLE}.Month ;;
   }
 
-  dimension: month_number {
-    hidden: yes
-    type: number
-    sql: CASE
-    WHEN ${TABLE}.Month = "January" THEN 1
-    WHEN ${TABLE}.Month = "February" THEN 2
-    WHEN ${TABLE}.Month = "March" THEN 3
-    WHEN ${TABLE}.Month = "April" THEN 4
-    WHEN ${TABLE}.Month = "May" THEN 5
-    WHEN ${TABLE}.Month = "June" THEN 6
-    WHEN ${TABLE}.Month = "July" THEN 7
-    WHEN ${TABLE}.Month = "August" THEN 8
-    WHEN ${TABLE}.Month = "September" THEN 9
-    WHEN ${TABLE}.Month = "October" THEN 10
-    WHEN ${TABLE}.Month = "November" THEN 11
-    WHEN ${TABLE}.Month = "December" THEN 12
-    END;;
-  }
-
 
   dimension: value {
     type: number
