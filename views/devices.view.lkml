@@ -113,6 +113,14 @@ view: devices {
     filters: [devicetype: "%Minut%", active: "yes, Yes"]
   }
 
+  measure: total_freshAir_devices {
+    label: "Total FreshAir Devices"
+    description: "Returns a count of all ACTIVE FreshAir devices."
+    type: count_distinct
+    sql: ${deviceid} ;;
+    filters: [devicetype: "FreshAir_v1",  connectionstatus: "online"]
+  }
+
   measure: running_total_minut_devices {
     label: "Running Total Minut Devices"
     type: running_total
@@ -123,6 +131,14 @@ view: devices {
     label: "Running Total SmartThings Devices"
     type: running_total
     sql: CASE WHEN ${devicetype} LIKE "Schlage Door Lock" THEN ${deviceid} ELSE NULL END ;;
-    # filters: [devicetype: "%Minut%"]
+
   }
+  measure: running_total_frishaire_devices {
+    label: "Running Total FreshAir Devices"
+    type: running_total
+    sql: CASE WHEN ${devicetype} LIKE "FreshAir_v1" THEN ${deviceid} ELSE NULL END ;;
+
+  }
+
+
 }
