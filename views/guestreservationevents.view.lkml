@@ -3,11 +3,11 @@ view: guestreservationevents{
     sql: SELECT
     sn.*,
     re.confirmationcode ,
-    sn.eventdetails.eventlocaltime  as eventlocaltime ,
-    sn.eventdetails.eventtimezone as eventtimezone,
+    sn.eventdetails.eventtimezone as eventtimezone ,
+    sn.eventdetails.eventlocaltime  as eventlocaltime
     FROM `bigquery-analytics-272822.mongo.guestreservationevents` sn
     JOIN dbt.reservations_v3 re on  sn.reservation= re._id
-       ;;
+       ;; # sn.eventdetails.eventlocaltime  as eventlocaltime ,
   }
 
   dimension: _id {
@@ -104,12 +104,27 @@ view: guestreservationevents{
     sql: CASE WHEN ${TABLE}.event like "%smoke.alert.start%" or ${TABLE}.event like "%nsmoke.alert.end%"   then ${_id} ELSE NULL END;;
     drill_fields: [detail*]
   }
-  # measure:  total_reservation {
-  #   label: "Total reservation"
-  #   type: count_distinct
-  #   sql: ${confirmationcode};;
-  #   drill_fields: [detail*]
-  # }
+  measure:  total_reservation_tamper {
+    label: "Total reservations (MinutTamper)"
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    filters: [event: "minuttamper.alert.start,minuttamper.alert.end"]
+    drill_fields: [detail*]
+  }
+  measure:  total_reservation_noise {
+    label: "Total reservations (Noise)"
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    filters: [event: "noise.alert.start,noise.alert.end"]
+    drill_fields: [detail*]
+  }
+  measure:  total_reservation_smoke {
+    label: "Total reservations (Smoke)"
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    filters: [event: "smoke.alert.start,smoke.alert.end"]
+    drill_fields: [detail*]
+  }
 
 
   set: detail {
