@@ -341,8 +341,8 @@ view: reservations_kustomer {
     description: "Total Reservations (with a status of Confirmed or Checked-In"
     type: count_distinct
     sql: ${confirmationcode} ;;
-    filters: [ status: "confirmed, checked_in"]
-  }
+    filters: [status: "confirmed, checked_in"]
+}
 
 
 
