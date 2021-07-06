@@ -488,13 +488,13 @@ explore: capacities_v3 {
     relationship: one_to_one
     sql_on: ${capacities_v3._id} = ${units._id} ;;
   }
-  join: iot_alerts {
-    type: left_outer
-    relationship: one_to_many
-    sql_on: ${units._id} =${iot_alerts.unit} AND ${capacities_v3.night_date}=${iot_alerts.event_create_date_date};;
-  }
+  # join: iot_alerts {
+  #   type: left_outer
+  #   relationship: one_to_many
+  #   sql_on: ${units._id} =${iot_alerts.unit} AND ${capacities_v3.night_date}=${iot_alerts.event_create_date_date};;
+  # }
   join: guestreservationevents {
-    view_label: "Guest Reservations Events"
+    view_label: "IoT Alerts"
     type: left_outer
     relationship: one_to_many
     sql_on: ${reservations_v3._id} = ${guestreservationevents.reservation};;
