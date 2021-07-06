@@ -7,8 +7,9 @@ view: post_checkout_v2 {
   }
 
   dimension: aggregated_comments {
-    description: "This will aggregate all communication related comments into one block which was utilized for the Over-Communication Analysis."
-    group_label: "Comments"
+    label: "Aggregated Communication Comments"
+    view_label: "Review Force"
+    description: "This will aggregate all communication related comments from different review channels (airbnb, Postcheckout, Postcheckout V2) into one block which was utilized for the Over-Communication Analysis."
     type: string
     sql: CONCAT(COALESCE(${airbnb_reviews.private_feedback},"PC: Null")," | ",COALESCE(${airbnb_reviews.communication_comments},"CC: Null")," | ",
           COALESCE(${airbnb_reviews.overall_comments},"OC: Null")," | ",
@@ -18,12 +19,24 @@ view: post_checkout_v2 {
 
 
   dimension: contains_buzzword {
+    view_label: "Review Force"
     label: "Contains Buzz Word (Communication)"
-    description: "This field has been created to display all aggregated comments which contain one of the defined buzzwords pertinent to overcommunication such as communication, text, email, etc."
+    description: "This field has been created to display all aggregated comments from different review channels (airbnb, Postcheckout, Postcheckout V2) which contain one of the defined buzzwords pertinent to overcommunication such as communication, text, email, etc."
     type: yesno
     sql: lower(${aggregated_comments}) LIKE "%communicat%" OR lower(${aggregated_comments}) LIKE "%automat%" OR lower(${aggregated_comments}) LIKE "%email%"
           OR lower(${aggregated_comments}) LIKE "%text%" OR lower(${aggregated_comments}) LIKE "%e-mail%" OR lower(${aggregated_comments}) LIKE "%phone%"
           OR lower(${aggregated_comments}) LIKE "%talk%" ;;
+  }
+
+  dimension: aggregated_comments_all {
+    label: "Aggregated Comments (All)"
+    view_label: "Review Force"
+    description: "This will aggregate all review comments from different review channels (airbnb, Postcheckout, Postcheckout V2) into one block."
+    type: string
+    sql: CONCAT(COALESCE(${airbnb_reviews.accuracy_comments},"Accuracy_Airbnb: N/A")," | ",COALESCE(${airbnb_reviews.overall_comments},"Overall_Airbnb: N/A")," | ", COALESCE(${airbnb_reviews.cleanliness_comments},"Cleanliness_Airbnb: N/A")," | ",COALESCE(${airbnb_reviews.communication_comments},"Communication_Airbnb: N/A")," | ",COALESCE(${airbnb_reviews.checkin_comments},"Checkin_Airbnb: N/A")," | ",COALESCE(${airbnb_reviews.value_comments},"Value_Airbnb: N/A")," | ",COALESCE(${airbnb_reviews.location_comments},"Location_Airbnb: N/A")," | ",COALESCE(${airbnb_reviews.private_feedback},"Private_Airbnb: N/A")," | ",
+          COALESCE(${post_checkout_data.overall_feedback},"Overall_PSS: N/A")," | ",COALESCE(${post_checkout_data.suggestion},"Suggestion_PSS: N/A")," | ",
+          COALESCE(${what_aspects_were_different_from_you_expected_},"Accuracy_PSSV2: N/A"), " | ", COALESCE(${what_else_could_kasa_have_done_to_improve_your_stay_},"Overall_PSSV2: N/A")," | ",COALESCE(${how_did_we_miss_the_mark_on_cleanliness_},"Cleanliness_PSSV2: N/A"), " | ",COALESCE(${what_aspects_of_communications_fell_short_},"Communication_PSSV2: N/A"), " | ",COALESCE(${how_did_the_the_check_in_experience_miss_the_mark_},"Checkin_PSSV2: N/A"), " | ",COALESCE(${what_would_have_made_your_stay_feel_like_a_better_value_},"Value_PSSV2: N/A"), " | ",COALESCE(${how_did_the_property_location_fall_short_},"Location_PSSV2: N/A"), " | ",
+          COALESCE(${reviews.privatereviewtext},"Realtime_Review: N/A")) ;;
   }
 
 
