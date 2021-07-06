@@ -493,12 +493,7 @@ explore: capacities_v3 {
   #   relationship: one_to_many
   #   sql_on: ${units._id} =${iot_alerts.unit} AND ${capacities_v3.night_date}=${iot_alerts.event_create_date_date};;
   # }
-  join: guestreservationevents {
-    view_label: "IoT Alerts"
-    type: left_outer
-    relationship: one_to_many
-    sql_on: ${reservations_v3._id} = ${guestreservationevents.reservation};;
-    }
+
   join: complexes {
     type:  inner
     relationship: one_to_one #one_to_one
@@ -513,6 +508,12 @@ explore: capacities_v3 {
     type:  left_outer
     relationship: one_to_many # One_to_Many
     sql_on: ${units._id} = ${reservations_v3.unit};;
+  }
+  join: guestreservationevents {
+    view_label: "IoT Alerts"
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${reservations_v3.confirmationcode} = ${guestreservationevents.confirmationcode};;
   }
 
 
