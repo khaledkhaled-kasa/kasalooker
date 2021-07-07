@@ -873,8 +873,3 @@ explore: ximble_master {
   group_label: "Software"
   label: "Ximble"
 }
-
-explore: seasonality_chart {
-  group_label: "Software"
-  label: "season"
-}
