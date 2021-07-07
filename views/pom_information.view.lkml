@@ -72,7 +72,7 @@ view: pom_information {
   dimension: min_los {
     label: "Property Min LOS"
     description: "This will pull the property's minimum length of stay in days as shown in the Properties tab of the KPO"
-    type: string
+    type: number
     view_label: "Building and Geographic Information"
     sql: ${TABLE}.Min_LOS ;;
   }
@@ -80,7 +80,7 @@ view: pom_information {
   dimension: max_los {
     label: "Property Max LOS"
     description: "This will pull the property's maximum length of stay in days as shown in the Properties tab of the KPO"
-    type: string
+    type: number
     view_label: "Building and Geographic Information"
     sql: ${TABLE}.Max_LOS ;;
   }
