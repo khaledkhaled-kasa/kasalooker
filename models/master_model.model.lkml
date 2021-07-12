@@ -878,3 +878,7 @@ explore: seasonality_chart {
   group_label: "Software"
   label: "season"
 }
+explore: kpotest {
+  group_label: "Looker Develpment"
+  label: "KPOTEST"
+}

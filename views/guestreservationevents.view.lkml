@@ -85,37 +85,34 @@ view: guestreservationevents{
 
   measure:  tota_tampering_events {
     label: "Total Tampering alerts"
-    description: "Minut alert triggered & Minut alert ended"
     type: count_distinct
-    sql: CASE WHEN ${TABLE}.event like "%minuttamper.alert.start%" or ${TABLE}.event like "%minuttamper.alert.end%"  then ${_id} ELSE NULL END;;
+    sql: CASE WHEN ${TABLE}.event like "%minuttamper.alert.end%"  then ${_id} ELSE NULL END;;
     drill_fields: [detail*]
   }
   measure:  tota_noise_events {
     label: "Total Noise alerts"
-    description: "Noise alert triggered & Noise alert ended"
     type: count_distinct
-    sql: CASE WHEN ${TABLE}.event like "%noise.alert.start%" or ${TABLE}.event like "%noise.alert.end%"  then ${_id} ELSE NULL END;;
+    sql: CASE WHEN ${TABLE}.event like "%noise.alert.end%"  then ${_id} ELSE NULL END;;
     drill_fields: [detail*]
   }
   measure:  tota_smoke_events {
     label: "Total Smoke alerts"
-    description: "Smoke alert triggered & Noise alert ended"
     type: count_distinct
-    sql: CASE WHEN ${TABLE}.event like "%smoke.alert.start%" or ${TABLE}.event like "%nsmoke.alert.end%"   then ${_id} ELSE NULL END;;
+    sql: CASE WHEN  ${TABLE}.event like "%nsmoke.alert.end%"   then ${_id} ELSE NULL END;;
     drill_fields: [detail*]
   }
   measure:  total_reservation_tamper {
     label: "Total reservations (MinutTamper)"
     type: count_distinct
     sql: ${confirmationcode} ;;
-    filters: [event: "minuttamper.alert.start,minuttamper.alert.end"]
+    filters: [event: "minuttamper.alert.end"]
     drill_fields: [detail*]
   }
   measure:  total_reservation_noise {
     label: "Total reservations (Noise)"
     type: count_distinct
     sql: ${confirmationcode} ;;
-    filters: [event: "noise.alert.start,noise.alert.end"]
+    filters: [event: "noise.alert.end"]
     drill_fields: [detail*]
   }
   measure:  total_reservation_smoke {
