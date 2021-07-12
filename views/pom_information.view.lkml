@@ -69,6 +69,22 @@ view: pom_information {
     sql: ${TABLE}.propertytype ;;
   }
 
+  dimension: min_los {
+    label: "Property Min LOS"
+    description: "This will pull the property's minimum length of stay in days as shown in the Properties tab of the KPO"
+    type: number
+    view_label: "Building and Geographic Information"
+    sql: ${TABLE}.Min_LOS ;;
+  }
+
+  dimension: max_los {
+    label: "Property Max LOS"
+    description: "This will pull the property's maximum length of stay in days as shown in the Properties tab of the KPO"
+    type: number
+    view_label: "Building and Geographic Information"
+    sql: ${TABLE}.Max_LOS ;;
+  }
+
   dimension: property_type_buckets {
     type: string
     label: "Property Category (Special/Core)"

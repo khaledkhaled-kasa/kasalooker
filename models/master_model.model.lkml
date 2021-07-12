@@ -874,6 +874,7 @@ explore: ximble_master {
   label: "Ximble"
 }
 
+
 explore: seasonality_chart {
   group_label: "Software"
   label: "season"

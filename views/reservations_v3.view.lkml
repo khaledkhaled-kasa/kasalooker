@@ -363,7 +363,7 @@ view: reservations_v3 {
   }
 
   measure: num_reservations_late_checkout {
-    label: "Num Resevations (w/ Late Checkout)"
+    label: "Num Reservations (w/ Late Checkout)"
     description: "Returns the count of reservations who had an approved late checkout"
     type: count_distinct
     sql: ${confirmationcode} ;;
