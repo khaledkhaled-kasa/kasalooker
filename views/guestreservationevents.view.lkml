@@ -4,7 +4,9 @@ view: guestreservationevents{
     sn.*,
     re.confirmationcode ,
     sn.eventdetails.eventtimezone as eventtimezone ,
-    sn.eventdetails.eventlocaltime  as eventlocaltime
+    sn.eventdetails.eventlocaltime  as eventlocaltime,
+    sn.eventdetails,
+    sn.eventdetails.source as eventdetailsSource
     FROM `bigquery-analytics-272822.mongo.guestreservationevents` sn
     JOIN dbt.reservations_v3 re on  sn.reservation= re._id
        ;; # sn.eventdetails.eventlocaltime  as eventlocaltime ,
@@ -54,7 +56,12 @@ view: guestreservationevents{
     sql: ${TABLE}.guest ;;
   }
 
-  dimension: eventdetails {
+  dimension: eventdetailsSource {
+    type: string
+    hidden: yes
+    sql: ${TABLE}.eventdetailsSource ;;
+  }
+  dimension: eventNumber {
     type: string
     hidden: yes
     sql: ${TABLE}.eventdetails ;;
@@ -64,8 +71,16 @@ view: guestreservationevents{
   dimension_group: eventlocaltime {
     type: time
     label: "Alert local time"
-    timeframes: [date,time, week, month]
-    sql:   datetime(safe_cast(${TABLE}.eventlocaltime as timestamp),${TABLE}.eventtimezone);;
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql:   TIMESTAMP(datetime(safe_cast(${TABLE}.eventlocaltime as timestamp),${TABLE}.eventtimezone));;
     convert_tz: no
 
   }
@@ -92,7 +107,7 @@ view: guestreservationevents{
   measure:  tota_noise_events {
     label: "Total Noise alerts"
     type: count_distinct
-    sql: CASE WHEN ${TABLE}.event like "%noise.alert.end%"  then ${_id} ELSE NULL END;;
+    sql: CASE WHEN ${TABLE}.eventdetailsSource like "%noiseFirstWarning%"  or ${TABLE}.eventdetailsSource  like "%noiseSecondWarning%" or ${TABLE}.eventdetailsSource  like "%noiseFinalWarning%"or ${TABLE}.event like "%noise.alert.start%" then ${_id} ELSE NULL END;;
     drill_fields: [detail*]
   }
   measure:  tota_smoke_events {
@@ -119,7 +134,29 @@ view: guestreservationevents{
     label: "Total reservations (Smoke)"
     type: count_distinct
     sql: ${confirmationcode} ;;
-    filters: [event: "smoke.alert.start,smoke.alert.end"]
+    filters: [event: "smoke.alert.start"]
+    drill_fields: [detail*]
+  }
+
+  measure:  total_first_alert {
+    label: "Total First Noise Alerts"
+    type: count_distinct
+    sql: ${_id} ;;
+    filters: [eventdetailsSource: "%noiseFirstWarning%"]
+    drill_fields: [detail*]
+  }
+  measure:  total_second_alert {
+    label: "Total Second Noise Alerts"
+    type: count_distinct
+    sql: ${_id} ;;
+    filters: [eventdetailsSource: "%noiseSecondWarning%"]
+    drill_fields: [detail*]
+  }
+  measure:  total_Fina_alert {
+    label: "Total Final Noise Alerts"
+    type: count_distinct
+    sql: ${_id} ;;
+    filters: [eventdetailsSource: "%noiseFinalWarning%"]
     drill_fields: [detail*]
   }
 
@@ -133,7 +170,7 @@ view: guestreservationevents{
       _id,
       unit,
       guest,
-      eventdetails,
+      eventdetailsSource,
       confirmationcode
     ]
   }
