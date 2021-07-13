@@ -73,7 +73,6 @@ view: guestreservationevents{
     sql:  CASE WHEN ${TABLE}.eventdetailsSource like "%noiseFinalWarning%" then True
     else False
     end
-
     ;;
   }
 
@@ -150,21 +149,21 @@ view: guestreservationevents{
   }
 
   measure:  total_first_alert {
-    label: "Total First Noise Alerts"
+    label: "First Noise Alerts"
     type: count_distinct
     sql: ${_id} ;;
     filters: [eventdetailsSource: "%noiseFirstWarning%"]
     drill_fields: [detail*]
   }
   measure:  total_second_alert {
-    label: "Total Second Noise Alerts"
+    label: "Second Noise Alerts"
     type: count_distinct
     sql: ${_id} ;;
     filters: [eventdetailsSource: "%noiseSecondWarning%"]
     drill_fields: [detail*]
   }
   measure:  total_Fina_alert {
-    label: "Total Final Noise Alerts"
+    label: "Final Noise Alerts(Incidents)"
     type: count_distinct
     sql: ${_id} ;;
     filters: [eventdetailsSource: "%noiseFinalWarning%"]
