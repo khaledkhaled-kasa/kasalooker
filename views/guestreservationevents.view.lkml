@@ -61,10 +61,20 @@ view: guestreservationevents{
     hidden: yes
     sql: ${TABLE}.eventdetailsSource ;;
   }
-  dimension: eventNumber {
+  dimension: eventdetails {
     type: string
     hidden: yes
     sql: ${TABLE}.eventdetails ;;
+  }
+
+
+  dimension:noise_incidents{
+    type: yesno
+    sql:  CASE WHEN ${TABLE}.event like "%noise.alert.warning%" then True
+    else False
+    end
+
+    ;;
   }
 
 
@@ -96,6 +106,7 @@ view: guestreservationevents{
   dimension: confirmationcode {
     type: string
     sql: ${TABLE}.confirmationcode ;;
+    hidden: yes
   }
 
   measure:  tota_tampering_events {
