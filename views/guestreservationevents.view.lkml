@@ -70,7 +70,7 @@ view: guestreservationevents{
 
   dimension:noise_incidents{
     type: yesno
-    sql:  CASE WHEN ${TABLE}.event like "%noise.alert.warning%" then True
+    sql:  CASE WHEN ${TABLE}.eventdetailsSource like "%noiseFinalWarning%" then True
     else False
     end
 
