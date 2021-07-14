@@ -1528,6 +1528,13 @@ view: conversation {
         # END;;
         }
 
+        measure: total_kfc_related_issues {
+          label: "Total KFC Related issues"
+          type: number
+          sql: ${issue_categories_1.unique_conversations_kfc}+${issue_categories_2.unique_conversations_kfc}+${issue_categories_3.unique_conversations_kfc};;
+        }
+
+
         measure: issues_per_reservation {
           type: number
           sql: ${total_issues} / NULLIF(${reservations_count},0) ;;
@@ -1545,6 +1552,12 @@ view: conversation {
           sql: ${total_kontrol_related_issues} / NULLIF(${reservations_kustomer.total_reservations},0) ;;
           value_format_name: decimal_2
         }
+  measure: total_kfc_related_issues_per_reservation {
+    label: "Total KFC Related issues by reservation"
+    type: number
+    sql: ${total_kfc_related_issues} / NULLIF(${reservations_kustomer.total_reservations},0) ;;
+    value_format_name: decimal_2
+  }
 
 
       }
