@@ -109,21 +109,21 @@ view: guestreservationevents{
   }
 
   measure:  tota_tampering_events {
-    label: "Total Tampering alerts"
+    label: "Total Tampering Alerts"
     type: count_distinct
     sql: ${_id};;
     filters: [eventdetailsSource: "kasa-automessages-production-minutTamperReplacedAlert"]
     drill_fields: [detail*]
   }
   measure:  tota_noise_events {
-    label: "Total Noise alerts"
+    label: "Total Noise Alerts"
     type: count_distinct
     sql: ${_id} ;;
     filters: [event: "noise.alert.warning"]
     drill_fields: [detail*]
   }
   measure:  tota_smoke_events {
-    label: "Total Smoke alerts(Incidents)"
+    label: "Total Smoke Alerts(Incidents)"
     type: count_distinct
     sql: CASE WHEN  ${TABLE}.event like "%smoke.alert.start%"  and ${TABLE}.eventdetailsSource="kasa-automessages-production-smokeAlert"  then ${_id} ELSE NULL END;;
     drill_fields: [detail*]
