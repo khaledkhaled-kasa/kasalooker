@@ -123,7 +123,7 @@ view: guestreservationevents{
     drill_fields: [detail*]
   }
   measure:  tota_smoke_events {
-    label: "Total Smoke alerts"
+    label: "Total Smoke alerts(Incidents)"
     type: count_distinct
     sql: CASE WHEN  ${TABLE}.event like "%smoke.alert.start%"  and ${TABLE}.eventdetailsSource="kasa-automessages-production-smokeAlert"  then ${_id} ELSE NULL END;;
     drill_fields: [detail*]
