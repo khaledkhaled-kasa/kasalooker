@@ -468,17 +468,17 @@ explore: reservations_audit {
 }
 
 explore: capacities_v3 {
-  aggregate_table: capacities_by_month_and_metrics {
-    query: {
-      dimensions: [capacities_v3.night_month,  complexes.title]
-      measures: [capacities_v3.capacity,financials_v3.adr, financials_v3.revpar, financials_v3.amount, reservations_v3.occupancy, reservations_v3.num_reservations, reservations_v3.reservation_night, reservations_v3.number_of_checkins]
-      timezone: America/Los_Angeles
-    }
+  # aggregate_table: capacities_by_month_and_metrics {
+  #   query: {
+  #     dimensions: [capacities_v3.night_month,  complexes.title]
+  #     measures: [capacities_v3.capacity,financials_v3.adr, financials_v3.revpar, financials_v3.amount, reservations_v3.occupancy, reservations_v3.num_reservations, reservations_v3.reservation_night, reservations_v3.number_of_checkins]
+  #     timezone: America/Los_Angeles
+  #   }
 
-    materialization: {
-      sql_trigger_value: SELECT MAX(createdat) from reservations ;;
-    }
-  }
+    # materialization: {
+    #   sql_trigger_value: SELECT MAX(createdat) from reservations ;;
+    # }
+
   group_label: "Kasa Metrics"
   label: "Reservations"
   persist_with: kasametrics_reservations_datagroup
@@ -563,9 +563,6 @@ explore: capacities_v3 {
     sql_on:  ${units.address_city} = ${geo_location.city}
       and ${units.address_state} = ${geo_location.state};;
   }
-
-
-
 
 }
 

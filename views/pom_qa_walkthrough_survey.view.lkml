@@ -113,6 +113,7 @@ GROUP BY
       week,
       month,
       quarter,
+      day_of_week,
       year
     ]
     sql: ${TABLE}.TIMESTAMP ;;

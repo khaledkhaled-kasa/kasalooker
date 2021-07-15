@@ -61,6 +61,7 @@ view: financials_v3{
           END;;
   }
 
+
   dimension: unit {
     type: string
     hidden: yes
@@ -155,7 +156,8 @@ view: financials_v3{
     label: "Original Amount"
     hidden: yes
     description: "This is amount as per payment received dates"
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${_id} ;;
     value_format: "$#,##0.00"
     sql: ${amount_revised} ;;
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"]
@@ -165,7 +167,8 @@ view: financials_v3{
     label: "Original Amount (Direct)"
     hidden: yes
     description: "This is amount as per payment received dates from direct, kasawebsite & website booking channels"
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${_id} ;;
     value_format: "$#,##0.00"
     sql: ${amount_revised} ;;
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability", reservations_v3.sourcedata_channel: "gx, kasawebsite, guest portal, virtual front desk"]
@@ -175,7 +178,8 @@ view: financials_v3{
     label: "Original Amount (GX)"
     hidden: yes
     description: "This is amount as per payment received dates from direct booking channels"
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${_id} ;;
     value_format: "$#,##0.00"
     sql: ${amount_revised} ;;
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability", reservations_v3.sourcedata_channel: "gx"]
@@ -185,7 +189,8 @@ view: financials_v3{
     label: "Original Amount (Website)"
     hidden: yes
     description: "This is amount as per payment received dates from kasawebsite & website booking channels"
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${_id} ;;
     value_format: "$#,##0.00"
     sql: ${amount_revised} ;;
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability", reservations_v3.sourcedata_channel: "kasawebsite"]
@@ -195,7 +200,8 @@ view: financials_v3{
     label: "Original Amount (Guest Portal)"
     hidden: yes
     description: "This is amount as per payment received dates from guest portal channels"
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${_id} ;;
     value_format: "$#,##0.00"
     sql: ${amount_revised} ;;
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability", reservations_v3.sourcedata_channel: "virtual front desk, guest portal"]
@@ -205,7 +211,8 @@ view: financials_v3{
     label: "Original Amount (OTAs excluding Airbnb)"
     hidden: yes
     description: "This is amount as per payment received dates from all OTAs excluding Airbnb"
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${_id} ;;
     value_format: "$#,##0.00"
     sql: ${amount_revised} ;;
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability", reservations_v3.sourcedata_channel: "-airbnb,-gx, -kasawebsite, -virtual front desk"]
@@ -215,7 +222,8 @@ view: financials_v3{
     label: "Original Amount (Ancillary)"
     hidden: yes
     description: "This is amount as per payment received dates from Ancillary financial types"
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${_id} ;;
     value_format: "$#,##0.00"
     sql: ${amount_revised} ;;
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "AccessCharge,AddCleanCharge,DamageCharge,Fees,PetFees,SecurityFee,LateCheckoutCharge"]
@@ -226,7 +234,8 @@ view: financials_v3{
     label: "Original Amount"
     hidden: yes
     description: "This is amount as per payment received dates"
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${_id} ;;
     value_format: "$#,##0.00"
     sql: ${amount_revised} ;;
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)"]
@@ -237,7 +246,8 @@ view: financials_v3{
     hidden: yes
     label: "Amount Outstanding"
     description: "This is the amount missing from previous scheduled nights"
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${_id} ;;
     value_format: "$#,##0.00"
     sql: ${TABLE}.nightly_outstanding_amount;;
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability"]
@@ -247,7 +257,8 @@ view: financials_v3{
     hidden: yes
     label: "Amount Outstanding (Direct)"
     description: "This is the amount missing from previous scheduled nights from direct, kasawebsite & website booking channels"
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${_id} ;;
     value_format: "$#,##0.00"
     sql: ${TABLE}.nightly_outstanding_amount;;
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability", reservations_v3.sourcedata_channel: "gx, kasawebsite, guest portal, virtual front desk"]
@@ -257,7 +268,8 @@ view: financials_v3{
     hidden: yes
     label: "Amount Outstanding (GX)"
     description: "This is the amount missing from previous scheduled nights from direct booking channels"
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${_id} ;;
     value_format: "$#,##0.00"
     sql: ${TABLE}.nightly_outstanding_amount;;
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability", reservations_v3.sourcedata_channel: "gx"]
@@ -267,7 +279,8 @@ view: financials_v3{
     hidden: yes
     label: "Amount Outstanding (Website)"
     description: "This is the amount missing from previous scheduled nights from kasawebsite & website booking channels"
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${_id} ;;
     value_format: "$#,##0.00"
     sql: ${TABLE}.nightly_outstanding_amount;;
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability", reservations_v3.sourcedata_channel: "kasawebsite"]
@@ -277,7 +290,8 @@ view: financials_v3{
     hidden: yes
     label: "Amount Outstanding (Guest Portal)"
     description: "This is the amount missing from previous scheduled nights from guest portal booking channels"
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${_id} ;;
     value_format: "$#,##0.00"
     sql: ${TABLE}.nightly_outstanding_amount;;
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability", reservations_v3.sourcedata_channel: "virtual front desk, guest portal"]
@@ -287,7 +301,8 @@ view: financials_v3{
     hidden: yes
     label: "Amount Outstanding (OTA Excl. Airbnb)"
     description: "This is the amount missing from previous scheduled nights from OTC Channels excluding Airbnb"
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${_id} ;;
     value_format: "$#,##0.00"
     sql: ${TABLE}.nightly_outstanding_amount;;
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability", reservations_v3.sourcedata_channel: "-airbnb,-gx, -kasawebsite, -virtual front desk"]
@@ -297,7 +312,8 @@ view: financials_v3{
     hidden: yes
     label: "Amount Outstanding (Ancillary)"
     description: "This is the amount missing from previous scheduled nights from Ancillary Revenues"
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${_id} ;;
     value_format: "$#,##0.00"
     sql: ${TABLE}.nightly_outstanding_amount;;
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "AccessCharge,AddCleanCharge,DamageCharge,Fees,PetFees,SecurityFee,LateCheckoutCharge"]
@@ -308,7 +324,8 @@ view: financials_v3{
     hidden: yes
     label: "Amount Outstanding"
     description: "This is the amount missing from previous scheduled nights"
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${_id} ;;
     value_format: "$#,##0.00"
     sql: ${TABLE}.nightly_outstanding_amount;;
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)"]
@@ -419,7 +436,8 @@ view: financials_v3{
     label: "Original Amount"
     hidden: yes
     description: "This is amount as per payment received dates"
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${_id} ;;
     value_format: "$#,##0.00"
     sql: ${amount_revised} ;;
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability",reservations_v3.extended_booking: "no"]
@@ -429,7 +447,8 @@ view: financials_v3{
     hidden: yes
     label: "Amount Outstanding"
     description: "This is the amount missing from previous scheduled nights"
-    type: sum
+    type: sum_distinct
+    sql_distinct_key: ${_id} ;;
     value_format: "$#,##0.00"
     sql: ${TABLE}.nightly_outstanding_amount;;
     filters: [reservations_v3.financial_night_part_of_res_modified: "yes",actualizedat_modified: "-Nonactualized (Historic)",reservations_v3.status: "confirmed, checked_in", type: "-channelFee,-ToT,-ToTInflow,-ToTOutflowNonLiability,-ToTInflowNonLiability",reservations_v3.extended_booking: "no"]
