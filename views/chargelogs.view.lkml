@@ -184,5 +184,11 @@ view: chargelogs {
     sql: ${amount} ;;
     value_format_name: usd
   }
-
+  measure: total_reservationn_extend {
+    label: "Total Extend Resrvations"
+    view_label: "Metrics"
+    type: count_distinct
+    sql: ${reservation} ;;
+    filters: [source: "gp-extensions"]
+  }
 }

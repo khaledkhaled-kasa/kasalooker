@@ -111,40 +111,41 @@ view: guestreservationevents{
   measure:  tota_tampering_events {
     label: "Total Tampering alerts"
     type: count_distinct
-    sql: CASE WHEN ${TABLE}.event like "%minuttamper.alert.end%"  then ${_id} ELSE NULL END;;
+    sql: ${_id};;
+    filters: [eventdetailsSource: "kasa-automessages-production-minutTamperReplacedAlert"]
     drill_fields: [detail*]
   }
   measure:  tota_noise_events {
     label: "Total Noise alerts"
     type: count_distinct
-    sql: CASE WHEN ${TABLE}.eventdetailsSource like "%noiseFirstWarning%"  or ${TABLE}.eventdetailsSource  like "%noiseSecondWarning%" or ${TABLE}.eventdetailsSource  like "%noiseFinalWarning%"or ${TABLE}.event like "%noise.alert.start%" then ${_id} ELSE NULL END;;
+    sql: ${_id} ;;
+    filters: [event: "noise.alert.warning"]
     drill_fields: [detail*]
   }
   measure:  tota_smoke_events {
     label: "Total Smoke alerts"
     type: count_distinct
-    sql: CASE WHEN  ${TABLE}.event like "%nsmoke.alert.end%"   then ${_id} ELSE NULL END;;
+    sql: CASE WHEN  ${TABLE}.event like "%smoke.alert.start%"  and ${TABLE}.eventdetailsSource="kasa-automessages-production-smokeAlert"  then ${_id} ELSE NULL END;;
     drill_fields: [detail*]
   }
   measure:  total_reservation_tamper {
     label: "Total reservations (MinutTamper)"
     type: count_distinct
     sql: ${confirmationcode} ;;
-    filters: [event: "minuttamper.alert.end"]
+    filters: [eventdetailsSource: "kasa-automessages-production-minutTamperReplacedAlert"]
     drill_fields: [detail*]
   }
   measure:  total_reservation_noise {
     label: "Total reservations (Noise)"
     type: count_distinct
     sql: ${confirmationcode} ;;
-    filters: [event: "noise.alert.end"]
+    filters: [event: "noise.alert.warning"]
     drill_fields: [detail*]
   }
   measure:  total_reservation_smoke {
     label: "Total reservations (Smoke)"
     type: count_distinct
-    sql: ${confirmationcode} ;;
-    filters: [event: "smoke.alert.start"]
+    sql: CASE WHEN ${TABLE}.event like "%smoke.alert.start%"  and ${TABLE}.eventdetailsSource="kasa-automessages-production-smokeAlert" then ${confirmationcode}  ELSE NULL END ;;
     drill_fields: [detail*]
   }
 
