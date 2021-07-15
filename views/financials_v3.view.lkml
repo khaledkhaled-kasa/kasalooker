@@ -62,15 +62,6 @@ view: financials_v3{
   }
 
 
-  measure: test {
-    label: "test"
-    description: "This will correct for unavailable amount__fl values"
-    type: sum_distinct
-    sql_distinct_key: ${_id} ;;
-    value_format: "$#,##0.00"
-    sql: ${amount_revised};;
-  }
-
   dimension: unit {
     type: string
     hidden: yes
