@@ -15,6 +15,10 @@ view: accesses {
     hidden: yes
     sql: ${TABLE}._id ;;
   }
+  dimension: devicetype {
+    type: string
+    sql: ${TABLE}.devicetype ;;
+  }
 
   dimension: checkoutdate {
     type: string
@@ -44,6 +48,7 @@ view: accesses {
   dimension: accesstype {
     type: string
     sql: ${TABLE}.accesstype ;;
+    hidden: yes
   }
 
   dimension: value {

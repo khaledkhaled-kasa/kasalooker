@@ -1,6 +1,7 @@
 view: reservations_kustomer {
   label: "Reservations"
-  sql_table_name: `bigquery-analytics-272822.mongo.reservations`;;
+  # sql_table_name: `bigquery-analytics-272822.mongo.reservations`;;
+  sql_table_name: `bigquery-analytics-272822.dbt.reservations_v3`  ;;
 
 
   dimension: _id {
@@ -342,6 +343,7 @@ view: reservations_kustomer {
     type: count_distinct
     sql: ${confirmationcode} ;;
     filters: [status: "confirmed, checked_in"]
+    drill_fields: [reservation_details*]
 }
 
 
