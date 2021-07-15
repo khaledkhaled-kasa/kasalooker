@@ -3,7 +3,7 @@ view: units {
 
 
     dimension: _id {
-      hidden:  yes
+      hidden: yes
       primary_key: yes
       type: string
       sql: ${TABLE}._id ;;

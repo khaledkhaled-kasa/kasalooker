@@ -373,7 +373,7 @@ view: reservations_v3 {
 
     measure: occupancy {
       label: "Occupancy"
-      description: "Number of reservation nights / capacity"
+      description: "Number of reservation nights / capacity - This metric should be grouped by Night Available Date Group to retrieve accurate results"
       type: number
       value_format: "0.0%"
       sql:  ${reservation_night} / NULLIF(${capacities_v3.capacity}, 0) ;;
