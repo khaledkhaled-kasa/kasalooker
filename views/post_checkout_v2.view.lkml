@@ -44,7 +44,11 @@ view: post_checkout_v2 {
     label: "Overall Rating"
     group_label: "Ratings"
     type: number
-    sql: ${TABLE}.Overall__how_would_you_rate_your_Kasa_stay_ ;;
+    sql:
+    CASE
+    WHEN ${TABLE}.Overall__how_would_you_rate_your_Kasa_stay_ is NULL THEN  ${TABLE}.Overall__how_would_you_rate_your_Kasa_stay__V2_
+    ELSE ${TABLE}.Overall__how_would_you_rate_your_Kasa_stay_
+    END;;
   }
 
   dimension: _cleanliness___how_clean_was_the_kasa_when_you_arrived_ {
@@ -301,7 +305,7 @@ view: post_checkout_v2 {
     group_label: "Ratings (Aggregated)"
     type: average
     value_format: "0.00"
-    sql: ${TABLE}.Overall__how_would_you_rate_your_Kasa_stay_ ;;
+    sql: ${overall__how_would_you_rate_your_kasa_stay_} ;;
   }
 
   measure: cleanliness_measure {
