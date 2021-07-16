@@ -5,19 +5,25 @@
   view: reviews {
     derived_table: {
       sql:
-      with t3 as (
-        with t2 as (
-            with t1 as
-           (SELECT * FROM mongo.reviews, UNNEST(reviewtags))
-            select _id as _id2, value
-            from t1)
-        select * from mongo.reviews
-        left join t2
-        on reviews._id = t2._id2)
-      select reviewbykasa, reservation, overallratingstandardized, submitdate, _id, target, unit, guest, channel, overallrating, privatereviewtext,
-      string_agg(value order by value) as review_tags
-      from t3
-      group by 1,2,3,4,5,6,7,8,9,10,11;;
+      with t4 as (with t3 as (
+              with t2 as (
+                with t1 as
+                (SELECT * FROM mongo.reviews, UNNEST(reviewtags))
+                  select _id as _id2, value
+                 from t1)
+                 select * from mongo.reviews
+                  left join t2
+                  on reviews._id = t2._id2)
+
+                select reviewbykasa, reservation, overallratingstandardized, submitdate, _id, target, unit, guest, channel, overallrating, privatereviewtext,
+                string_agg(value order by value) as review_tags
+                from t3
+                group by 1,2,3,4,5,6,7,8,9,10,11)
+
+
+      select t4.*, t5.privatereviewtext privatereviewtext2
+      from t4 join t4 t5
+      on (t4.reservation = t5.reservation and t4.target != t5.target);;
     }
 
 
@@ -90,6 +96,16 @@ view_label: "Check-In Survey Data"
     type: string
     sql: ${TABLE}.privatereviewtext ;;
   }
+
+    dimension: aggregated_comments {
+      hidden: yes
+      label: "Aggregated Private Review Text"
+      description: "This will concatenate the cleaning and checking comments"
+      type: string
+      sql: CASE WHEN ${target} = "cleaning" THEN CONCAT(COALESCE(${TABLE}.privatereviewtext,"N/A")," | ",COALESCE(${TABLE}.privatereviewtext2,"N/A"))
+      ELSE CONCAT(COALESCE(${TABLE}.privatereviewtext2,"N/A")," | ",COALESCE(${TABLE}.privatereviewtext,"N/A"))
+      END;;
+    }
 
   dimension: reservation {
     type: string
