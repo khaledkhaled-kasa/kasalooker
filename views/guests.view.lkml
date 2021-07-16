@@ -108,5 +108,4 @@ view: guests {
     sql: ${TABLE}.verification.backgroundcheckstatus;;
   }
 
-
 }

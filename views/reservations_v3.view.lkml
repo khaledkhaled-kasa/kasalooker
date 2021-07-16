@@ -694,6 +694,25 @@ view: reservations_v3 {
     filters: [capacity_night_part_of_res: "yes", status: "cancelled, canceled", extended_booking: "no"]
   }
 
+  measure: num_reservations_canceled_due_idFailure{
+    type: count_distinct
+    label: "Canceled Reservation Due ID Failure"
+    sql:CASE WHEN ${capacity_night_part_of_res}=True and
+          (${status}="cancelled" or ${status}= "canceled")
+          and ${guests.idcheckstatus}="failure" THEN ${confirmationcode} ELSE null END;;
+
+    }
+
+  measure: num_reservations_canceled_due_BGCFailure{
+    type: count_distinct
+    label: "Canceled Reservation Due BGC Failure"
+    sql:CASE WHEN ${capacity_night_part_of_res}=True and
+          (${status}="cancelled" or ${status}= "canceled")
+          and (${guests.backgroundCheckStatus}="failure" or  ${guests.backgroundCheckStatus} ="failed")  THEN ${confirmationcode} ELSE null END;;
+
+    }
+
+
 
 
 
