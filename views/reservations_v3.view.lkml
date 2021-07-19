@@ -321,7 +321,6 @@ view: reservations_v3 {
     type:  yesno
     sql: ${capacities_v3.night_date} = ${checkoutdate_date} ;;
   }
-
   measure: reservation_night {
     label: "Num ReservationNights"
     description: "Reservation night stay. This metric will only consider confirmed / checked in bookings. Also, this includes extended bookings as a SEPARATE booking."
@@ -711,9 +710,6 @@ view: reservations_v3 {
           and (${guests.backgroundCheckStatus}="failure" or  ${guests.backgroundCheckStatus} ="failed")  THEN ${confirmationcode} ELSE null END;;
 
     }
-
-
-
 
 
     set:reservation_details {
