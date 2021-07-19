@@ -866,6 +866,13 @@ explore: kasa_kredit_reimbursement {
 
 }
 
+
+explore: security_deposits_kfc {
+  group_label: "KFC Reporting"
+  label: "Security Deposits"
+}
+
+
 explore: ximble_master {
   group_label: "Software"
   label: "Ximble"
