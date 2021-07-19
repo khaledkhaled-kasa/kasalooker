@@ -74,6 +74,7 @@ view: guestreservationevents{
     else False
     end
     ;;
+    hidden: yes
   }
 
 

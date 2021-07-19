@@ -239,6 +239,56 @@ view: trs_prs {
     value_format: "0.00%"
     sql: ${num_reservations_trs_prs} / ${num_reservations_confirmed} ;;
   }
+  measure: num_reservations_high_PRS{
+    type: count_distinct
+    label: "PRS High"
+    view_label: "TRS/PRS"
+    sql:${confirmationcode};;
+    filters: [party_risk_level: "high",status: "confirmed, checked_in"]
+  }
+  measure: num_reservations_low_PRS{
+    type: count_distinct
+    label: "PRS Low"
+    view_label: "TRS/PRS"
+    sql:${confirmationcode};;
+    filters: [party_risk_level: "low",status: "confirmed, checked_in"]
+  }
+  measure: num_reservations_medium_PRS{
+    type: count_distinct
+    label: "PRS Medium"
+    view_label: "TRS/PRS"
+    sql:${confirmationcode};;
+    filters: [party_risk_level: "medium",status: "confirmed, checked_in"]
+  }
+
+  measure: num_reservations_high_TRS{
+    type: count_distinct
+    label: "TRS High"
+    view_label: "TRS/PRS"
+    sql:${confirmationcode};;
+    filters: [trust_risk_level: "high",status: "confirmed, checked_in"]
+  }
+  measure: num_reservations_low_TRS{
+    type: count_distinct
+    label: "TRS Low"
+    view_label: "TRS/PRS"
+    sql:${confirmationcode};;
+    filters: [trust_risk_level: "low",status: "confirmed, checked_in"]
+  }
+  measure: num_reservations_medium_TRS{
+    type: count_distinct
+    label: "TRS Medium"
+    view_label: "TRS/PRS"
+    sql:${confirmationcode};;
+    filters: [trust_risk_level: "medium",status: "confirmed, checked_in"]
+  }
+  measure: num_reservations_nibe_TRS{
+    type: count_distinct
+    label: "TRS None"
+    view_label: "TRS/PRS"
+    sql:${confirmationcode};;
+    filters: [trust_risk_level: "none",status: "confirmed, checked_in"]
+  }
 
 
 }
