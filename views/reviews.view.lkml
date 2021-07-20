@@ -102,8 +102,8 @@ view_label: "Check-In Survey Data"
       label: "Aggregated Private Review Text"
       description: "This will concatenate the cleaning and checking comments"
       type: string
-      sql: CASE WHEN ${target} = "cleaning" THEN CONCAT(COALESCE(${TABLE}.privatereviewtext,"N/A")," | ",COALESCE(${TABLE}.privatereviewtext2,"N/A"))
-      ELSE CONCAT(COALESCE(${TABLE}.privatereviewtext2,"N/A")," | ",COALESCE(${TABLE}.privatereviewtext,"N/A"))
+      sql: CASE WHEN ${target} = "cleaning" THEN CONCAT(COALESCE(${TABLE}.privatereviewtext,""),"~",COALESCE(${TABLE}.privatereviewtext2,"N/A"))
+      ELSE CONCAT(COALESCE(${TABLE}.privatereviewtext2,""),"~",COALESCE(${TABLE}.privatereviewtext,"N/A"))
       END;;
     }
 
