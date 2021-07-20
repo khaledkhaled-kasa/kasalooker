@@ -53,9 +53,9 @@ view: post_checkout_v2 {
     view_label: "Review Force"
     description: "This will aggregate all review comments from different review channels (airbnb, Postcheckout, Postcheckout V2) into one block."
     type: string
-    sql: regexp_replace(regexp_replace(
+    sql: LTRIM(regexp_replace(regexp_replace(
         RTRIM(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(
-          regexp_replace(${aggregated_comments_all},"Checkin Comments: N/A~N/A",""),"Cleaning Comments: N/A~N/A",""),"Communication Comments: N/A~N/A",""),"Accuracy Comments: N/A~N/A",""),"Value Comments: N/A~N/A",""),"Location Comments: N/A~N/A",""),"Real-time Review Comments: ~N/A",""),"~N/A",""),"-"),"~","|"),"N/A|","")
+          regexp_replace(regexp_replace(${aggregated_comments_all},"Overall Comments: N/A~N/A~N/A~N/A~N/A~N/A~N/A",""),"Checkin Comments: N/A~N/A",""),"Cleaning Comments: N/A~N/A",""),"Communication Comments: N/A~N/A",""),"Accuracy Comments: N/A~N/A",""),"Value Comments: N/A~N/A",""),"Location Comments: N/A~N/A",""),"Real-time Review Comments: ~N/A",""),"~N/A",""),"-"),"~","|"),"N/A|",""),"-")
               ;;
   }
 
