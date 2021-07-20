@@ -80,6 +80,24 @@ view: units {
       sql: PARSE_DATE('%m/%d/%Y',${TABLE}.FirstAvailableDate) ;;
       convert_tz: no
     }
+
+  dimension_group: Date_Contract_Signed {
+    description: "This will pull the contract signed date from Col BK of the Kasa Portfolio Overview"
+    type: time
+    datatype: date
+    timeframes: [
+      date,
+      week,
+      week_of_year,
+      month,
+      month_name,
+      quarter,
+      year
+    ]
+    sql: PARSE_DATE('%m/%d/%Y',${TABLE}.ContractSignedDate) ;;
+    convert_tz: no
+  }
+
     dimension_group: KPO_deactivatedDate {
       type: time
       datatype: date
@@ -157,17 +175,7 @@ view: units {
     sql: ${TABLE}.ContractType ;;
   }
 
-    # dimension: unit_status {
-    #   description: "Status of Unit (Active/Deactivated/Expiring/Onboarding)"
-    #   type: string
-    #   sql: CASE
 
-    #         WHEN CURRENT_DATE < DATE(${TABLE}.unit_availability_enddate) AND (DATE_DIFF(DATE(${TABLE}.unit_availability_enddate), CURRENT_DATE ,DAY) BETWEEN 1 AND 30 ) THEN 'Expiring'
-    #         WHEN CURRENT_DATE >= SAFE_CAST(${availability_enddate} as DATE) THEN 'Deactivated'
-    #         WHEN SAFE_CAST(${availability_startdate_date} AS DATE) >= CURRENT_DATE THEN 'Onboarding'
-    #   ELSE 'Active'
-    #   END ;;
-    # }
   dimension: unit_status {
     description: "Status of Unit (Active/Deactivated/Expiring/Onboarding)"
     type: string
@@ -179,6 +187,7 @@ view: units {
             ELSE NULL
       END ;;
   }
+
     dimension: availability_enddate_string {
       hidden: yes
       type:  string
@@ -244,7 +253,6 @@ view: units {
     }
 
     dimension: internaltitle {
-      # view_label: "Units"
       label: "Unit #"
       type: string
       sql: ${TABLE}.internaltitle ;;
@@ -312,7 +320,7 @@ view: units {
       sql: CASE WHEN ((${TABLE}.internaltitle LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%-RES") OR (${TABLE}.internaltitle LIKE "%-S")) THEN NULL
           ELSE ${TABLE}._id
           END;;
-          drill_fields: [internaltitle, availability_startdate_date, availability_enddate_date, unit_status]
+          drill_fields: [internaltitle, Date_Contract_Signed_date, availability_startdate_date, availability_enddate_date, unit_status]
     }
 
 
