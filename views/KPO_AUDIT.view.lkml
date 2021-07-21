@@ -37,7 +37,7 @@ view: KPO_AUDIT {
     label: "First Available Date"
     type: time
     timeframes: [date, week, month, year]
-    sql: TIMESTAMP(${TABLE}.FirstAvailableDate) ;;
+    sql: cast(PARSE_DATE('%m/%d/%Y',${TABLE}.FirstAvailableDate)as TIMESTAMP) ;;
     convert_tz: no
   }
   dimension_group: ContractSignedDate
@@ -45,7 +45,7 @@ view: KPO_AUDIT {
     label: "Contract Signed Date"
     type: time
     timeframes: [date, week, month, year]
-    sql: TIMESTAMP(${TABLE}.FirstAvailableDate) ;;
+    sql: cast(PARSE_DATE('%m/%d/%Y',${TABLE}.ContractSignedDate) as TIMESTAMP);;
     convert_tz: no
   }
 
