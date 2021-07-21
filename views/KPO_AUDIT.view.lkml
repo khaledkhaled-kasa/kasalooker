@@ -1,6 +1,6 @@
-view: kpo {
+view: KPO_AUDIT {
   derived_table: {
-    sql: select KPO_table.UID, KPO_table.status,units.internaltitle,ContractType
+    sql: select KPO_table.UID, KPO_table.status,units.internaltitle,ContractType,FirstAvailableDate,ContractSignedDate
       from
 
                `bigquery-analytics-272822.Gsheets.kpo_overview_clean` KPO_table
@@ -23,6 +23,7 @@ view: kpo {
   }
   dimension: internaltitle {
     hidden: no
+    label: "Units internaltitle "
     type: string
     sql: ${TABLE}.internaltitle ;;
   }
@@ -31,10 +32,24 @@ view: kpo {
     type: string
     sql: ${TABLE}.status ;;
   }
-
-  set: detail {
-    fields: [uid,status]
+  dimension_group: FirstAvailableDate
+  {
+    label: "First Available Date"
+    type: time
+    timeframes: [date, week, month, year]
+    sql: TIMESTAMP(${TABLE}.FirstAvailableDate) ;;
+    convert_tz: no
   }
+  dimension_group: ContractSignedDate
+  {
+    label: "Contract Signed Date"
+    type: time
+    timeframes: [date, week, month, year]
+    sql: TIMESTAMP(${TABLE}.FirstAvailableDate) ;;
+    convert_tz: no
+  }
+
+
   measure: countt {
     type: count_distinct
     label: "Total Unique Properties"
@@ -49,4 +64,6 @@ view: kpo {
     sql:Case WHEN ${TABLE}.internaltitle is Null and ${TABLE}.status<>"Deactivated" and ${TABLE}.ContractType <>"Distribution Agreement" THEN ${TABLE}.UID ELSE NULL END;;
     drill_fields: [detail*]
   }
+set: detail {
+  fields: [uid,status]}
 }
