@@ -313,19 +313,19 @@ explore: units_buildings_information {
 
 
 explore: reservations_clean {
-  aggregate_table: reviews_by_week_and_metrics {
-    query: {
-      dimensions: [complexes__address.title, airbnb_reviews.reservation_checkout_week]
-      measures: [airbnb_reviews.count, airbnb_reviews.net_quality_score, airbnb_reviews.avg_overall_rating, airbnb_reviews.avg_cleanliness_rating,
-        airbnb_reviews.count_clean, airbnb_reviews.avg_accuracy_rating, airbnb_reviews.net_quality_score_clean, airbnb_reviews.avg_checkin_rating,
-        airbnb_reviews.avg_communication_rating, airbnb_reviews.net_quality_score_accuracy, airbnb_reviews.net_quality_score_checkin, airbnb_reviews.net_quality_score_communication]
-      timezone: America/Los_Angeles
-    }
+  # aggregate_table: reviews_by_week_and_metrics {
+  #   query: {
+  #     dimensions: [complexes__address.title, airbnb_reviews.reservation_checkout_week]
+  #     measures: [airbnb_reviews.count, airbnb_reviews.net_quality_score, airbnb_reviews.avg_overall_rating, airbnb_reviews.avg_cleanliness_rating,
+  #       airbnb_reviews.count_clean, airbnb_reviews.avg_accuracy_rating, airbnb_reviews.net_quality_score_clean, airbnb_reviews.avg_checkin_rating,
+  #       airbnb_reviews.avg_communication_rating, airbnb_reviews.net_quality_score_accuracy, airbnb_reviews.net_quality_score_checkin, airbnb_reviews.net_quality_score_communication]
+  #     timezone: America/Los_Angeles
+  #   }
 
-    materialization: {
-      sql_trigger_value: SELECT MAX(createdat) from reservations ;;
-    }
-  }
+  #   materialization: {
+  #     sql_trigger_value: SELECT MAX(createdat) from reservations ;;
+  #   }
+  # }
   fields: [
     ALL_FIELDS*, -airbnb_reviews.clean_count_5_star_first90, -airbnb_reviews.clean_count_less_than_4_star_first90, -airbnb_reviews.count_clean_first90, -airbnb_reviews.net_quality_score_clean_first90, -airbnb_reviews.percent_5_star_clean_first90, -airbnb_reviews.percent_less_than_4_star_clean_first90, -complexes.title, -units.propcode]
   # sql_always_where: ${units.availability_enddate} <> 'Invalid date' ;;
