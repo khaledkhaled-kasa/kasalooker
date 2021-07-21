@@ -35,6 +35,15 @@ view: pom_information {
     sql: ${TABLE}.POM ;;
   }
 
+  dimension: city_multi_pom {
+    hidden: no
+    label: "POM / Multi-POM City"
+    type: string
+    sql: CASE WHEN ${TABLE}.POM_Multi_City is NULL THEN ${pom}
+    ELSE ${TABLE}.POM_Multi_City
+    END;;
+  }
+
   dimension: property {
     type: string
     sql: ${TABLE}.Property ;;
@@ -285,10 +294,4 @@ view: pom_information {
     sql: ${FreshAirWeight} ;;
   }
 
-
-
-  measure: count {
-    type: count
-    drill_fields: []
-  }
 }
