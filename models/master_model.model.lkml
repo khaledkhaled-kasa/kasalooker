@@ -657,9 +657,8 @@ explore: pom_qa_walkthrough_survey {
   fields: [
     ALL_FIELDS*,
     -units*,
-    -pom_information*,
     -hk_partners.first_3_months,
-    -pom_qa_walkthrough_survey.total_qas_completed_percentage, -units*, -pom_information*,-hk_partners.first_3_months,
+    -pom_qa_walkthrough_survey.total_qas_completed_percentage, -units*,-hk_partners.first_3_months,
     -pom_qa_walkthrough_survey.airbnb_reviews_POM_Walkthrough, -pom_qa_walkthrough_survey.real_time_POM_Walkthrough
   ]
   persist_with: pom_checklist_default_datagroup
