@@ -883,7 +883,7 @@ explore: seasonality_chart {
   group_label: "Software"
   label: "season"
 }
-explore: kpo{
-  group_label: "Gsheet"
-  label: "KPO"
+explore: KPO_AUDIT{
+  group_label: "KPO"
+  label: "KPO_AUDIT"
 }
