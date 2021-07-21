@@ -117,6 +117,7 @@ view: capacities_v3 {
 
   measure: unit_count_EOM {
     label: "Total Unique Units (EOM)"
+    view_label: "Units"
     description: "Pulls the total number of Unique Units by end of month"
     type: count_distinct
     sql: CASE WHEN ((${units.internaltitle} LIKE "%-XX") OR (${units.internaltitle} LIKE "%-RES") OR (${units.internaltitle} LIKE "%-S")) THEN NULL
