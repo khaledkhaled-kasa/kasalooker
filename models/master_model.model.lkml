@@ -884,6 +884,6 @@ explore: seasonality_chart {
   label: "season"
 }
 explore: kpo{
-  group_label: "Looker Develpment"
+  group_label: "Gsheet"
   label: "KPO"
 }
