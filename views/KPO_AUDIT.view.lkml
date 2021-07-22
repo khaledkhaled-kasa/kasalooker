@@ -1,6 +1,6 @@
 view: KPO_AUDIT {
   derived_table: {
-    sql: select KPO_table.UID, KPO_table.status,units.internaltitle,ContractType,FirstAvailableDate,ContractSignedDate
+    sql: select KPO_table.UID, KPO_table.PropCode, KPO_table.status,units.internaltitle,ContractType,FirstAvailableDate,ContractSignedDate
       from
 
                `bigquery-analytics-272822.Gsheets.kpo_overview_clean` KPO_table
@@ -26,6 +26,11 @@ view: KPO_AUDIT {
     label: "Units internaltitle "
     type: string
     sql: ${TABLE}.internaltitle ;;
+  }
+
+  dimension: PropCode {
+    type: string
+    sql: ${TABLE}.PropCode ;;
   }
 
   dimension: status {
