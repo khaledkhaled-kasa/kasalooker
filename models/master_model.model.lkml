@@ -172,144 +172,144 @@ explore: breezeway_export {
 # }
 
 
-# explore: units_buildings_information {
-#   fields: [ALL_FIELDS*, -geo_location.city_full_uid, -capacities_v3.unit_count_EOM]
-#   from: units
-#   view_label: "Unit Information"
-#   sql_always_where: ${units_buildings_information.availability_enddate_string} <> 'Invalid date' OR ${units_buildings_information.availability_enddate_string} IS NULL ;;
-#   label: "Units and Property Information"
-#   group_label: "Properties"
+explore: units_buildings_information {
+  fields: [ALL_FIELDS*, -geo_location.city_full_uid, -capacities_v3.unit_count_EOM]
+  from: units
+  view_label: "Unit Information"
+  sql_always_where: ${units_buildings_information.availability_enddate_string} <> 'Invalid date' OR ${units_buildings_information.availability_enddate_string} IS NULL ;;
+  label: "Units and Property Information"
+  group_label: "Properties"
 
-#   join: capacities_v3 { # This could be avoided by using the capacities table!
-#     type: left_outer
-#     relationship: one_to_many
-#     sql_on: ${units_buildings_information._id} = ${capacities_v3._id} ;;
-#   }
-#   join: accesses {
-#     type: left_outer
-#     relationship: one_to_many
-#     sql_on: ${units_buildings_information._id} = ${accesses.unitid} ;;
-#   }
+  join: capacities_v3 { # This could be avoided by using the capacities table!
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information._id} = ${capacities_v3._id} ;;
+  }
+  join: accesses {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information._id} = ${accesses.unitid} ;;
+  }
 
-#   join: reservations_v3 {
-#     view_label: "Reservations"
-#     fields: [reservations_v3.confirmationcode, reservations_v3.checkoutdate_date]
-#     type: left_outer
-#     relationship: one_to_many
-#     sql_on: ${units_buildings_information._id} = ${reservations_v3.unit};;
-#   }
+  join: reservations_v3 {
+    view_label: "Reservations"
+    fields: [reservations_v3.confirmationcode, reservations_v3.checkoutdate_date]
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information._id} = ${reservations_v3.unit};;
+  }
 
-#   join: check_in_data {
-#     type: left_outer
-#     relationship: one_to_many
-#     sql_on: ${units_buildings_information.internaltitle} = ${check_in_data.internaltitle} ;;
-#   }
-
-
-#   join: pom_qa_walkthrough_survey_agg {
-#     view_label: "QA Walkthrough Survey Data"
-#     type: left_outer
-#     relationship: one_to_many
-#     sql_on: ${units_buildings_information.internaltitle} = ${pom_qa_walkthrough_survey_agg.unit} ;;
-#   }
-
-#   join: breezeway_export {
-#     fields: [breezeway_export.pct_on_time_pom_score, breezeway_export.pct_on_time_pom_score_weighted, breezeway_export.pct_on_time]
-#     type: left_outer
-#     relationship: one_to_one
-#     sql_on: ${breezeway_export.property_internal_id} =  ${units_buildings_information.breezeway_id};;
-#     }
+  join: check_in_data {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information.internaltitle} = ${check_in_data.internaltitle} ;;
+  }
 
 
-#   join: airbnb_reviews {
-#     fields: [airbnb_reviews.avg_cleanliness_rating, airbnb_reviews.avg_accuracy_rating, airbnb_reviews.avg_checkin_rating, airbnb_reviews.avg_communication_rating, airbnb_reviews.avg_overall_rating, airbnb_reviews.cleaning_rating_score, airbnb_reviews.cleaning_rating_score_weighted]
-#     type: left_outer
-#     relationship: one_to_one
-#     sql_on: ${reservations_v3.confirmationcode} = ${airbnb_reviews.reservation_code} ;;
-#   }
+  join: pom_qa_walkthrough_survey_agg {
+    view_label: "QA Walkthrough Survey Data"
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information.internaltitle} = ${pom_qa_walkthrough_survey_agg.unit} ;;
+  }
 
-#   join: geo_location {
-#     type:  left_outer
-#     relationship: one_to_one
-#     sql_on:  ${units_buildings_information.address_city} = ${geo_location.city}
-#       and ${units_buildings_information.address_state} = ${geo_location.state};;
-#   }
-
-#   join: complexes {
-#     type: left_outer
-#     relationship: one_to_one
-#     sql_on: ${complexes._id} = ${units_buildings_information.complex};;
-#   }
-
-#   join: pom_information {
-#     view_label: "POM Information"
-#     type: left_outer
-#     relationship: one_to_one
-#     sql_on: ${units_buildings_information.propcode} = ${pom_information.Prop_Code} ;;
-#   }
-
-#   join: pom_meeting_attendance {
-#     view_label: "POM Meeting Data"
-#     type: left_outer
-#     relationship: one_to_many
-#     sql_on: ${pom_information.pom} = ${pom_meeting_attendance.pom} ;;
-#   }
-
-#   join: unit_submission_data_final {
-#     view_label: "POM Visit Information"
-#     type: left_outer
-#     relationship: one_to_many
-#     sql_on: ${units_buildings_information.internaltitle} = ${unit_submission_data_final.buildingunit} ;;
-#   }
-
-#   join: noiseaware {
-#     view_label: "NoiseAware"
-#     type: left_outer
-#     relationship: one_to_one
-#     sql_on: ${units_buildings_information.internaltitle} = ${noiseaware.building_unit} ;;
-#   }
-
-#   join: freshair_data {
-#     view_label: "Fresh Air Data (Export)"
-#     type: left_outer
-#     relationship: one_to_one
-#     sql_on: ${units_buildings_information.internaltitle} = ${freshair_data.uid} ;;
-#   }
+  join: breezeway_export {
+    fields: [breezeway_export.pct_on_time_pom_score, breezeway_export.pct_on_time_pom_score_weighted, breezeway_export.pct_on_time]
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${breezeway_export.property_internal_id} =  ${units_buildings_information.breezeway_id};;
+    }
 
 
-#   join: minut_data {
-#     from: devices
-#     type: left_outer
-#     relationship: one_to_many
-#     sql_on: ${units_buildings_information._id} = ${minut_data.unit}
-#             AND ${minut_data.devicetype} LIKE '%Minut%';;
-#   }
+  join: airbnb_reviews {
+    fields: [airbnb_reviews.avg_cleanliness_rating, airbnb_reviews.avg_accuracy_rating, airbnb_reviews.avg_checkin_rating, airbnb_reviews.avg_communication_rating, airbnb_reviews.avg_overall_rating, airbnb_reviews.cleaning_rating_score, airbnb_reviews.cleaning_rating_score_weighted]
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${reservations_v3.confirmationcode} = ${airbnb_reviews.reservation_code} ;;
+  }
 
-#   join: lock_data {
-#     from: devices
-#     type: left_outer
-#     relationship: one_to_many
-#     sql_on: ${units_buildings_information._id} = ${lock_data.unit}
-#       AND lower(${lock_data.devicetype}) LIKE '%lock%';;
-#   }
-#   join: hub_devices {
-#     from: devices
-#     type: left_outer
-#     relationship: one_to_many
-#     sql_on: ${units_buildings_information._id} = ${hub_devices.unit}
-#     AND ${hub_devices.devicetype} IN ('Nexia_v1', 'Smartthings_v1');;
-#   }
+  join: geo_location {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on:  ${units_buildings_information.address_city} = ${geo_location.city}
+      and ${units_buildings_information.address_state} = ${geo_location.state};;
+  }
 
-#   join: fresh_air_data {
-#     view_label: "Fresh Air Data"
-#     from: devices
-#     type: left_outer
-#     relationship: one_to_many
-#     sql_on: ${units_buildings_information._id} = ${fresh_air_data.unit}
-#       AND ${fresh_air_data.devicetype} = "FreshAir_v1";;
-#   }
+  join: complexes {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${complexes._id} = ${units_buildings_information.complex};;
+  }
 
-# }
+  join: pom_information {
+    view_label: "POM Information"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units_buildings_information.propcode} = ${pom_information.Prop_Code} ;;
+  }
+
+  join: pom_meeting_attendance {
+    view_label: "POM Meeting Data"
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${pom_information.pom} = ${pom_meeting_attendance.pom} ;;
+  }
+
+  join: unit_submission_data_final {
+    view_label: "POM Visit Information"
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information.internaltitle} = ${unit_submission_data_final.buildingunit} ;;
+  }
+
+  join: noiseaware {
+    view_label: "NoiseAware"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units_buildings_information.internaltitle} = ${noiseaware.building_unit} ;;
+  }
+
+  join: freshair_data {
+    view_label: "Fresh Air Data (Export)"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units_buildings_information.internaltitle} = ${freshair_data.uid} ;;
+  }
+
+
+  join: minut_data {
+    from: devices
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information._id} = ${minut_data.unit}
+            AND ${minut_data.devicetype} LIKE '%Minut%';;
+  }
+
+  join: lock_data {
+    from: devices
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information._id} = ${lock_data.unit}
+      AND lower(${lock_data.devicetype}) LIKE '%lock%';;
+  }
+  join: hub_devices {
+    from: devices
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information._id} = ${hub_devices.unit}
+    AND ${hub_devices.devicetype} IN ('Nexia_v1', 'Smartthings_v1');;
+  }
+
+  join: fresh_air_data {
+    view_label: "Fresh Air Data"
+    from: devices
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${units_buildings_information._id} = ${fresh_air_data.unit}
+      AND ${fresh_air_data.devicetype} = "FreshAir_v1";;
+  }
+
+}
 
 
 explore: reservations_clean {
