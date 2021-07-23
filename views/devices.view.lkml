@@ -120,7 +120,7 @@ view: devices {
     type: number
     value_format: "0%"
     sql: ${online_devices} / nullif(${all_devices},0) ;;
-    drill_fields: [units_and_devices.internaltitle, connectionstatus]
+    drill_fields: [units_buildings_information.internaltitle, connectionstatus]
   }
 
   measure: total_smartthings_devices {

@@ -184,6 +184,7 @@ view: unit_submission_data_final {
 
   measure: pct_refreshes_up_to_date {
     type: number
+    label: "% Refreshes up to date"
     description: "Returns the percentage of ACTIVE units with a Refresh Status of All Good"
     sql: 1.00*${count_refreshes_up_to_date}/NULLIF(${total_unit_count},0) ;;
     value_format: "0%"
