@@ -1317,6 +1317,15 @@ view: conversation {
           filters: [is_auto_false: "yes", message.direction: "out"]
         }
 
+  measure: reservations_count_all {
+    type: count_distinct
+    view_label: "Metrics"
+    label: "Unique Reservations (Mapped)"
+    description: "Number of unique reservations for messages sent"
+    sql: ${kobject_reservation.id} ;;
+  }
+
+
         measure: messages_sent_per_reservation {
           type: number
           view_label: "Metrics"
@@ -1537,7 +1546,7 @@ view: conversation {
 
         measure: issues_per_reservation {
           type: number
-          sql: ${total_issues} / NULLIF(${reservations_count},0) ;;
+          sql: ${total_issues} / NULLIF(${reservations_count_all},0) ;;
           value_format_name: decimal_2
         }
 

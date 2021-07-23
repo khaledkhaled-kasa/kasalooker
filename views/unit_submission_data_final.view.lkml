@@ -35,10 +35,6 @@ view: unit_submission_data_final {
  ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: [detail*]
-  }
 
   dimension: visit_date {
     type: date
@@ -57,16 +53,19 @@ view: unit_submission_data_final {
   }
 
   dimension: building {
+    hidden: yes
     type: string
     sql: ${TABLE}.Building ;;
   }
 
   dimension: unit {
+    hidden: yes
     type: string
     sql: ${TABLE}.Unit ;;
   }
 
   dimension: buildingunit {
+    label: "Unit #"
     type: string
     sql: CONCAT(${building}, '-', ${unit}) ;;
   }
@@ -82,7 +81,7 @@ view: unit_submission_data_final {
     sql: ${TABLE}.MostRecentRefresh ;;
   }
 
-  dimension: om_refresh {
+  dimension: pom_refresh {
     label: "Refresh POM"
     type: string
     sql: ${TABLE}.POM_Refresh ;;
@@ -152,28 +151,43 @@ view: unit_submission_data_final {
   # }
 
   measure: total_unit_count {
-    hidden: yes
+    label: "Units Managed (Active)"
+    hidden: no
     type: count_distinct
-    sql: ${unit} ;;
+    sql: CASE WHEN ((${units_buildings_information.internaltitle} LIKE "%-XX") OR (${units_buildings_information.internaltitle} LIKE "%-RES") OR (${units_buildings_information.internaltitle} LIKE "%-S")) THEN NULL
+          ELSE ${units_buildings_information.internaltitle}
+          END ;;
+    filters: [unit_refresh_status: "-N/A - Deactivated"]
+    drill_fields: [units_buildings_information.internaltitle, units_buildings_information.availability_startdate_date, units_buildings_information.availability_enddate_date, routine_visit_status, unit_refresh_status]
   }
 
   measure: count_visits_up_to_date {
     type: count_distinct
-    description: "Counts all distinct units with a Routine Visit Status of All Good"
-    sql: CASE WHEN ${routine_visit_status} = 'All Good' Then ${unit} ELSE NULL END;;
+    description: "Counts all distinct ACTIVE units with a Routine Visit Status of All Good"
+    sql: CASE WHEN ${routine_visit_status} = 'All Good' AND
+    ((${units_buildings_information.internaltitle} NOT LIKE "%-XX") OR (${units_buildings_information.internaltitle} NOT LIKE "%-RES") OR (${units_buildings_information.internaltitle} NOT LIKE "%-S"))
+    Then ${units_buildings_information.internaltitle}
+    ELSE NULL END;;
+    filters: [unit_refresh_status: "-N/A - Deactivated"]
   }
 
   measure: count_refreshes_up_to_date {
     type: count_distinct
-    description: "Counts all the distinct units with a Refresh Status of All Good"
-    sql: CASE WHEN ${unit_refresh_status} = 'All Good' THEN ${unit} ELSE NULL End ;;
+    description: "Counts all the distinct ACTIVE units with a Refresh Status of All Good"
+    sql: CASE WHEN ${unit_refresh_status} = 'All Good' AND
+    ((${units_buildings_information.internaltitle} NOT LIKE "%-XX") OR (${units_buildings_information.internaltitle} NOT LIKE "%-RES") OR (${units_buildings_information.internaltitle} NOT LIKE "%-S"))
+    THEN ${units_buildings_information.internaltitle}
+    ELSE NULL END ;;
+    filters: [unit_refresh_status: "-N/A - Deactivated"]
+    drill_fields: [units_buildings_information.internaltitle, units_buildings_information.availability_startdate_date, units_buildings_information.availability_enddate_date, most_recent_refresh, pom_refresh, next_refresh, unit_refresh_status]
   }
 
   measure: pct_refreshes_up_to_date {
     type: number
-    description: "Returns the percentage of units with a Refresh Status of All Good"
+    description: "Returns the percentage of ACTIVE units with a Refresh Status of All Good"
     sql: 1.00*${count_refreshes_up_to_date}/NULLIF(${total_unit_count},0) ;;
-    value_format_name: percent_2
+    value_format: "0%"
+    drill_fields: [units_buildings_information.internaltitle, units_buildings_information.availability_startdate_date, units_buildings_information.availability_enddate_date, most_recent_refresh, pom_refresh, next_refresh, unit_refresh_status]
   }
 
   measure: refreshes_up_to_date_score {

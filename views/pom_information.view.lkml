@@ -38,10 +38,34 @@ view: pom_information {
   dimension: city_multi_pom {
     hidden: no
     label: "POM / Multi-POM City"
+    description: "This data point is pulled from Col BH of the KPO Properties tab."
     type: string
     sql: CASE WHEN ${TABLE}.POM_Multi_City is NULL THEN ${pom}
     ELSE ${TABLE}.POM_Multi_City
     END;;
+  }
+
+  dimension: employment_type {
+    hidden: no
+    description: "This data point is pulled from Col BI of the KPO Properties tab."
+    type: string
+    sql: ${TABLE}.Emp_Type;;
+  }
+
+  dimension: pom_type {
+    label: "POM Type"
+    hidden: no
+    description: "This data point is pulled from Col BJ of the KPO Properties tab."
+    type: string
+    sql: ${TABLE}.POM_Type;;
+  }
+
+  dimension: HK_Hybrid {
+    label: "HK Hybrid?"
+    hidden: no
+    description: "This data point is pulled from Col BK of the KPO Properties tab."
+    type: string
+    sql: ${TABLE}.HK_Hybrid;;
   }
 
   dimension: property {

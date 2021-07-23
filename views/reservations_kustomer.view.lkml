@@ -348,6 +348,7 @@ view: reservations_kustomer {
 
 
 
+
   set:reservation_details {
     fields: [confirmationcode, status, source, checkin_date, checkout_date, booking_date]
   }

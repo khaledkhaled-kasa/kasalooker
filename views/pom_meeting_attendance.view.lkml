@@ -10,7 +10,7 @@ view: pom_meeting_attendance {
   }
 
   dimension: attendance {
-    type: string
+    type: number
     sql: ${TABLE}.Attendance ;;
   }
 
@@ -25,31 +25,28 @@ view: pom_meeting_attendance {
     ]
     convert_tz: no
     datatype: date
-    sql: ${TABLE}.MeetingDate ;;
+    sql: ${TABLE}.Date ;;
   }
 
   dimension: pom {
+    label: "POM"
     type: string
     sql: ${TABLE}.POM ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: []
-  }
 
   measure: total_meetings_attended {
     type: count_distinct
     hidden: yes
     sql: ${primary_key} ;;
-    filters: [attendance: "Y"]
+    filters: [attendance: "1"]
     }
 
   measure: total_meetings_not_attended {
     type: count_distinct
     hidden: yes
     sql: ${primary_key} ;;
-    filters: [attendance: "-Y"]
+    filters: [attendance: "0"]
   }
 
   measure: meeting_attendance_rate {
@@ -75,5 +72,6 @@ view: pom_meeting_attendance {
   measure: total_meetings_held {
     type: count_distinct
     sql: ${meeting_date} ;;
+    filters: [attendance: "0,1"]
   }
 }

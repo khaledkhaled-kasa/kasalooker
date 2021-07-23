@@ -97,6 +97,32 @@ view: devices {
     drill_fields: [deviceid]
   }
 
+
+  measure: all_devices {
+    label: "# of Devices"
+    description: "Returns a count of all devices"
+    type: count_distinct
+    sql: ${deviceid} ;;
+    filters: [connectionstatus: "-null"]
+  }
+
+  measure: online_devices {
+    label: "# of Online Devices"
+    description: "Returns a count of all devices that are 'online"
+    type: count_distinct
+    sql: ${deviceid} ;;
+    filters: [connectionstatus: "online"]
+  }
+
+  measure: pct_online_devices {
+    label: "% of Online Devices"
+    description: "Returns % of all devices that are 'online"
+    type: number
+    value_format: "0%"
+    sql: ${online_devices} / nullif(${all_devices},0) ;;
+    drill_fields: [units_and_devices.internaltitle, connectionstatus]
+  }
+
   measure: total_smartthings_devices {
     label: "Total SmartThings Devices"
     description: "Returns a count of all ACTIVE SmartThings devices."
