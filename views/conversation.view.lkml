@@ -1243,18 +1243,6 @@ view: conversation {
         sql: ${TABLE}.updated_at ;;
       }
 
-      dimension: issues {
-        type: number
-        sql: CASE
-            WHEN ${custom_issue_category_1_tree} IS NOT NULL AND ${custom_issue_category_2_tree} IS NOT NULL AND ${custom_issue_category_3_tree} IS NOT NULL THEN 3
-            WHEN ${custom_issue_category_1_tree} IS NOT NULL AND ${custom_issue_category_2_tree} IS NOT NULL AND ${custom_issue_category_3_tree} IS NULL THEN 2
-            WHEN ${custom_issue_category_1_tree} IS NOT NULL AND ${custom_issue_category_2_tree} IS NULL AND ${custom_issue_category_3_tree} IS NULL THEN 1
-          ELSE 0
-          END;;
-
-        }
-
-
 
 ####################### Average / Median First Response Time Required Dimensions
 
@@ -1505,7 +1493,8 @@ view: conversation {
 
         measure: total_issues {
           type: sum
-          sql: ${issues} ;;
+          sql:
+          (CASE WHEN ${custom_issue_category_1_tree} is not null THEN 1 ELSE 0 END) + (CASE WHEN ${custom_issue_category_2_tree} is not null THEN 1 ELSE 0 END) + (CASE WHEN ${custom_issue_category_3_tree} is not null THEN 1 ELSE 0 END) ;;
         }
 
         measure: total_tech_related_issues {
@@ -1522,11 +1511,6 @@ view: conversation {
         measure: total_kontrol_related_issues {
           type: number
            sql: ${issue_categories_1.unique_conversations_kontrol}+${issue_categories_2.unique_conversations_kontrol}+${issue_categories_3.unique_conversations_kontrol};;
-        #   sql: CASE WHEN ${issue_categories_1.kontrol_influenced}
-        #       OR ${issue_categories_2.kontrol_influenced}
-        #       OR ${issue_categories_3.kontrol_influenced} THEN ${issues}
-        # ELSE NULL
-        # END;;
         }
 
         measure: total_kfc_related_issues {
@@ -1548,6 +1532,7 @@ view: conversation {
           sql: ${total_kontrol_related_issues} / NULLIF(${reservations_kustomer.total_reservations},0) ;;
           value_format_name: decimal_2
         }
+
   measure: total_kfc_related_issues_per_reservation {
     label: "Total KFC Related issues by reservation"
     type: number
