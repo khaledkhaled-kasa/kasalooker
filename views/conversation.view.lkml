@@ -1520,7 +1520,7 @@ view: conversation {
 
         measure: total_kontrol_related_issues {
           type: number
-          sql: ${issue_categories_1.unique_conversations_kontrol}+${issue_categories_2.unique_conversations_kontrol}+${issue_categories_3.unique_conversations_kontrol};;
+           sql: ${issue_categories_1.unique_conversations_kontrol}+${issue_categories_2.unique_conversations_kontrol}+${issue_categories_3.unique_conversations_kontrol};;
         #   sql: CASE WHEN ${issue_categories_1.kontrol_influenced}
         #       OR ${issue_categories_2.kontrol_influenced}
         #       OR ${issue_categories_3.kontrol_influenced} THEN ${issues}
@@ -1558,6 +1558,36 @@ view: conversation {
     sql: ${total_kfc_related_issues} / NULLIF(${reservations_kustomer.total_reservations},0) ;;
     value_format_name: decimal_2
   }
+  measure: total_affected_reservation_kontrol {
+    label: "# Of Affected Rez by Kontrol Issues"
+    type: count_distinct
+    sql: CASE WHEN (${issue_categories_1.kontrol_influenced} or${issue_categories_2.kontrol_influenced} or ${issue_categories_3.kontrol_influenced})
+    and ( ${reservations_kustomer.status} ="confirmed" OR  ${reservations_kustomer.status}="checked_in") THEN ${reservations_kustomer.confirmationcode}
+    ELSE NULL
+    END;;
+
+  }
+  measure: total_affected_reservation_kfc {
+    label: "# Of Affected Rez by KFC Issues"
+    type: count_distinct
+    sql: CASE WHEN (${issue_categories_1.kfcinfluenced}
+          OR ${issue_categories_2.kfcinfluenced}
+          OR ${issue_categories_3.kfcinfluenced} ) and ( ${reservations_kustomer.status} ="confirmed" OR  ${reservations_kustomer.status}="checked_in") THEN ${reservations_kustomer.confirmationcode}
+    ELSE NULL
+    END;;
+    }
+
+  measure: total_affected_reservation_tech {
+    label: "# Of Affected Rez by Tech Issues"
+    type: count_distinct
+    sql: CASE WHEN ( ${issue_categories_1.tech_influenced}
+          OR ${issue_categories_2.tech_influenced}
+          OR ${issue_categories_3.tech_influenced} ) and ( ${reservations_kustomer.status} ="confirmed" OR  ${reservations_kustomer.status}="checked_in") THEN ${reservations_kustomer.confirmationcode}
+    ELSE NULL
+    END;;
+
+    }
+
 
 
       }
