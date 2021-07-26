@@ -1,11 +1,13 @@
 view: KPO_AUDIT {
   derived_table: {
-    sql: select KPO_table.UID, KPO_table.PropCode, KPO_table.status,units.internaltitle,ContractType,FirstAvailableDate,ContractSignedDate
+    sql: select KPO_table.UID, KPO_table.PropCode, KPO_table.status,units.internaltitle,ContractType,FirstAvailableDate,ContractSignedDate, complexes.title
       from
 
                `bigquery-analytics-272822.Gsheets.kpo_overview_clean` KPO_table
              LEFT JOIN `bigquery-analytics-272822.mongo.units` units
               ON units.internaltitle =KPO_table.UID
+                LEFT JOIN `bigquery-analytics-272822.mongo.complexes` complexes
+                  ON units.complex = complexes._id
        ;;
   }
 
@@ -31,6 +33,11 @@ view: KPO_AUDIT {
   dimension: PropCode {
     type: string
     sql: ${TABLE}.PropCode ;;
+  }
+
+  dimension: building_title {
+    type: string
+    sql: ${TABLE}.title ;;
   }
 
   dimension: status {
