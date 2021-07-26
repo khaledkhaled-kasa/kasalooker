@@ -95,9 +95,10 @@ view: gx_scorecard {
                       GROUP BY 1,2),
 
                       FCRR AS
-                      (SELECT *
+                      (SELECT name, AVG(value) value
                       FROM Gsheets.kustomer_metrics
-                      WHERE {% condition review_month %} TIMESTAMP(kustomer_metrics.date) {% endcondition %}),
+                      WHERE {% condition review_month %} TIMESTAMP(kustomer_metrics.date) {% endcondition %}
+                      GROUP BY 1),
 
 
                       CSAT AS (WITH CAU AS (WITH CAU_MODIFIED AS (SELECT conversation_id, max(_fivetran_synced) _fivetran_synced
@@ -136,7 +137,7 @@ view: gx_scorecard {
                       round(MFRT_email,2) AS MFRT_email,
                       round(MFRT_chat,2) AS MFRT_chat,
                       NULL as weighted_response_time,
-                      round(FCRR.value,2) AS FCRR,
+                      round((FCRR.value),2) AS FCRR,
                       round(CSAT.CSAT,2) AS CSAT,
                       NULL as comms_quality_score,
                       NULL as total_score

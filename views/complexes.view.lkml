@@ -69,6 +69,7 @@ view: complexes {
     type: string
     primary_key: yes
     sql: ${TABLE}.title ;;
+
   }
 
   dimension: city {
@@ -90,7 +91,7 @@ view: complexes__address {
     sql: SELECT address, _id, internaltitle, title
         FROM complexes
       ;;
-  datagroup_trigger: units_kpo_overview_default_datagroup
+    datagroup_trigger: units_kpo_overview_default_datagroup
   }
 
   dimension: title {
@@ -110,7 +111,7 @@ view: complexes__address {
     sql: ${TABLE}.internaltitle ;;
   }
 
-    dimension: address_city {
+  dimension: address_city {
     hidden: yes
     view_label: "Core Dimensions"
     label: "City from C2"
@@ -128,7 +129,7 @@ view: complexes__address {
           END;;
   }
 
-dimension: address_city_revised {
+  dimension: address_city_revised {
     hidden: yes
     view_label: "Core Dimensions"
     label: "City (Incl. Complexes)"
