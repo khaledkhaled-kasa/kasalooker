@@ -74,6 +74,8 @@ explore: breezeway_export {
   fields: [
     ALL_FIELDS*,
     -complexes.title,
+    -complexes_general_building.title,
+    -complexes.externalrefs_stripepayoutaccountid,-complexes_general_building.externalrefs_stripepayoutaccountid,
     -units.propcode,
     -pom_qa_walkthrough_survey.total_qas_completed_percentage
   ]
