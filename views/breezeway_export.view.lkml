@@ -251,6 +251,7 @@ view: breezeway_export {
   }
 
   dimension: property {
+    hidden: yes
     type: string
     sql: ${TABLE}.Property ;;
   }
@@ -264,15 +265,13 @@ view: breezeway_export {
   dimension: property_internal_id {
     hidden: no
     type: string
-    sql: CASE WHEN ${TABLE}.Property = 'La Monarca (Full Building)' THEN 'LMH-0'
-    ELSE ${TABLE}.Property_Internal_ID
-    END;;
+    sql: ${TABLE}.Property_Internal_ID;;
   }
 
   dimension: unit {
     hidden: no
     type: string
-    sql: CASE WHEN ${TABLE}.Property = 'La Monarca (Full Building)' THEN 'LMH-0'
+    sql: CASE WHEN ${TABLE}.Property_Internal_ID IS NULL THEN CONCAT(${TABLE}.Building,"-0")
     ELSE ${units.internaltitle}
     END ;;
   }
@@ -398,8 +397,8 @@ view: breezeway_export {
     view_label: "Building and Geographic Information"
     label: "Building Title"
     type: string
-    sql: CASE WHEN ${property} = 'La Monarca (Full Building)' THEN 'LaMonarcaH'
-    ELSE ${complexes.title}
+    sql: CASE WHEN ${TABLE}.Property_Internal_ID IS NOT NULL THEN  ${complexes.title}
+    ELSE ${complexes_general_building.title}
     END;;
   }
 
@@ -409,7 +408,7 @@ view: breezeway_export {
     view_label: "Building and Geographic Information"
     label: "Property Code"
     type: string
-    sql: CASE WHEN ${property} = 'La Monarca (Full Building)' THEN 'LMH'
+    sql: CASE WHEN ${TABLE}.Property_Internal_ID IS NULL THEN ${TABLE}.Building
     ELSE ${units.propcode}
     END;;
   }

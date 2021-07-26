@@ -94,6 +94,13 @@ explore: breezeway_export {
     sql_on: ${complexes._id} = ${units.complex} ;;
   }
 
+  join: complexes_general_building { ## This will pull building title for general buildings where there is no property internal ids
+    from: complexes
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${complexes_general_building.internaltitle} = ${breezeway_export.building};;
+  }
+
   join: pom_information {
     view_label: "POM Information"
     type: left_outer
@@ -604,12 +611,9 @@ explore: devices {
 }
 
 explore: bw_cleaning {
-  fields: [
-    ALL_FIELDS*,
-    -complexes.title,
-    -units.propcode,
-    -bw_cleaning.pct_on_time_pom_score,
-    -bw_cleaning.pct_on_time_pom_score_weighted
+  fields: [bw_cleaning.title,bw_cleaning.propcode, bw_cleaning.id, bw_cleaning.property_internal_id, bw_cleaning.tags, bw_cleaning.name_revised,
+    bw_cleaning.assigned_date, bw_cleaning.completed_date_date, bw_cleaning.unit,
+    hk_cleaning_pricing.pricing, hk_cleaning_pricing.total_pricing, hk_pricing_companies.company, units.bedrooms
   ]
   group_label: "Software"
   label: "BW Cleaning Pricing Schedule"
@@ -628,6 +632,13 @@ explore: bw_cleaning {
     sql_on: ${complexes._id} = ${units.complex};;
   }
 
+
+  join: complexes_general_building { ## This will pull building title for general buildings where there is no property internal ids
+    from: complexes
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${complexes_general_building.internaltitle} = ${bw_cleaning.building};;
+  }
 
   join: hk_cleaning_pricing {
     type: left_outer

@@ -39,7 +39,7 @@ view: hk_cleaning_pricing {
     type: sum
     sql_distinct_key: ${bw_cleaning.id};;
     sql: ${pricing};;
-    drill_fields: [bw_cleaning.id,hk_pricing_companies.company, units.internaltitle, units.bedrooms, bw_cleaning.name, bw_cleaning.name_revised, pricing]
+    drill_fields: [bw_cleaning.id,hk_pricing_companies.company, bw_cleaning.unit, units.bedrooms, bw_cleaning.name, bw_cleaning.name_revised, pricing]
   }
 
 }
