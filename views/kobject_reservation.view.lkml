@@ -357,12 +357,6 @@ view: kobject_reservation {
       sql: ${TABLE}.custom_confirmation_code_str ;;
       drill_fields: [id, name]
     }
-  # measure: reservations_Kontrol {
-  #   type: count_distinct
-  #   sql: case when ${issue_categories_1.Kontrol_Influenced}=True then
-  #   ${custom_confirmation_code_str}  ELSE NULL end ;;
-  #   drill_fields: [custom_confirmation_code_str]
-  # }
 
 
   }

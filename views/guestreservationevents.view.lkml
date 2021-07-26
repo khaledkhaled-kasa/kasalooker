@@ -6,10 +6,10 @@ view: guestreservationevents{
     sn.eventdetails.eventtimezone as eventtimezone ,
     sn.eventdetails.eventlocaltime  as eventlocaltime,
     sn.eventdetails,
-    sn.eventdetails.source as eventdetailsSource
+    sn.eventdetails.source as eventdetailsSource,
+    DENSE_RANK () over(partition by sn.eventdetails.source, date(TIMESTAMP(datetime(safe_cast(sn.eventdetails.eventlocaltime as timestamp),sn.eventdetails.eventtimezone))) order by sn.eventdetails.eventlocaltime) as eventRank
     FROM `bigquery-analytics-272822.mongo.guestreservationevents` sn
-    JOIN dbt.reservations_v3 re on  sn.reservation= re._id
-       ;; # sn.eventdetails.eventlocaltime  as eventlocaltime ,
+    JOIN dbt.reservations_v3 re on  sn.reservation= re._id;;
   }
 
   dimension: _id {
@@ -76,7 +76,11 @@ view: guestreservationevents{
     ;;
     hidden: yes
   }
-
+  dimension: eventRank {
+    type: number
+    hidden: yes
+    sql: ${TABLE}.eventRank ;;
+  }
 
   dimension_group: eventlocaltime {
     type: time
@@ -137,14 +141,14 @@ view: guestreservationevents{
     drill_fields: [detail*]
   }
   measure:  total_reservation_noise {
-    label: "Total reservations (Noise)"
+    label: "Total Rez W/Noise Incidents "
     type: count_distinct
     sql: ${confirmationcode} ;;
-    filters: [event: "noise.alert.warning"]
+    filters: [eventdetailsSource: "%noiseFinalWarning%"]
     drill_fields: [detail*]
   }
   measure:  total_reservation_smoke {
-    label: "Total reservations (Smoke)"
+    label: "Total Rez W/Smoke Incidents "
     type: count_distinct
     sql: CASE WHEN ${TABLE}.event like "%smoke.alert.start%"  and ${TABLE}.eventdetailsSource="kasa-automessages-production-smokeAlert" then ${confirmationcode}  ELSE NULL END ;;
     drill_fields: [detail*]
@@ -169,6 +173,27 @@ view: guestreservationevents{
     type: count_distinct
     sql: ${_id} ;;
     filters: [eventdetailsSource: "%noiseFinalWarning%"]
+    drill_fields: [detail*]
+  }
+  measure:  total_first_Smoke_alert {
+    label: "First Smoke Alerts"
+    type: count_distinct
+    sql: ${_id} ;;
+    filters: [eventdetailsSource: "%kasa-automessages-production-smokeAlert%", eventRank: "1"]
+    drill_fields: [detail*]
+  }
+  measure:  total_second_Smoke_alert {
+    label: "Second Smoke Alerts"
+    type: count_distinct
+    sql: ${_id} ;;
+    filters: [eventdetailsSource: "%kasa-automessages-production-smokeAlert%", eventRank: "2"]
+    drill_fields: [detail*]
+  }
+  measure:  total_triple_Smoke_alert {
+    label: "Triple Smoke Alerts"
+    type: count_distinct
+    sql: ${_id} ;;
+    filters: [eventdetailsSource: "%kasa-automessages-production-smokeAlert%", eventRank: "3"]
     drill_fields: [detail*]
   }
 

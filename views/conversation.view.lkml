@@ -1513,6 +1513,7 @@ view: conversation {
            sql: ${issue_categories_1.unique_conversations_kontrol}+${issue_categories_2.unique_conversations_kontrol}+${issue_categories_3.unique_conversations_kontrol};;
         }
 
+
         measure: total_kfc_related_issues {
           label: "Total KFC Related issues"
           type: number
@@ -1546,6 +1547,7 @@ view: conversation {
     and ( ${reservations_kustomer.status} ="confirmed" OR  ${reservations_kustomer.status}="checked_in") THEN ${reservations_kustomer.confirmationcode}
     ELSE NULL
     END;;
+    #drill_fields: [reservations_kustomer.confirmationcode, total_kontrol_related_issues]
 
   }
   measure: total_affected_reservation_kfc {
