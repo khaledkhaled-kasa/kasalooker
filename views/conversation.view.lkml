@@ -1505,12 +1505,14 @@ view: conversation {
           #         OR ${issue_categories_3.tech_influenced} THEN ${issues}
           #   ELSE NULL
           #   END;;
-            # drill_fields: [issue_categories_1.tech_influenced,custom_issue_category_1_tree,issue_categories_2.tech_influenced,custom_issue_category_2_tree,issue_categories_3.tech_influenced,custom_issue_category_3_tree,issues]
+         drill_fields: [message.conversation_id,issue_categories_1.tech_influenced,custom_issue_category_1_tree,issue_categories_2.tech_influenced,custom_issue_category_2_tree,issue_categories_3.tech_influenced,custom_issue_category_3_tree]
         }
 
         measure: total_kontrol_related_issues {
           type: number
            sql: ${issue_categories_1.unique_conversations_kontrol}+${issue_categories_2.unique_conversations_kontrol}+${issue_categories_3.unique_conversations_kontrol};;
+         drill_fields: [message.conversation_id,issue_categories_1.kontrol_influenced,custom_issue_category_1_tree,issue_categories_2.kontrol_influenced,custom_issue_category_2_tree,issue_categories_3.kontrol_influenced,custom_issue_category_3_tree]
+
         }
 
 
@@ -1518,6 +1520,8 @@ view: conversation {
           label: "Total KFC Related issues"
           type: number
           sql: ${issue_categories_1.unique_conversations_kfc}+${issue_categories_2.unique_conversations_kfc}+${issue_categories_3.unique_conversations_kfc};;
+          drill_fields: [message.conversation_id,issue_categories_1.kfc_influenced,custom_issue_category_1_tree,issue_categories_2.kfc_influenced,custom_issue_category_2_tree,issue_categories_3.kfc_influenced,custom_issue_category_3_tree]
+
         }
 
 
@@ -1526,12 +1530,14 @@ view: conversation {
           type: number
           sql: ${total_tech_related_issues} / NULLIF(${reservations_kustomer.total_reservations},0) ;;
           value_format_name: decimal_2
+          hidden: yes
         }
 
         measure: total_kontrol_related_issues_per_reservation {
           type: number
           sql: ${total_kontrol_related_issues} / NULLIF(${reservations_kustomer.total_reservations},0) ;;
           value_format_name: decimal_2
+          hidden: yes
         }
 
   measure: total_kfc_related_issues_per_reservation {
@@ -1539,6 +1545,7 @@ view: conversation {
     type: number
     sql: ${total_kfc_related_issues} / NULLIF(${reservations_kustomer.total_reservations},0) ;;
     value_format_name: decimal_2
+    hidden: yes
   }
   measure: total_affected_reservation_kontrol {
     label: "# Of Affected Rez by Kontrol Issues"
@@ -1547,7 +1554,7 @@ view: conversation {
     and ( ${reservations_kustomer.status} ="confirmed" OR  ${reservations_kustomer.status}="checked_in") THEN ${reservations_kustomer.confirmationcode}
     ELSE NULL
     END;;
-    #drill_fields: [reservations_kustomer.confirmationcode, total_kontrol_related_issues]
+    drill_fields: [reservations_kustomer.confirmationcode, total_kontrol_related_issues]
 
   }
   measure: total_affected_reservation_kfc {
