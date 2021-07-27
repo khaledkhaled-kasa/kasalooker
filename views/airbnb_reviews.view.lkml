@@ -256,7 +256,7 @@ view: airbnb_reviews {
     type: average
     value_format: "0.00"
     sql: ${TABLE}.Cleanliness_Rating ;;
-    drill_fields: [airbnb_details*, review_date, ds_checkout_date , units.internaltitle, cleanliness_comments, value_comments, overall_comments]
+    drill_fields: [review_date, ds_checkin_date, ds_checkout_date , units.internaltitle, cleanliness_rating, cleanliness_comments, value_comments, overall_comments]
 
   }
 
