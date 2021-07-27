@@ -3,7 +3,6 @@ view: pom_weighting_standards_final {
   derived_table: {
     sql:  SELECT *
           FROM `bigquery-analytics-272822.POM_Standards.POM_Weighting_Standards_Final`;;
-    datagroup_trigger: pom_checklist_default_datagroup
   }
 
   dimension: standard_type {
@@ -101,8 +100,4 @@ view: pom_weighting_standards_final {
     }
   }
 
-  measure: count {
-    type: count
-    drill_fields: []
-  }
 }

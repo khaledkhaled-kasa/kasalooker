@@ -166,5 +166,24 @@ view: devices {
 
   }
 
+  measure: fresh_air_score {
+    type: number
+    view_label: "POM Scorecard"
+    hidden: no
+    sql:  CASE WHEN ${pct_online_devices} >= 0.93 THEN 1
+          ELSE ${pct_online_devices} / NULLIF(0.93,0)
+          END;;
+    value_format: "0.0"
+  }
+
+  measure: fresh_air_score_weighted {
+    label: "Fresh Air Score (Weighted)"
+    view_label: "POM Scorecard"
+    type: number
+    sql: ${fresh_air_score} * ${pom_information.FreshAir_Weighting} ;;
+    value_format: "0.00"
+  }
+
+
 
 }

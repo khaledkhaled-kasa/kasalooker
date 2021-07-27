@@ -16,7 +16,7 @@ view: pom_qa_walkthrough_survey_agg {
       FROM c1 c
         LEFT JOIN MostRecentQA ref
         ON c.Unit = ref.Unit
-       ;;
+      ;;
     datagroup_trigger: pom_checklist_default_datagroup
   }
 
@@ -55,33 +55,33 @@ view: pom_qa_walkthrough_survey_agg {
     sql: ${TABLE}.MostRecentPOM ;;
   }
 
-  measure: count {
-    type: count
-    drill_fields: [detail*]
-  }
+  # measure: count {
+  #   type: count
+  #   drill_fields: [detail*]
+  # }
 
-  measure: total_qas_completed_percentage {
-    label: "Pct QAs Completed"
-    description: "Total QAs completed as a percentage of check-ins. Should be used in conjunstion with a check-in date filter"
-    type: number
-    sql: ${count} / NULLIF(${check_in_data.total_checkins},0) ;;
-  }
+  # measure: total_qas_completed_percentage {
+  #   label: "Pct QAs Completed"
+  #   description: "Total QAs completed as a percentage of check-ins. Should be used in conjunstion with a check-in date filter"
+  #   type: number
+  #   sql: ${count} / NULLIF(${check_in_data.total_checkins},0) ;;
+  # }
 
-  measure: total_qas_completed_score {
-    label: "Total QAs Completed Score"
-    type: number
-    sql:  CASE WHEN ${total_qas_completed_percentage} >= ${pom_information.PctQAsCompleted_Standard} THEN 1
-            ELSE ${total_qas_completed_percentage} / NULLIF(${pom_information.PctQAsCompleted_Standard},0)
-          END;;
-  }
+  # measure: total_qas_completed_score {
+  #   label: "Total QAs Completed Score"
+  #   type: number
+  #   sql:  CASE WHEN ${total_qas_completed_percentage} >= ${pom_information.PctQAsCompleted_Standard} THEN 1
+  #           ELSE ${total_qas_completed_percentage} / NULLIF(${pom_information.PctQAsCompleted_Standard},0)
+  #         END;;
+  # }
 
-  measure: total_qas_completed_score_weighted {
-    label: "Total QAs Completed Score (Weighting)"
-    type: number
-    sql: ${total_qas_completed_score} * ${pom_information.QACompleted_Weighting} ;;
-  }
+  # measure: total_qas_completed_score_weighted {
+  #   label: "Total QAs Completed Score (Weighting)"
+  #   type: number
+  #   sql: ${total_qas_completed_score} * ${pom_information.QACompleted_Weighting} ;;
+  # }
 
-  set: detail {
-    fields: [visit_date, unit, pom_name]
-  }
+  # set: detail {
+  #   fields: [visit_date, unit, pom_name]
+  # }
 }

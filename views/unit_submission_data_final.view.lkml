@@ -193,11 +193,11 @@ view: unit_submission_data_final {
 
   measure: refreshes_up_to_date_score {
     type: number
-    description: "If Pct Refreshes Up To Date >82% Then 1, Else Divide by 82"
-    sql:  CASE WHEN ${pct_refreshes_up_to_date} > ${pom_information.Refreshes_Standard}        THEN 1
-           ELSE ${pct_refreshes_up_to_date}/NULLIF(${pom_information.Refreshes_Standard},0)
+    description: "If Pct Refreshes Up To Date > 70% Then 1, Else Divide by 70"
+    sql:  CASE WHEN ${pct_refreshes_up_to_date} > 0.7 THEN 1
+           ELSE ${pct_refreshes_up_to_date}/NULLIF(0.7,0)
           END;;
-    value_format_name: percent_2
+    value_format: "0.0"
   }
 
   measure: refreshes_up_to_date_score_weighted {
@@ -205,7 +205,7 @@ view: unit_submission_data_final {
     label: "Refreshes Up To Date Score (Weighted)"
     description: "Multiplies Refreshed Up To Date Score by Designated Weight"
     sql: ${refreshes_up_to_date_score}*${pom_information.Refreshes_Weighting} ;;
-    value_format_name: percent_2
+    value_format: "0.00"
   }
 
   measure: pct_visits_up_to_date {
@@ -214,16 +214,4 @@ view: unit_submission_data_final {
     value_format_name: percent_2
   }
 
-  set: detail {
-    fields: [
-      visit_date,
-      name,
-      email,
-      building,
-      unit,
-      visit_type,
-      most_recent_refresh,
-      most_recent_routine_visit
-    ]
-  }
 }

@@ -52,21 +52,24 @@ view: pom_meeting_attendance {
   measure: meeting_attendance_rate {
     type: number
     sql: ${total_meetings_attended}/NULLIF((${total_meetings_attended} + ${total_meetings_not_attended}),0) ;;
-    value_format_name: percent_2
+    value_format: "0%"
   }
 
   measure: meeting_attendance_pom_score {
     label: "Meeting Attendance POM Score"
+    view_label: "POM Scorecard"
     type: number
-    sql:  CASE WHEN ${meeting_attendance_rate} >= ${pom_information.MeetingAttendanceStandard} THEN 1
-          ELSE ${meeting_attendance_rate}/NULLIF(${pom_information.MeetingAttendanceStandard},0)
+    sql:  CASE WHEN ${meeting_attendance_rate} >= 1 THEN 1
+          ELSE ${meeting_attendance_rate}/NULLIF(1,0)
           END;;
   }
 
   measure: meeting_attendance_pom_score_weighted {
     type: number
     label: "Meeting Attendance POM Score (Weighted)"
+    view_label: "POM Scorecard"
     sql: ${meeting_attendance_pom_score} * ${pom_information.Meeting_Attendance_Weighting} ;;
+    value_format: "0.00"
   }
 
   measure: total_meetings_held {

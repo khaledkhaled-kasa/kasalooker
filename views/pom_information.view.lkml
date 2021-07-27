@@ -9,13 +9,10 @@ view: pom_information {
                   w.UnitsVisitedWeight,
                   w. CleaningScoreWeight,
                   w.MeetingAttendanceWeight,
-                  w.QACompletedWeight,
-                  s.*
+                  w.QACompletedWeight
           FROM `bigquery-analytics-272822.Gsheets.pom_information` p
             LEFT JOIN ${pom_weighting_standards_final_transposed.SQL_TABLE_NAME} w
-            ON p.WeightingCategory = w.WeightingCategory
-            CROSS JOIN `bigquery-analytics-272822.Gsheets.pom_wide_standards` s ;;
-    datagroup_trigger: pom_checklist_default_datagroup
+            ON p.WeightingCategory = w.WeightingCategory ;;
   }
 
   dimension: Prop_Code {
@@ -25,6 +22,7 @@ view: pom_information {
   }
 
   dimension: PropOfficial {
+    hidden: yes
     type: string
     sql: ${TABLE}.PropOfficial ;;
   }
@@ -68,7 +66,15 @@ view: pom_information {
     sql: ${TABLE}.HK_Hybrid;;
   }
 
+  dimension: weighting_category {
+    hidden: no
+    description: "This data point is pulled from Col BL of the KPO Properties tab."
+    type: string
+    sql: ${TABLE}.WeightingCategory;;
+  }
+
   dimension: property {
+    hidden: yes
     type: string
     sql: ${TABLE}.Property ;;
   }
@@ -130,39 +136,7 @@ view: pom_information {
     END ;;
   }
 
-  dimension: region {
-    type: string
-    sql: ${TABLE}.region ;;
-  }
 
-  dimension: weighting_category {
-    hidden: yes
-    type: string
-    sql: ${TABLE}.weighting_category ;;
-  }
-
-  dimension: location {
-    type: string
-    sql: ${TABLE}.location ;;
-  }
-
-  dimension: employment {
-    hidden: yes
-    type: string
-    sql: ${TABLE}.employment ;;
-  }
-
-  dimension: status {
-    hidden: yes
-    type: string
-    sql: ${TABLE}.status ;;
-  }
-
-  dimension: type {
-    hidden: yes
-    type: string
-    sql: ${TABLE}.type ;;
-  }
 
   dimension: CleaningScoreWeight {
     hidden: yes
@@ -170,12 +144,6 @@ view: pom_information {
     sql: ${TABLE}.CleaningScoreWeight/100.0 ;;
   }
 
-  dimension: HOM {
-    hidden: yes
-    type: string
-    label: "HOM"
-    sql: ${TABLE}.HOM ;;
-  }
 
   dimension: PctQAsCompleted {
     hidden: yes
@@ -244,36 +212,17 @@ view: pom_information {
   }
 
 
-  measure: PctQAsCompleted_Standard {
-    hidden: yes
-    description: "Pct QAs Completed to achieve to get a perfect 1."
-    type: max
-    sql: ${PctQAsCompleted} ;;
-  }
-
   measure: QACompleted_Weighting {
     hidden: yes
     type: max
     sql: ${QACompletedWeight} ;;
   }
 
-  measure: Cleaning_Score_Standard {
-    hidden: yes
-    description: "Avg Cleaning Score to Achieve To Get a Perfect 1"
-    type: max
-    sql: ${AvgCleaningScore} ;;
-  }
 
   measure: Cleaning_Score_Weighting {
     hidden: yes
     type: max
     sql: ${CleaningScoreWeight} ;;
-  }
-
-  measure: Refreshes_Standard {
-    hidden: yes
-    type: max
-    sql: ${Refreshes} ;;
   }
 
   measure: Refreshes_Weighting {
@@ -282,11 +231,6 @@ view: pom_information {
     sql: ${Refreshes_Weight} ;;
   }
 
-  measure: MeetingAttendanceStandard {
-    hidden: yes
-    type: max
-    sql: ${MeetingAttendance} ;;
-  }
 
   measure: Meeting_Attendance_Weighting {
     hidden: yes
@@ -294,11 +238,6 @@ view: pom_information {
     sql: ${MeetingAttendanceWeight} ;;
   }
 
-  measure: BWTasksOnTimeStandard {
-    hidden: yes
-    type: max
-    sql: ${BWTasksOnTime} ;;
-  }
 
   measure: BWTasksOnTime_Weighting {
     hidden: yes
@@ -306,16 +245,12 @@ view: pom_information {
     sql: ${BWStandardWeight} ;;
   }
 
-  measure: FreshAirStandard {
-    hidden: yes
-    type: max
-    sql: ${FreshAirMonitoring} ;;
-  }
 
   measure: FreshAir_Weighting {
     hidden: yes
     type: max
     sql: ${FreshAirWeight} ;;
   }
+
 
 }

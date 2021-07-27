@@ -13,7 +13,6 @@ view: pom_weighting_standards_final_transposed {
 
           FROM `bigquery-analytics-272822.POM_Standards.POM_Weighting_Standards_Final`
           Group By 1 ;;
-    datagroup_trigger: pom_checklist_default_datagroup
   }
 
   dimension: Weighting_Category {
@@ -74,4 +73,22 @@ view: pom_weighting_standards_final_transposed {
     type: string
     sql: ${TABLE}.QACompletedWeight ;;
   }
+
+
+
+
+  # measure: total_qas_completed_score {
+  #   label: "Total QAs Completed Score"
+  #   type: number
+  #   sql:  CASE WHEN ${pom_qa_walkthrough_survey.total_qas_completed_percentage} >= ${pom_information.PctQAsCompleted_Standard} THEN 1
+  #         ELSE ${pom_qa_walkthrough_survey.total_qas_completed_percentage} / NULLIF(${pom_information.PctQAsCompleted_Standard},0)
+  #         END;;
+  # }
+
+  # measure: total_qas_completed_score_weighted {
+  #   label: "Total QAs Completed Score (Weighting)"
+  #   type: number
+  #   sql: ${total_qas_completed_score} * ${pom_information.QACompleted_Weighting} ;;
+  # }
+
 }

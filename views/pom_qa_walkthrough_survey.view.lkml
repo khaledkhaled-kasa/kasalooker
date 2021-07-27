@@ -351,19 +351,7 @@ GROUP BY
     sql: ${total_qas_completed} / NULLIF(${reservations_v3.number_of_checkins},0) ;;
   }
 
-  measure: total_qas_completed_score {
-    label: "Total QAs Completed Score"
-    type: number
-    sql:  CASE WHEN ${total_qas_completed_percentage} >= ${pom_information.PctQAsCompleted_Standard} THEN 1
-            ELSE ${total_qas_completed_percentage} / NULLIF(${pom_information.PctQAsCompleted_Standard},0)
-          END;;
-  }
 
-  measure: total_qas_completed_score_weighted {
-    label: "Total QAs Completed Score (Weighting)"
-    type: number
-    sql: ${total_qas_completed_score} * ${pom_information.QACompleted_Weighting} ;;
-  }
 
 
 

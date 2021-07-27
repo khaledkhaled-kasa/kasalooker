@@ -48,14 +48,10 @@ datagroup: ximble_default_datagroup {
   max_cache_age: "1 hour"
 }
 
-explore: pom_weighting_standards_initial {
-  group_label: "POM Weights"
-  label: "POM Weighting Test"
-}
 
 explore: pom_weighting_standards_final {
-  group_label: "POM Weights"
-  label: "POM Weighting Test 2"
+  group_label: "PropOps"
+  label: "POM Scorecard Weights"
 }
 
 
@@ -79,7 +75,7 @@ explore: breezeway_export {
     -units.propcode,
     -pom_qa_walkthrough_survey.total_qas_completed_percentage
   ]
-  group_label: "Software"
+  group_label: "PropOps"
   persist_with: breezeway_default_datagroup
   from: breezeway_export
   label: "Breezeway (Exports)"
@@ -276,13 +272,6 @@ explore: units_buildings_information {
     type: left_outer
     relationship: one_to_one
     sql_on: ${units_buildings_information.internaltitle} = ${noiseaware.building_unit} ;;
-  }
-
-  join: freshair_data {
-    view_label: "Fresh Air Data (Export)"
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${units_buildings_information.internaltitle} = ${freshair_data.uid} ;;
   }
 
 
@@ -583,6 +572,8 @@ explore: okrs_master {
 explore: devices {
   group_label: "Product & Tech"
   label: "Guest Alerts (Smoke & Noise)"
+  fields: [ALL_FIELDS*,
+    -devices.fresh_air_score,-devices.fresh_air_score_weighted]
   from: devices
 
   join: units {
@@ -617,7 +608,7 @@ explore: bw_cleaning {
     bw_cleaning.assigned_date, bw_cleaning.completed_date_date, bw_cleaning.unit,
     hk_cleaning_pricing.pricing, hk_cleaning_pricing.total_pricing, hk_pricing_companies.company, units.bedrooms
   ]
-  group_label: "Software"
+  group_label: "PropOps"
   label: "BW Cleaning Pricing Schedule"
   from: breezeway_export
   view_label: "BW Export"
@@ -675,7 +666,7 @@ explore: pom_qa_walkthrough_survey {
     -pom_qa_walkthrough_survey.airbnb_reviews_POM_Walkthrough, -pom_qa_walkthrough_survey.real_time_POM_Walkthrough
   ]
   persist_with: pom_checklist_default_datagroup
-  group_label: "Software"
+  group_label: "PropOps"
   label: "POM QA Walkthrough Checklist"
 
   join: hk_partners {
