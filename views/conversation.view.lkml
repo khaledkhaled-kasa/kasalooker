@@ -1494,17 +1494,13 @@ view: conversation {
         measure: total_issues {
           type: sum
           sql:
-          (CASE WHEN ${custom_issue_category_1_tree} is not null THEN 1 ELSE 0 END) + (CASE WHEN ${custom_issue_category_2_tree} is not null THEN 1 ELSE 0 END) + (CASE WHEN ${custom_issue_category_3_tree} is not null THEN 1 ELSE 0 END) ;;
+          (CASE WHEN  ${custom_issue_category_1_tree} is not null THEN 1 ELSE 0 END) + (CASE WHEN ${custom_issue_category_2_tree} is not null THEN 1 ELSE 0 END) + (CASE WHEN ${custom_issue_category_3_tree} is not null THEN 1 ELSE 0 END) ;;
         }
 
         measure: total_tech_related_issues {
           type: number
-          sql:${issue_categories_1.unique_conversations_tech}+${issue_categories_2.unique_conversations_tech}+${issue_categories_3.unique_conversations_tech};;
-          # CASE WHEN ${issue_categories_1.tech_influenced}
-          #         OR ${issue_categories_2.tech_influenced}
-          #         OR ${issue_categories_3.tech_influenced} THEN ${issues}
-          #   ELSE NULL
-          #   END;;
+          sql: ${issue_categories_1.unique_conversations_tech}+${issue_categories_2.unique_conversations_tech}+${issue_categories_3.unique_conversations_tech};;
+
          drill_fields: [message.conversation_id,issue_categories_1.tech_influenced,custom_issue_category_1_tree,issue_categories_2.tech_influenced,custom_issue_category_2_tree,issue_categories_3.tech_influenced,custom_issue_category_3_tree]
         }
 
@@ -1523,6 +1519,14 @@ view: conversation {
           drill_fields: [message.conversation_id,issue_categories_1.kfc_influenced,custom_issue_category_1_tree,issue_categories_2.kfc_influenced,custom_issue_category_2_tree,issue_categories_3.kfc_influenced,custom_issue_category_3_tree]
 
         }
+  measure: total_iot_related_issues {
+    label: "Total A&IoT Related issues"
+    type: number
+    sql:  ${issue_categories_1.unique_conversations_iot}+${issue_categories_2.unique_conversations_iot}+${issue_categories_3.unique_conversations_iot};;
+    # filters: [message.conversation_id: "-NULL"]
+    drill_fields: [message.conversation_id,issue_categories_1.access_io_tinfluenced,custom_issue_category_1_tree,issue_categories_2.access_io_tinfluenced,custom_issue_category_2_tree,issue_categories_3.access_io_tinfluenced,custom_issue_category_3_tree]
+
+  }
 
 
 
@@ -1565,6 +1569,7 @@ view: conversation {
           OR ${issue_categories_3.kfcinfluenced} ) and ( ${reservations_kustomer.status} ="confirmed" OR  ${reservations_kustomer.status}="checked_in") THEN ${reservations_kustomer.confirmationcode}
     ELSE NULL
     END;;
+    drill_fields: [reservations_kustomer.confirmationcode, total_kfc_related_issues]
     }
 
   measure: total_affected_reservation_tech {
@@ -1575,6 +1580,20 @@ view: conversation {
           OR ${issue_categories_3.tech_influenced} ) and ( ${reservations_kustomer.status} ="confirmed" OR  ${reservations_kustomer.status}="checked_in") THEN ${reservations_kustomer.confirmationcode}
     ELSE NULL
     END;;
+    drill_fields: [reservations_kustomer.confirmationcode, total_tech_related_issues]
+
+
+    }
+  measure: total_affected_reservation_iot {
+    label: "# Of Affected Rez by  A&IoT Issues"
+    type: count_distinct
+    sql: CASE WHEN ( ${issue_categories_1.access_io_tinfluenced}
+          OR ${issue_categories_2.access_io_tinfluenced}
+          OR ${issue_categories_3.access_io_tinfluenced} ) and ( ${reservations_kustomer.status} ="confirmed" OR  ${reservations_kustomer.status}="checked_in") THEN ${reservations_kustomer.confirmationcode}
+    ELSE NULL
+    END;;
+    drill_fields: [reservations_kustomer.confirmationcode, total_iot_related_issues]
+
 
     }
 

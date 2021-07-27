@@ -149,7 +149,7 @@ explore: customer {
 explore: gx_cost_allocation {
   from: customer
   label: "GX Cost Allocation"
-  fields: [ALL_FIELDS*,-conversation.total_tech_related_issues, -conversation.total_kfc_related_issues,-conversation.total_kontrol_related_issues,-conversation.total_affected_reservation_kontrol,-conversation.total_affected_reservation_tech,-conversation.total_affected_reservation_kfc]
+  fields: [ALL_FIELDS*,-conversation.total_tech_related_issues, -conversation.total_kfc_related_issues,-conversation.total_kontrol_related_issues,-conversation.total_iot_related_issues,-conversation.total_affected_reservation_kontrol,-conversation.total_affected_reservation_tech,-conversation.total_affected_reservation_kfc,-conversation.total_affected_reservation_iot]
   join: conversation {
 
     type: inner

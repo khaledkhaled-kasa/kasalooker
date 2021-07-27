@@ -84,7 +84,7 @@ view: issue_categories {
     sql: ${conversation.id} ;;
     value_format: "#,##0"
     drill_fields: [conversation.customer_id, conversation.id, conversation.created_date, message.created_date]
-    filters: [kfcinfluenced: "yes"]
+    filters: [kfcinfluenced: "yes",message.conversation_id: "-NULL"]
   }
 
   measure: unique_conversations_iot {
@@ -94,7 +94,7 @@ view: issue_categories {
     sql: ${conversation.id} ;;
     value_format: "###"
     drill_fields: [conversation.customer_id, conversation.id, conversation.created_date, message.created_date]
-    filters: [access_io_tinfluenced: "yes"]
+    filters: [access_io_tinfluenced: "yes" ,message.conversation_id: "-NULL"]
   }
 
   measure: unique_conversations_external {
@@ -104,7 +104,7 @@ view: issue_categories {
     sql: ${conversation.id} ;;
     value_format: "###"
     drill_fields: [conversation.customer_id, conversation.id, conversation.created_date, message.created_date]
-    filters: [external_influenced: "yes"]
+    filters: [external_influenced: "yes",message.conversation_id: "-NULL"]
   }
 
   measure: unique_conversations_kontrol {
@@ -114,7 +114,7 @@ view: issue_categories {
     sql: ${conversation.id} ;;
     value_format: "###"
     drill_fields: [conversation.customer_id, conversation.id, conversation.created_date, message.created_date]
-    filters: [kontrol_influenced: "yes"]
+    filters: [kontrol_influenced: "yes",message.conversation_id: "-NULL"]
   }
 
   measure: unique_conversations_tech {
@@ -124,7 +124,7 @@ view: issue_categories {
     sql: ${conversation.id} ;;
     value_format: "#,##0"
     drill_fields: [conversation.customer_id, conversation.id, conversation.created_date, message.created_date]
-    filters: [tech_influenced: "yes"]
+    filters: [tech_influenced: "yes",message.conversation_id: "-NULL"]
   }
 
 }
