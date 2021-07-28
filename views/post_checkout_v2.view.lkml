@@ -316,6 +316,23 @@ view: post_checkout_v2 {
     sql: ${TABLE}.Token ;;
   }
 
+  dimension: number_of_days {
+    description: "Number of days it took to complete real-time checkin survey post check-in"
+    hidden: yes
+    type:  number
+    sql:  date_diff(${submitted_at_date}, ${reservations_clean.checkoutdate_date}, DAY) ;;
+  }
+
+
+  measure: number_of_days_median {
+    description: "Median number of days it took to complete Post-checkout Survey."
+    label: "Median # of Days to Complete Post-checkout Survey"
+    value_format: "0.0"
+    type:  median_distinct
+    sql_distinct_key: ${confirmationcode} ;;
+    sql: ${number_of_days};;
+  }
+
   measure: count {
     label: "Review Count"
     type: count_distinct

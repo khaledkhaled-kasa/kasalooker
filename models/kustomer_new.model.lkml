@@ -24,7 +24,7 @@ explore: customer {
     -airbnb_reviews.reservation_checkout_month, -airbnb_reviews.reservation_checkout_year, -airbnb_reviews.reservation_checkout_quarter,
     -airbnb_reviews.cleaning_rating_score, -airbnb_reviews.cleaning_rating_score_weighted, -airbnb_reviews.clean_count_5_star_first90, -airbnb_reviews.clean_count_less_than_4_star_first90,
     -airbnb_reviews.count_clean_first90, -airbnb_reviews.net_quality_score_clean_first90, -airbnb_reviews.percent_5_star_clean_first90, -airbnb_reviews.percent_less_than_4_star_clean_first90,
-    -post_checkout_v2.aggregated_comments_all]
+    -post_checkout_v2.aggregated_comments_all, -airbnb_reviews.number_of_days, -post_checkout_v2.number_of_days]
   join: conversation {
     type: inner
     sql_on: ${customer.id} = ${conversation.customer_id};;
