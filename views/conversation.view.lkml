@@ -1493,12 +1493,14 @@ view: conversation {
 
         measure: total_issues {
           type: sum
+          view_label: "Metrics"
           sql:
           (CASE WHEN  ${custom_issue_category_1_tree} is not null THEN 1 ELSE 0 END) + (CASE WHEN ${custom_issue_category_2_tree} is not null THEN 1 ELSE 0 END) + (CASE WHEN ${custom_issue_category_3_tree} is not null THEN 1 ELSE 0 END) ;;
         }
 
         measure: total_tech_related_issues {
           type: number
+          view_label: "Metrics"
           sql: ${issue_categories_1.unique_conversations_tech}+${issue_categories_2.unique_conversations_tech}+${issue_categories_3.unique_conversations_tech};;
 
          drill_fields: [message.conversation_id,issue_categories_1.tech_influenced,custom_issue_category_1_tree,issue_categories_2.tech_influenced,custom_issue_category_2_tree,issue_categories_3.tech_influenced,custom_issue_category_3_tree]
@@ -1506,6 +1508,7 @@ view: conversation {
 
         measure: total_kontrol_related_issues {
           type: number
+          view_label: "Metrics"
            sql: ${issue_categories_1.unique_conversations_kontrol}+${issue_categories_2.unique_conversations_kontrol}+${issue_categories_3.unique_conversations_kontrol};;
          drill_fields: [message.conversation_id,issue_categories_1.kontrol_influenced,custom_issue_category_1_tree,issue_categories_2.kontrol_influenced,custom_issue_category_2_tree,issue_categories_3.kontrol_influenced,custom_issue_category_3_tree]
 
@@ -1514,6 +1517,7 @@ view: conversation {
 
         measure: total_kfc_related_issues {
           label: "Total KFC Related issues"
+          view_label: "Metrics"
           type: number
           sql: ${issue_categories_1.unique_conversations_kfc}+${issue_categories_2.unique_conversations_kfc}+${issue_categories_3.unique_conversations_kfc};;
           drill_fields: [message.conversation_id,issue_categories_1.kfc_influenced,custom_issue_category_1_tree,issue_categories_2.kfc_influenced,custom_issue_category_2_tree,issue_categories_3.kfc_influenced,custom_issue_category_3_tree]
@@ -1521,6 +1525,7 @@ view: conversation {
         }
   measure: total_iot_related_issues {
     label: "Total A&IoT Related issues"
+    view_label: "Metrics"
     type: number
     sql:  ${issue_categories_1.unique_conversations_iot}+${issue_categories_2.unique_conversations_iot}+${issue_categories_3.unique_conversations_iot};;
     # filters: [message.conversation_id: "-NULL"]
@@ -1546,6 +1551,7 @@ view: conversation {
 
   measure: total_kfc_related_issues_per_reservation {
     label: "Total KFC Related issues by reservation"
+    view_label: "Metrics"
     type: number
     sql: ${total_kfc_related_issues} / NULLIF(${reservations_kustomer.total_reservations},0) ;;
     value_format_name: decimal_2
@@ -1553,6 +1559,7 @@ view: conversation {
   }
   measure: total_affected_reservation_kontrol {
     label: "# Of Affected Rez by Kontrol Issues"
+    view_label: "Metrics"
     type: count_distinct
     sql: CASE WHEN (${issue_categories_1.kontrol_influenced} or${issue_categories_2.kontrol_influenced} or ${issue_categories_3.kontrol_influenced})
     and ( ${reservations_kustomer.status} ="confirmed" OR  ${reservations_kustomer.status}="checked_in") THEN ${reservations_kustomer.confirmationcode}
@@ -1563,6 +1570,7 @@ view: conversation {
   }
   measure: total_affected_reservation_kfc {
     label: "# Of Affected Rez by KFC Issues"
+    view_label: "Metrics"
     type: count_distinct
     sql: CASE WHEN (${issue_categories_1.kfcinfluenced}
           OR ${issue_categories_2.kfcinfluenced}
@@ -1574,6 +1582,7 @@ view: conversation {
 
   measure: total_affected_reservation_tech {
     label: "# Of Affected Rez by Tech Issues"
+    view_label: "Metrics"
     type: count_distinct
     sql: CASE WHEN ( ${issue_categories_1.tech_influenced}
           OR ${issue_categories_2.tech_influenced}
@@ -1586,6 +1595,7 @@ view: conversation {
     }
   measure: total_affected_reservation_iot {
     label: "# Of Affected Rez by  A&IoT Issues"
+    view_label: "Metrics"
     type: count_distinct
     sql: CASE WHEN ( ${issue_categories_1.access_io_tinfluenced}
           OR ${issue_categories_2.access_io_tinfluenced}
