@@ -261,6 +261,7 @@ view: airbnb_reviews {
   }
 
   measure: cleaning_rating_score {
+    group_label: "POM Scorecard Metrics"
     type: number
     description: "POM Cleaning Rating Score"
     sql:  CASE WHEN ${avg_cleanliness_rating} > 4.73 THEN 1
@@ -270,6 +271,7 @@ view: airbnb_reviews {
   }
 
   measure: cleaning_rating_score_weighted {
+    group_label: "POM Scorecard Metrics"
     type: number
     label: "POM Cleaning Rating Score (Weighted)"
     description: "POM Cleaning Rating Score (Weighted)"
@@ -280,7 +282,7 @@ view: airbnb_reviews {
 
   measure: count_5_star {
     #view_label: "Metrics"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "Count 5 Star Overall"
     type: count_distinct
     value_format: "0"
@@ -292,7 +294,7 @@ view: airbnb_reviews {
 
   measure: count_promoter {
     #view_label: "Metrics"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "# of Perfect Stays (Promoters)"
     type: count_distinct
     value_format: "0"
@@ -304,7 +306,7 @@ view: airbnb_reviews {
 
 
   measure: count_4_star {
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "Count 4 Star Overall"
     type: count_distinct
     value_format: "0"
@@ -316,7 +318,7 @@ view: airbnb_reviews {
 
   measure: count_3_star {
     #view_label: "Metrics"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "Count 3 Star Overall"
     type: count_distinct
     hidden: no
@@ -329,7 +331,7 @@ view: airbnb_reviews {
 
   measure: count_2_star {
     #view_label: "Metrics"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "Count 2 Star Overall"
     type: count_distinct
     hidden: no
@@ -343,7 +345,7 @@ view: airbnb_reviews {
   measure: count_1_star {
     #view_label: "Metrics"
     type: count_distinct
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "Count 1 Star Overall"
     hidden: no
     value_format: "0"
@@ -355,7 +357,7 @@ view: airbnb_reviews {
 
   measure: count_less_than_4_star {
     #view_label: "Metrics"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "Count Less Than 4 Star Overall "
     type: count_distinct
     value_format: "0"
@@ -367,7 +369,7 @@ view: airbnb_reviews {
 
   measure: count_detractor {
     #view_label: "Metrics"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "# of Bad Stays (Detractors)"
     type: count_distinct
     value_format: "0"
@@ -514,8 +516,7 @@ view: airbnb_reviews {
   }
 
   measure: count {
-    #view_label: "Metrics"
-    #group_label: "Airbnb Count Metrics"
+    label: "Airbnb Review Count"
     description: "This will take the count of all reviews which had an overall rating (Higher than subcategory review count)"
     type: count_distinct
     sql: ${reservation_code} ;;
@@ -523,7 +524,7 @@ view: airbnb_reviews {
 
   measure: clean_count_5_star {
     #view_label: "Metrics"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "Count 5 Star Clean"
     type: count_distinct
     value_format: "0"
@@ -535,7 +536,7 @@ view: airbnb_reviews {
 
   measure: accuracy_count_5_star {
     #view_label: "Metrics"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "Count 5 Star Accuracy"
     type: count_distinct
     value_format: "0"
@@ -547,7 +548,7 @@ view: airbnb_reviews {
 
   measure: accuracy_count_4_star {
     #view_label: "Metrics"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "Count 4 Star Accuracy"
     type: count_distinct
     value_format: "0"
@@ -559,7 +560,7 @@ view: airbnb_reviews {
 
   measure: value_count_5_star {
     #view_label: "Metrics"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "Count 5 Star Value"
     type: count_distinct
     value_format: "0"
@@ -571,7 +572,7 @@ view: airbnb_reviews {
 
   measure: location_count_5_star {
     #view_label: "Metrics"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "Count 5 Star Location"
     type: count_distinct
     value_format: "0"
@@ -583,7 +584,7 @@ view: airbnb_reviews {
 
   measure: communication_count_5_star {
     #view_label: "Metrics"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "Count 5 Star Communication"
     type: count_distinct
     value_format: "0"
@@ -595,7 +596,7 @@ view: airbnb_reviews {
 
   measure: checkin_count_5_star {
     #view_label: "Metrics"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "Count 5 Star Checkin"
     type: count_distinct
     value_format: "0"
@@ -607,7 +608,7 @@ view: airbnb_reviews {
 
   measure: clean_count_less_than_4_star {
     #view_label: "Metrics"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "Count Less Than 4 Star Clean"
     type: count_distinct
     value_format: "0"
@@ -619,7 +620,7 @@ view: airbnb_reviews {
 
   measure: accuracy_count_less_than_4_star {
     #view_label: "Metrics"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "Count Less Than 4 Star Accuracy"
     type: count_distinct
     value_format: "0"
@@ -631,7 +632,7 @@ view: airbnb_reviews {
 
   measure: value_count_less_than_4_star {
     #view_label: "Metrics"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "Count Less Than 4 Star Value"
     type: count_distinct
     value_format: "0"
@@ -643,7 +644,7 @@ view: airbnb_reviews {
 
   measure: location_count_less_than_4_star {
    #view_label: "Metrics"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "Count Less Than 4 Star Location"
     type: count_distinct
     value_format: "0"
@@ -655,7 +656,7 @@ view: airbnb_reviews {
 
   measure: communication_count_less_than_4_star {
    #view_label: "Metrics"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "Count Less Than 4 Star Communication"
     type: count_distinct
     value_format: "0"
@@ -667,7 +668,7 @@ view: airbnb_reviews {
 
   measure: checkin_count_less_than_4_star {
    #view_label: "Metrics"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     label: "Count Less Than 4 Star Checkin"
     type: count_distinct
     value_format: "0"
@@ -679,7 +680,7 @@ view: airbnb_reviews {
 
   measure: count_clean {
    #view_label: "Metrics"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     type: count_distinct
     label: "Count Reviews (Subcategories)"
     sql: ${reservation_code} ;;
@@ -852,7 +853,7 @@ view: airbnb_reviews {
   }
 
   measure: count_4_star_clean {
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     type: count_distinct
     value_format: "0"
     sql: ${TABLE}.Reservation_Code;;
@@ -862,7 +863,7 @@ view: airbnb_reviews {
   }
 
   measure: count_4_star_value {
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     type: count_distinct
     value_format: "0"
     sql: ${TABLE}.Reservation_Code;;
@@ -872,7 +873,7 @@ view: airbnb_reviews {
   }
 
   measure: count_4_star_location {
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     type: count_distinct
     value_format: "0"
     sql: ${TABLE}.Reservation_Code;;
@@ -882,7 +883,7 @@ view: airbnb_reviews {
   }
 
   measure: count_4_star_communication {
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     type: count_distinct
     value_format: "0"
     sql: ${TABLE}.Reservation_Code;;
@@ -893,7 +894,7 @@ view: airbnb_reviews {
 
 
   measure: count_4_star_checkin {
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     type: count_distinct
     value_format: "0"
     sql: ${TABLE}.Reservation_Code;;
