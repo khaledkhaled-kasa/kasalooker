@@ -41,6 +41,7 @@ view: capacities_v3 {
     label: "Same Time Last Week (STLW)"
     description: "This will provide the date from the same time last week as of today"
     type: time
+    datatype: date
     timeframes: [
       raw,
       date,
