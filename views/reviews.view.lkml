@@ -77,7 +77,8 @@ view_label: "Check-In Survey Data"
   }
 
   measure: count_thumbs_up {
-    type: count
+    type: count_distinct
+    sql: ${reservation};;
     hidden: yes
     view_label: "Metrics"
     filters: [overallrating: "5"]
