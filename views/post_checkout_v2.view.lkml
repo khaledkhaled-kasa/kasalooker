@@ -317,7 +317,7 @@ view: post_checkout_v2 {
   }
 
   measure: count {
-    label: "Post Checkout Survey Review Count"
+    label: "Review Count"
     type: count_distinct
     sql: ${confirmationcode} ;;
   }
@@ -404,7 +404,7 @@ view: post_checkout_v2 {
 
   measure: overall_count_5_star {
     label: "Count 5 Star (Overall)"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     type: count_distinct
     value_format: "0"
     sql: ${confirmationcode} ;;
@@ -413,7 +413,7 @@ view: post_checkout_v2 {
 
   measure: cleanliness_5_star {
     label: "Count 5 Star (Cleanliness)"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     type: count_distinct
     value_format: "0"
     sql: ${confirmationcode} ;;
@@ -422,7 +422,7 @@ view: post_checkout_v2 {
 
   measure: accuracy_5_star {
     label: "Count 5 Star (Accuracy)"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     type: count_distinct
     value_format: "0"
     sql: ${confirmationcode} ;;
@@ -431,7 +431,7 @@ view: post_checkout_v2 {
 
   measure: communication_5_star {
     label: "Count 5 Star (Communication)"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     type: count_distinct
     value_format: "0"
     sql: ${confirmationcode} ;;
@@ -440,7 +440,7 @@ view: post_checkout_v2 {
 
   measure: location_5_star {
     label: "Count 5 Star (Location)"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     type: count_distinct
     value_format: "0"
     sql: ${confirmationcode} ;;
@@ -449,7 +449,7 @@ view: post_checkout_v2 {
 
   measure: checkin_5_star {
     label: "Count 5 Star (Checkin)"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     type: count_distinct
     value_format: "0"
     sql: ${confirmationcode} ;;
@@ -458,7 +458,7 @@ view: post_checkout_v2 {
 
   measure: value_5_star {
     label: "Count 5 Star (Value)"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     type: count_distinct
     value_format: "0"
     sql: ${confirmationcode} ;;
@@ -467,7 +467,7 @@ view: post_checkout_v2 {
 
   measure: overall_count_less_than_4_star {
     label: "Count Less Than 4 Star (Overall)"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     type: count_distinct
     value_format: "0"
     sql: ${confirmationcode} ;;
@@ -476,7 +476,7 @@ view: post_checkout_v2 {
 
   measure: cleanliness_less_than_4_star {
     label: "Count Less Than 4 Star (Cleanliness)"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     type: count_distinct
     value_format: "0"
     sql: ${confirmationcode} ;;
@@ -485,7 +485,7 @@ view: post_checkout_v2 {
 
   measure: accuracy_less_than_4_star {
     label: "Count Less Than 4 Star (Accuracy)"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     type: count_distinct
     value_format: "0"
     sql: ${confirmationcode} ;;
@@ -494,7 +494,7 @@ view: post_checkout_v2 {
 
   measure: communication_less_than_4_star {
     label: "Count Less Than 4 Star (Communication)"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     type: count_distinct
     value_format: "0"
     sql: ${confirmationcode} ;;
@@ -503,7 +503,7 @@ view: post_checkout_v2 {
 
   measure: location_less_than_4_star {
     label: "Count Less Than 4 Star (Location)"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     type: count_distinct
     value_format: "0"
     sql: ${confirmationcode} ;;
@@ -512,7 +512,7 @@ view: post_checkout_v2 {
 
   measure: checkin_less_than_4_star {
     label: "Count Less Than 4 Star (Checkin)"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     type: count_distinct
     value_format: "0"
     sql: ${confirmationcode} ;;
@@ -521,7 +521,7 @@ view: post_checkout_v2 {
 
   measure: value_less_than_4_star {
     label: "Count Less Than 4 Star (Value)"
-    group_label: "Review Counts"
+    group_label: "Other Review Counts"
     type: count_distinct
     value_format: "0"
     sql: ${confirmationcode} ;;

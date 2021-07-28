@@ -25,12 +25,6 @@ explore: units_and_devices {
     sql_on: ${units_and_devices.propcode} = ${pom_information.Prop_Code} ;;
   }
 
-  join: noiseaware {
-    fields: []
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${units_and_devices.internaltitle} = ${noiseaware.building_unit} ;;
-  }
 
   join: sensors {
     type: left_outer

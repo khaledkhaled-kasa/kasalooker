@@ -171,45 +171,21 @@ explore: breezeway_export {
 }
 
 
-# explore: units_kpo_overview {
-#   group_label: "Properties"
-#   label: "Kasa Portfolio Overview Unit Details"
-# }
-
 
 explore: units_buildings_information {
-  fields: [ALL_FIELDS*, -geo_location.city_full_uid, -capacities_v3.unit_count_EOM]
+  fields: [ALL_FIELDS*, -geo_location.city_full_uid]
   from: units
   view_label: "Unit Information"
   sql_always_where: ${units_buildings_information.availability_enddate_string} <> 'Invalid date' OR ${units_buildings_information.availability_enddate_string} IS NULL ;;
   label: "Units and Property Information"
   group_label: "Properties"
 
-  join: capacities_v3 { # This could be avoided by using the capacities table!
-    type: left_outer
-    relationship: one_to_many
-    sql_on: ${units_buildings_information._id} = ${capacities_v3._id} ;;
-  }
+
   join: accesses {
     type: left_outer
     relationship: one_to_many
     sql_on: ${units_buildings_information._id} = ${accesses.unitid} ;;
   }
-
-  join: reservations_v3 {
-    view_label: "Reservations"
-    fields: [reservations_v3.confirmationcode, reservations_v3.checkoutdate_date]
-    type: left_outer
-    relationship: one_to_many
-    sql_on: ${units_buildings_information._id} = ${reservations_v3.unit};;
-  }
-
-  join: check_in_data {
-    type: left_outer
-    relationship: one_to_many
-    sql_on: ${units_buildings_information.internaltitle} = ${check_in_data.internaltitle} ;;
-  }
-
 
   join: pom_qa_walkthrough_survey_agg {
     view_label: "QA Walkthrough Survey Data"
@@ -218,20 +194,6 @@ explore: units_buildings_information {
     sql_on: ${units_buildings_information.internaltitle} = ${pom_qa_walkthrough_survey_agg.unit} ;;
   }
 
-  join: breezeway_export {
-    fields: [breezeway_export.pct_on_time_pom_score, breezeway_export.pct_on_time_pom_score_weighted, breezeway_export.pct_on_time]
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${breezeway_export.property_internal_id} =  ${units_buildings_information.breezeway_id};;
-    }
-
-
-  join: airbnb_reviews {
-    fields: [airbnb_reviews.avg_cleanliness_rating, airbnb_reviews.avg_accuracy_rating, airbnb_reviews.avg_checkin_rating, airbnb_reviews.avg_communication_rating, airbnb_reviews.avg_overall_rating, airbnb_reviews.cleaning_rating_score, airbnb_reviews.cleaning_rating_score_weighted]
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${reservations_v3.confirmationcode} = ${airbnb_reviews.reservation_code} ;;
-  }
 
   join: geo_location {
     type:  left_outer
@@ -267,13 +229,6 @@ explore: units_buildings_information {
     sql_on: ${units_buildings_information.internaltitle} = ${unit_submission_data_final.buildingunit} ;;
   }
 
-  join: noiseaware {
-    view_label: "NoiseAware"
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${units_buildings_information.internaltitle} = ${noiseaware.building_unit} ;;
-  }
-
 
   join: minut_data {
     from: devices
@@ -290,6 +245,7 @@ explore: units_buildings_information {
     sql_on: ${units_buildings_information._id} = ${lock_data.unit}
       AND lower(${lock_data.devicetype}) LIKE '%lock%';;
   }
+
   join: hub_devices {
     from: devices
     type: left_outer
