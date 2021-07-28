@@ -199,6 +199,23 @@ view: airbnb_reviews {
     sql: ${TABLE}.Review_Date ;;
   }
 
+  dimension: number_of_days {
+    description: "Number of days it took to complete real-time checkin survey post check-in"
+    hidden: yes
+    type:  number
+    sql:  date_diff(${review_date}, ${reservations_clean.checkoutdate_date}, DAY) ;;
+  }
+
+
+  measure: number_of_days_median {
+    description: "Median number of days it took to complete Airbnb Survey."
+    label: "Median # of Days to Complete Airbnb Survey"
+    value_format: "0.0"
+    type:  median_distinct
+    sql_distinct_key: ${reservation_code} ;;
+    sql: ${number_of_days};;
+  }
+
   measure: avg_location_rating {
     group_label: "Ratings (Aggregated)"
     label: "Average Location Rating"

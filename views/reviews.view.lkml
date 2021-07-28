@@ -144,6 +144,24 @@ view_label: "Check-In Survey Data"
     sql: ${TABLE}.unit ;;
   }
 
+
+    dimension: number_of_days {
+      description: "Number of days it took to complete real-time checkin survey post check-in"
+      hidden: yes
+      type:  number
+      sql:  date_diff(${submitdate_date}, ${reservations_clean.checkindate_date}, DAY) ;;
+    }
+
+
+    measure: number_of_days_median {
+      description: "Median number of days it took to complete real-time checkin survey post check-in."
+      label: "Median # of Days to Complete VFD Survey"
+      value_format: "0.0"
+      type:  median_distinct
+      sql_distinct_key: ${reservation} ;;
+      sql: ${number_of_days};;
+    }
+
   measure: count {
     label: "Review Count (Total)"
     description: "This will pull the # of reviews for either cleanliness or checkin."

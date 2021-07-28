@@ -37,6 +37,23 @@ view: capacities_v3 {
       convert_tz: no
     }
 
+  dimension_group: td_stlw {
+    label: "Same Time Last Week (STLW)"
+    description: "This will provide the date from the same time last week as of today"
+    type: time
+    timeframes: [
+      raw,
+      date,
+      day_of_month,
+      week,
+      month,
+      day_of_week
+    ]
+    sql:  DATE_SUB(DATE(DATETIME(CURRENT_TIMESTAMP(),'America/Los_Angeles')), INTERVAL 7 DAY) ;;
+    convert_tz: no
+  }
+
+
 
     dimension_group: night {
       description: "This will return all dates for which the unit is available."
