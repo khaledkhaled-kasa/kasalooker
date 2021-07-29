@@ -217,7 +217,7 @@ view: disputes_tracker {
     label: "Dispute Amount Won % Net of Pending / Bad Actor / Accepted"
     type: number
     value_format: "0.00%"
-    sql: ifnull(${dispute_amount_won} / nullif(${dispute_total} - ${dispute_accepted_bad} - ${dispute_amount_pending},0),0) ;;
+    sql: ifnull(${dispute_amount_won} / nullif(${dispute_total} - ${dispute_accepted_bad} - ${dispute_amount_pending},0),0);;
     drill_fields: [detail*]
     }
 

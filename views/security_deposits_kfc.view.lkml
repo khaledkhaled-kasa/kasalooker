@@ -4,12 +4,12 @@ view: security_deposits_kfc {
 
     with reservationriskscores AS (
       SELECT rrs.reservation, trust_riskscoretype, trust_risklevel, party_riskscoretype, party_risklevel
-      FROM  mongodev.reservationriskscores rrs
+      FROM  mongo.reservationriskscores rrs
 
       LEFT JOIN
 
       (SELECT reservation, trust.riskscoretype trust_riskscoretype, trust.risklevel trust_risklevel
-      FROM  mongodev.reservationriskscores trust
+      FROM  mongo.reservationriskscores trust
       WHERE riskscoretype = 'trust'
       GROUP BY 1,2,3) trust
       ON rrs.reservation = trust.reservation
@@ -17,7 +17,7 @@ view: security_deposits_kfc {
       LEFT JOIN
 
       (SELECT reservation, party.riskscoretype party_riskscoretype, party.risklevel party_risklevel
-      FROM  mongodev.reservationriskscores party
+      FROM  mongo.reservationriskscores party
       WHERE riskscoretype = 'party'
       GROUP BY 1,2,3) party
       ON rrs.reservation = party.reservation
@@ -35,10 +35,11 @@ view: security_deposits_kfc {
         guests.email,
         reservationriskscores.trust_risklevel, reservationriskscores.party_risklevel
 
-    FROM mongodev.securitydeposits CROSS JOIN UNNEST(reservations) as unique_reservation_id_secdep
-    JOIN mongodev.reservations ON unique_reservation_id_secdep.value = reservations._id
-    LEFT OUTER JOIN mongodev.guests ON reservations.guest = guests._id
+    FROM mongo.securitydeposits CROSS JOIN UNNEST(reservations) as unique_reservation_id_secdep
+    JOIN mongo.reservations ON unique_reservation_id_secdep.value = reservations._id
+    LEFT OUTER JOIN mongo.guests ON reservations.guest = guests._id
     LEFT OUTER JOIN reservationriskscores ON reservations._id = reservationriskscores.reservation
+
 
  ;;
 
