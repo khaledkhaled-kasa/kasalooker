@@ -1,12 +1,28 @@
 view: airbnb_reviews {
   derived_table: {
-    sql:  SELECT *
-          FROM `bigquery-analytics-272822.airbnb_review_master.Master`;;
+    sql:
+          SELECT airbnb_reviews.*, RANK() OVER (PARTITION BY complex ORDER BY airbnb_reviews.Review_Date DESC, airbnb_reviews.ds_checkout DESC) Review_Order
+          FROM `bigquery-analytics-272822.airbnb_review_master.Master` airbnb_reviews
+          LEFT JOIN reservations ON reservations.confirmationcode = airbnb_reviews.Reservation_Code
+          LEFT JOIN units ON units._id = reservations.unit ;;
+
+          # SELECT * -- OLD
+          # FROM `bigquery-analytics-272822.airbnb_review_master.Master`;;
 
   #datagroup_trigger: reviews_default_datagroup
   persist_for: "1 hours"
   }
 
+  dimension: review_order {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.Review_Order ;;
+  }
+
+  dimension: last_30_reviews {
+    type: yesno
+    sql: ${TABLE}.Review_Order <= 30 ;;
+  }
 
   dimension: accuracy_comments {
     group_label: "Comments"
@@ -992,6 +1008,65 @@ view: airbnb_reviews {
     sql: 100*(${percent_5_star_clean} - ${percent_less_than_4_star_clean});;
     drill_fields: [reservation_code, reservation_checkin_date, reservation_checkout_date, cleanliness_rating, cleanliness_comments]
 
+  }
+
+  measure: net_quality_score_clean_last_30_reviews {
+    group_label: "NQS Metrics"
+    label: "NQS (Clean) - Last 30 Reviews"
+    type: number
+    value_format: "0.0"
+    sql: 100*(${percent_5_star_clean_last_30_reviews} - ${percent_less_than_4_star_clean_last_30_reviews});;
+    drill_fields: [airbnb_details*, review_date, cleanliness_comments, value_comments, overall_comments]
+  }
+
+  measure: percent_5_star_clean_last_30_reviews {
+    #view_label: "Metrics"
+    hidden: yes
+    group_label: "Review Percentages"
+    type: number
+    value_format: "0.0%"
+    sql: ${clean_count_5_star_last_30_reviews} / nullif(${count_clean_last_30_reviews},0);;
+  }
+
+  measure: count_clean_last_30_reviews {
+    #view_label: "Metrics"
+    hidden: yes
+    group_label: "Other Review Counts"
+    type: count_distinct
+    label: "Count Reviews (Subcategories) - Last 30 Reviews"
+    sql: ${reservation_code} ;;
+    filters: [cleanliness_rating: "1,2,3,4,5", last_30_reviews: "Yes"]
+  }
+
+  measure: clean_count_5_star_last_30_reviews {
+    hidden: yes
+    #view_label: "Metrics"
+    group_label: "Other Review Counts"
+    label: "Count 5 Star Clean (Last 30 Reviews)"
+    type: count_distinct
+    value_format: "0"
+    sql: ${TABLE}.Reservation_Code;;
+    filters: [cleanliness_rating: "5", last_30_reviews: "Yes"]
+  }
+
+  measure: percent_less_than_4_star_clean_last_30_reviews {
+    #view_label: "Metrics"
+    hidden: yes
+    group_label: "Review Percentages"
+    type: number
+    value_format: "0.0%"
+    sql: ${clean_count_less_than_4_star_last_30_reviews} / nullif(${count_clean_last_30_reviews},0);;
+  }
+
+  measure: clean_count_less_than_4_star_last_30_reviews {
+    #view_label: "Metrics"
+    hidden: yes
+    group_label: "Other Review Counts"
+    label: "Count Less Than 4 Star Clean - Last 30 Reviews"
+    type: count_distinct
+    value_format: "0"
+    sql: ${reservation_code};;
+    filters: [cleanliness_rating: "<=3", last_30_reviews: "Yes"]
   }
 
 
