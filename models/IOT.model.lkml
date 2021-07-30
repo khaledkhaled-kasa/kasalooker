@@ -8,6 +8,7 @@ datagroup: pom_checklist_default_datagroup {
 }
 
 explore: units_and_devices {
+  fields: [ALL_FIELDS*, -pom_information.live_partners]
   from: units
   group_label: "Product & Tech"
   label: "IoT Devices"
