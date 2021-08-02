@@ -239,7 +239,8 @@ view: breezeway_export {
     WHEN lower(${TABLE}.Name) LIKE "%carpet/upholstery: full unit%" THEN "Carpet/Upholstery Full Room"
     WHEN lower(${TABLE}.Name) LIKE "%cleanliness review feedback%" THEN "Cleanliness Review Feedback"
     WHEN lower(${TABLE}.Name) LIKE "%hk touch up or vip prep%" THEN "HK Touch Up - VIP Prep"
-    WHEN lower(${TABLE}.Name) LIKE "hk misc%" OR lower(${TABLE}.Name) LIKE "errand fee" THEN "HK Misc/Delayed Entry/False Arrival/Errand Fee"
+    WHEN lower(${TABLE}.Name) = 'hk misc.' THEN 'HK Misc.'
+    WHEN lower(${TABLE}.Name) LIKE "hk misc%" OR lower(${TABLE}.Name) LIKE "errand fee" THEN "HK Misc. Invoice/Delayed Entry/False Arrival/Errand Fee" -- HK Misc. Invoice
     ELSE ${TABLE}.Name
     END;;
   }
