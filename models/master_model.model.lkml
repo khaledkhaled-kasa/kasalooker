@@ -173,7 +173,7 @@ explore: breezeway_export {
 
 
 explore: units_buildings_information {
-  fields: [ALL_FIELDS*, -geo_location.city_full_uid]
+  fields: [ALL_FIELDS*, -geo_location.city_full_uid, -pom_information.live_partners]
   from: units
   view_label: "Unit Information"
   sql_always_where: ${units_buildings_information.availability_enddate_string} <> 'Invalid date' OR ${units_buildings_information.availability_enddate_string} IS NULL ;;
@@ -619,7 +619,7 @@ explore: pom_qa_walkthrough_survey {
     -units*,
     -hk_partners.first_3_months,
     -pom_qa_walkthrough_survey.total_qas_completed_percentage, -units*,-hk_partners.first_3_months,
-    -pom_qa_walkthrough_survey.airbnb_reviews_POM_Walkthrough, -pom_qa_walkthrough_survey.real_time_POM_Walkthrough
+    -pom_qa_walkthrough_survey.airbnb_reviews_POM_Walkthrough, -pom_qa_walkthrough_survey.real_time_POM_Walkthrough, -pom_information.live_partners
   ]
   persist_with: pom_checklist_default_datagroup
   group_label: "PropOps"

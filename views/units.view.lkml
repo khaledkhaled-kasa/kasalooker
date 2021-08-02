@@ -331,10 +331,33 @@ view: units {
           ELSE ${TABLE}._id
           END ;;
     filters: [unit_status: "Active, Expiring"]
+    drill_fields: [internaltitle, availability_startdate_date, availability_enddate_date]
   }
+
+  measure: active_property_count {
+    label: "Total Active Unique Properties"
+    view_label: "Building and Geographic Information"
+    type: count_distinct
+    sql: CASE WHEN ((${internaltitle} LIKE "%-XX") OR (${internaltitle} LIKE "%-RES")) THEN NULL
+          ELSE ${TABLE}.complex
+          END ;;
+    filters: [unit_status: "Active, Expiring"]
+    drill_fields: [complexes.title]
+  }
+
+  # measure: live_partners {
+  #   label: "Total Live Partners"
+  #   view_label: "Building and Geographic Information"
+  #   type: count_distinct
+  #   sql: CASE WHEN ((${internaltitle} LIKE "%-XX") OR (${internaltitle} LIKE "%-RES")) THEN NULL
+  #         ELSE ${pom_information.property_owner}
+  #         END ;;
+  #   filters: [unit_status: "Active, Expiring"]
+  # }
 
     measure: property_count {
       label: "Total Unique Properties"
+      view_label: "Building and Geographic Information"
       type: count_distinct
       sql: ${TABLE}.complex ;;
     }

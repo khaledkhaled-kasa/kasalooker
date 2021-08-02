@@ -27,6 +27,14 @@ view: pom_information {
     sql: ${TABLE}.PropOfficial ;;
   }
 
+  dimension: property_owner {
+    view_label: "Building and Geographic Information"
+    hidden: no
+    type: string
+    sql: ${TABLE}.PropOwner ;;
+  }
+
+
   dimension: pom {
     label: "POM"
     type: string
@@ -212,6 +220,7 @@ view: pom_information {
   }
 
 
+
   measure: QACompleted_Weighting {
     hidden: yes
     type: max
@@ -250,6 +259,17 @@ view: pom_information {
     hidden: yes
     type: max
     sql: ${FreshAirWeight} ;;
+  }
+
+  measure: live_partners {
+    label: "Total Live Partners"
+    view_label: "Building and Geographic Information"
+    type: count_distinct
+    sql: CASE WHEN ((${units.internaltitle} LIKE "%-XX") OR (${units.internaltitle} LIKE "%-RES")) THEN NULL
+          ELSE ${property_owner}
+          END ;;
+    filters: [units.unit_status: "Active, Expiring"]
+    drill_fields: [property_owner, live_partners]
   }
 
 
