@@ -52,4 +52,12 @@ explore: units_and_devices {
     relationship: one_to_many
     sql_on: (${devices.deviceid} = ${sensorevents.deviceid});;
   }
+  join: hub_devices {
+    from: devices
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${devices.unit} = ${hub_devices.unit}
+      AND ${hub_devices.devicetype} IN ('Nexia_v1', 'Smartthings_v1') and ${hub_devices.active}=true;;
+  }
+
 }
