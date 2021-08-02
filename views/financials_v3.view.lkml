@@ -1,46 +1,47 @@
 view: financials_v3{
   label: "Financials"
-  derived_table: {
-    sql: SELECT financials.*, DATE(financials.night) as partition_date,
-        CASE WHEN CAST(financials.night as date) < '2021-01-01' THEN (t2.outstanding_amount / t3.count_nights_room_revenue)
-        ELSE null
-        END nightly_outstanding_amount
-        FROM financials
-        LEFT JOIN
+  sql_table_name: `bigquery-analytics-272822.dbt.financials`  ;;
+  # derived_table: {
+  #   sql: SELECT financials.*, DATE(financials.night) as partition_date,
+  #       CASE WHEN CAST(financials.night as date) < '2021-01-01' THEN (t2.outstanding_amount / t3.count_nights_room_revenue)
+  #       ELSE null
+  #       END nightly_outstanding_amount
+  #       FROM financials
+  #       LEFT JOIN
 
-        (SELECT confirmationcode, reservation_id, 'roomRevenue' as Type, outstanding_amount
-        FROM
-          (SELECT reservations.confirmationcode as confirmationcode, financials.reservation as reservation_id,
-          (COALESCE(sum(amount),0) + COALESCE(sum(amount__fl),0)) as outstanding_amount
-          FROM financials JOIN reservations
-          ON financials.reservation = reservations._id
-          WHERE (CAST(financials.night AS DATE) < CAST(timestamp(reservations.checkindate) AS DATE) OR CAST(financials.night AS DATE) >= CAST(timestamp(reservations.checkoutdate) AS DATE))
-          AND financials.type NOT IN ("channelFee","ToT","ToTInflow","ToTOutflowNonLiability","ToTInflowNonLiability")
-          AND (isvalid is null or isvalid = true)
-          GROUP BY 1,2)t1)t2
+  #       (SELECT confirmationcode, reservation_id, 'roomRevenue' as Type, outstanding_amount
+  #       FROM
+  #         (SELECT reservations.confirmationcode as confirmationcode, financials.reservation as reservation_id,
+  #         (COALESCE(sum(amount),0) + COALESCE(sum(amount__fl),0)) as outstanding_amount
+  #         FROM financials JOIN reservations
+  #         ON financials.reservation = reservations._id
+  #         WHERE (CAST(financials.night AS DATE) < CAST(timestamp(reservations.checkindate) AS DATE) OR CAST(financials.night AS DATE) >= CAST(timestamp(reservations.checkoutdate) AS DATE))
+  #         AND financials.type NOT IN ("channelFee","ToT","ToTInflow","ToTOutflowNonLiability","ToTInflowNonLiability")
+  #         AND (isvalid is null or isvalid = true)
+  #         GROUP BY 1,2)t1)t2
 
-        ON financials.reservation = t2.reservation_id
-        AND financials.type = t2.type
+  #       ON financials.reservation = t2.reservation_id
+  #       AND financials.type = t2.type
 
-        LEFT JOIN
+  #       LEFT JOIN
 
-        (SELECT financials.reservation as reservationid, count(*) as count_nights_room_revenue
-        FROM financials JOIN reservations
-        ON financials.reservation = reservations._id
-        AND financials.type = 'roomRevenue'
-        AND (CAST(financials.night AS DATE) >= CAST(timestamp(reservations.checkindate) AS DATE) AND CAST(financials.night AS DATE) < CAST(timestamp(reservations.checkoutdate) AS DATE))
-        GROUP BY 1)t3
-        ON financials.reservation = t3.reservationid
-        where financials.isvalid is null or financials.isvalid = true
-      ;;
+  #       (SELECT financials.reservation as reservationid, count(*) as count_nights_room_revenue
+  #       FROM financials JOIN reservations
+  #       ON financials.reservation = reservations._id
+  #       AND financials.type = 'roomRevenue'
+  #       AND (CAST(financials.night AS DATE) >= CAST(timestamp(reservations.checkindate) AS DATE) AND CAST(financials.night AS DATE) < CAST(timestamp(reservations.checkoutdate) AS DATE))
+  #       GROUP BY 1)t3
+  #       ON financials.reservation = t3.reservationid
+  #       where financials.isvalid is null or financials.isvalid = true
+  #     ;;
 
 
-    # persist_for: "1 hour"
-    datagroup_trigger: kasametrics_reservations_datagroup
-    # indexes: ["night","transaction"]
-    publish_as_db_view: yes
-    partition_keys: ["partition_date"]
-  }
+  #   # persist_for: "1 hour"
+  #   datagroup_trigger: kasametrics_reservations_datagroup
+  #   # indexes: ["night","transaction"]
+  #   publish_as_db_view: yes
+  #   partition_keys: ["partition_date"]
+  # }
 
 
   dimension: _id {
