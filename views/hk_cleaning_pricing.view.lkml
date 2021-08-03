@@ -20,6 +20,7 @@ view: hk_cleaning_pricing {
     sql: CASE WHEN ${hk_pricing_unit_specific.pricing} IS NULL THEN ${TABLE}.Pricing
     ELSE ${hk_pricing_unit_specific.pricing}
     END ;;
+    value_format: "$#,##0.00"
   }
 
   dimension: property_code {
@@ -40,6 +41,7 @@ view: hk_cleaning_pricing {
     sql_distinct_key: ${bw_cleaning.id};;
     sql: ${pricing};;
     drill_fields: [bw_cleaning.id,hk_pricing_companies.company, bw_cleaning.unit, units.bedrooms, bw_cleaning.name, bw_cleaning.name_revised, pricing]
+    value_format: "$#,##0.00"
   }
 
 }

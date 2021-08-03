@@ -167,7 +167,7 @@ view: disputes_tracker {
     type: sum
     value_format: "$#,##0"
     sql: ${TABLE}.Dispute_Amount ;;
-    filters: [resolution: "Accepted dispute"]
+    filters: [resolution: "Accepted dispute, Accepted"]
   }
 
   measure: dispute_accepted_bad {
@@ -263,7 +263,7 @@ view: disputes_tracker {
     label: "Dispute (Accepted Dispute Actor)"
     type: count
     hidden: yes
-    filters: [resolution: "Accepted dispute"]
+    filters: [resolution: "Accepted dispute, Accepted"]
   }
 
   measure: dispute_bad_actor {
