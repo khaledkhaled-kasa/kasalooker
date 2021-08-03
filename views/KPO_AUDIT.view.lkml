@@ -42,6 +42,7 @@ view: KPO_AUDIT {
 
   dimension: new_partner {
     label: "Partner (New/Existing)"
+    description: "This will pull the value from Column BE of the KPO"
     type: string
     sql: ${TABLE}.NewPartner ;;
   }
