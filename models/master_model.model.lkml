@@ -251,7 +251,7 @@ explore: units_buildings_information {
     type: left_outer
     relationship: one_to_many
     sql_on: ${units_buildings_information._id} = ${hub_devices.unit}
-    AND ${hub_devices.devicetype} IN ('Nexia_v1', 'Smartthings_v1') and${hub_devices.active}=true;;
+    AND ${hub_devices.devicetype} IN ('Nexia_v1', 'Smartthings_v1') and ${hub_devices.active}=true;;
   }
 
   join: fresh_air_data {
