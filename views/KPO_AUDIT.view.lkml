@@ -1,6 +1,6 @@
 view: KPO_AUDIT {
   derived_table: {
-    sql: select KPO_table.UID, KPO_table.PropCode, KPO_table.status,units.internaltitle,ContractType,FirstAvailableDate,ContractSignedDate, complexes.title
+    sql: select KPO_table.UID, KPO_table.PropCode, KPO_table.status,KPO_table.newpartner, units.internaltitle,ContractType,FirstAvailableDate,ContractSignedDate, complexes.title
       from
 
                `bigquery-analytics-272822.Gsheets.kpo_overview_clean` KPO_table
@@ -40,6 +40,12 @@ view: KPO_AUDIT {
     sql: ${TABLE}.title ;;
   }
 
+  dimension: new_partner {
+    label: "Partner (New/Existing)"
+    type: string
+    sql: ${TABLE}.NewPartner ;;
+  }
+
   dimension: status {
     type: string
     sql: ${TABLE}.status ;;
@@ -64,7 +70,7 @@ view: KPO_AUDIT {
 
   measure: countt {
     type: count_distinct
-    label: "Total Unique Properties"
+    label: "Total Unique Units"
     description: "Count # of Units with Active,Onboarding,Expiring status "
     sql:${TABLE}.UID ;;
     filters: [status: "Active,Onboarding,Expiring"]
@@ -72,7 +78,7 @@ view: KPO_AUDIT {
   }
   measure: countMissigunitsFromUnitsMongo{
     type: count_distinct
-    label: "Total Miss Properties From Units Mongo"
+    label: "Total Miss Units From Units Mongo"
     sql:Case WHEN ${TABLE}.internaltitle is Null and ${TABLE}.status<>"Deactivated" and ${TABLE}.ContractType <>"Distribution Agreement" THEN ${TABLE}.UID ELSE NULL END;;
     drill_fields: [detail*]
   }
