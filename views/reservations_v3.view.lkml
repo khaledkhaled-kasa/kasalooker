@@ -258,9 +258,10 @@ view: reservations_v3 {
       sql: ${TABLE}.specialrequest ;;
     }
 
+    # Update 08-04-2021; This will start pulling from status_revised which will convert all confirmed status with cancellation dates to canceled status
     dimension: status {
       type: string
-      sql: ${TABLE}.status ;;
+      sql: ${TABLE}.status_revised ;;
     }
 
     dimension: suspicious {
