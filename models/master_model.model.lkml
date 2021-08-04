@@ -51,12 +51,14 @@ datagroup: ximble_default_datagroup {
 
 explore: pom_weighting_standards_final {
   group_label: "PropOps"
+  hidden: yes
   label: "POM Scorecard Weights"
 }
 
 
 explore: compliance_tracker {
   group_label: "Legal"
+  hidden: yes
   label: "Compliance Tracker"
 }
 
@@ -518,6 +520,7 @@ explore: capacities_v3 {
 explore: okrs_master {
   group_label: "Kasa Metrics"
   label: "Kasa OKRs"
+  hidden: yes
 }
 
 explore: devices {
@@ -561,6 +564,7 @@ explore: bw_cleaning {
   ]
   group_label: "PropOps"
   label: "BW Cleaning Pricing Schedule"
+  hidden: yes
   from: breezeway_export
   view_label: "BW Export"
   join: units {
@@ -619,6 +623,7 @@ explore: pom_qa_walkthrough_survey {
   persist_with: pom_checklist_default_datagroup
   group_label: "PropOps"
   label: "POM QA Walkthrough Checklist"
+  hidden: yes
 
   join: hk_partners {
     type:  full_outer
@@ -657,6 +662,7 @@ explore: pom_qa_walkthrough_survey {
 
 explore: disputes_tracker {
   group_label: "Finance"
+  hidden: yes
   label: "Disputes Tracker"
 
   join: reservations_clean {
@@ -693,16 +699,19 @@ explore: trs_prs {
 explore: t_s_security_deployment {
   group_label: "T & S"
   label: "Security Deployment Report"
+  hidden: yes
 }
 
 explore: t_s_incident_report {
   group_label: "T & S"
   label: "Security Incident Report"
+  hidden: yes
 }
 
 explore: channel_cost_marketing {
   group_label: "Marketing Analytics"
   label: "Channel Cost Dashboard"
+  hidden: yes
 
   join: missing_cost_channel_metrics {
     type: full_outer
@@ -714,6 +723,7 @@ explore: channel_cost_marketing {
 }
 
 explore: slack_bugs_tech {
+  hidden: yes
   fields: [
     ALL_FIELDS*,
     -pom_information*,
@@ -777,6 +787,7 @@ explore: slack_bugs_tech {
 
 explore: kasa_kredit_reimbursement {
   group_label: "People Ops"
+  hidden: yes
   label: "Kasa Kredits"
 
   join: kasa_team_summary {
@@ -817,13 +828,13 @@ explore: kasa_kredit_reimbursement {
     sql_on:  ${units.address_city} = ${geo_location.city}
       and ${units.address_state} = ${geo_location.state};;
   }
-
 }
 
 
 explore: security_deposits_kfc {
   group_label: "KFC Reporting"
   label: "Security Deposits"
+  hidden: yes
 }
 
 
@@ -839,6 +850,6 @@ explore: ximble_master {
 # }
 
 explore: KPO_AUDIT{
-  group_label: "KPO"
-  label: "KPO_AUDIT"
+  group_label: "Properties"
+  label: "KPO (Audit)"
 }
