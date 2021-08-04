@@ -40,6 +40,18 @@ view: pom_information {
     type: string
     sql: ${TABLE}.POM ;;
   }
+  dimension: RevenueManager
+ {
+    label: "Revenue Manager"
+    type: string
+    sql: ${TABLE}.RevenueManager ;;
+  }
+  dimension: PortfolioManager
+ {
+    label: "Portfolio Manager"
+    type: string
+    sql: ${TABLE}.PortfolioManager ;;
+  }
 
   dimension: city_multi_pom {
     hidden: no
