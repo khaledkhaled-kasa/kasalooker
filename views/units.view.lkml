@@ -317,7 +317,7 @@ view: units {
     measure: unit_count {
       label: "Total Unique Units"
       type: count_distinct
-      sql: CASE WHEN ((${TABLE}.internaltitle LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%-RES") OR (${TABLE}.internaltitle LIKE "%-S")) THEN NULL
+      sql: CASE WHEN ((${TABLE}.internaltitle LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%XXX") OR (${TABLE}.internaltitle LIKE "%-RES") OR (${TABLE}.internaltitle LIKE "%-S")) THEN NULL
           ELSE ${TABLE}._id
           END;;
           drill_fields: [internaltitle, Date_Contract_Signed_date, availability_startdate_date, availability_enddate_date, unit_status]
@@ -327,7 +327,7 @@ view: units {
   measure: active_unit_count {
     label: "Total Active Unique Units"
     type: count_distinct
-    sql: CASE WHEN ((${internaltitle} LIKE "%-XX") OR (${internaltitle} LIKE "%-RES")) THEN NULL
+    sql: CASE WHEN ((${internaltitle} LIKE "%-XX") OR (${internaltitle} LIKE "%XXX") OR (${internaltitle} LIKE "%-S") OR (${internaltitle} LIKE "%-RES")) THEN NULL
           ELSE ${TABLE}._id
           END ;;
     filters: [unit_status: "Active, Expiring"]
@@ -338,22 +338,14 @@ view: units {
     label: "Total Active Unique Properties"
     view_label: "Building and Geographic Information"
     type: count_distinct
-    sql: CASE WHEN ((${internaltitle} LIKE "%-XX") OR (${internaltitle} LIKE "%-RES")) THEN NULL
+    sql: CASE WHEN ((${internaltitle} LIKE "%-XX") OR (${internaltitle} LIKE "%XXX") OR (${internaltitle} LIKE "%-S") OR (${internaltitle} LIKE "%-RES")) THEN NULL
           ELSE ${TABLE}.complex
           END ;;
     filters: [unit_status: "Active, Expiring"]
     drill_fields: [complexes.title]
   }
 
-  # measure: live_partners {
-  #   label: "Total Live Partners"
-  #   view_label: "Building and Geographic Information"
-  #   type: count_distinct
-  #   sql: CASE WHEN ((${internaltitle} LIKE "%-XX") OR (${internaltitle} LIKE "%-RES")) THEN NULL
-  #         ELSE ${pom_information.property_owner}
-  #         END ;;
-  #   filters: [unit_status: "Active, Expiring"]
-  # }
+
 
     measure: property_count {
       label: "Total Unique Properties"

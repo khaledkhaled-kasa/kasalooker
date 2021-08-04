@@ -93,6 +93,13 @@ view: capacities_v3 {
       sql: extract(day from date_sub(${night_date},interval -1 day)) = 1 ;;
     }
 
+  dimension: expired_month {
+    label: "End of Month"
+    hidden: yes
+    type: yesno
+    sql: extract(day from date_sub(${night_date},interval -1 day)) = 1 ;;
+  }
+
 
 
 
@@ -109,7 +116,7 @@ view: capacities_v3 {
       label: "Total Capacity"
       description: "Number of available room nights bookable"
       type: count_distinct
-      sql: CASE WHEN ((${TABLE}.internaltitle LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%-RES") OR (${TABLE}.internaltitle LIKE "%-S")) THEN NULL
+      sql: CASE WHEN ((${TABLE}.internaltitle LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%XXX") OR (${TABLE}.internaltitle LIKE "%-RES") OR (${TABLE}.internaltitle LIKE "%-S")) THEN NULL
           ELSE CONCAT(${TABLE}.internaltitle, '-', ${night_date})
           END;;
     }
@@ -119,7 +126,7 @@ view: capacities_v3 {
       label: "Days Available"
       description: "Number of available room nights bookable"
       type: count_distinct
-      sql: CASE WHEN ((${TABLE}.internaltitle LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%-RES") OR (${TABLE}.internaltitle LIKE "%-S")) THEN NULL
+      sql: CASE WHEN ((${TABLE}.internaltitle LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%XXX") OR (${TABLE}.internaltitle LIKE "%-RES") OR (${TABLE}.internaltitle LIKE "%-S")) THEN NULL
         ELSE CONCAT(${TABLE}.internaltitle, '-', ${night_date})
         END;;
     }
@@ -128,7 +135,7 @@ view: capacities_v3 {
     label: "Capacity after First Active Month"
     description: "Number of available room nights bookable post first active month"
     type: count_distinct
-    sql: CASE WHEN ((${TABLE}.internaltitle LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%-RES") OR (${night_date} < ${first_active_day})) THEN NULL
+    sql: CASE WHEN ((${TABLE}.internaltitle LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%XXX") OR (${TABLE}.internaltitle LIKE "%-RES") OR (${units.internaltitle} LIKE "%-S") OR (${night_date} < ${first_active_day})) THEN NULL
           ELSE CONCAT(${TABLE}.internaltitle, '-', ${night_date})
           END;;
   }
@@ -138,7 +145,7 @@ view: capacities_v3 {
     view_label: "Units"
     description: "Pulls the total number of Unique Units by end of month"
     type: count_distinct
-    sql: CASE WHEN ((${units.internaltitle} LIKE "%-XX") OR (${units.internaltitle} LIKE "%-RES") OR (${units.internaltitle} LIKE "%-S")) THEN NULL
+    sql: CASE WHEN ((${units.internaltitle} LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%XXX") OR (${units.internaltitle} LIKE "%-RES") OR (${units.internaltitle} LIKE "%-S")) THEN NULL
           ELSE ${units._id}
           END;;
     filters: [EOM: "Yes"]

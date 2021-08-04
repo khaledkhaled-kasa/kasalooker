@@ -329,6 +329,15 @@ GROUP BY
     filters: [Q: "Wrap_Up___New_Clean_Required", survey_response: "Yes"]
   }
 
+  # measure: resend_to_hk_2 {
+  #   label: "QAs Schedule Carpet Clean"
+  #   description: "This will pull the total number of surveys"
+  #   type: count_distinct
+  #   sql: ${primary_key} ;;
+  #   drill_fields: [submitdate_time, Email_address, POM_Name, Unit]
+  #   filters: [Q: "Living_Room___Carpet", survey_response: "Yes"]
+  # }
+
   measure: percent_resend {
     label: "% of Tasks resent for HK"
     description: "This will pull the percentage of the tasks which have undergone QA and have been resent for cleaning"
