@@ -270,8 +270,14 @@ view: units {
       type: string
       sql: ${TABLE}.lock_id ;;
     }
+  dimension: lockmodel{
+    label: "Lock Model"
+    type: string
+    sql: ${TABLE}.lockmodel;;
+  }
 
     dimension: nexiaid {
+      label: "Nexia ID"
       type: string
       sql: ${TABLE}.externalrefs.nexiaid ;;
     }
