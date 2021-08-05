@@ -734,7 +734,7 @@ explore: slack_bugs_tech {
     -airbnb_reviews.net_quality_score_clean_first90,
     -airbnb_reviews.percent_5_star_clean_first90,
     -airbnb_reviews.percent_less_than_4_star_clean_first90,
-    -post_checkout_v2.aggregated_comments_all]
+    -post_checkout_v2.aggregated_comments_all_unclean]
   group_label: "Product & Tech"
   label: "Slack Bugs"
 

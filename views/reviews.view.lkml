@@ -98,13 +98,25 @@ view_label: "Check-In Survey Data"
     sql: ${TABLE}.privatereviewtext ;;
   }
 
-    dimension: aggregated_comments {
+    dimension: cleaning_text {
+      label: "Cleaning Comment"
       hidden: yes
-      label: "Aggregated Private Review Text"
-      description: "This will concatenate the cleaning and checking comments"
       type: string
-      sql: CASE WHEN ${target} = "cleaning" THEN CONCAT(COALESCE(${TABLE}.privatereviewtext,""),"~",COALESCE(${TABLE}.privatereviewtext2,"N/A"))
-      ELSE CONCAT(COALESCE(${TABLE}.privatereviewtext2,""),"~",COALESCE(${TABLE}.privatereviewtext,"N/A"))
+      sql: CASE
+      WHEN ${target} = "cleaning" THEN ${TABLE}.privatereviewtext
+      WHEN ${target} = "checkIn" THEN ${TABLE}.privatereviewtext2
+      ELSE NULL
+      END;;
+    }
+
+    dimension: checkin_text {
+      label: "Checkin Comment"
+      hidden: yes
+      type: string
+      sql: CASE
+      WHEN ${target} = "checkIn" THEN ${TABLE}.privatereviewtext
+      WHEN ${target} = "cleaning" THEN ${TABLE}.privatereviewtext2
+      ELSE NULL
       END;;
     }
 

@@ -6,6 +6,7 @@ view: post_checkout_v2 {
     persist_for: "1 hours"
   }
 
+  # Over Communication Analysis
   dimension: aggregated_comments {
     label: "Aggregated Communication Comments"
     view_label: "Review Force"
@@ -17,7 +18,7 @@ view: post_checkout_v2 {
           COALESCE(${what_else_could_kasa_have_done_to_improve_your_stay_},"O-PSS2: Null")," | ",COALESCE(${what_aspects_of_communications_fell_short_},"C-PSS2: Null")) ;;
   }
 
-
+  # Over Communication Analysis
   dimension: contains_buzzword {
     view_label: "Review Force"
     label: "Contains Buzz Word (Communication)"
@@ -28,22 +29,22 @@ view: post_checkout_v2 {
           OR lower(${aggregated_comments}) LIKE "%talk%" ;;
   }
 
-  dimension: aggregated_comments_all {
+  dimension: aggregated_comments_all_unclean {
     label: "Aggregated Comments (All)"
     view_label: "Review Force"
     description: "This will aggregate all review comments from different review channels (airbnb, Postcheckout, Postcheckout V2) into one block."
     type: string
-    hidden: yes
-    sql: CONCAT("Overall Comments: ", COALESCE(${airbnb_reviews.overall_comments},"N/A"),"~",COALESCE(${what_else_could_kasa_have_done_to_improve_your_stay_},"N/A"),"~",COALESCE(${post_checkout_data.overall_feedback},"N/A"),"~",
-          COALESCE(${post_checkout_data.suggestion},"N/A"),"~",COALESCE(${airbnb_reviews.private_feedback},"N/A"),"~",
-          COALESCE(${why_did_you_choose_to_stay_at_this_particular_property_},"N/A"), "~",COALESCE(${what_was_your_favorite_aspect_of_the_kasa_experience_},"N/A"),"---",
-        "Cleaning Comments: ", COALESCE(${airbnb_reviews.cleanliness_comments},"N/A"),"~",COALESCE(${how_did_we_miss_the_mark_on_cleanliness_},"N/A"),"---",
-        "Communication Comments: ",COALESCE(${airbnb_reviews.communication_comments},"N/A"),"~",COALESCE(${what_aspects_of_communications_fell_short_},"N/A"),"---",
+    hidden: no
+    sql: CONCAT("Overall Comments: ", COALESCE(${airbnb_reviews.overall_comments},"N/A"),"~", COALESCE(${airbnb_reviews.private_feedback},"N/A"),"~", COALESCE(${post_checkout_data.overall_feedback},"N/A"),"---",
         "Accuracy Comments: ", COALESCE(${airbnb_reviews.accuracy_comments},"N/A"),"~",COALESCE(${what_aspects_were_different_from_you_expected_},"N/A"),"---",
-        "Value Comments: ", COALESCE(${airbnb_reviews.value_comments},"N/A"),"~",COALESCE(${what_would_have_made_your_stay_feel_like_a_better_value_},"N/A"),"---",
+        "Checkin Comments: ", COALESCE(${airbnb_reviews.checkin_comments},"N/A"),"~", COALESCE(${how_did_the_the_check_in_experience_miss_the_mark_},"N/A"),"~",COALESCE(${reviews.checkin_text},"N/A"),"---",
+        "Cleaning Comments: ", COALESCE(${airbnb_reviews.cleanliness_comments},"N/A"),"~",COALESCE(${how_did_we_miss_the_mark_on_cleanliness_},"N/A"),"~",COALESCE(${reviews.cleaning_text},"N/A"),"---",
+        "Communication Comments: ",COALESCE(${airbnb_reviews.communication_comments},"N/A"),"~",COALESCE(${what_aspects_of_communications_fell_short_},"N/A"),"---",
         "Location Comments: ", COALESCE(${airbnb_reviews.location_comments},"N/A"),"~", COALESCE(${how_did_the_property_location_fall_short_},"N/A"),"---",
-        "Checkin Comments: ", COALESCE(${airbnb_reviews.checkin_comments},"N/A"),"~", COALESCE(${how_did_the_the_check_in_experience_miss_the_mark_},"N/A"),"---",
-        "Real-time Review Comments: ", COALESCE(${reviews.aggregated_comments},"N/A"))
+        "Value Comments: ", COALESCE(${airbnb_reviews.value_comments},"N/A"),"~",COALESCE(${what_would_have_made_your_stay_feel_like_a_better_value_},"N/A"),"---",
+        "Why: ", COALESCE(${why_did_you_choose_to_stay_at_this_particular_property_},"N/A"),"---",
+        "Favorite: ", COALESCE(${what_was_your_favorite_aspect_of_the_kasa_experience_},"N/A"),"---",
+        "Suggestions: ", COALESCE(${what_else_could_kasa_have_done_to_improve_your_stay_},"N/A"),"~",COALESCE(${post_checkout_data.suggestion},"N/A"))
         ;;
   }
 
@@ -53,9 +54,8 @@ view: post_checkout_v2 {
     view_label: "Review Force"
     description: "This will aggregate all review comments from different review channels (airbnb, Postcheckout, Postcheckout V2) into one block."
     type: string
-    sql: LTRIM(regexp_replace(regexp_replace(
-        RTRIM(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(
-          regexp_replace(regexp_replace(${aggregated_comments_all},"Overall Comments: N/A~N/A~N/A~N/A~N/A~N/A~N/A",""),"Checkin Comments: N/A~N/A",""),"Cleaning Comments: N/A~N/A",""),"Communication Comments: N/A~N/A",""),"Accuracy Comments: N/A~N/A",""),"Value Comments: N/A~N/A",""),"Location Comments: N/A~N/A",""),"Real-time Review Comments: ~N/A",""),"~N/A",""),"-"),"~","|"),"N/A|",""),"-")
+    sql: regexp_replace(regexp_replace(RTRIM(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(
+          regexp_replace(regexp_replace(regexp_replace(${aggregated_comments_all_unclean},"Overall Comments: N/A~N/A~N/A---",""),"Checkin Comments: N/A~N/A~N/A---",""),"Cleaning Comments: N/A~N/A~N/A---",""),"Communication Comments: N/A~N/A---",""),"Accuracy Comments: N/A~N/A---",""),"Value Comments: N/A~N/A---",""),"Location Comments: N/A~N/A---",""),"Why: N/A---",""),"Favorite: N/A---",""),"Suggestions: N/A~N/A",""),"~N/A",""),"---"),"N/A~",""),"~","|")
               ;;
   }
 
