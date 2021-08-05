@@ -34,26 +34,14 @@ SELECT
     pom_qa_walkthrough_survey.POM_Name  AS pom_qa_walkthrough_survey_pom_name,
     pom_qa_walkthrough_survey.Email_address  AS pom_qa_walkthrough_survey_email_address,
         COALESCE(SUM(CASE
-    WHEN pom_qa_walkthrough_survey.value IN ('Yes- high dusting was completed','No - there were no items left behind from the previous guest under the bed.',
-    'Cabinets are organized and well stocked','Blanket- sheets and pillows for sofa bed are stocked properly.',
-    'Shower liner is clean and in good condition?','No there were not items left behind from the previous guest.',
-    'All appliances are clean', 'All areas have been sanitized', 'Windows are streak free and clear',
-    'The sink was cleaned out properly. Individually wrapped is present and clean.', "No Items were left behind from the previous guest") THEN pom_qa_walkthrough_survey.Weight
+    WHEN pom_qa_walkthrough_survey.value LIKE "%[0]%" THEN 0
 
-    WHEN pom_qa_walkthrough_survey.value = "Yes" AND pom_qa_walkthrough_survey.column_name IN ("Living_Room___Carpet", "Balcony___Cleanliness", "Living_Room___Sofa", "Living_Room___Ceiling_Fan", "Kitchen___Glasses",
-    "Kitchen___Dishwasher") THEN pom_qa_walkthrough_survey.Weight
+    WHEN pom_qa_walkthrough_survey.value LIKE "%[]%" THEN NULL
 
-    WHEN pom_qa_walkthrough_survey.value = "true" AND pom_qa_walkthrough_survey.column_name IN ("Wall_to_Wall___Scuffs_and_Spots", "Living_Room___Vents", "Living_Room___Non_carpeted_Floors",
-    "Living_Room___Dust", "Laundry_Room___Stocking_Supplies_Par_Levels", "Kitchen___Stocking_Supplies_Par_Levels", "Kitchen___Microwave",
-    "Kitchen___Essential_Stocking_Items_", "Kitchen___Coffeemaker", "Bedroom___Bed_Stains", "Bathroom___Stocking_Supplies") THEN pom_qa_walkthrough_survey.Weight
-
-    WHEN pom_qa_walkthrough_survey.value = "No" AND pom_qa_walkthrough_survey.column_name IN ("Bathroom___Shower_Liner","Bathroom___Drawers", "Bedroom___Under_Bed", "Bedroom___Carpet", "Balcony___Smoking",
-    "Bedroom___Fan_Blades", "Kitchen___Drawers", "Living_Room___Fan_Blades") THEN pom_qa_walkthrough_survey.Weight
-
-    WHEN pom_qa_walkthrough_survey.value = "false" AND pom_qa_walkthrough_survey.column_name IN ("Bedroom___Linen_and_Pillow_Cases", "Bathroom___Vents", "Bathroom___Hair_Removal") THEN pom_qa_walkthrough_survey.Weight
-    WHEN pom_qa_walkthrough_survey.value LIKE '%N/A%' OR pom_qa_walkthrough_survey.value = "null" THEN NULL
-    ELSE 0
-    END), 0) / nullif(COALESCE(SUM(( CASE WHEN pom_qa_walkthrough_survey.value LIKE '%N/A%' OR pom_qa_walkthrough_survey.value = "null" THEN NULL
+    WHEN (pom_qa_walkthrough_survey.value LIKE "%[1]%" OR pom_qa_walkthrough_survey.value LIKE "%[2]%"
+    OR pom_qa_walkthrough_survey.value LIKE "%[3]%" OR pom_qa_walkthrough_survey.value LIKE "%[4]%"
+    OR pom_qa_walkthrough_survey.value LIKE "%[5]%" OR pom_qa_walkthrough_survey.value LIKE "%[6]%") THEN pom_qa_walkthrough_survey.Weight
+    END), 0) / nullif(COALESCE(SUM(( CASE WHEN pom_qa_walkthrough_survey.value LIKE '%[]%' OR pom_qa_walkthrough_survey.value = "null" THEN NULL
     ELSE pom_qa_walkthrough_survey.Weight
     END ) ), 0), 0) AS pom_qa_walkthrough_survey_total_score
 FROM pom_qa_walkthrough_survey
@@ -190,26 +178,15 @@ GROUP BY
 
   dimension: response_answer {
     type: number
-    sql:  CASE
-    WHEN ${survey_response} IN ('Yes- high dusting was completed','No - there were no items left behind from the previous guest under the bed.',
-    'Cabinets are organized and well stocked','Blanket- sheets and pillows for sofa bed are stocked properly.',
-    'Shower liner is clean and in good condition?','No there were not items left behind from the previous guest.',
-    'All appliances are clean', 'All areas have been sanitized', 'Windows are streak free and clear',
-    'The sink was cleaned out properly. Individually wrapped is present and clean.', "No Items were left behind from the previous guest") THEN ${TABLE}.Weight
+    sql:
+    CASE
+    WHEN pom_qa_walkthrough_survey.value LIKE "%[0]%" THEN 0
 
-    WHEN ${survey_response} = "Yes" AND ${Q} IN ("Living_Room___Carpet", "Balcony___Cleanliness", "Living_Room___Sofa", "Living_Room___Ceiling_Fan", "Kitchen___Glasses",
-    "Kitchen___Dishwasher") THEN ${TABLE}.Weight
+    WHEN pom_qa_walkthrough_survey.value LIKE "%[]%" THEN NULL
 
-    WHEN ${survey_response} = "true" AND ${Q} IN ("Wall_to_Wall___Scuffs_and_Spots", "Living_Room___Vents", "Living_Room___Non_carpeted_Floors",
-    "Living_Room___Dust", "Laundry_Room___Stocking_Supplies_Par_Levels", "Kitchen___Stocking_Supplies_Par_Levels", "Kitchen___Microwave",
-    "Kitchen___Essential_Stocking_Items_", "Kitchen___Coffeemaker", "Bedroom___Bed_Stains", "Bathroom___Stocking_Supplies") THEN ${TABLE}.Weight
-
-    WHEN ${survey_response} = "No" AND ${Q} IN ("Bathroom___Shower_Liner","Bathroom___Drawers", "Bedroom___Under_Bed", "Bedroom___Carpet", "Balcony___Smoking",
-    "Bedroom___Fan_Blades", "Kitchen___Drawers", "Living_Room___Fan_Blades") THEN ${TABLE}.Weight
-
-    WHEN ${survey_response} = "false" AND ${Q} IN ("Bedroom___Linen_and_Pillow_Cases", "Bathroom___Vents", "Bathroom___Hair_Removal") THEN ${TABLE}.Weight
-    WHEN ${survey_response} LIKE '%N/A%' OR ${survey_response} = "null" THEN NULL
-    ELSE 0
+    WHEN (pom_qa_walkthrough_survey.value LIKE "%[1]%" OR pom_qa_walkthrough_survey.value LIKE "%[2]%"
+    OR pom_qa_walkthrough_survey.value LIKE "%[3]%" OR pom_qa_walkthrough_survey.value LIKE "%[4]%"
+    OR pom_qa_walkthrough_survey.value LIKE "%[5]%" OR pom_qa_walkthrough_survey.value LIKE "%[6]%") THEN pom_qa_walkthrough_survey.Weight
     END;;
   }
 
@@ -217,7 +194,7 @@ GROUP BY
     label: "Weight Adjusted"
     description: "This weight has been adjusted for cases of N/A"
     type: number
-    sql:  CASE WHEN ${survey_response} LIKE '%N/A%' OR ${survey_response} = "null" THEN NULL
+    sql:  CASE WHEN (${survey_response} LIKE '%[]%' OR ${survey_response} is null OR ${survey_response} ="null") THEN NULL
     ELSE ${weight}
     END;;
   }
@@ -300,7 +277,7 @@ GROUP BY
     type: number
     value_format: "0.0%"
     sql: (${response_sum} / nullif(${weight_adjusted_sum},0));;
-    drill_fields: [Question, section, survey_response, response_answer, weight_adjusted]
+    drill_fields: [Question, section, survey_response, response_answer, weight, weight_adjusted]
   }
 
 
@@ -329,14 +306,14 @@ GROUP BY
     filters: [Q: "Wrap_Up___New_Clean_Required", survey_response: "Yes"]
   }
 
-  # measure: resend_to_hk_2 {
-  #   label: "QAs Schedule Carpet Clean"
-  #   description: "This will pull the total number of surveys"
-  #   type: count_distinct
-  #   sql: ${primary_key} ;;
-  #   drill_fields: [submitdate_time, Email_address, POM_Name, Unit]
-  #   filters: [Q: "Living_Room___Carpet", survey_response: "Yes"]
-  # }
+  measure: resend_to_hk_2 {
+    label: "QAs Schedule Carpet Clean"
+    description: "This will pull the total number of surveys"
+    type: count_distinct
+    sql: ${primary_key} ;;
+    drill_fields: [submitdate_time, Email_address, POM_Name, Unit]
+    filters: [Q: "Living_Room___Carpet_Upholstery_Comment", survey_response: "Yes"]
+  }
 
   measure: percent_resend {
     label: "% of Tasks resent for HK"
