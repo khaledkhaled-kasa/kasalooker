@@ -312,7 +312,7 @@ GROUP BY
     type: count_distinct
     sql: ${primary_key} ;;
     drill_fields: [submitdate_time, Email_address, POM_Name, Unit]
-    filters: [Q: "Living_Room___Carpet_Upholstery_Comment", survey_response: "Yes"]
+    filters: [Q: "Living_Room___Carpet_Upholstery_Comment", survey_response: "No"]
   }
 
   measure: percent_resend {
