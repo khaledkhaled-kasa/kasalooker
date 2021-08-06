@@ -700,7 +700,7 @@ view: reservations_v3 {
     sql:CASE WHEN ${capacity_night_part_of_res}=True and
           (${status}="cancelled" or ${status}= "canceled")
           and ${guests.idcheckstatus}="failure" THEN ${confirmationcode} ELSE null END;;
-
+    drill_fields: [confirmationcode,guests.idcheckstatus]
     }
 
   measure: num_reservations_canceled_due_BGCFailure{
@@ -709,7 +709,7 @@ view: reservations_v3 {
     sql:CASE WHEN ${capacity_night_part_of_res}=True and
           (${status}="cancelled" or ${status}= "canceled")
           and (${guests.backgroundCheckStatus}="failure" or  ${guests.backgroundCheckStatus} ="failed")  THEN ${confirmationcode} ELSE null END;;
-
+    drill_fields: [reservation_details*]
     }
 
 
