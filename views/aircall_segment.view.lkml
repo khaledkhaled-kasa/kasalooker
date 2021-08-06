@@ -24,6 +24,7 @@ view: aircall_segment {
   }
 
   dimension: composite_primary_key {
+    hidden: yes
     primary_key: yes
     sql: concat(${TABLE}.properties.id,${TABLE}.event) ;;
   }

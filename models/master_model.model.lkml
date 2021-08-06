@@ -844,10 +844,10 @@ explore: ximble_master {
 }
 
 
-# explore: seasonality_chart {
-#   group_label: "Software"
-#   label: "season"
-# }
+explore: adaptive_export_skinny {
+  group_label: "Test"
+  label: "Adaptive"
+}
 
 explore: KPO_AUDIT{
   group_label: "Properties"

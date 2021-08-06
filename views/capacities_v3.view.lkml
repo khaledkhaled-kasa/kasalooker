@@ -93,14 +93,12 @@ view: capacities_v3 {
       sql: extract(day from date_sub(${night_date},interval -1 day)) = 1 ;;
     }
 
-  dimension: expired_month {
-    label: "End of Month"
+  dimension: churned_units {
+    label: "Churned Units"
     hidden: yes
     type: yesno
-    sql: extract(day from date_sub(${night_date},interval -1 day)) = 1 ;;
+    sql: ${night_date} = ${TABLE}.night_availability_enddate ;;
   }
-
-
 
 
     dimension: first_active_day {
@@ -143,12 +141,26 @@ view: capacities_v3 {
   measure: unit_count_EOM {
     label: "Total Unique Units (EOM)"
     view_label: "Units"
-    description: "Pulls the total number of Unique Units by end of month"
+    description: "Pulls the total number of Unique Units by end of month. Please note that units with black-out dates at EOM would be excluded from this calculation."
     type: count_distinct
     sql: CASE WHEN ((${units.internaltitle} LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%XXX") OR (${units.internaltitle} LIKE "%-RES") OR (${units.internaltitle} LIKE "%-S")) THEN NULL
           ELSE ${units._id}
           END;;
     filters: [EOM: "Yes"]
+    drill_fields: [units.internaltitle, units.availability_startdate_date, units.availability_enddate_date, units.unit_status]
+  }
+
+  ## This measure is used to pull one of the PS H2 KRs
+  measure: churned_units_count {
+    label: "Total Churned Units"
+    hidden: yes
+    view_label: "Units"
+    description: "Pulls total number of churned units based on unit deactivation date (Col AJ of KPO)"
+    type: count_distinct
+    sql: CASE WHEN ((${units.internaltitle} LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%XXX") OR (${units.internaltitle} LIKE "%-RES") OR (${units.internaltitle} LIKE "%-S")) THEN NULL
+          ELSE ${units._id}
+          END;;
+    filters: [churned_units: "Yes"]
     drill_fields: [units.internaltitle, units.availability_startdate_date, units.availability_enddate_date, units.unit_status]
   }
 }
