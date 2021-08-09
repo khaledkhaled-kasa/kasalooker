@@ -15,6 +15,10 @@ view: adaptive_export_skinny {
         AND building IS NOT NULL -- This will remove all null records to ensure value_float doesn't fail
 
        ;;
+
+    datagroup_trigger: adaptive_export_default_datagroup
+    # indexes: ["night","transaction"]
+    publish_as_db_view: yes
   }
 
   dimension: composite_primary_key {
