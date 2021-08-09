@@ -1597,9 +1597,31 @@ view: conversation {
     label: "# Of Affected Rez by  A&IoT Issues"
     view_label: "Metrics"
     type: count_distinct
-    sql: CASE WHEN ( ${issue_categories_1.access_io_tinfluenced}
+    sql: CASE WHEN
+        ( ${issue_categories_1.access_io_tinfluenced}
           OR ${issue_categories_2.access_io_tinfluenced}
-          OR ${issue_categories_3.access_io_tinfluenced} ) and ( ${reservations_kustomer.status} ="confirmed" OR  ${reservations_kustomer.status}="checked_in") THEN ${reservations_kustomer.confirmationcode}
+          OR ${issue_categories_3.access_io_tinfluenced}
+        )
+      AND
+        (${reservations_kustomer.status} ="confirmed" OR  ${reservations_kustomer.status}="checked_in")
+      AND
+          ((CASE WHEN  ${issue_categories_1.access_io_tinfluenced}=true THEN 1 ELSE 0 END)
+          + (CASE WHEN ${issue_categories_2.access_io_tinfluenced}=true THEN 1 ELSE 0 END)
+          + (CASE WHEN ${issue_categories_3.access_io_tinfluenced}=true THEN 1 ELSE 0 END)
+          +
+          (CASE WHEN ${issue_categories_1.sub_category} in ("Unit Lock: Dead Battery","Unit Lock: User Error","Building System: Non Responsive/No Power","Building System: User Error")
+          THEN 1 ELSE 0 END)
+          +
+          (CASE WHEN ${issue_categories_2.sub_category} in ("Unit Lock: Dead Battery","Unit Lock: User Error","Building System: Non Responsive/No Power","Building System: User Error")
+          THEN 1 ELSE 0 END)
+          +
+          (CASE WHEN ${issue_categories_3.sub_category} in ("Unit Lock: Dead Battery","Unit Lock: User Error","Building System: Non Responsive/No Power","Building System: User Error")
+          THEN 1 ELSE 0 END)
+          <>2)
+
+
+          THEN ${reservations_kustomer.confirmationcode}
+
     ELSE NULL
     END;;
     drill_fields: [reservations_kustomer.confirmationcode, total_iot_related_issues]

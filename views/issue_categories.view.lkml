@@ -94,7 +94,7 @@ view: issue_categories {
     sql: ${conversation.id} ;;
     value_format: "###"
     drill_fields: [conversation.customer_id, conversation.id, conversation.created_date, message.created_date]
-    filters: [access_io_tinfluenced: "yes" ,message.conversation_id: "-NULL"]
+    filters: [access_io_tinfluenced: "yes" ,message.conversation_id: "-NULL",sub_category: "-Unit Lock: Dead Battery,-Unit Lock: User Error,-Building System: Non Responsive/No Power,-Building System: User Error"]
   }
 
   measure: unique_conversations_external {
