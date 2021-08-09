@@ -1439,6 +1439,50 @@ view: conversation {
           filters: [first_response_time: ">0", is_first_message: "yes", is_auto_false: "yes", is_direction_out: "yes"]
         }
 
+  measure: median_first_response_time_chat {
+    view_label: "Metrics"
+    hidden: yes
+    label: "MFRT (Chat)"
+    description: "Median time between the customer's first inbound message and the agent's response. (Message Level)"
+    type: median
+    value_format: "###0.0"
+    sql: ${conversation.first_response_time} /(60*1000);;
+    filters: [first_response_time: ">0", is_first_message: "yes", is_auto_false: "yes", is_direction_out: "yes", message.channel: "chat"]
+  }
+
+  measure: median_first_response_time_sms {
+    view_label: "Metrics"
+    label: "MFRT (SMS)"
+    hidden: yes
+    description: "Median time between the customer's first inbound message and the agent's response. (Message Level)"
+    type: median
+    value_format: "###0.0"
+    sql: ${conversation.first_response_time} /(60*1000);;
+    filters: [first_response_time: ">0", is_first_message: "yes", is_auto_false: "yes", is_direction_out: "yes", message.channel: "sms"]
+  }
+
+  measure: median_first_response_time_email {
+    view_label: "Metrics"
+    label: "MFRT (email)"
+    hidden: yes
+    description: "Median time between the customer's first inbound message and the agent's response. (Message Level)"
+    type: median
+    value_format: "###0.0"
+    sql: ${conversation.first_response_time} /(60*1000);;
+    filters: [first_response_time: ">0", is_first_message: "yes", is_auto_false: "yes", is_direction_out: "yes", message.channel: "email"]
+  }
+
+  measure: median_first_response_time_whatsapp {
+    view_label: "Metrics"
+    label: "MFRT (Whatsapp)"
+    hidden: yes
+    description: "Median time between the customer's first inbound message and the agent's response. (Message Level)"
+    type: median
+    value_format: "###0.0"
+    sql: ${conversation.first_response_time} /(60*1000);;
+    filters: [first_response_time: ">0", is_first_message: "yes", is_auto_false: "yes", is_direction_out: "yes", message.channel: "whatsapp"]
+  }
+
 
 ###### Average Time to First Resolution - STILL IN PROGRESS
 
