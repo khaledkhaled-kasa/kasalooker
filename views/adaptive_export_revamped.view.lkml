@@ -92,7 +92,7 @@ view: adaptive_export_revamped {
     description: "This date should be used instead of 'Night Available Month' in cases where units retrieve income outside of their active dates."
     type: date_month
     datatype: date
-    sql: ${TABLE}.Month ;;
+    sql: ${TABLE}.Month;;
   }
 
   dimension: forecast_month {
