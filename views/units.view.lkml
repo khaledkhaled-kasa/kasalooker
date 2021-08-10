@@ -336,8 +336,8 @@ view: units {
     sql: CASE WHEN ((${internaltitle} LIKE "%-XX") OR (${internaltitle} LIKE "%XXX") OR (${internaltitle} LIKE "%-S") OR (${internaltitle} LIKE "%-RES")) THEN NULL
           ELSE ${TABLE}._id
           END ;;
-    filters: [unit_status: "Active, Expiring"]
-    drill_fields: [internaltitle, availability_startdate_date, availability_enddate_date]
+    filters: [unit_status: "Active, Expiring,Onboarding"]
+    drill_fields: [internaltitle, unit_status]
   }
 
   measure: active_property_count {
@@ -359,5 +359,6 @@ view: units {
       type: count_distinct
       sql: ${TABLE}.complex ;;
     }
+
 
   }
