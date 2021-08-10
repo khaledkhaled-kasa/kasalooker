@@ -17,6 +17,11 @@ datagroup: units_kpo_overview_default_datagroup {
   max_cache_age: "1 hours"
 }
 
+datagroup: adaptive_export_default_datagroup {
+  sql_trigger: SELECT count(*) FROM Gsheets.adaptive_export WHERE Building is NOT NULL ;;
+  max_cache_age: "1 hours"
+}
+
 datagroup: breezeway_default_datagroup {
   sql_trigger: SELECT count(*) FROM Breezeway_Data.export_summary ;;
   max_cache_age: "1 hours"

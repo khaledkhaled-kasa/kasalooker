@@ -123,6 +123,7 @@ view: pom_information {
 
   dimension: property_type {
     type: string
+    description:  "This data point is pulled from Col BG of the KPO Properties tab."
     label: "Property Sub-Category (Property Type)"
     view_label: "Building and Geographic Information"
     sql: ${TABLE}.propertytype ;;
