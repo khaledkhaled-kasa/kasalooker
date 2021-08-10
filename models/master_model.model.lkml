@@ -520,6 +520,14 @@ explore: capacities_v3 {
       and ${units.address_state} = ${geo_location.state};;
   }
 
+  join: adaptive_export_revamped {
+    view_label: "Adaptive Audited & Forecast Financials (Monthly)"
+    type:  full_outer
+    relationship: one_to_one
+    sql_on: ${capacities_v3.night_month} = ${adaptive_export_revamped.month}
+      and ${adaptive_export_revamped.prop_code} = ${units.propcode};;
+  }
+
 }
 
 explore: okrs_master {
@@ -849,10 +857,6 @@ explore: ximble_master {
 }
 
 
-explore: adaptive_export_skinny {
-  group_label: "Test"
-  label: "Adaptive"
-}
 
 explore: KPO_AUDIT{
   group_label: "Properties"
