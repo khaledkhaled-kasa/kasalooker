@@ -1,6 +1,94 @@
 view: reservations_v3 {
-  sql_table_name: `bigquery-analytics-272822.dbt.reservations_v3`  ;;
+  # sql_table_name: `bigquery-analytics-272822.dbt.reservations_v3`  ;;
   label: "Reservations"
+
+  derived_table: {
+    sql: WITH revised_reservations AS (WITH  guest_type_table AS (
+         SELECT guests.email,
+         CASE WHEN count(*) > 1 THEN "Multi Booker"
+         ELSE "Single Booker"
+         END guest_type,
+         count(*) AS number_of_bookings
+         FROM mongo.reservations
+         JOIN mongo.guests ON reservations.guest = guests._id
+         WHERE reservations.status IN ('confirmed','checked_in')
+         GROUP BY 1),
+
+        extensions AS (
+            with r1 AS (SELECT reservations.*, guests.email r1_email
+            FROM mongo.reservations JOIN mongo.guests ON reservations.guest = guests._id),
+            r2 AS (SELECT reservations.*, guests.email r2_email
+            FROM mongo.reservations JOIN mongo.guests ON reservations.guest = guests._id)
+          SELECT r1.confirmationcode AS initial_reservation_extensions,
+          r2.confirmationcode AS reservation_extensions
+          FROM r1 JOIN r2 ON r1.r1_email = r2.r2_email
+          AND CAST(TIMESTAMP(r1.checkoutdate) AS DATE) = CAST(TIMESTAMP(r2.checkindate) AS DATE)
+          AND r1.property = r2.property
+          WHERE r1.status IN ('confirmed','checked_in')
+          AND r2.status IN ('confirmed','checked_in')),
+
+          number_of_extended_bookings AS (
+            with r1 AS (SELECT reservations.*, guests.email r1_email
+            FROM mongo.reservations JOIN mongo.guests ON reservations.guest = guests._id),
+            r2 AS (SELECT reservations.*, guests.email r2_email
+            FROM mongo.reservations JOIN mongo.guests ON reservations.guest = guests._id)
+          SELECT r1.r1_email, count(*) AS bookings_with_extensions
+          FROM r1 JOIN r2 ON r1.r1_email = r2.r2_email
+          AND CAST(TIMESTAMP(r1.checkoutdate) AS DATE) = CAST(TIMESTAMP(r2.checkindate) AS DATE)
+          AND r1.property = r2.property
+          WHERE r1.status IN ('confirmed','checked_in')
+          AND r2.status IN ('confirmed','checked_in')
+          GROUP BY 1),
+
+        reservations_new AS (
+          SELECT reservations.*, guests.email guests_email, DATE(checkindate) as partition_date
+          FROM mongo.reservations LEFT JOIN mongo.guests
+          ON reservations.guest = guests._id)
+
+
+    SELECT reservations_new.*, guest_type_table.guest_type, guest_type_table.number_of_bookings, number_of_extended_bookings.bookings_with_extensions,
+    CASE WHEN bookings_with_extensions is null THEN guest_type_table.number_of_bookings
+    WHEN (guest_type_table.number_of_bookings - number_of_extended_bookings.bookings_with_extensions) < 1 THEN (guest_type_table.number_of_bookings - 0.5*number_of_extended_bookings.bookings_with_extensions)
+    ELSE guest_type_table.number_of_bookings - number_of_extended_bookings.bookings_with_extensions
+    END number_of_unique_reservations,
+    CASE WHEN e2.initial_reservation_extensions is not null THEN 1
+    ELSE NULL
+    END initial_booking,
+    CASE WHEN e1.reservation_extensions is not null THEN 1
+    ELSE NULL
+    END extended_booking,
+    CASE WHEN (status IN ("confirmed","checked_in") AND cancellationdate is not null) THEN "canceled"
+    WHEN status = "cancelled" THEN "canceled"
+    ELSE status
+    END status_revised
+    FROM reservations_new
+    LEFT JOIN extensions e1
+    ON reservations_new.confirmationcode = e1.reservation_extensions
+    LEFT JOIN extensions e2
+    ON reservations_new.confirmationcode = e2.initial_reservation_extensions
+    LEFT JOIN number_of_extended_bookings
+    ON reservations_new.guests_email = number_of_extended_bookings.r1_email
+    LEFT JOIN guest_type_table
+    ON reservations_new.guests_email = guest_type_table.email)
+
+-- Remove Duplicate Rows
+SELECT *
+FROM (
+  SELECT
+      *,
+      ROW_NUMBER()
+          OVER (PARTITION BY _id)
+          row_number
+  FROM revised_reservations
+)
+WHERE row_number = 1 ;;
+
+    # persist_for: "1 hour"
+    datagroup_trigger: kasametrics_reservations_datagroup
+    # indexes: ["night","transaction"]
+    publish_as_db_view: yes
+    partition_keys: ["partition_date"]
+  }
 
 
   dimension: confirmationcode {
