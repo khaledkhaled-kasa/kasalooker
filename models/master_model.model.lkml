@@ -712,13 +712,13 @@ explore: trs_prs {
 explore: t_s_security_deployment {
   group_label: "T & S"
   label: "Security Deployment Report"
-  hidden: yes
+  hidden: no
 }
 
 explore: t_s_incident_report {
   group_label: "T & S"
   label: "Security Incident Report"
-  hidden: yes
+  hidden: no
 }
 
 explore: channel_cost_marketing {
