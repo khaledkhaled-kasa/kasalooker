@@ -152,7 +152,6 @@ view: adaptive_export_revamped {
   }
 
 
-
   measure: occupancy_forecast {
     label: "Forecast Occupancy (Monthly)"
     description: "This will pull the monthly forecast occupied nights divided by the monthly forecast room nights available from adaptive. Live occupancy can be retrieved from the 'Occupancy' measure under the Reservations view."
@@ -175,7 +174,7 @@ view: adaptive_export_revamped {
     label: "Forecast Guest Turns (Monthly)"
     description: "This will pull the monthly forecast from Adaptive. Live Guest Turns can be retrieved from the 'Number of Checkouts' measure under the Reservations view."
     type: number
-    sql: CASE WHEN (${guest_turns_hidden} = 0) THEN NULL ELSE ${guest_turns_hidden} END;;
+    sql: CASE WHEN (${forecast_month} = 'Audited Month') THEN NULL ELSE ${guest_turns_hidden} END;;
   }
 
   measure: income_audited_hidden {
@@ -192,7 +191,7 @@ view: adaptive_export_revamped {
     description: "This will pull income statements from Adaptive for only audited months. This will essentially retrieve the 'Amount' measure under the Financials view after financial auditing."
     type: number
     value_format: "$#,##0"
-    sql: CASE WHEN ${income_audited_hidden} = 0 THEN NULL ELSE ${income_audited_hidden} END;;
+    sql: CASE WHEN (${forecast_month} = 'Forecast Month') THEN NULL ELSE ${income_audited_hidden} END;;
   }
 
   measure: income_forecast_hidden {
@@ -209,7 +208,7 @@ view: adaptive_export_revamped {
     description: "This will pull income statements from Adaptive for only forecast months. Live revenues can be captured from the 'Amount' measure under the Financials view."
     type: number
     value_format: "$#,##0"
-    sql: CASE WHEN ${income_forecast_hidden} = 0 THEN NULL ELSE ${income_forecast_hidden} END;;
+    sql: CASE WHEN (${forecast_month} = 'Audited Month') THEN NULL ELSE ${income_forecast_hidden} END;;
   }
 
   measure: adr_revamped {
