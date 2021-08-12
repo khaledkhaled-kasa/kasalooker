@@ -21,14 +21,14 @@ view: adaptive_export_revamped {
 
       -- Pivoting the table! Any additioanl metrics need to be included here!
       SELECT PropShrt, PropCode, Building, Month, Forecast_Month,
-      ANY_VALUE(if(Metric = 'ADR',value_float,null)) AS ADR,
-      ANY_VALUE(if(Metric = 'RevPAR',value_float,null)) AS RevPAR,
-      ANY_VALUE(if(Metric = 'Occupancy %',value_float,null)) AS Occupancy,
-      ANY_VALUE(if(Metric = 'Units Available',value_float,null)) AS Units_Available, -- This is originally sourced from Looker
+      ANY_VALUE(if(Metric = 'ADR' AND Forecast_Month = 'Forecast Month',value_float,null)) AS ADR,
+      ANY_VALUE(if(Metric = 'RevPAR' AND Forecast_Month = 'Forecast Month',value_float,null)) AS RevPAR,
+      ANY_VALUE(if(Metric = 'Occupancy %' AND Forecast_Month = 'Forecast Month',value_float,null)) AS Occupancy,
+      ANY_VALUE(if(Metric = 'Units Available' AND Forecast_Month = 'Forecast Month',value_float,null)) AS Units_Available, -- This is originally sourced from Looker
       ANY_VALUE(if(Metric = 'Guest Turns',value_float,null)) AS Guest_Turns, -- This is originally sourced from Looker (historicals)
       ANY_VALUE(if(Metric = 'Length of Stay',value_float,null)) AS LOS, -- This is originally sourced from Looker (historicals)
-      ANY_VALUE(if(Metric = 'Occupied Nights',value_float,null)) AS Occupied_Nights, -- This is originally sourced from Looker (historicals)
-      ANY_VALUE(if(Metric = 'Room Nights Available',value_float,null)) AS Room_Nights_Available, -- This is originally sourced from Looker
+      ANY_VALUE(if(Metric = 'Occupied Nights' AND Forecast_Month = 'Forecast Month',value_float,null)) AS Occupied_Nights, -- This is originally sourced from Looker (historicals)
+      ANY_VALUE(if(Metric = 'Room Nights Available' AND Forecast_Month = 'Forecast Month',value_float,null)) AS Room_Nights_Available, -- This is originally sourced from Looker
       ANY_VALUE(if(Metric = 'Income',value_float,null)) AS Income,
       ANY_VALUE(if(Metric = 'Owner Remittance (NetSuite)',value_float,null)) AS Owner_Remittance,
       ANY_VALUE(if(Metric = 'Owner Profitability',value_float,null)) AS Owner_Profitability,
@@ -137,7 +137,7 @@ view: adaptive_export_revamped {
 
   measure: occupied_nights_measure {
     description: "This will pull the occupied nights from Adaptive. Live occupied nights can be retrieved from the 'NumReservationNights' measure under the Reservations view."
-    hidden: yes
+    hidden: no
     label: "Occupied Nights (Adaptive)"
     type: sum_distinct
     sql: ${TABLE}.Occupied_Nights ;;
@@ -145,7 +145,7 @@ view: adaptive_export_revamped {
 
   measure: room_nights_available_measure {
     description: "This will pull the room nights available from Adaptive. Live room nights available can be retrieved from the 'Capacity' measure under the Capacities view."
-    hidden: yes
+    hidden: no
     label: "Room Nights Available (Adaptive)"
     type: sum_distinct
     sql: ${TABLE}.Room_Nights_Available ;;
@@ -157,8 +157,9 @@ view: adaptive_export_revamped {
     description: "This will pull the monthly forecast occupied nights divided by the monthly forecast room nights available from adaptive. Live occupancy can be retrieved from the 'Occupancy' measure under the Reservations view."
     type: number
     value_format: "0.00%"
-    sql: ${occupied_nights_measure} / nullif(${room_nights_available_measure},0) ;;
+    sql: ${occupied_nights_measure} / nullif(${room_nights_available_measure},0);;
   }
+
 
   measure: guest_turns_hidden {
     label: "Forecast Guest Turns (Monthly)"
@@ -174,7 +175,7 @@ view: adaptive_export_revamped {
     label: "Forecast Guest Turns (Monthly)"
     description: "This will pull the monthly forecast from Adaptive. Live Guest Turns can be retrieved from the 'Number of Checkouts' measure under the Reservations view."
     type: number
-    sql: CASE WHEN (${forecast_month} = 'Audited Month') THEN NULL ELSE ${guest_turns_hidden} END;;
+    sql: CASE WHEN (${guest_turns_hidden} = 0) THEN NULL ELSE ${guest_turns_hidden} END;;
   }
 
   measure: income_audited_hidden {
@@ -191,7 +192,7 @@ view: adaptive_export_revamped {
     description: "This will pull income statements from Adaptive for only audited months. This will essentially retrieve the 'Amount' measure under the Financials view after financial auditing."
     type: number
     value_format: "$#,##0"
-    sql: CASE WHEN (${forecast_month} = 'Forecast Month') THEN NULL ELSE ${income_audited_hidden} END;;
+    sql: CASE WHEN (${income_audited_hidden} = 0) THEN NULL ELSE ${income_audited_hidden} END;;
   }
 
   measure: income_forecast_hidden {
@@ -208,7 +209,7 @@ view: adaptive_export_revamped {
     description: "This will pull income statements from Adaptive for only forecast months. Live revenues can be captured from the 'Amount' measure under the Financials view."
     type: number
     value_format: "$#,##0"
-    sql: CASE WHEN (${forecast_month} = 'Audited Month') THEN NULL ELSE ${income_forecast_hidden} END;;
+    sql: CASE WHEN (${income_forecast_hidden} = 0) THEN NULL ELSE ${income_forecast_hidden} END;;
   }
 
   measure: adr_revamped {
