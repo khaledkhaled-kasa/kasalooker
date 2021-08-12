@@ -28,7 +28,7 @@ datagroup: breezeway_default_datagroup {
 }
 
 datagroup: pom_checklist_default_datagroup {
-  sql_trigger: SELECT count(*) FROM Gsheets.POM_QA_Walkthrough_Survey ;;
+  sql_trigger: SELECT extract(hour FROM current_timestamp) ;;
   max_cache_age: "1 hours"
 }
 
@@ -521,7 +521,7 @@ explore: capacities_v3 {
   }
 
   join: adaptive_export_revamped {
-    view_label: "Adaptive Audited & Forecast Financials (Monthly)"
+    view_label: "Financials - Adaptive (Monthly)"
     type:  full_outer
     relationship: one_to_one
     sql_on: ${capacities_v3.night_month} = ${adaptive_export_revamped.month}

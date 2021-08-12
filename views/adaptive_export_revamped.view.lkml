@@ -102,14 +102,6 @@ view: adaptive_export_revamped {
     sql: ${TABLE}.Forecast_Month ;;
   }
 
-  dimension: occupancy {
-    hidden: yes
-    label: "Occupancy (Adaptive)"
-    type: number
-    value_format: "0.00%"
-    sql: ${TABLE}.Occupancy ;;
-  }
-
 
   dimension: occupied_nights {
     hidden: yes
@@ -118,20 +110,11 @@ view: adaptive_export_revamped {
     sql: ${TABLE}.Occupied_Nights ;;
   }
 
-  dimension: adr {
+  dimension: room_nights_available {
     hidden: yes
-    value_format: "$#,##0.00"
-    label: "ADR (Adaptive)"
+    label: "Room Nights Available (Adaptive)"
     type: number
-    sql: ${TABLE}.ADR ;;
-  }
-
-  dimension: revpar {
-    hidden: yes
-    value_format: "$#,##0.00"
-    label: "RevPAR (Adaptive)"
-    type: number
-    sql: ${TABLE}.RevPAR ;;
+    sql: ${TABLE}.Room_Nights_Available ;;
   }
 
 
@@ -143,17 +126,43 @@ view: adaptive_export_revamped {
     sql: ${TABLE}.Income ;;
   }
 
+  measure: income_measure {
+    hidden: yes
+    value_format: "$#,##0.00"
+    label: "Income (Adaptive)"
+    type: sum_distinct
+    sql: ${TABLE}.Income ;;
+  }
+
+
+  measure: occupied_nights_measure {
+    description: "This will pull the occupied nights from Adaptive. Live occupied nights can be retrieved from the 'NumReservationNights' measure under the Reservations view."
+    hidden: yes
+    label: "Occupied Nights (Adaptive)"
+    type: sum_distinct
+    sql: ${TABLE}.Occupied_Nights ;;
+  }
+
+  measure: room_nights_available_measure {
+    description: "This will pull the room nights available from Adaptive. Live room nights available can be retrieved from the 'Capacity' measure under the Capacities view."
+    hidden: yes
+    label: "Room Nights Available (Adaptive)"
+    type: sum_distinct
+    sql: ${TABLE}.Room_Nights_Available ;;
+  }
+
+
+
   measure: occupancy_forecast {
-    label: "Monthly Forecast Occupancy (Adaptive)"
-    description: "This will pull the monthly forecast from Adaptive for unaudited months. Live occupancy can be retrieved from the 'Occupancy' measure under the Reservations view."
-    type: average_distinct
+    label: "Forecast Occupancy (Monthly)"
+    description: "This will pull the monthly forecast occupied nights divided by the monthly forecast room nights available from adaptive. Live occupancy can be retrieved from the 'Occupancy' measure under the Reservations view."
+    type: number
     value_format: "0.00%"
-    sql: ${TABLE}.Occupancy ;;
-    filters: [forecast_month: "Forecast Month"]
+    sql: ${occupied_nights_measure} / nullif(${room_nights_available_measure},0) ;;
   }
 
   measure: guest_turns_hidden {
-    label: "Monthly Forecast Guest Turns (Adaptive)"
+    label: "Forecast Guest Turns (Monthly)"
     description: "This will pull the monthly forecast from Adaptive. Live Guest Turns can be retrieved from the 'Number of Checkouts' measure under the Reservations view."
     hidden: yes
     type: sum_distinct
@@ -163,14 +172,14 @@ view: adaptive_export_revamped {
 
   # This field is meant to convert all coalesced 0s in guest_turns_hidden to nulls
   measure: guest_turns_exposed {
-    label: "Monthly Forecast Guest Turns (Adaptive)"
+    label: "Forecast Guest Turns (Monthly)"
     description: "This will pull the monthly forecast from Adaptive. Live Guest Turns can be retrieved from the 'Number of Checkouts' measure under the Reservations view."
     type: number
     sql: CASE WHEN (${guest_turns_hidden} = 0) THEN NULL ELSE ${guest_turns_hidden} END;;
   }
 
   measure: income_audited_hidden {
-    label: "Monthly Audited Top Line Revenue (Adaptive)"
+    label: "Audited Top Line Revenue (Monthly)"
     hidden: yes
     type: sum_distinct
     value_format: "$#,##0"
@@ -179,7 +188,7 @@ view: adaptive_export_revamped {
   }
 
   measure: income_audited_exposed {
-    label: "Monthly Audited Top Line Revenue (Adaptive)"
+    label: "Audited Top Line Revenue (Monthly)"
     description: "This will pull income statements from Adaptive for only audited months. This will essentially retrieve the 'Amount' measure under the Financials view after financial auditing."
     type: number
     value_format: "$#,##0"
@@ -187,7 +196,7 @@ view: adaptive_export_revamped {
   }
 
   measure: income_forecast_hidden {
-    label: "Monthly Forecast Top Line Revenue (Adaptive)"
+    label: "Forecast Top Line Revenue (Monthly)"
     hidden: yes
     type: sum_distinct
     value_format: "$#,##0"
@@ -196,7 +205,7 @@ view: adaptive_export_revamped {
   }
 
   measure: income_forecast_exposed {
-    label: "Monthly Forecast Top Line Revenue (Adaptive)"
+    label: "Forecast Top Line Revenue (Monthly)"
     description: "This will pull income statements from Adaptive for only forecast months. Live revenues can be captured from the 'Amount' measure under the Financials view."
     type: number
     value_format: "$#,##0"
@@ -204,7 +213,7 @@ view: adaptive_export_revamped {
   }
 
   measure: adr_revamped {
-    label: " Monthly Audited ADR (Adaptive)"
+    label: "Audited ADR (Monthly)"
     description: "This will pull ADR based on finalized income statements from Adaptive, for audited months, divided by the total number of reservation nights from Looker. This will essentially retrieve the 'ADR' measure under the Financials view after financial auditing."
     type: number
     value_format: "$#,##0.00"
@@ -213,7 +222,7 @@ view: adaptive_export_revamped {
   }
 
   measure: revpar_revamped {
-    label: "Monthly Audited RevPAR (Adaptive)"
+    label: "Audited RevPAR (Monthly)"
     description: "This will pull RevPAR based on finalized income statements from Adaptive, for audited months, divided by the total number of nights available from Looker. This will essentially retrieve the 'RevPAR' measure under the Financials view after financial auditing."
     type: number
     value_format: "$#,##0.00"
@@ -223,26 +232,26 @@ view: adaptive_export_revamped {
 
 
   measure: forecast_adr {
-    label: "Monthly Forecast ADR (Adaptive)"
-    description: "This will pull the monthly forecast from Adaptive for unaudited months. Live ADR can be retrieved from the 'ADR' measure under the Financials view."
+    label: "Forecast ADR (Monthly)"
+    description: "This will ADR based on the forecast income statements from adaptive divided by the forecast occupied room nights from adaptive. Live ADR can be retrieved from the 'ADR' measure under the Financials view."
     value_format: "$#,##0.00"
-    type: average_distinct
-    sql: ${TABLE}.ADR ;;
-    filters: [forecast_month: "Forecast Month"]
-    drill_fields: [month, prop_code, occupied_nights, income, adr]
+    type: number
+    sql: ${income_forecast_exposed} / nullif(${occupied_nights_measure},0);;
+    drill_fields: [month, prop_code, occupied_nights, income]
   }
 
   measure: forecast_revpar {
     value_format: "$#,##0.00"
-    label: "Monthly Forecast RevPAR (Adaptive)"
-    description: "This will pull the monthly forecast from Adaptive for unaudited months. Live RevPAR can be retrieved from the 'RevPAR' measure under the Financials view."
-    type: average_distinct
-    sql: ${TABLE}.RevPAR ;;
-    filters: [forecast_month: "Forecast Month"]
-    drill_fields: [month, prop_code, occupied_nights, income, adr, occupancy, revpar]
+    label: "Forecast RevPAR (Monthly)"
+    description: "This will pull RevPAR based on forecast income statements from adaptive divided by the forecast room nights available from adaptive. Live RevPAR can be retrieved from the 'RevPAR' measure under the Financials view."
+    type: number
+    sql: ${income_forecast_exposed} / nullif(${room_nights_available_measure},0);;
+    drill_fields: [month, prop_code, room_nights_available, income]
   }
 
+
   measure: monthly_owner_remittance {
+    label: "Owner Remittance (Monthly)"
     description: "This data is pulled from an Adaptive export"
     type: sum_distinct
     value_format: "$#,##0"
@@ -250,6 +259,7 @@ view: adaptive_export_revamped {
   }
 
   measure: monthly_owner_profitability {
+    label: "Owner Profitability (Monthly)"
     description: "This data is pulled from an Adaptive export"
     type: sum_distinct
     value_format: "$#,##0"
@@ -258,15 +268,15 @@ view: adaptive_export_revamped {
 
   measure: owner_profitability_percent {
     description: "This data is pulled from an Adaptive export"
-    label: "Monthly Owner Profitability %"
+    label: "Owner Profitability % (Monthly)"
     value_format: "0%"
-    type: average_distinct
-    sql: ${TABLE}.Owner_Profitability_Percent ;;
+    type: number
+    sql: ${monthly_owner_profitability} / nullif(${income_measure},0) ;;
   }
 
-  measure: bhag_margin {
+  measure: monthly_bhag_margin {
     description: "This data is pulled from an Adaptive export"
-    label: "Monthly BHAG Margin"
+    label: "BHAG Margin (Monthly)"
     type: sum_distinct
     value_format: "$#,##0"
     sql: ${TABLE}.BHAG_Margin ;;
@@ -274,10 +284,10 @@ view: adaptive_export_revamped {
 
   measure: monthly_bhag_margin_percent {
     description: "This data is pulled from an Adaptive export"
-    label: "Monthly BHAG Margin %"
+    label: "BHAG Margin % (Monthly)"
     value_format: "0%"
-    type: average_distinct
-    sql: ${TABLE}.BHAG_Margin_Percent ;;
+    type: number
+    sql: ${monthly_bhag_margin} / nullif(${income_measure},0) ;;
   }
 
   measure: market_rent {
@@ -295,28 +305,28 @@ view: adaptive_export_revamped {
   }
 
   measure: housekeeping {
-    group_label: "Monthly Operating Expenses"
+    group_label: "Operating Expenses (Monthly)"
     value_format: "$#,##0"
     type: sum_distinct
     sql: ${TABLE}.Housekeeping ;;
   }
 
   measure: supplies {
-    group_label: "Monthly Operating Expenses"
+    group_label: "Operating Expenses (Monthly)"
     value_format: "$#,##0"
     type: sum_distinct
     sql: ${TABLE}.Supplies ;;
   }
 
   measure: channel_fees {
-    group_label: "Monthly Operating Expenses"
+    group_label: "Operating Expenses (Monthly)"
     value_format: "$#,##0"
     type: sum_distinct
     sql: ${TABLE}.Channel_Fees ;;
   }
 
   measure: maintenance_providers {
-    group_label: "Monthly Operating Expenses"
+    group_label: "Operating Expenses (Monthly)"
     value_format: "$#,##0"
     type: sum_distinct
     sql: ${TABLE}.Maintenance_Providers ;;
@@ -324,7 +334,7 @@ view: adaptive_export_revamped {
 
   measure: electric_gas_water_parking_others {
     label: "Electric/Gas/Water/ Parking/Others"
-    group_label: "Monthly Operating Expenses"
+    group_label: "Operating Expenses (Monthly)"
     value_format: "$#,##0"
     type: sum_distinct
     sql: ${TABLE}.Electric_Gas_Water_Parking_Others ;;
@@ -332,7 +342,7 @@ view: adaptive_export_revamped {
 
   measure: tv_internet {
     label: "TV/Internet"
-    group_label: "Monthly Operating Expenses"
+    group_label: "Operating Expenses (Monthly)"
     value_format: "$#,##0"
     type: sum_distinct
     sql: ${TABLE}.TV_Internet ;;
@@ -340,14 +350,14 @@ view: adaptive_export_revamped {
 
   measure: allocated_gx_costs {
     label: "Allocated GX Costs"
-    group_label: "Monthly Operating Expenses"
+    group_label: "Operating Expenses (Monthly)"
     value_format: "$#,##0"
     type: sum_distinct
     sql: ${TABLE}.Allocated_GX_Costs ;;
   }
 
   measure: allocated_tech_costs {
-    group_label: "Monthly Operating Expenses"
+    group_label: "Operating Expenses (Monthly)"
     value_format: "$#,##0"
     type: sum_distinct
     sql: ${TABLE}.Allocated_Tech_Costs ;;
@@ -355,14 +365,14 @@ view: adaptive_export_revamped {
 
   measure: allocated_pom_costs {
     label: "Allocated POM Costs"
-    group_label: "Monthly Operating Expenses"
+    group_label: "Operating Expenses (Monthly)"
     value_format: "$#,##0"
     type: sum_distinct
     sql: ${TABLE}.Allocated_POM_Costs ;;
   }
 
   measure: all_other_opex {
-    group_label: "Monthly Operating Expenses"
+    group_label: "Operating Expenses (Monthly)"
     label: "All Other OPEX Costs"
     value_format: "$#,##0"
     type: sum_distinct
@@ -370,7 +380,8 @@ view: adaptive_export_revamped {
   }
 
   measure: monthly_total_operating_expenses {
-    description: "This will pull the total operating expenses on a monthly basis from Adaptive. For a breakdown, you can either click on the drill-down option or navigate to the 'Monthly Operating Expenses' group label"
+    label: "Total Operating Expenses (Monthly)"
+    description: "This will pull the total operating expenses on a monthly basis from Adaptive. For a breakdown, you can either click on the drill-down option or navigate to the 'Operating Expenses (Monthly)' group label"
     value_format: "$#,##0"
     type: sum_distinct
     sql: ${TABLE}.Operating_Expense ;;
@@ -378,13 +389,14 @@ view: adaptive_export_revamped {
   }
 
   measure: monthly_payment_processing_fees {
+    label: "Payment Processing Fees (Monthly)"
     value_format: "$#,##0"
     type: sum_distinct
     sql: ${TABLE}.Payment_Processing_Fees ;;
   }
 
   measure: str_operating_cash_flow {
-    label: "Monthly STR Operating Cash Flow (Est.)"
+    label: "STR Operating Cash Flow Est. (Monthly)"
     value_format: "$#,##0"
     type: sum_distinct
     sql: ${TABLE}.STR_Operating_Cash_Flow ;;
