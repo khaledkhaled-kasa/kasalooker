@@ -137,7 +137,7 @@ view: adaptive_export_revamped {
 
   measure: occupied_nights_measure {
     description: "This will pull the occupied nights from Adaptive. Live occupied nights can be retrieved from the 'NumReservationNights' measure under the Reservations view."
-    hidden: no
+    hidden: yes
     label: "Occupied Nights (Adaptive)"
     type: sum_distinct
     sql: ${TABLE}.Occupied_Nights ;;
@@ -145,7 +145,7 @@ view: adaptive_export_revamped {
 
   measure: room_nights_available_measure {
     description: "This will pull the room nights available from Adaptive. Live room nights available can be retrieved from the 'Capacity' measure under the Capacities view."
-    hidden: no
+    hidden: yes
     label: "Room Nights Available (Adaptive)"
     type: sum_distinct
     sql: ${TABLE}.Room_Nights_Available ;;
