@@ -32,6 +32,7 @@ view: blocks {
 
   dimension: enddatelocal {
     label: "End Date"
+    datatype: date
     type: date
     sql: DATE(${TABLE}.enddatelocal) ;;
     convert_tz: no
@@ -40,6 +41,7 @@ view: blocks {
   dimension: startdatelocal {
     label: "Start Date"
     type: date
+    datatype: date
     sql: DATE(${TABLE}.startdatelocal) ;;
     convert_tz: no
   }
