@@ -4,11 +4,13 @@ view: blocks {
 
 
   dimension: category {
+    label: "Category"
     type: string
     sql: ${TABLE}.category ;;
   }
 
   dimension_group: createdat {
+    label: "Created"
     type: time
     timeframes: [
       raw,
@@ -23,20 +25,34 @@ view: blocks {
   }
 
   dimension: createdby {
+    label: "Created By"
     type: string
     sql: ${TABLE}.createdby ;;
   }
 
   dimension: enddatelocal {
+    label: "End Date"
     type: date
     sql: DATE(${TABLE}.enddatelocal) ;;
     convert_tz: no
   }
 
+  dimension: startdatelocal {
+    label: "Start Date"
+    type: date
+    sql: DATE(${TABLE}.startdatelocal) ;;
+    convert_tz: no
+  }
 
   dimension: notes {
     type: string
     sql: ${TABLE}.notes ;;
+  }
+
+  dimension: status {
+    label: "Status"
+    type: string
+    sql: ${TABLE}.status ;;
   }
 
   dimension: property {
@@ -50,19 +66,6 @@ view: blocks {
     type: string
     sql: ${TABLE}.reservation ;;
   }
-
-  dimension: startdatelocal {
-    type: date
-    sql: DATE(${TABLE}.startdatelocal) ;;
-    convert_tz: no
-  }
-
-
-  dimension: status {
-    type: string
-    sql: ${TABLE}.status ;;
-  }
-
 
   dimension: unit {
     hidden: yes
