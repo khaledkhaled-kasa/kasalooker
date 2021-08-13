@@ -21,6 +21,7 @@ view: geo_location {
 
   dimension: marketing_property_dash_transition {
     type: string
+    hidden: yes
     sql: "Click to continue ⏭️️ " ;;
     link: {
       label: "Move to next Dashboard"
