@@ -16,7 +16,7 @@ view: adaptive_export_revamped {
               UNNEST(SPLIT(REGEXP_REPLACE(to_json_string(t), r'{|}', ''))) pair
               )
               WHERE NOT LOWER(column_name) IN ('propshrt','propcode','building', 'metric')
-              AND building IS NOT NULL -- This will remove all null records to ensure value_float doesn't fail
+              AND PropShrt IS NOT NULL -- This will remove all null records to ensure value_float doesn't fail
       )
 
       -- Pivoting the table! Any additioanl metrics need to be included here!

@@ -855,6 +855,42 @@ explore: kasa_kredit_reimbursement {
 }
 
 
+explore: blocks {
+  group_label: "Reservations"
+  hidden: no
+  label: "Guesty Calendar Blocks"
+  fields: [geo_location.city, geo_location.state, geo_location.metro, complexes.title, units.propcode, units.internaltitle,
+            blocks.startdatelocal, blocks.enddatelocal, blocks.createdat_date, blocks.createdby, blocks.category, blocks.notes, blocks.status]
+
+  join: units {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${units._id} = ${blocks.unit} ;;
+  }
+
+
+  join: complexes {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${complexes._id} = ${units.complex} ;;
+
+  }
+
+  join: geo_location {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on:  ${units.address_city} = ${geo_location.city}
+      and ${units.address_state} = ${geo_location.state};;
+  }
+}
+
+# -- SELECT complexes.internaltitle, units.internaltitle, startdatelocal, enddatelocal, blocks.createdat, blocks.createdby, category, notes, blocks.*
+# -- FROM `bigquery-analytics-272822.mongo.blocks` blocks
+# -- JOIN units ON blocks.unit = units._id
+# -- JOIN complexes ON complexes._id = units.complex
+# -- where units.internaltitle = 'ARW-222'
+
+
 explore: security_deposits_kfc {
   group_label: "KFC Reporting"
   label: "Security Deposits"
