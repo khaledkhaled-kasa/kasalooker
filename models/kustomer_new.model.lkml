@@ -142,6 +142,7 @@ explore: customer {
     sql_on:  ${post_checkout_v2.confirmationcode} = ${reservations_kustomer.confirmationcode} ;;
   }
 
+
 }
 
 

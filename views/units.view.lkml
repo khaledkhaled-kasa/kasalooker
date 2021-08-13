@@ -336,7 +336,7 @@ view: units {
     sql: CASE WHEN ((${internaltitle} LIKE "%-XX") OR (${internaltitle} LIKE "%XXX") OR (${internaltitle} LIKE "%-S") OR (${internaltitle} LIKE "%-RES")) THEN NULL
           ELSE ${TABLE}._id
           END ;;
-    filters: [unit_status: "Active, Expiring,Onboarding"]
+    filters: [unit_status: "Active, Expiring"]
     drill_fields: [internaltitle, unit_status]
   }
 

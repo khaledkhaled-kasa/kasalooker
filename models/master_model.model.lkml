@@ -10,7 +10,11 @@ datagroup: default_datagroup {
   sql_trigger: SELECT CURRENT_DATE() ;;
   max_cache_age: "24 hours"
 }
-
+datagroup: ST_Installation_Dates_Tracke_datagroup {
+  sql_trigger: SELECT COUNT(*) FROM `bigquery-analytics-272822.Gsheets.ST_Installation_Dates_Tracke`
+  where  UnitInternalTitle is not null ;;
+  max_cache_age: "1 hours"
+}
 
 datagroup: units_kpo_overview_default_datagroup {
   sql_trigger: SELECT COUNT(*) FROM `bigquery-analytics-272822.Gsheets.kpo_overview_clean` ;;
@@ -299,6 +303,11 @@ explore: reservations_clean {
     type:  left_outer
     relationship: one_to_one
     sql_on: ${units._id} = ${reservations_clean.unit};;
+  }
+  join: ST_Installation_Dates_Tracker{
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${units.internaltitle} = ${ST_Installation_Dates_Tracker.unit_internal_title};;
   }
 
   join: pom_information {

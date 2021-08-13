@@ -1270,6 +1270,8 @@ view: conversation {
           sql: message.direction_type = 'response-out' ;;
         }
 
+
+
 ######## Team Metrics - THESE MEASURES ONLY APPLY TO KUSTOMETRICS
 
         ###### Messages Sent
@@ -1672,7 +1674,13 @@ view: conversation {
 
 
     }
+  parameter: top_n {
+    type: number
+  }
 
-
+  dimension: rank_limit {
+    type: number
+    sql: {% parameter  top_n %} ;;
+  }
 
       }
