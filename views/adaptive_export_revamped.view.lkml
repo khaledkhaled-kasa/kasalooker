@@ -291,14 +291,14 @@ view: adaptive_export_revamped {
   }
 
   measure: market_rent {
-    description: "This data is pulled from an Adaptive export"
+    description: "This data is pulled from CoStar on a quarterly basis by Real Estate. This gives us a real time view into the health of the market."
     type: sum_distinct
     value_format: "$#,##0"
     sql: ${TABLE}.Market_Rent ;;
   }
 
   measure: lease_rent {
-    description: "This data is pulled from an Adaptive export"
+    description: "This data is pulled from adaptive based on the KPO (static per lease agreement)."
     type: sum_distinct
     value_format: "$#,##0"
     sql: ${TABLE}.Lease_Rent ;;

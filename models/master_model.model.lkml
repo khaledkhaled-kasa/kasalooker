@@ -368,11 +368,22 @@ explore: reservations_audit {
   label: "Reservations (Finance Audit)"
   group_label: "Finance"
   from: reservations_audit
+  fields: [ALL_FIELDS*,
+    -adaptive_export_revamped.adr_revamped, -adaptive_export_revamped.revpar_revamped]
+
 
   join: financials_audit {
     type:  inner
     relationship: one_to_many
     sql_on: ${reservations_audit._id} = ${financials_audit.reservation} ;;
+  }
+
+  join: adaptive_export_revamped {
+    view_label: "Financials - Adaptive (Monthly)"
+    type:  full_outer
+    relationship: one_to_one
+    sql_on: ${financials_audit.night_month} = ${adaptive_export_revamped.month}
+      and ${adaptive_export_revamped.prop_code} = ${units.propcode};;
   }
 
   join: chargelogs {
