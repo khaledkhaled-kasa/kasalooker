@@ -423,7 +423,7 @@ view: financials_v3{
 
 
   measure: revpar {
-    label: "RevPar"
+    label: "RevPAR"
     description: "Revenue per available room: amount / capacity. This only applies to confirmed / checked-in bookings and filtered financial types (excluding taxes & channel fees)."
     type: number
     value_format: "$#,##0.00"

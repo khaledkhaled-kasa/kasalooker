@@ -32,7 +32,7 @@ datagroup: breezeway_default_datagroup {
 }
 
 datagroup: pom_checklist_default_datagroup {
-  sql_trigger: SELECT count(*) FROM Gsheets.POM_QA_Walkthrough_Survey ;;
+  sql_trigger: SELECT extract(hour FROM current_timestamp) ;;
   max_cache_age: "1 hours"
 }
 
@@ -377,11 +377,22 @@ explore: reservations_audit {
   label: "Reservations (Finance Audit)"
   group_label: "Finance"
   from: reservations_audit
+  fields: [ALL_FIELDS*,
+    -adaptive_export_revamped.adr_revamped, -adaptive_export_revamped.revpar_revamped]
+
 
   join: financials_audit {
     type:  inner
     relationship: one_to_many
     sql_on: ${reservations_audit._id} = ${financials_audit.reservation} ;;
+  }
+
+  join: adaptive_export_revamped {
+    view_label: "Financials - Adaptive (Monthly)"
+    type:  full_outer
+    relationship: one_to_one
+    sql_on: ${financials_audit.night_month} = ${adaptive_export_revamped.month}
+      and ${adaptive_export_revamped.prop_code} = ${units.propcode};;
   }
 
   join: chargelogs {
@@ -527,6 +538,14 @@ explore: capacities_v3 {
     relationship: one_to_one
     sql_on:  ${units.address_city} = ${geo_location.city}
       and ${units.address_state} = ${geo_location.state};;
+  }
+
+  join: adaptive_export_revamped {
+    view_label: "Financials - Adaptive (Monthly)"
+    type:  full_outer
+    relationship: one_to_one
+    sql_on: ${capacities_v3.night_month} = ${adaptive_export_revamped.month}
+      and ${adaptive_export_revamped.prop_code} = ${units.propcode};;
   }
 
 }
@@ -713,13 +732,13 @@ explore: trs_prs {
 explore: t_s_security_deployment {
   group_label: "T & S"
   label: "Security Deployment Report"
-  hidden: yes
+  hidden: no
 }
 
 explore: t_s_incident_report {
   group_label: "T & S"
   label: "Security Incident Report"
-  hidden: yes
+  hidden: no
 }
 
 explore: channel_cost_marketing {
@@ -845,6 +864,43 @@ explore: kasa_kredit_reimbursement {
 }
 
 
+explore: blocks {
+  group_label: "Reservations"
+  hidden: yes
+  label: "Guesty Calendar Blocks"
+  fields: [geo_location.city, geo_location.state, geo_location.metro, complexes.title, units.propcode, units.internaltitle,
+            blocks.startdatelocal, blocks.enddatelocal, blocks.createdat_date, blocks.createdat_month, blocks.createdat_quarter,
+            blocks.createdby, blocks.category, blocks.notes, blocks.status]
+
+  join: units {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${units._id} = ${blocks.unit} ;;
+  }
+
+
+  join: complexes {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${complexes._id} = ${units.complex} ;;
+
+  }
+
+  join: geo_location {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on:  ${units.address_city} = ${geo_location.city}
+      and ${units.address_state} = ${geo_location.state};;
+  }
+}
+
+# -- SELECT complexes.internaltitle, units.internaltitle, startdatelocal, enddatelocal, blocks.createdat, blocks.createdby, category, notes, blocks.*
+# -- FROM `bigquery-analytics-272822.mongo.blocks` blocks
+# -- JOIN units ON blocks.unit = units._id
+# -- JOIN complexes ON complexes._id = units.complex
+# -- where units.internaltitle = 'ARW-222'
+
+
 explore: security_deposits_kfc {
   group_label: "KFC Reporting"
   label: "Security Deposits"
@@ -858,10 +914,6 @@ explore: ximble_master {
 }
 
 
-explore: adaptive_export_skinny {
-  group_label: "Test"
-  label: "Adaptive"
-}
 
 explore: KPO_AUDIT{
   group_label: "Properties"
