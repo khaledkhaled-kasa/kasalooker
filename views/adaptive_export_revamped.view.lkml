@@ -5,7 +5,7 @@ view: adaptive_export_revamped {
     -- This table will convert the original wide adaptive_export to a narrow table (month as a new column)
       WITH t as (SELECT PropShrt, PropCode, Building, Metric,
             LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH) Month,
-            CASE WHEN current_date() >= DATE_ADD(LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH), INTERVAL 15 DAY) THEN "Audited Month"
+            CASE WHEN current_date() >= DATE_ADD(LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH), INTERVAL 20 DAY) THEN "Audited Month"
             ELSE "Forecast Month" END Forecast_Month,
             value, SAFE_CAST(value as FLOAT64) value_float
               FROM (
