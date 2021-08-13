@@ -19,6 +19,15 @@ view: geo_location {
     END;;
   }
 
+  dimension: marketing_property_dash_transition {
+    type: string
+    sql: "Click to continue ⏭️️ " ;;
+    link: {
+      label: "Move to next Dashboard"
+      url: "https://kasaliving.looker.com/dashboards-next/439?Building%20Filter={{ _filters['complexes.title'] | url_encode }}&City%20Filter={{ _filters['geo_location.city'] | url_encode }}"
+    }
+  }
+
 
   dimension: metro {
     view_label: "Building and Geographic Information"

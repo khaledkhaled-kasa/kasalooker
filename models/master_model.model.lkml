@@ -84,7 +84,7 @@ explore: breezeway_export {
     -complexes_general_building.title,
     -complexes.externalrefs_stripepayoutaccountid,-complexes_general_building.externalrefs_stripepayoutaccountid,
     -units.propcode,
-    -pom_qa_walkthrough_survey.total_qas_completed_percentage
+    -pom_qa_walkthrough_survey.total_qas_completed_percentage, -geo_location.marketing_property_dash_transition
   ]
   group_label: "PropOps"
   persist_with: breezeway_default_datagroup
@@ -292,7 +292,7 @@ explore: reservations_clean {
   #   }
   # }
   fields: [
-    ALL_FIELDS*, -airbnb_reviews.clean_count_5_star_first90, -airbnb_reviews.clean_count_less_than_4_star_first90, -airbnb_reviews.count_clean_first90, -airbnb_reviews.net_quality_score_clean_first90, -airbnb_reviews.percent_5_star_clean_first90, -airbnb_reviews.percent_less_than_4_star_clean_first90, -complexes.title, -units.propcode]
+    ALL_FIELDS*, -airbnb_reviews.clean_count_5_star_first90, -airbnb_reviews.clean_count_less_than_4_star_first90, -airbnb_reviews.count_clean_first90, -airbnb_reviews.net_quality_score_clean_first90, -airbnb_reviews.percent_5_star_clean_first90, -airbnb_reviews.percent_less_than_4_star_clean_first90, -complexes.title, -units.propcode, -geo_location.marketing_property_dash_transition]
   # sql_always_where: ${units.availability_enddate} <> 'Invalid date' ;;
   persist_with: reviews_default_datagroup
   group_label: "Kasa Metrics"
