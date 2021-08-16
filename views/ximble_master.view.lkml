@@ -3,8 +3,7 @@
       sql: SELECT *
         FROM `bigquery-analytics-272822.ximble.ximble_master`;;
 
-      #datagroup_trigger: reviews_default_datagroup
-      persist_for: "12 hours"
+      datagroup_trigger: ximble_default_datagroup
     }
 
   dimension_group: date {

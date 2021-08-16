@@ -17,7 +17,7 @@ datagroup: ST_Installation_Dates_Tracke_datagroup {
 }
 
 datagroup: units_kpo_overview_default_datagroup {
-  sql_trigger: SELECT COUNT(*) FROM `bigquery-analytics-272822.Gsheets.kpo_overview_clean` ;;
+  sql_trigger: SELECT COUNT(*) FROM `bigquery-analytics-272822.Gsheets.kpo_overview_clean` WHERE UID IS NOT NULL ;;
   max_cache_age: "1 hours"
 }
 
@@ -27,7 +27,7 @@ datagroup: adaptive_export_default_datagroup {
 }
 
 datagroup: breezeway_default_datagroup {
-  sql_trigger: SELECT count(*) FROM Breezeway_Data.export_summary ;;
+  sql_trigger: SELECT count(*) FROM Breezeway_Data.export_summary WHERE type is NOT NULL ;;
   max_cache_age: "1 hours"
 }
 
@@ -53,7 +53,7 @@ datagroup: gv_form_ts_default_datagroup {
 
 
 datagroup: ximble_default_datagroup {
-  sql_trigger: SELECT MAX(date) FROM ximble.ximble_master;;
+  sql_trigger: SELECT COUNT(*) FROM ximble.ximble_master WHERE First_Name IS NOT NULL ;;
   max_cache_age: "1 hour"
 }
 
