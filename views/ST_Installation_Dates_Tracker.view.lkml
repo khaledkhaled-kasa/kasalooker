@@ -63,22 +63,6 @@ view: ST_Installation_Dates_Tracker {
     hidden: yes
   }
 
-  measure: BeforerCheckinRating {
-    label: "SUM Checkin Rating(Befor Installation)"
-    type: sum
-    sql: case when ${sT_Installation_Status}="Befor Installation" then ${airbnb_reviews.checkin_rating} else null end ;;
-
-    drill_fields: [airbnb_reviews.reservation_code,airbnb_reviews.checkin_rating,sT_Installation_Status]
-    hidden: yes
-  }
-  measure: AfterCheckinRating {
-    label: "SUM Checkin Rating(After Installation)"
-    type: sum
-    sql: case when ${sT_Installation_Status}="After Installation" then ${airbnb_reviews.checkin_rating} else null end ;;
-    drill_fields: [airbnb_reviews.reservation_code,airbnb_reviews.checkin_rating,sT_Installation_Status]
-    hidden: yes
-  }
-
 
   measure: avg_checkin_rating_after {
     label: "Average Checkin Rating(After Installation)"
@@ -93,6 +77,22 @@ view: ST_Installation_Dates_Tracker {
     value_format: "0.00"
     sql:  ${airbnb_reviews.checkin_rating};;
     filters: [sT_Installation_Status: "Befor Installation"]
+  }
+  measure: count_checkin_rating_before {
+    label: "#Rievws (Before Installation)"
+    type: count_distinct
+    sql:  ${airbnb_reviews.reservation_code};;
+    filters: [sT_Installation_Status: "Befor Installation"]
+    drill_fields: [airbnb_reviews.reservation_code,airbnb_reviews.checkin_rating,sT_Installation_Status,airbnb_reviews.checkin_comments]
+
+  }
+  measure: count_checkin_rating_after {
+    label: "#Rievws (After Installation)"
+    type: count_distinct
+    sql:  ${airbnb_reviews.reservation_code};;
+    filters: [sT_Installation_Status: "After Installation"]
+    drill_fields: [airbnb_reviews.reservation_code,airbnb_reviews.checkin_rating,sT_Installation_Status,airbnb_reviews.checkin_comments]
+
   }
 
   }
