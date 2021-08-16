@@ -801,6 +801,8 @@ view: reservations_v3 {
     }
 
 
+
+
     set:reservation_details {
       fields: [confirmationcode, status, source, bookingdate_date, cancellationdate_date, checkindate_date, checkoutdate_date, reservation_night, reservation_night_canceled, num_reservations, num_reservations_canceled, sourcedata_channel, sourcedata_channel_manager]
     }

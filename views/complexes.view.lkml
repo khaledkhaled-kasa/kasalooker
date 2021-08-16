@@ -69,7 +69,6 @@ view: complexes {
     type: string
     primary_key: yes
     sql: ${TABLE}.title ;;
-
   }
 
   dimension: city {
