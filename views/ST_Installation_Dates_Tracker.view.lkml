@@ -65,14 +65,14 @@ view: ST_Installation_Dates_Tracker {
 
 
   measure: avg_checkin_rating_after {
-    label: "Average Checkin Rating(After Installation)"
+    label: "Avg CI Rating(After Installation)"
     type: average
     value_format: "0.00"
     sql:  ${airbnb_reviews.checkin_rating};;
     filters: [sT_Installation_Status: "After Installation"]
   }
   measure: avg_checkin_rating_before {
-    label: "Average Checkin Rating(Before Installation)"
+    label: "Avg CI Rating(Before Installation)"
     type: average
     value_format: "0.00"
     sql:  ${airbnb_reviews.checkin_rating};;
