@@ -25,12 +25,13 @@ view: ST_Installation_Dates_Tracker {
       type: date
       datatype: date
       sql: ${TABLE}.SmartThings_Installation ;;
-      hidden: yes
+
     }
 
     dimension: rank {
       type: number
       sql: ${TABLE}.rank ;;
+      hidden: yes
     }
 
     set: detail {

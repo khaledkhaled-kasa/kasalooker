@@ -13,7 +13,7 @@ datagroup: default_datagroup {
 datagroup: ST_Installation_Dates_Tracke_datagroup {
   sql_trigger: SELECT COUNT(*) FROM `bigquery-analytics-272822.Gsheets.ST_Installation_Dates_Tracke`
   where  UnitInternalTitle is not null ;;
-  max_cache_age: "1 hours"
+  max_cache_age: "1 minutes"
 }
 
 datagroup: units_kpo_overview_default_datagroup {
