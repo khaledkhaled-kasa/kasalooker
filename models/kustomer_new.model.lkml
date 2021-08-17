@@ -16,6 +16,7 @@ label: "Software"
 
 # This excludes Voice Calls (message channels = 'voice')
 explore: customer {
+  description: "This explore houses the majority of our Kustomer metrics such as messages sent, unique customers messages, etc."
   label: "Kustomer Metrics"
   fields: [ALL_FIELDS*, -units.unit_count, -units.property_count,
     -airbnb_reviews.reservation_checkin_raw, -airbnb_reviews.reservation_checkin_time, -airbnb_reviews.reservation_checkin_date, -airbnb_reviews.reservation_checkin_week,
@@ -240,6 +241,7 @@ explore: gx_cost_allocation {
 }
 
 explore: customer_csat {
+  description: "This explore pulls Kustomer data and is designed specifically to pull CSAT metrics."
   from: customer
   always_join: [team_member,conversation_assigned_user, user]
   label: "Kustomer CSAT"
@@ -285,6 +287,7 @@ explore: customer_csat {
 explore: customer_ps {
   from: customer
   label: "Kustomer PS"
+  description: "This explore is designed to pull Kustomer metrics powering PS dashboards."
   join: conversation_ps {
     type: inner
     sql_on: ${customer_ps.id} = ${conversation_ps.customer_id};;

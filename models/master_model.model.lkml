@@ -74,6 +74,7 @@ explore: compliance_tracker {
 
 explore: aircall_segment {
   group_label: "Software"
+  description: "This explore pulls all air-call related events in real-time to power all aircall related metrics (Missed calls, inbound & outbound calls, etc.)"
   label: "Aircall"
 }
 
@@ -87,6 +88,7 @@ explore: breezeway_export {
     -pom_qa_walkthrough_survey.total_qas_completed_percentage, -geo_location.marketing_property_dash_transition
   ]
   group_label: "PropOps"
+  description: "This explore is based on a Breezeway export updated every Monday which displays all Breezeway related tasks for our POM teams (HK / PropOps). It also ties cleans to all reviews (Airbnb, Post-checkout, etc.) for feedback loop reinforcement."
   persist_with: breezeway_default_datagroup
   from: breezeway_export
   label: "Breezeway (Exports)"
@@ -297,6 +299,7 @@ explore: reservations_clean {
   persist_with: reviews_default_datagroup
   group_label: "Kasa Metrics"
   label: "Reviews"
+  description: "This pulls review data from different platforms including Airbnb, Post-checkout surveys, Real-time checkin surveys (VFD)"
   from: reservations_clean
 
   join: units {
@@ -375,6 +378,7 @@ explore: reservations_clean {
 
 explore: reservations_audit {
   label: "Reservations (Finance Audit)"
+  description: "This explore is exclusively built for our Finance team for auditing purposes. It differs from the Reservations in the sense that it will report financials for nights when the units weren't active as well. As a result, there is a slight difference in reported financials between both explores (roughly 1%). This explore does not house any guests or capacity (occupancy data)."
   group_label: "Finance"
   from: reservations_audit
   fields: [ALL_FIELDS*,
@@ -462,6 +466,7 @@ explore: capacities_v3 {
 
   group_label: "Kasa Metrics"
   label: "Reservations"
+  description: "The mother of all explores. This houses all our capacities, reservations, units, buildings, guests and financials data."
   persist_with: kasametrics_reservations_datagroup
   from: capacities_v3
   join: units {
@@ -909,6 +914,7 @@ explore: security_deposits_kfc {
 
 
 explore: ximble_master {
+  description: "This explore is based on a Ximble export updated every Monday which provides scheduled hours by GX teams to power metrics such as messages sent / hour."
   group_label: "Software"
   label: "Ximble"
 }
@@ -917,5 +923,6 @@ explore: ximble_master {
 
 explore: KPO_AUDIT{
   group_label: "Properties"
+  description: "This explore will pull data directly from the KPO Overview tab. It was created for audit checks between the KPO and our Units DB"
   label: "KPO (Audit)"
 }

@@ -12,6 +12,7 @@ explore: units_and_devices {
   from: units
   group_label: "Product & Tech"
   label: "IoT Devices"
+  description: "This explore is utilized by our Product & Tech team which essentially pulls status (battery life, active, etc.) of Kasa-Devices (Minut, Nexia, Schlage & Smartthings."
 
   join: devices {
     type: left_outer
