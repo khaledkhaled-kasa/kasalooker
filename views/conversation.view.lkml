@@ -1396,15 +1396,15 @@ view: conversation {
 
 ##### Average Response Time - In Progress
 
-        measure: average_response_time_hrs {
-          view_label: "Metrics"
-          label: "Average Response Time (hrs)"
-          description: "Average time between each inbound message and the corresponding outbound agent's response."
-          type: average
-          value_format: "###0.0"
-          sql: ${conversation.first_response_time} /(60*1000*60);;
-          filters: [first_response_time: ">0", is_auto_false: "yes", is_direction_out: "yes"]
-        }
+        # measure: average_response_time_hrs {
+        #   view_label: "Metrics"
+        #   label: "Average Response Time (hrs)"
+        #   description: "Average time between each inbound message and the corresponding outbound agent's response."
+        #   type: average
+        #   value_format: "###0.0"
+        #   sql: ${conversation.first_response_time} /(60*1000*60);;
+        #   filters: [first_response_time: ">0", is_auto_false: "yes", is_direction_out: "yes"]
+        # }
 
 ###### Average First Response Time
 

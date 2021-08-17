@@ -368,6 +368,13 @@ explore: reservations_clean {
     sql_on:  ${post_checkout_v2.confirmationcode} = ${reservations_clean.confirmation_code} ;;
   }
 
+  join: reviewforce {
+    view_label: "Review Force"
+    type:  full_outer
+    relationship: one_to_one
+    sql_on:  ${reviewforce.confirmation_code} = ${reservations_clean.confirmation_code} ;;
+  }
+
 # for marketing
   join: latest_listing_review_date {
     type: full_outer
