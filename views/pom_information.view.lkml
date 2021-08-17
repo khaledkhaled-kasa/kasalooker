@@ -29,7 +29,7 @@ view: pom_information {
 
   dimension: property_owner {
     view_label: "Building and Geographic Information"
-    description: "This will pull the property owner from Col G of the KPO"
+    description: "This data point is pulled from Col I of the KPO Properties tab."
     hidden: no
     type: string
     sql: ${TABLE}.PropOwner ;;
