@@ -79,7 +79,7 @@ view: ST_Installation_Dates_Tracker {
     filters: [sT_Installation_Status: "Befor Installation"]
   }
   measure: count_checkin_rating_before {
-    label: "#Rievws (Before Installation)"
+    label: "#Reviews (Before Installation)"
     type: count_distinct
     sql:  ${airbnb_reviews.reservation_code};;
     filters: [sT_Installation_Status: "Befor Installation",airbnb_reviews.reservation_code: "-Null"]
@@ -87,7 +87,7 @@ view: ST_Installation_Dates_Tracker {
 
   }
   measure: count_checkin_rating_after {
-    label: "#Rievws (After Installation)"
+    label: "#Reviews (After Installation)"
     type: count_distinct
     sql:  ${airbnb_reviews.reservation_code};;
     filters: [sT_Installation_Status: "After Installation",airbnb_reviews.reservation_code: "-Null"]
