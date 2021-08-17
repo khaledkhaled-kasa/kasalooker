@@ -1,6 +1,14 @@
 view: post_checkout_v2 {
   derived_table: {
-    sql: SELECT * FROM `bigquery-analytics-272822.Gsheets.post_checkout_v2`
+    sql:Select *
+ from
+ `bigquery-analytics-272822.Gsheets.post_checkout_v2`
+union all
+    SELECT
+*
+ FROM `bigquery-analytics-272822.Gsheets.post_checkout_v2_FIVE_STAR_VARIANT`
+
+
       ;;
 
     persist_for: "1 hours"
