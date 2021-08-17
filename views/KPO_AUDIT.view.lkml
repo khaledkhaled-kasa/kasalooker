@@ -1,6 +1,6 @@
 view: KPO_AUDIT {
   derived_table: {
-    sql: select KPO_table.UID, KPO_table.PropCode, KPO_table.status,KPO_table.newpartner, units.internaltitle,ContractType,FirstAvailableDate,ContractSignedDate, complexes.title
+    sql: select KPO_table.UID, KPO_table.PropCode, KPO_table.PropOwner, KPO_table.status,KPO_table.newpartner, units.internaltitle,ContractType,FirstAvailableDate,ContractSignedDate, complexes.title
       from
 
                `bigquery-analytics-272822.Gsheets.kpo_overview_clean` KPO_table
@@ -34,6 +34,11 @@ view: KPO_AUDIT {
   dimension: PropCode {
     type: string
     sql: ${TABLE}.PropCode ;;
+  }
+
+  dimension: PropOwner {
+    type: string
+    sql: ${TABLE}.PropOwner ;;
   }
 
   dimension: building_title {
@@ -78,6 +83,16 @@ view: KPO_AUDIT {
     filters: [status: "Active,Onboarding,Expiring"]
     drill_fields: [detail*]
   }
+
+  measure: count_partners {
+    type: count_distinct
+    label: "Total Unique Property Owners"
+    description: "Count # of Partners with Active,Onboarding,Expiring status "
+    sql:${TABLE}.PropOwner ;;
+    filters: [status: "Active,Onboarding,Expiring"]
+    drill_fields: [detail*]
+  }
+
   measure: countMissigunitsFromUnitsMongo{
     type: count_distinct
     label: "Total Miss Units From Units Mongo"
