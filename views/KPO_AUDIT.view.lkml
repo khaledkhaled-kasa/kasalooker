@@ -8,6 +8,7 @@ view: KPO_AUDIT {
               ON units.internaltitle =KPO_table.UID
                 LEFT JOIN `bigquery-analytics-272822.mongo.complexes` complexes
                   ON units.complex = complexes._id
+                  WHERE ContractType != 'Distribution Agreement'
        ;;
   }
 
