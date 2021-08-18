@@ -10,14 +10,8 @@ view: reservations_clean {
     sql: ${TABLE}._id ;;
   }
 
-  dimension: additionalguests {
-    hidden: yes
-    sql: ${TABLE}.additionalguests ;;
-  }
-
-
-
   dimension: property {
+    hidden: yes
     type: string
     sql: ${TABLE}.property ;;
   }
@@ -53,28 +47,6 @@ view: reservations_clean {
     sql: ${TABLE}.bookingdate ;;
   }
 
-  # dimension_group: review_date {
-  #   label: "Review"
-  #   description: "If Airbnb Review Present, this date will reflect the Airbnb Review. Otherwise, date is grabbed from Post-Checkout Data"
-  #   type: time
-  #   datatype: date
-  #   timeframes: [
-  #     raw,
-  #     time,
-  #     date,
-  #     week,
-  #     month,
-  #     quarter,
-  #     year
-  #   ]
-  #   sql:  case
-  #   when ${airbnb_reviews.review_raw} is not NULL then ${airbnb_reviews.review_raw}
-  #   when cast(${post_checkout_data.review_raw} as Date) is not NULL AND ${airbnb_reviews.review_raw} IS NULL then Cast(${post_checkout_data.review_raw} as Date)
-  #   else NULL
-  #   end;;
-  #   #sql: coalesce(${airbnb_reviews.review_raw},CAST(${post_checkout_data.review_raw} as DATE),${booking_reviews.review_raw}) ;;
-  # }
-
   dimension: preceding_cleaning_task {
     hidden: no
     type: string
@@ -83,17 +55,17 @@ view: reservations_clean {
   }
 
 
-  dimension: bring_pets {
+  dimension: bringingpets {
     type: yesno
     sql: ${TABLE}.bringingpets ;;
   }
 
-  dimension: call_box_code {
-    type: string
-    sql: ${TABLE}.callboxcode ;;
-  }
+  # dimension: call_box_code {
+  #   type: string
+  #   sql: ${TABLE}.callboxcode ;;
+  # }
 
-  dimension_group: cancellation_date {
+  dimension_group: cancellationdate {
     label: "Cancellation"
     type: time
     timeframes: [
@@ -120,22 +92,22 @@ view: reservations_clean {
     sql: CAST(${TABLE}.checkoutdate as TIMESTAMP);;
   }
 
-  dimension: confirmation_code {
+  dimension: confirmationcode {
     type: string
     sql: ${TABLE}.confirmationcode ;;
     drill_fields: [reservation_details*]
   }
 
 
-  dimension: guests_count {
-    type: number
-    sql: ${TABLE}.guestscount ;;
-  }
+  # dimension: guests_count {
+  #   type: number
+  #   sql: ${TABLE}.guestscount ;;
+  # }
 
-  dimension: number_of_pets {
-    type: number
-    sql: ${TABLE}.numberofpets ;;
-  }
+  # dimension: number_of_pets {
+  #   type: number
+  #   sql: ${TABLE}.numberofpets ;;
+  # }
 
   dimension: parking_space_needed {
     type: yesno
@@ -212,6 +184,6 @@ view: reservations_clean {
   # }
 
   set:reservation_details {
-    fields: [confirmation_code, status, source, checkindate_date, checkoutdate_date, bookingdate_date]
+    fields: [confirmationcode, status, source, checkindate_date, checkoutdate_date, bookingdate_date]
   }
 }

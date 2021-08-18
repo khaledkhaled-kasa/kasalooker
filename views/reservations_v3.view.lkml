@@ -142,6 +142,11 @@ view: reservations_v3 {
       sql: ${TABLE}.initial_booking = 1 ;;
     }
 
+  dimension: property {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.property ;;
+  }
 
 
     dimension: _id {
@@ -183,6 +188,13 @@ view: reservations_v3 {
   dimension: length_of_stay {
     type:  number
     sql:  date_diff(${checkoutdate_date}, ${checkindate_date}, DAY) ;;
+  }
+
+  dimension: preceding_cleaning_task {
+    hidden: no
+    type: string
+    description: "This will pull the BW task prior to the stay"
+    sql: ${TABLE}.precedingcleaningtask ;;
   }
 
   dimension: length_of_stay_type {
@@ -269,23 +281,21 @@ view: reservations_v3 {
       sql: ${TABLE}.guest ;;
     }
 
-    dimension: guestscount {
+    dimension: guests_count {
       type: number
       sql: ${TABLE}.guestscount ;;
     }
 
 
-    dimension: parkingspaceneeded {
+    dimension: parking_space_needed {
       type: yesno
       sql: ${TABLE}.parkingspaceneeded ;;
     }
 
-
-    # dimension: pets {
-    #   hidden: yes
-    #   type: yesno
-    #   sql: ${TABLE}.pets ;;
-    # }
+    dimension: number_of_pets {
+    type: number
+    sql: ${TABLE}.numberofpets ;;
+  }
 
 
     dimension: plannedarrival {
@@ -591,9 +601,9 @@ view: reservations_v3 {
     description: "Number of guests within the reservation(s). This metric will only consider confirmed / checked in bookings. Also, this includes extended bookings as a SEPARATE booking."
     type: sum_distinct
     sql_distinct_key: ${confirmationcode} ;;
-    sql: ${guestscount} ;;
+    sql: ${guests_count} ;;
     filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in"]
-    drill_fields: [reservation_details*, guestscount]
+    drill_fields: [reservation_details*, guests_count]
 
   }
 
@@ -800,7 +810,9 @@ view: reservations_v3 {
     drill_fields: [reservation_details*]
     }
 
-
+  set:reservations_clean {
+    fields: [property, _id, length_of_stay, preceding_cleaning_task,length_of_stay_type,bringingpets, cancellationdate_date,checkindate_date, checkoutdate_date,guests_count, parking_space_needed, number_of_pets, source, sourcedetail, sourcedata_channel, sourcedata_channel_manager, status, timezone, unit, checkindate_month, checkindate_quarter, checkindate_raw, checkindate_time, checkindate_week, checkindate_year, checkoutdate_month, checkoutdate_quarter, checkoutdate_raw, checkoutdate_time, checkoutdate_week, checkoutdate_year]
+    }
 
 
     set:reservation_details {
