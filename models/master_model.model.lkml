@@ -36,6 +36,11 @@ datagroup: pom_checklist_default_datagroup {
   max_cache_age: "1 hours"
 }
 
+datagroup: reviewforce_default_datagroup {
+  sql_trigger: SELECT count(*) FROM `bigquery-analytics-272822.Gsheets.reviewforce_categorization_clean` WHERE ConfirmationCode IS NOT NULL ;;
+  max_cache_age: "1 hours"
+}
+
 datagroup: reviews_default_datagroup {
   max_cache_age: "1 hours"
 }

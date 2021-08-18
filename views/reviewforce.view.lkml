@@ -24,6 +24,10 @@ view: reviewforce {
       FROM t3 LEFT JOIN `bigquery-analytics-272822.Gsheets.reviewforce_responsibility_mapping` t4
       ON TRIM(t3.child_category) = t4.child_categories
        ;;
+
+    datagroup_trigger: reviewforce_default_datagroup
+    # indexes: ["night","transaction"]
+    publish_as_db_view: yes
   }
 
   dimension: primary_key {
@@ -81,18 +85,13 @@ view: reviewforce {
   }
 
 
-  measure: count_parent {
-    label: "Count of Parent"
+  measure: count {
+    label: "Count"
+    description: "This will count the number of review force categories (parent/child)"
     type: count_distinct
-    sql_distinct_key: ${primary_key} ;;
-    sql: ${TABLE}.parent_category ;;
+    # sql_distinct_key: ${primary_key} ;;
+    sql: ${primary_key} ;;
   }
 
-  measure: count_child {
-    label: "Count of Child"
-    type: count_distinct
-    sql_distinct_key: ${primary_key};;
-    sql: ${TABLE}.clean_child_category ;;
-  }
 
 }
