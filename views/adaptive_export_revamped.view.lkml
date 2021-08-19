@@ -137,8 +137,8 @@ view: adaptive_export_revamped {
 
   measure: occupied_nights_measure {
     description: "This will pull the occupied nights from Adaptive. Live occupied nights can be retrieved from the 'NumReservationNights' measure under the Reservations view."
-    hidden: yes
-    label: "Occupied Nights (Adaptive)"
+    hidden: no
+    label: "Forecast Occupied Nights (Adaptive)"
     type: sum_distinct
     sql: ${TABLE}.Occupied_Nights ;;
   }
@@ -400,6 +400,13 @@ view: adaptive_export_revamped {
     value_format: "$#,##0"
     type: sum_distinct
     sql: ${TABLE}.STR_Operating_Cash_Flow ;;
+  }
+
+  measure: str_operating_cash_flow_percent {
+    label: "STR Operating Cash Flow Est. % (Monthly)"
+    value_format: "0%"
+    type: number
+    sql: ${str_operating_cash_flow} / nullif(${income_measure},0) ;;
   }
 
 
