@@ -54,6 +54,10 @@ view: reviewforce {
     sql: ${TABLE}.clean_child_category ;;
   }
 
+  dimension: feedback_type {
+    type: string
+    sql: ${TABLE}.Feedback_Type ;;
+  }
 
   dimension: parent_categories {
     label: "Parent Categories (Responsibility Mapping)"
