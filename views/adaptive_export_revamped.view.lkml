@@ -5,8 +5,9 @@ view: adaptive_export_revamped {
     -- This table will convert the original wide adaptive_export to a narrow table (month as a new column)
       WITH t as (SELECT PropShrt, PropCode, Building, Metric,
             LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH) Month,
-            CASE WHEN current_date() >= DATE_ADD(LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH), INTERVAL 20 DAY) THEN "Audited Month"
-            ELSE "Forecast Month" END Forecast_Month,
+            CASE WHEN LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH) < '2021-06-30' THEN 'Audited Month'
+            WHEN LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH) = '2021-06-30' THEN 'Audited Month (Latest)'
+            ELSE 'Forecast Month' END Forecast_Month,
             value, SAFE_CAST(value as FLOAT64) value_float
               FROM (
               SELECT PropShrt, PropCode, Building, Metric,
@@ -134,14 +135,67 @@ view: adaptive_export_revamped {
     sql: ${TABLE}.Income ;;
   }
 
+  measure: income_audited_hidden {
+    label: "Audited Top Line Revenue (Monthly)"
+    hidden: yes
+    type: sum_distinct
+    value_format: "$#,##0"
+    sql: ${TABLE}.Income;;
+    filters: [forecast_month: "Audited Month, Audited Month (Latest)"]
+  }
 
-  measure: occupied_nights_measure {
+  measure: income_audited_exposed {
+    label: "Audited Top Line Revenue (Monthly)"
+    description: "This will pull income statements from Adaptive for only audited months. This will essentially retrieve the 'Amount' measure under the Financials view after financial auditing."
+    type: number
+    value_format: "$#,##0"
+    sql: CASE WHEN (${income_audited_hidden} = 0) THEN NULL ELSE ${income_audited_hidden} END;;
+  }
+
+  measure: income_forecast_hidden {
+    label: "Forecast Top Line Revenue (Monthly)"
+    hidden: yes
+    type: sum_distinct
+    value_format: "$#,##0"
+    sql: ${TABLE}.Income;;
+    filters: [forecast_month: "Forecast Month, Audited Month (Latest)"]
+  }
+
+  measure: income_forecast_exposed {
+    label: "Forecast Top Line Revenue (Monthly)"
+    description: "This will pull income statements from Adaptive for only forecast months. Live revenues can be captured from the 'Amount' measure under the Financials view."
+    type: number
+    value_format: "$#,##0"
+    sql: CASE WHEN (${income_forecast_hidden} = 0) THEN NULL ELSE ${income_forecast_hidden} END;;
+  }
+
+
+  measure: occupied_nights_hidden {
     description: "This will pull the occupied nights from Adaptive. Live occupied nights can be retrieved from the 'NumReservationNights' measure under the Reservations view."
-    hidden: no
-    label: "Forecast Occupied Nights (Adaptive)"
+    hidden: yes
+    label: "Forecast Occupied Nights (Monthly)"
     type: sum_distinct
     sql: ${TABLE}.Occupied_Nights ;;
   }
+
+  measure: occupied_nights_exposed {
+    description: "This will pull the occupied nights from Adaptive. Live occupied nights can be retrieved from the 'NumReservationNights' measure under the Reservations view."
+    hidden: no
+    label: "Forecast Occupied Nights (Monthly)"
+    type: number
+    sql: CASE WHEN ${forecast_month} = 'Audited Month (Latest)' THEN ${reservations_v3.reservation_night}
+    ELSE NULLIF(${occupied_nights_hidden},0) END ;;
+  }
+
+  measure: occupied_nights_audited_exposed {
+    description: "This will pull the occupied nights from the 'NumReservationNights' measure under the Reservations view."
+    hidden: no
+    label: "Audited Occupied Nights (Monthly)"
+    type: number
+    sql: CASE WHEN ${forecast_month} IN ('Audited Month (Latest)', 'Audited Month') THEN ${reservations_v3.reservation_night}
+      ELSE NULL END ;;
+  }
+
 
   measure: room_nights_available_measure {
     description: "This will pull the room nights available from Adaptive. Live room nights available can be retrieved from the 'Capacity' measure under the Capacities view."
@@ -156,8 +210,28 @@ view: adaptive_export_revamped {
     label: "Forecast Occupancy (Monthly)"
     description: "This will pull the monthly forecast occupied nights divided by the monthly forecast room nights available from adaptive. Live occupancy can be retrieved from the 'Occupancy' measure under the Reservations view."
     type: number
-    value_format: "0.00%"
-    sql: ${occupied_nights_measure} / nullif(${room_nights_available_measure},0);;
+    value_format: "0.0%"
+    sql: CASE WHEN ${forecast_month} = 'Audited Month (Latest)' THEN ${reservations_v3.occupancy}
+    ELSE ${occupied_nights_exposed} / nullif(${room_nights_available_measure},0) END;;
+  }
+
+  measure: occupancy_audited {
+    description: "This will pull the occupied nights from the 'NumReservationNights' measure under the Reservations view."
+    hidden: no
+    label: "Audited Occupancy (Monthly)"
+    type: number
+    value_format: "0.0%"
+    sql: CASE WHEN ${forecast_month} IN ('Audited Month (Latest)', 'Audited Month') THEN ${reservations_v3.occupancy}
+      ELSE NULL END ;;
+  }
+
+  measure: guest_turns_audited {
+    description: "This will pull the occupied nights from the 'NumReservationNights' measure under the Reservations view."
+    hidden: no
+    label: "Audited Guest Turns (Monthly)"
+    type: number
+    sql: CASE WHEN ${forecast_month} IN ('Audited Month (Latest)', 'Audited Month') THEN ${reservations_v3.number_of_checkouts}
+      ELSE NULL END ;;
   }
 
 
@@ -175,42 +249,9 @@ view: adaptive_export_revamped {
     label: "Forecast Guest Turns (Monthly)"
     description: "This will pull the monthly forecast from Adaptive. Live Guest Turns can be retrieved from the 'Number of Checkouts' measure under the Reservations view."
     type: number
-    sql: CASE WHEN (${guest_turns_hidden} = 0) THEN NULL ELSE ${guest_turns_hidden} END;;
+    sql: CASE WHEN ${forecast_month} = 'Audited Month (Latest)' THEN ${reservations_v3.number_of_checkouts}  ELSE NULLIF(${guest_turns_hidden},0) END;;
   }
 
-  measure: income_audited_hidden {
-    label: "Audited Top Line Revenue (Monthly)"
-    hidden: yes
-    type: sum_distinct
-    value_format: "$#,##0"
-    sql: ${TABLE}.Income;;
-    filters: [forecast_month: "Audited Month"]
-  }
-
-  measure: income_audited_exposed {
-    label: "Audited Top Line Revenue (Monthly)"
-    description: "This will pull income statements from Adaptive for only audited months. This will essentially retrieve the 'Amount' measure under the Financials view after financial auditing."
-    type: number
-    value_format: "$#,##0"
-    sql: CASE WHEN (${income_audited_hidden} = 0) THEN NULL ELSE ${income_audited_hidden} END;;
-  }
-
-  measure: income_forecast_hidden {
-    label: "Forecast Top Line Revenue (Monthly)"
-    hidden: yes
-    type: sum_distinct
-    value_format: "$#,##0"
-    sql: ${TABLE}.Income;;
-    filters: [forecast_month: "Forecast Month"]
-  }
-
-  measure: income_forecast_exposed {
-    label: "Forecast Top Line Revenue (Monthly)"
-    description: "This will pull income statements from Adaptive for only forecast months. Live revenues can be captured from the 'Amount' measure under the Financials view."
-    type: number
-    value_format: "$#,##0"
-    sql: CASE WHEN (${income_forecast_hidden} = 0) THEN NULL ELSE ${income_forecast_hidden} END;;
-  }
 
   measure: adr_revamped {
     label: "Audited ADR (Monthly)"
@@ -219,6 +260,17 @@ view: adaptive_export_revamped {
     value_format: "$#,##0.00"
     sql: ${income_audited_exposed} / NULLIF(${reservations_v3.reservation_night}, 0);;
     drill_fields: [reservations_v3.reservation_night, reservations_v3.num_reservations, income]
+  }
+
+
+  measure: forecast_adr {
+    label: "Forecast ADR (Monthly)"
+    description: "This will ADR based on the forecast income statements from adaptive divided by the forecast occupied room nights from adaptive. Live ADR can be retrieved from the 'ADR' measure under the Financials view."
+    value_format: "$#,##0.00"
+    type: number
+    sql: CASE WHEN ${forecast_month} = 'Audited Month (Latest)' THEN ${income_audited_exposed} / NULLIF(${reservations_v3.reservation_night}, 0)
+    ELSE ${income_forecast_exposed} / NULLIF(${occupied_nights_exposed},0) END ;;
+    drill_fields: [month, prop_code, occupied_nights, income]
   }
 
   measure: revpar_revamped {
@@ -231,21 +283,13 @@ view: adaptive_export_revamped {
   }
 
 
-  measure: forecast_adr {
-    label: "Forecast ADR (Monthly)"
-    description: "This will ADR based on the forecast income statements from adaptive divided by the forecast occupied room nights from adaptive. Live ADR can be retrieved from the 'ADR' measure under the Financials view."
-    value_format: "$#,##0.00"
-    type: number
-    sql: ${income_forecast_exposed} / nullif(${occupied_nights_measure},0);;
-    drill_fields: [month, prop_code, occupied_nights, income]
-  }
-
   measure: forecast_revpar {
     value_format: "$#,##0.00"
     label: "Forecast RevPAR (Monthly)"
     description: "This will pull RevPAR based on forecast income statements from adaptive divided by the forecast room nights available from adaptive. Live RevPAR can be retrieved from the 'RevPAR' measure under the Financials view."
     type: number
-    sql: ${income_forecast_exposed} / nullif(${room_nights_available_measure},0);;
+    sql: CASE WHEN ${forecast_month} = 'Audited Month (Latest)' THEN ${income_audited_exposed} / NULLIF(${capacities_v3.capacity}, 0)
+    ELSE ${income_forecast_exposed} / NULLIF(${room_nights_available_measure},0) END;;
     drill_fields: [month, prop_code, room_nights_available, income]
   }
 

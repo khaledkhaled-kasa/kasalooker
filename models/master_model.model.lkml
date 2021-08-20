@@ -393,7 +393,11 @@ explore: reservations_audit {
   group_label: "Finance"
   from: reservations_audit
   fields: [ALL_FIELDS*,
-    -adaptive_export_revamped.adr_revamped, -adaptive_export_revamped.revpar_revamped]
+    -adaptive_export_revamped.adr_revamped, -adaptive_export_revamped.revpar_revamped,
+    -adaptive_export_revamped.forecast_revpar, -adaptive_export_revamped.forecast_adr,
+    -adaptive_export_revamped.guest_turns_audited, -adaptive_export_revamped.guest_turns_exposed, -adaptive_export_revamped.guest_turns_hidden,
+    -adaptive_export_revamped.occupancy_audited, -adaptive_export_revamped.occupancy_forecast,
+    -adaptive_export_revamped.occupied_nights_audited_exposed, -adaptive_export_revamped.occupied_nights_exposed]
 
 
   join: financials_audit {

@@ -777,6 +777,14 @@ union all
     sql: 1 - (${percent_5_star_accuracy} + ${percent_less_than_4_star_accuracy});;
   }
 
+  measure: disappointed_percentage {
+    label: "Disappointed Score"
+    type: number
+    value_format: "0.0"
+    sql: 100*(sum(if(${TABLE}.how_would_you_feel_if_you_could_no_longer_stay_at_any_kasa_locations_ = "Very disappointed",1,0)) /
+      NULLIF(count(${TABLE}.how_would_you_feel_if_you_could_no_longer_stay_at_any_kasa_locations_),0));;
+  }
+
 
   set: detail {
     fields: [

@@ -41,17 +41,28 @@ view: pom_information {
     type: string
     sql: ${TABLE}.POM ;;
   }
-  dimension: RevenueManager
- {
+  dimension: RevenueManager {
+    view_label: "Building and Geographic Information"
     label: "Revenue Manager"
+    description: "This data point is pulled from Col BM of the KPO Properties tab."
     type: string
     sql: ${TABLE}.RevenueManager ;;
   }
-  dimension: PortfolioManager
- {
+
+  dimension: PortfolioManager {
+    view_label: "Building and Geographic Information"
     label: "Portfolio Manager"
+    description: "This data point is pulled from Col BN of the KPO Properties tab."
     type: string
     sql: ${TABLE}.PortfolioManager ;;
+  }
+
+  dimension: wifi_type {
+    view_label: "Building and Geographic Information"
+    label: "Building WiFi (Distributed / In-Unit)"
+    description: "This data point is pulled from Col BO of the KPO Properties tab."
+    type: string
+    sql: ${TABLE}.WifiType ;;
   }
 
   dimension: city_multi_pom {
