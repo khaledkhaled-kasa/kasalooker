@@ -756,9 +756,23 @@ explore: t_s_security_deployment {
 }
 
 explore: t_s_incident_report {
+  fields: [t_s_incident_report*,-complexes.externalrefs_stripepayoutaccountid, pom_information.RevenueManager, pom_information.PortfolioManager, complexes.title]
   group_label: "T & S"
   label: "Security Incident Report"
   hidden: no
+
+  join: pom_information {
+    view_label: "POM Information"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${t_s_incident_report.incident_location} = ${pom_information.Prop_Code} ;;
+  }
+
+  join: complexes {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${complexes.internaltitle} = ${t_s_incident_report.incident_location}  ;;
+  }
 }
 
 explore: channel_cost_marketing {
