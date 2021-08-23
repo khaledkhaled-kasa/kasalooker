@@ -13,6 +13,8 @@ view: pom_information {
           FROM `bigquery-analytics-272822.Gsheets.pom_information` p
             LEFT JOIN ${pom_weighting_standards_final_transposed.SQL_TABLE_NAME} w
             ON p.WeightingCategory = w.WeightingCategory ;;
+
+    persist_for: "4 hours"
   }
 
   dimension: Prop_Code {
