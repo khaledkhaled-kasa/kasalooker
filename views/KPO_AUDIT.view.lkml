@@ -1,6 +1,7 @@
 view: KPO_AUDIT {
   derived_table: {
-    sql: select KPO_table.UID, KPO_table.PropCode, KPO_table.PropOwner, KPO_table.status,KPO_table.newpartner, units.internaltitle,ContractType,FirstAvailableDate,ContractSignedDate, complexes.title
+    sql: select KPO_table.UID, KPO_table.PropCode, KPO_table.PropOwner, KPO_table.status,KPO_table.newpartner,
+    units.internaltitle,ContractType,FirstAvailableDate,ContractSignedDate, complexes.title, pom_information.PropertyClass
       from
 
                `bigquery-analytics-272822.Gsheets.kpo_overview_clean` KPO_table
@@ -8,8 +9,12 @@ view: KPO_AUDIT {
               ON units.internaltitle =KPO_table.UID
                 LEFT JOIN `bigquery-analytics-272822.mongo.complexes` complexes
                   ON units.complex = complexes._id
+                    LEFT JOIN `bigquery-analytics-272822.Gsheets.pom_information` pom_information
+                      ON pom_information.PropCode = KPO_table.PropCode
                   WHERE ContractType != 'Distribution Agreement'
        ;;
+
+      persist_for: "4 hours"
   }
 
 
@@ -51,6 +56,11 @@ view: KPO_AUDIT {
     description: "This will pull the value from Column BE of the KPO"
     type: string
     sql: ${TABLE}.NewPartner ;;
+  }
+
+  dimension: property_class {
+    type: string
+    sql: ${TABLE}.PropertyClass ;;
   }
 
   dimension: status {

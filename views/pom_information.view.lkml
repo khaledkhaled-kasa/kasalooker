@@ -37,6 +37,14 @@ view: pom_information {
     sql: ${TABLE}.PropOwner ;;
   }
 
+  dimension: property_class {
+    view_label: "Building and Geographic Information"
+    description: "This data point is pulled from Col BP of the KPO Properties tab."
+    hidden: no
+    type: string
+    sql: ${TABLE}.PropertyClass ;;
+  }
+
 
   dimension: pom {
     label: "POM"
