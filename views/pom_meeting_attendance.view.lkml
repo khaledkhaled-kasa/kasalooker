@@ -1,7 +1,11 @@
 view: pom_meeting_attendance {
-  sql_table_name: `bigquery-analytics-272822.Gsheets.POM_Meeting_Attendance`
-    ;;
+  derived_table: {
+    sql: SELECT * FROM `bigquery-analytics-272822.Gsheets.POM_Meeting_Attendance` ;;
 
+
+  datagroup_trigger: meeting_attendance_datagroup
+  publish_as_db_view: yes
+}
 
   dimension: primary_key {
     type: string

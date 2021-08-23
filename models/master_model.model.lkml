@@ -16,6 +16,12 @@ datagroup: ST_Installation_Dates_Tracke_datagroup {
   max_cache_age: "1 minutes"
 }
 
+datagroup: meeting_attendance_datagroup {
+  sql_trigger: SELECT COUNT(*) FROM `bigquery-analytics-272822.Gsheets.POM_Meeting_Attendance` WHERE Date is NOT NULL ;;
+  max_cache_age: "1 hours"
+}
+
+
 datagroup: units_kpo_overview_default_datagroup {
   sql_trigger: SELECT COUNT(*) FROM `bigquery-analytics-272822.Gsheets.kpo_overview_clean` WHERE UID IS NOT NULL ;;
   max_cache_age: "1 hours"
