@@ -261,7 +261,7 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
 
   measure: occupied_nights_audited_exposed {
     description: "This will pull the occupied nights from the 'NumReservationNights' measure under the Reservations view."
-    hidden: yes
+    hidden: no
     label: "Audited Occupied Nights (Monthly)"
     type: number
     sql: NULLIF(${occupied_nights_audited_hidden},0) ;;
