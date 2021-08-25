@@ -92,7 +92,7 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
       CASE WHEN Forecast_Month IN ("Audited Month","Audited Month (Latest)") THEN reservation_nights
       ELSE Occupied_Nights
       END Occupied_Nights_Mod,
-      p.PropOwner, p.POM, p.RevenueManager, p.PortfolioManager
+      p.PropOwner, p.POM, p.RevenueManager, p.PortfolioManager, DATE(Month) partition_date
       FROM all_tables
       LEFT JOIN `bigquery-analytics-272822.Gsheets.pom_information` p
       ON all_tables.PropCode = p.PropCode
@@ -101,6 +101,7 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
     datagroup_trigger: adaptive_export_default_datagroup
     # indexes: ["night","transaction"]
     publish_as_db_view: yes
+    partition_keys: ["partition_date"]
   }
 
   dimension: composite_primary_key {
