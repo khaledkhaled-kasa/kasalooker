@@ -94,7 +94,10 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
       END Occupied_Nights_Mod,
       p.PropOwner, p.POM, p.RevenueManager, p.PortfolioManager, DATE(Month) partition_date
       FROM all_tables
-      LEFT JOIN `bigquery-analytics-272822.Gsheets.pom_information` p
+      LEFT JOIN -- JOIN UNIQUE POM BUILDINGS
+      (SELECT PropCode, PropOwner, POM, RevenueManager, PortfolioManager
+      FROM `bigquery-analytics-272822.Gsheets.pom_information` p
+      GROUP BY 1,2,3,4,5) p
       ON all_tables.PropCode = p.PropCode
        ;;
 

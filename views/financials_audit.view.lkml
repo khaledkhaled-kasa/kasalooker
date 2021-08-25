@@ -36,7 +36,7 @@ view: financials_audit {
     view_label: "Metrics"
     label: "Amount"
     description: "Amount per night"
-    type: sum
+    type: sum_distinct
     value_format: "$#,##0.00"
     sql: ${amount_revised} ;;
     filters: [actualizedat_modified: "-Nonactualized (Historic)"]
@@ -44,7 +44,7 @@ view: financials_audit {
 
 
    measure: cleaning_amount {
-    type: sum
+    type: sum_distinct
     group_label: "Cleaning"
     view_label: "Metrics"
     value_format: "$#,##0.00"
@@ -53,7 +53,7 @@ view: financials_audit {
   }
 
   measure: clean_refund_amount {
-    type: sum
+    type: sum_distinct
     view_label: "Metrics"
     group_label: "Cleaning"
     value_format: "$#,##0.00"
@@ -126,9 +126,15 @@ view: financials_audit {
     sql:  ${night_day_of_week} in ('Friday', 'Saturday') ;;
   }
 
+  dimension: _id {
+    type: string
+    hidden: no
+    primary_key: yes
+    sql: ${TABLE}._id ;;
+  }
+
   dimension: reservation {
     type: string
-    primary_key: yes
     hidden: yes
     sql: ${TABLE}.reservation ;;
   }

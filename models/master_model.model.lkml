@@ -398,13 +398,6 @@ explore: reservations_audit {
   description: "This explore is exclusively built for our Finance team for auditing purposes. It differs from the Reservations in the sense that it will report financials for nights when the units weren't active as well. As a result, there is a slight difference in reported financials between both explores (roughly 1%). This explore does not house any guests or capacity (occupancy data)."
   group_label: "Finance"
   from: reservations_audit
-  # fields: [ALL_FIELDS*,
-  #   -adaptive_export_revamped.adr_revamped, -adaptive_export_revamped.revpar_revamped,
-  #   -adaptive_export_revamped.forecast_revpar, -adaptive_export_revamped.forecast_adr,
-  #   -adaptive_export_revamped.guest_turns_audited, -adaptive_export_revamped.guest_turns_exposed, -adaptive_export_revamped.guest_turns_hidden,
-  #   -adaptive_export_revamped.occupancy_audited, -adaptive_export_revamped.occupancy_forecast,
-  #   -adaptive_export_revamped.occupied_nights_audited_exposed, -adaptive_export_revamped.occupied_nights_exposed]
-
 
   join: financials_audit {
     type:  inner
