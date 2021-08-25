@@ -11,7 +11,7 @@ view: ST_Installation_Dates_Tracker {
                     UnitInternalTitle is not null
                   ) where rank=1
                ;;
-              datagroup_trigger: ST_Installation_Dates_Tracke_datagroup
+              datagroup_trigger: ST_Installation_Dates_Tracker_datagroup
     }
 
 

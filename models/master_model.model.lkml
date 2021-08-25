@@ -10,8 +10,8 @@ datagroup: default_datagroup {
   sql_trigger: SELECT CURRENT_DATE() ;;
   max_cache_age: "24 hours"
 }
-datagroup: ST_Installation_Dates_Tracke_datagroup {
-  sql_trigger: SELECT COUNT(*) FROM `bigquery-analytics-272822.Gsheets.ST_Installation_Dates_Tracke`
+datagroup: ST_Installation_Dates_Tracker_datagroup {
+  sql_trigger: SELECT COUNT(*) FROM `bigquery-analytics-272822.Gsheets.ST_Installation_Dates_Tracker`
   where  UnitInternalTitle is not null ;;
   max_cache_age: "1 minutes"
 }
@@ -945,6 +945,12 @@ explore: security_deposits_kfc {
   group_label: "KFC Reporting"
   label: "Security Deposits"
   hidden: yes
+}
+
+explore: adaptive_export_revamped {
+  group_label: "Finance"
+  label: "Adaptive Export"
+  hidden: no
 }
 
 
