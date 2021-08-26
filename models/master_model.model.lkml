@@ -943,7 +943,7 @@ explore: security_deposits_kfc {
 explore: adaptive_export_revamped {
   group_label: "Finance"
   label: "Adaptive Export"
-  hidden: no
+  hidden: yes
 }
 
 

@@ -94,6 +94,15 @@ view: conversation {
       sql: ${TABLE}.id ;;
     }
 
+    dimension: conversation_url {
+      type: string
+      sql: CONCAT("https://kasa.kustomerapp.com/app/customers/",${TABLE}.customer_id,"/event/",${TABLE}.id) ;;
+      link: {
+        label: "Navigate to Kustomer"
+        url: "{{ value }}"
+      }
+    }
+
     dimension: conversation_trip_phase {
       type: string
       description: "This will identify the trip phase based on the time the conversation was created. Reservations not picked up within range of the customer's conversations would not be assigned a trip phase."
