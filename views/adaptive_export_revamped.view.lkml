@@ -2,11 +2,35 @@ view: adaptive_export_revamped {
   derived_table: {
     sql:
 
-    -- This table will convert the original wide adaptive_export to a narrow table (month as a new column)
-      WITH t as (SELECT PropShrt, PropCode, Building, Metric,
+WITH all_tables AS (WITH capacity_table AS (SELECT
+    (FORMAT_TIMESTAMP('%Y-%m', CAST(capacities_v3.night_available_date as TIMESTAMP) )) AS capacities_v3_night_month,
+    substr(units.internaltitle, 1, 3) AS units_propcode,
+        COUNT(DISTINCT CASE WHEN ((DATE(CAST(capacities_v3.night_available_date as TIMESTAMP) )) < (DATE(CAST(reservations_v3.checkoutdate as TIMESTAMP), 'America/Los_Angeles')) and
+        (DATE(CAST(capacities_v3.night_available_date as TIMESTAMP) )) >= (DATE(TIMESTAMP(reservations_v3.checkindate), 'America/Los_Angeles'))) AND (reservations_v3.status_revised LIKE 'checked_in' OR reservations_v3.status_revised = 'confirmed') THEN CONCAT( reservations_v3.confirmationcode  , '-', ( DATE(CAST(capacities_v3.night_available_date as TIMESTAMP) ) )) ELSE NULL END) / NULLIF(COUNT(DISTINCT CASE WHEN ((capacities_v3.internaltitle LIKE "%-XX") OR (capacities_v3.internaltitle LIKE "%XXX") OR (capacities_v3.internaltitle LIKE "%-RES") OR (capacities_v3.internaltitle LIKE "%-S")) THEN NULL
+          ELSE CONCAT(capacities_v3.internaltitle, '-', ( DATE(CAST(capacities_v3.night_available_date as TIMESTAMP) ) ))
+          END), 0) AS reservations_v3_occupancy,
+    COUNT(DISTINCT CASE WHEN ((DATE(CAST(capacities_v3.night_available_date as TIMESTAMP) )) < (DATE(CAST(reservations_v3.checkoutdate as TIMESTAMP), 'America/Los_Angeles')) and
+        (DATE(CAST(capacities_v3.night_available_date as TIMESTAMP) )) >= (DATE(TIMESTAMP(reservations_v3.checkindate), 'America/Los_Angeles'))) AND (reservations_v3.status_revised LIKE 'checked_in' OR reservations_v3.status_revised = 'confirmed') THEN reservations_v3.confirmationcode  ELSE NULL END) AS reservations_v3_num_reservations,
+    COUNT(DISTINCT CASE WHEN ((DATE(CAST(capacities_v3.night_available_date as TIMESTAMP) )) < (DATE(CAST(reservations_v3.checkoutdate as TIMESTAMP), 'America/Los_Angeles')) and
+        (DATE(CAST(capacities_v3.night_available_date as TIMESTAMP) )) >= (DATE(TIMESTAMP(reservations_v3.checkindate), 'America/Los_Angeles'))) AND (reservations_v3.status_revised LIKE 'checked_in' OR reservations_v3.status_revised = 'confirmed') THEN CONCAT( reservations_v3.confirmationcode  , '-', ( DATE(CAST(capacities_v3.night_available_date as TIMESTAMP) ) )) ELSE NULL END) AS reservations_v3_reservation_night,
+    COUNT(DISTINCT CASE WHEN ((capacities_v3.internaltitle LIKE "%-XX") OR (capacities_v3.internaltitle LIKE "%XXX") OR (capacities_v3.internaltitle LIKE "%-RES") OR (capacities_v3.internaltitle LIKE "%-S")) THEN NULL
+        ELSE CONCAT(capacities_v3.internaltitle, '-', ( DATE(CAST(capacities_v3.night_available_date as TIMESTAMP) ) ))
+        END) AS capacities_v3_days_available,
+    COUNT(DISTINCT CASE WHEN ((DATE(CAST(capacities_v3.night_available_date as TIMESTAMP) )) = (DATE(CAST(reservations_v3.checkoutdate as TIMESTAMP), 'America/Los_Angeles'))) AND (NOT COALESCE(reservations_v3.initial_booking = 1 , FALSE)) AND (reservations_v3.status_revised LIKE 'checked_in' OR reservations_v3.status_revised = 'confirmed') THEN CONCAT( units.internaltitle , reservations_v3.confirmationcode  )  ELSE NULL END) AS reservations_v3_number_of_checkouts,
+    COUNT(DISTINCT CASE WHEN ((DATE(CAST(capacities_v3.night_available_date as TIMESTAMP) )) = (DATE(TIMESTAMP(reservations_v3.checkindate), 'America/Los_Angeles'))) AND (NOT COALESCE(reservations_v3.extended_booking = 1 , FALSE)) AND (reservations_v3.status_revised LIKE 'checked_in' OR reservations_v3.status_revised = 'confirmed') THEN CONCAT( reservations_v3._id , reservations_v3.confirmationcode  )  ELSE NULL END) AS reservations_v3_number_of_checkins
+FROM `bigquery-analytics-272822.dbt.capacities`  AS capacities_v3
+INNER JOIN `bigquery-analytics-272822.dbt.units`  AS units ON capacities_v3._id = units._id
+LEFT JOIN `bigquery-analytics-272822.dbt.reservations_v3`   AS reservations_v3 ON units._id = reservations_v3.unit
+WHERE (((( CAST(capacities_v3.night_available_date as TIMESTAMP)  )) >= TIMESTAMP('2020-01-01 00:00:00')))
+GROUP BY
+    1,2),
+
+t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
             LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH) Month,
-            CASE WHEN current_date() >= DATE_ADD(LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH), INTERVAL 20 DAY) THEN "Audited Month"
-            ELSE "Forecast Month" END Forecast_Month,
+            FORMAT_TIMESTAMP('%Y-%m', CAST(LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH) as TIMESTAMP)) Month_Year,
+            CASE WHEN LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH) < '2021-06-30' THEN 'Audited Month' -- This is where to adjust audited month
+            WHEN LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH) = '2021-06-30' THEN 'Audited Month (Latest)' -- This is where to adjust audited month latest
+            ELSE 'Forecast Month' END Forecast_Month,
             value, SAFE_CAST(value as FLOAT64) value_float
               FROM (
               SELECT PropShrt, PropCode, Building, Metric,
@@ -16,25 +40,22 @@ view: adaptive_export_revamped {
               UNNEST(SPLIT(REGEXP_REPLACE(to_json_string(t), r'{|}', ''))) pair
               )
               WHERE NOT LOWER(column_name) IN ('propshrt','propcode','building', 'metric')
-              AND PropShrt IS NOT NULL -- This will remove all null records to ensure value_float doesn't fail
-      )
+              AND PropShrt IS NOT NULL) -- This will remove all null records to ensure value_float doesn't fail
 
-      -- Pivoting the table! Any additioanl metrics need to be included here!
-      SELECT PropShrt, PropCode, Building, Month, Forecast_Month,
-      ANY_VALUE(if(Metric = 'ADR' AND Forecast_Month = 'Forecast Month',value_float,null)) AS ADR,
-      ANY_VALUE(if(Metric = 'RevPAR' AND Forecast_Month = 'Forecast Month',value_float,null)) AS RevPAR,
-      ANY_VALUE(if(Metric = 'Occupancy %' AND Forecast_Month = 'Forecast Month',value_float,null)) AS Occupancy,
-      ANY_VALUE(if(Metric = 'Units Available' AND Forecast_Month = 'Forecast Month',value_float,null)) AS Units_Available, -- This is originally sourced from Looker
+              -- Table t is created to sum metrics for properties with different building names (for e.g. Whitley / Whitley PMA)
+              SELECT PropShrt, PropCode, Metric, Month, Month_Year, Forecast_Month, sum(value_float) value_float
+              FROM skinny_table
+              GROUP BY 1,2,3,4,5,6)
+
+      -- Pivoting the table! Any additional metrics need to be included here!
+      SELECT PropShrt, PropCode, Month, Forecast_Month,
       ANY_VALUE(if(Metric = 'Guest Turns',value_float,null)) AS Guest_Turns, -- This is originally sourced from Looker (historicals)
-      ANY_VALUE(if(Metric = 'Length of Stay',value_float,null)) AS LOS, -- This is originally sourced from Looker (historicals)
       ANY_VALUE(if(Metric = 'Occupied Nights' AND Forecast_Month = 'Forecast Month',value_float,null)) AS Occupied_Nights, -- This is originally sourced from Looker (historicals)
       ANY_VALUE(if(Metric = 'Room Nights Available' AND Forecast_Month = 'Forecast Month',value_float,null)) AS Room_Nights_Available, -- This is originally sourced from Looker
       ANY_VALUE(if(Metric = 'Income',value_float,null)) AS Income,
       ANY_VALUE(if(Metric = 'Owner Remittance (NetSuite)',value_float,null)) AS Owner_Remittance,
       ANY_VALUE(if(Metric = 'Owner Profitability',value_float,null)) AS Owner_Profitability,
-      ANY_VALUE(if(Metric = 'Owner Profitability %',value_float,null)) AS Owner_Profitability_Percent,
       ANY_VALUE(if(Metric = 'BHAG Margin',value_float,null)) AS BHAG_Margin,
-      ANY_VALUE(if(Metric = 'BHAG Margin %',value_float,null)) AS BHAG_Margin_Percent,
       ANY_VALUE(if(Metric = 'Market Rent',value_float,null)) AS Market_Rent,
       ANY_VALUE(if(Metric = 'Lease Rent',value_float,null)) AS Lease_Rent,
       ANY_VALUE(if(Metric = 'Housekeeping',value_float,null)) AS Housekeeping,
@@ -50,22 +71,75 @@ view: adaptive_export_revamped {
       ANY_VALUE(if(Metric = 'Operating Expense',value_float,null)) AS Operating_Expense,
       ANY_VALUE(if(Metric = '5111 - Payment Processing Fees',value_float,null)) AS Payment_Processing_Fees,
       ANY_VALUE(if(Metric = 'STR Operating Cash Flow (Est.)',value_float,null)) AS STR_Operating_Cash_Flow,
+      MAX(capacity_table.reservations_v3_reservation_night) reservation_nights,
+      MAX(capacity_table.capacities_v3_days_available) days_available,
+      MAX(capacity_table.reservations_v3_number_of_checkouts) num_checkouts,
 
-      FROM t
-      GROUP BY 1,2,3,4,5
+      FROM t LEFT JOIN capacity_table
+      ON t.PropCode = capacity_table.units_propcode
+      AND (t.Month_Year = capacity_table.capacities_v3_night_month)
+
+
+      GROUP BY 1,2,3,4)
+
+      SELECT all_tables.*,
+      CASE WHEN Forecast_Month IN ("Audited Month","Audited Month (Latest)") THEN num_checkouts
+      ELSE Guest_Turns
+      END Guest_Turns_Mod,
+      CASE WHEN Forecast_Month IN ("Audited Month","Audited Month (Latest)") THEN days_available
+      ELSE Room_Nights_Available
+      END Room_Nights_Available_Mod,
+      CASE WHEN Forecast_Month IN ("Audited Month","Audited Month (Latest)") THEN reservation_nights
+      ELSE Occupied_Nights
+      END Occupied_Nights_Mod,
+      p.PropOwner, p.POM, p.RevenueManager, p.PortfolioManager, DATE(Month) partition_date
+      FROM all_tables
+      LEFT JOIN -- JOIN UNIQUE POM BUILDINGS
+      (SELECT PropCode, PropOwner, POM, RevenueManager, PortfolioManager
+      FROM `bigquery-analytics-272822.Gsheets.pom_information` p
+      GROUP BY 1,2,3,4,5) p
+      ON all_tables.PropCode = p.PropCode
        ;;
 
     datagroup_trigger: adaptive_export_default_datagroup
     # indexes: ["night","transaction"]
     publish_as_db_view: yes
+    partition_keys: ["partition_date"]
   }
 
   dimension: composite_primary_key {
     hidden: yes
     primary_key: yes
-    sql: concat(${TABLE}.Building,${TABLE}.Month) ;;
+    sql: concat(${TABLE}.PropCode,${TABLE}.Month) ;;
   }
 
+
+  dimension: property_owner {
+    description: "This data point is pulled from Col I of the KPO Properties tab."
+    hidden: no
+    type: string
+    sql: ${TABLE}.PropOwner ;;
+  }
+
+  dimension: pom {
+    label: "POM"
+    type: string
+    sql: ${TABLE}.POM ;;
+  }
+
+  dimension: RevenueManager {
+    label: "Revenue Manager"
+    description: "This data point is pulled from Col BM of the KPO Properties tab."
+    type: string
+    sql: ${TABLE}.RevenueManager ;;
+  }
+
+  dimension: PortfolioManager {
+    label: "Portfolio Manager"
+    description: "This data point is pulled from Col BN of the KPO Properties tab."
+    type: string
+    sql: ${TABLE}.PortfolioManager ;;
+  }
 
   dimension: prop_shrt {
     label: "PropShrt"
@@ -74,12 +148,6 @@ view: adaptive_export_revamped {
     sql: ${TABLE}.PropShrt ;;
   }
 
-  dimension: building {
-    description: "This will pull the building name as displayed in the adaptive export."
-    hidden: no
-    type: string
-    sql: ${TABLE}.Building ;;
-  }
 
   dimension: prop_code {
     label: "PropCode"
@@ -107,14 +175,14 @@ view: adaptive_export_revamped {
     hidden: yes
     label: "Occupied Nights (Adaptive)"
     type: number
-    sql: ${TABLE}.Occupied_Nights ;;
+    sql: ${TABLE}.Occupied_Nights_Mod ;;
   }
 
   dimension: room_nights_available {
     hidden: yes
     label: "Room Nights Available (Adaptive)"
     type: number
-    sql: ${TABLE}.Room_Nights_Available ;;
+    sql: ${TABLE}.Room_Nights_Available_Mod ;;
   }
 
 
@@ -134,57 +202,13 @@ view: adaptive_export_revamped {
     sql: ${TABLE}.Income ;;
   }
 
-
-  measure: occupied_nights_measure {
-    description: "This will pull the occupied nights from Adaptive. Live occupied nights can be retrieved from the 'NumReservationNights' measure under the Reservations view."
-    hidden: yes
-    label: "Occupied Nights (Adaptive)"
-    type: sum_distinct
-    sql: ${TABLE}.Occupied_Nights ;;
-  }
-
-  measure: room_nights_available_measure {
-    description: "This will pull the room nights available from Adaptive. Live room nights available can be retrieved from the 'Capacity' measure under the Capacities view."
-    hidden: yes
-    label: "Room Nights Available (Adaptive)"
-    type: sum_distinct
-    sql: ${TABLE}.Room_Nights_Available ;;
-  }
-
-
-  measure: occupancy_forecast {
-    label: "Forecast Occupancy (Monthly)"
-    description: "This will pull the monthly forecast occupied nights divided by the monthly forecast room nights available from adaptive. Live occupancy can be retrieved from the 'Occupancy' measure under the Reservations view."
-    type: number
-    value_format: "0.00%"
-    sql: ${occupied_nights_measure} / nullif(${room_nights_available_measure},0);;
-  }
-
-
-  measure: guest_turns_hidden {
-    label: "Forecast Guest Turns (Monthly)"
-    description: "This will pull the monthly forecast from Adaptive. Live Guest Turns can be retrieved from the 'Number of Checkouts' measure under the Reservations view."
-    hidden: yes
-    type: sum_distinct
-    sql: ${TABLE}.Guest_Turns ;;
-    filters: [forecast_month: "Forecast Month"]
-  }
-
-  # This field is meant to convert all coalesced 0s in guest_turns_hidden to nulls
-  measure: guest_turns_exposed {
-    label: "Forecast Guest Turns (Monthly)"
-    description: "This will pull the monthly forecast from Adaptive. Live Guest Turns can be retrieved from the 'Number of Checkouts' measure under the Reservations view."
-    type: number
-    sql: CASE WHEN (${guest_turns_hidden} = 0) THEN NULL ELSE ${guest_turns_hidden} END;;
-  }
-
   measure: income_audited_hidden {
     label: "Audited Top Line Revenue (Monthly)"
     hidden: yes
     type: sum_distinct
     value_format: "$#,##0"
     sql: ${TABLE}.Income;;
-    filters: [forecast_month: "Audited Month"]
+    filters: [forecast_month: "Audited Month, Audited Month (Latest)"]
   }
 
   measure: income_audited_exposed {
@@ -201,7 +225,7 @@ view: adaptive_export_revamped {
     type: sum_distinct
     value_format: "$#,##0"
     sql: ${TABLE}.Income;;
-    filters: [forecast_month: "Forecast Month"]
+    filters: [forecast_month: "Forecast Month, Audited Month (Latest)"]
   }
 
   measure: income_forecast_exposed {
@@ -209,25 +233,125 @@ view: adaptive_export_revamped {
     description: "This will pull income statements from Adaptive for only forecast months. Live revenues can be captured from the 'Amount' measure under the Financials view."
     type: number
     value_format: "$#,##0"
-    sql: CASE WHEN (${income_forecast_hidden} = 0) THEN NULL ELSE ${income_forecast_hidden} END;;
+    sql: NULLIF(${income_forecast_hidden},0) ;;
   }
+
+
+  measure: occupied_nights_forecast_hidden {
+    description: "This will pull the occupied nights from Adaptive. Live occupied nights can be retrieved from the 'NumReservationNights' measure under the Reservations view."
+    hidden: yes
+    label: "Forecast Occupied Nights (Monthly)"
+    type: sum_distinct
+    sql: ${TABLE}.Occupied_Nights_Mod ;;
+    filters: [forecast_month: "Forecast Month, Audited Month (Latest)"]
+  }
+
+  measure: occupied_nights_forecast_exposed {
+    description: "This will pull the occupied nights from Adaptive. Live occupied nights can be retrieved from the 'NumReservationNights' measure under the Reservations view."
+    hidden: no
+    label: "Forecast Occupied Nights (Monthly)"
+    type: number
+    sql: NULLIF(${occupied_nights_forecast_hidden},0) ;;
+  }
+
+  measure: occupied_nights_audited_hidden {
+    description: "This will pull the occupied nights from the 'NumReservationNights' measure under the Reservations view."
+    hidden: yes
+    label: "Audited Occupied Nights (Monthly)"
+    type: sum_distinct
+    sql: ${TABLE}.Occupied_Nights_Mod ;;
+    filters: [forecast_month: "Audited Month, Audited Month (Latest)"]
+  }
+
+  measure: occupied_nights_audited_exposed {
+    description: "This will pull the occupied nights from the 'NumReservationNights' measure under the Reservations view."
+    hidden: no
+    label: "Audited Occupied Nights (Monthly)"
+    type: number
+    sql: NULLIF(${occupied_nights_audited_hidden},0) ;;
+  }
+
+
+  measure: room_nights_available_audited {
+    description: "This will pull the room nights available from Adaptive. Live room nights available can be retrieved from the 'Capacity' measure under the Capacities view."
+    hidden: no
+    label: "Audited Room Nights Available (Adaptive)"
+    type: sum_distinct
+    sql: ${TABLE}.Room_Nights_Available_Mod ;;
+    filters: [forecast_month: "Audited Month, Audited Month (Latest)"]
+  }
+
+  measure: room_nights_available_forecast{
+    description: "This will pull the room nights available from Adaptive. Live room nights available can be retrieved from the 'Capacity' measure under the Capacities view."
+    hidden: yes
+    label: "Forecast Room Nights Available (Adaptive)"
+    type: sum_distinct
+    sql: ${TABLE}.Room_Nights_Available_Mod ;;
+    filters: [forecast_month: "Forecast Month, Audited Month (Latest)"]
+  }
+
+
+  measure: occupancy_forecast {
+    label: "Forecast Occupancy (Monthly)"
+    description: "This will pull the monthly forecast occupied nights divided by the monthly forecast room nights available from adaptive. Live occupancy can be retrieved from the 'Occupancy' measure under the Reservations view."
+    type: number
+    value_format: "0.0%"
+    sql: ${occupied_nights_forecast_exposed} / nullif(${room_nights_available_forecast},0) ;;
+  }
+
+  measure: occupancy_audited {
+    description: "This will pull the occupied nights from the 'NumReservationNights' measure under the Reservations view."
+    hidden: no
+    label: "Audited Occupancy (Monthly)"
+    type: number
+    value_format: "0.0%"
+    sql: ${occupied_nights_audited_exposed} / nullif(${room_nights_available_audited},0) ;;
+
+  }
+
+  measure: guest_turns_audited_hidden {
+    description: "This will pull the occupied nights from the 'NumReservationNights' measure under the Reservations view."
+    hidden: yes
+    label: "Audited Guest Turns (Monthly)"
+    type: sum_distinct
+    sql: ${TABLE}.Guest_Turns_Mod ;;
+    filters: [forecast_month: "Audited Month, Audited Month (Latest)"]
+  }
+
+  measure: guest_turns_audited_exposed {
+    description: "This will pull the occupied nights from the 'NumReservationNights' measure under the Reservations view."
+    hidden: no
+    label: "Audited Guest Turns (Monthly)"
+    type: number
+    sql: NULLIF(${guest_turns_audited_hidden},0);;
+  }
+
+
+  measure: guest_turns_forecast_hidden {
+    label: "Forecast Guest Turns (Monthly)"
+    description: "This will pull the monthly forecast from Adaptive. Live Guest Turns can be retrieved from the 'Number of Checkouts' measure under the Reservations view."
+    hidden: yes
+    type: sum_distinct
+    sql: ${TABLE}.Guest_Turns_Mod ;;
+    filters: [forecast_month: "Forecast Month, Audited Month (Latest)"]
+  }
+
+  # This field is meant to convert all coalesced 0s in guest_turns_hidden to nulls
+  measure: guest_turns_forecast_exposed {
+    label: "Forecast Guest Turns (Monthly)"
+    description: "This will pull the monthly forecast from Adaptive. Live Guest Turns can be retrieved from the 'Number of Checkouts' measure under the Reservations view."
+    type: number
+    sql: NULLIF(${guest_turns_forecast_hidden},0) ;;
+  }
+
 
   measure: adr_revamped {
     label: "Audited ADR (Monthly)"
     description: "This will pull ADR based on finalized income statements from Adaptive, for audited months, divided by the total number of reservation nights from Looker. This will essentially retrieve the 'ADR' measure under the Financials view after financial auditing."
     type: number
     value_format: "$#,##0.00"
-    sql: ${income_audited_exposed} / NULLIF(${reservations_v3.reservation_night}, 0);;
-    drill_fields: [reservations_v3.reservation_night, reservations_v3.num_reservations, income]
-  }
-
-  measure: revpar_revamped {
-    label: "Audited RevPAR (Monthly)"
-    description: "This will pull RevPAR based on finalized income statements from Adaptive, for audited months, divided by the total number of nights available from Looker. This will essentially retrieve the 'RevPAR' measure under the Financials view after financial auditing."
-    type: number
-    value_format: "$#,##0.00"
-    sql: ${income_audited_exposed} / NULLIF(${capacities_v3.capacity}, 0);;
-    drill_fields: [reservations_v3.reservation_night, reservations_v3.num_reservations, income, capacities_v3.capacity]
+    sql: ${income_audited_exposed} / NULLIF(${occupied_nights_audited_exposed}, 0);;
+    drill_fields: [month, prop_code, income, occupied_nights]
   }
 
 
@@ -236,18 +360,28 @@ view: adaptive_export_revamped {
     description: "This will ADR based on the forecast income statements from adaptive divided by the forecast occupied room nights from adaptive. Live ADR can be retrieved from the 'ADR' measure under the Financials view."
     value_format: "$#,##0.00"
     type: number
-    sql: ${income_forecast_exposed} / nullif(${occupied_nights_measure},0);;
-    drill_fields: [month, prop_code, occupied_nights, income]
+    sql: ${income_forecast_exposed} / NULLIF(${occupied_nights_forecast_exposed},0) ;;
+    drill_fields: [month, prop_code, income, occupied_nights]
   }
+
+  measure: revpar_revamped {
+    label: "Audited RevPAR (Monthly)"
+    description: "This will pull RevPAR based on finalized income statements from Adaptive, for audited months, divided by the total number of nights available from Looker. This will essentially retrieve the 'RevPAR' measure under the Financials view after financial auditing."
+    type: number
+    value_format: "$#,##0.00"
+    sql: ${income_audited_exposed} / NULLIF(${room_nights_available_audited}, 0);;
+    drill_fields: [month, prop_code, occupied_nights, income, room_nights_available]
+  }
+
 
   measure: forecast_revpar {
     value_format: "$#,##0.00"
     label: "Forecast RevPAR (Monthly)"
     description: "This will pull RevPAR based on forecast income statements from adaptive divided by the forecast room nights available from adaptive. Live RevPAR can be retrieved from the 'RevPAR' measure under the Financials view."
     type: number
-    sql: ${income_forecast_exposed} / nullif(${room_nights_available_measure},0);;
-    drill_fields: [month, prop_code, room_nights_available, income]
-  }
+    sql: ${income_forecast_exposed} / NULLIF(${room_nights_available_forecast},0) ;;
+    drill_fields: [month, prop_code, occupied_nights, income, room_nights_available]
+    }
 
 
   measure: monthly_owner_remittance {
@@ -400,6 +534,13 @@ view: adaptive_export_revamped {
     value_format: "$#,##0"
     type: sum_distinct
     sql: ${TABLE}.STR_Operating_Cash_Flow ;;
+  }
+
+  measure: str_operating_cash_flow_percent {
+    label: "STR Operating Cash Flow Est. % (Monthly)"
+    value_format: "0%"
+    type: number
+    sql: ${str_operating_cash_flow} / nullif(${income_measure},0) ;;
   }
 
 

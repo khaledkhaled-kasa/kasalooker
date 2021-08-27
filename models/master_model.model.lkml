@@ -10,11 +10,17 @@ datagroup: default_datagroup {
   sql_trigger: SELECT CURRENT_DATE() ;;
   max_cache_age: "24 hours"
 }
-datagroup: ST_Installation_Dates_Tracke_datagroup {
-  sql_trigger: SELECT COUNT(*) FROM `bigquery-analytics-272822.Gsheets.ST_Installation_Dates_Tracke`
+datagroup: ST_Installation_Dates_Tracker_datagroup {
+  sql_trigger: SELECT COUNT(*) FROM `bigquery-analytics-272822.Gsheets.ST_Installation_Dates_Tracker`
   where  UnitInternalTitle is not null ;;
   max_cache_age: "1 minutes"
 }
+
+datagroup: meeting_attendance_datagroup {
+  sql_trigger: SELECT COUNT(*) FROM `bigquery-analytics-272822.Gsheets.POM_Meeting_Attendance` WHERE Date is NOT NULL ;;
+  max_cache_age: "1 hours"
+}
+
 
 datagroup: units_kpo_overview_default_datagroup {
   sql_trigger: SELECT COUNT(*) FROM `bigquery-analytics-272822.Gsheets.kpo_overview_clean` WHERE UID IS NOT NULL ;;
@@ -151,21 +157,21 @@ explore: breezeway_export {
   join: airbnb_reviews {
     type: left_outer
     relationship:  one_to_one
-    sql_on: ${reservations_clean.confirmation_code} = ${airbnb_reviews.reservation_code} ;;
+    sql_on: ${reservations_clean.confirmationcode} = ${airbnb_reviews.reservation_code} ;;
   }
 
   join: post_checkout_data {
     view_label: "Post Checkout Surveys"
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_clean.confirmation_code} ;;
+    sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_clean.confirmationcode} ;;
   }
 
   join: post_checkout_v2 {
     view_label: "Post Checkout Surveys V2"
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${post_checkout_v2.confirmationcode} = ${reservations_clean.confirmation_code} ;;
+    sql_on:  ${post_checkout_v2.confirmationcode} = ${reservations_clean.confirmationcode} ;;
   }
 
   join: geo_location {
@@ -298,8 +304,7 @@ explore: reservations_clean {
   #     sql_trigger_value: SELECT MAX(createdat) from reservations ;;
   #   }
   # }
-  fields: [
-    ALL_FIELDS*, -airbnb_reviews.clean_count_5_star_first90, -airbnb_reviews.clean_count_less_than_4_star_first90, -airbnb_reviews.count_clean_first90, -airbnb_reviews.net_quality_score_clean_first90, -airbnb_reviews.percent_5_star_clean_first90, -airbnb_reviews.percent_less_than_4_star_clean_first90, -complexes.title, -units.propcode, -geo_location.marketing_property_dash_transition]
+  fields: [ALL_FIELDS*, -airbnb_reviews.clean_count_5_star_first90, -airbnb_reviews.clean_count_less_than_4_star_first90, -airbnb_reviews.count_clean_first90, -airbnb_reviews.net_quality_score_clean_first90, -airbnb_reviews.percent_5_star_clean_first90, -airbnb_reviews.percent_less_than_4_star_clean_first90, -complexes.title, -units.propcode, -geo_location.marketing_property_dash_transition]
   # sql_always_where: ${units.availability_enddate} <> 'Invalid date' ;;
   persist_with: reviews_default_datagroup
   group_label: "Kasa Metrics"
@@ -343,7 +348,7 @@ explore: reservations_clean {
   join: airbnb_reviews {
     type: full_outer
     relationship:  one_to_one
-    sql_on: ${reservations_clean.confirmation_code} = ${airbnb_reviews.reservation_code} ;;
+    sql_on: ${reservations_clean.confirmationcode} = ${airbnb_reviews.reservation_code} ;;
   }
 
   join: geo_location {
@@ -363,21 +368,21 @@ explore: reservations_clean {
     view_label: "Post Checkout Surveys"
     type:  full_outer
     relationship: one_to_one
-    sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_clean.confirmation_code} ;;
+    sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_clean.confirmationcode} ;;
   }
 
   join: post_checkout_v2 {
     view_label: "Post Checkout Surveys V2"
     type:  full_outer
     relationship: one_to_one
-    sql_on:  ${post_checkout_v2.confirmationcode} = ${reservations_clean.confirmation_code} ;;
+    sql_on:  ${post_checkout_v2.confirmationcode} = ${reservations_clean.confirmationcode} ;;
   }
 
   join: reviewforce {
     view_label: "Review Force"
     type:  full_outer
     relationship: one_to_one
-    sql_on:  ${reviewforce.confirmation_code} = ${reservations_clean.confirmation_code} ;;
+    sql_on:  ${reviewforce.confirmation_code} = ${reservations_clean.confirmationcode} ;;
   }
 
 # for marketing
@@ -393,9 +398,6 @@ explore: reservations_audit {
   description: "This explore is exclusively built for our Finance team for auditing purposes. It differs from the Reservations in the sense that it will report financials for nights when the units weren't active as well. As a result, there is a slight difference in reported financials between both explores (roughly 1%). This explore does not house any guests or capacity (occupancy data)."
   group_label: "Finance"
   from: reservations_audit
-  fields: [ALL_FIELDS*,
-    -adaptive_export_revamped.adr_revamped, -adaptive_export_revamped.revpar_revamped]
-
 
   join: financials_audit {
     type:  inner
@@ -718,7 +720,7 @@ explore: disputes_tracker {
   join: reservations_clean {
     type:  left_outer
     relationship: one_to_one
-    sql_on: ${disputes_tracker.reservation_id} = ${reservations_clean.confirmation_code};;
+    sql_on: ${disputes_tracker.reservation_id} = ${reservations_clean.confirmationcode};;
   }
 
   join: units {
@@ -753,9 +755,23 @@ explore: t_s_security_deployment {
 }
 
 explore: t_s_incident_report {
+  fields: [t_s_incident_report*,-complexes.externalrefs_stripepayoutaccountid, pom_information.RevenueManager, pom_information.PortfolioManager, complexes.title, pom_information.property_owner]
   group_label: "T & S"
   label: "Security Incident Report"
   hidden: no
+
+  join: pom_information {
+    view_label: "POM Information"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${t_s_incident_report.incident_location} = ${pom_information.Prop_Code} ;;
+  }
+
+  join: complexes {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${complexes.internaltitle} = ${t_s_incident_report.incident_location}  ;;
+  }
 }
 
 explore: channel_cost_marketing {
@@ -791,7 +807,7 @@ explore: slack_bugs_tech {
   join: reservations_clean {
     type: left_outer
     relationship: one_to_one
-    sql_on: ${reservations_clean.confirmation_code} = ${slack_bugs_tech.confirmation_code};;
+    sql_on: ${reservations_clean.confirmationcode} = ${slack_bugs_tech.confirmation_code};;
   }
 
   join: units {
@@ -809,21 +825,21 @@ explore: slack_bugs_tech {
   join: airbnb_reviews {
     type: left_outer
     relationship:  one_to_one
-    sql_on: ${reservations_clean.confirmation_code} = ${airbnb_reviews.reservation_code} ;;
+    sql_on: ${reservations_clean.confirmationcode} = ${airbnb_reviews.reservation_code} ;;
   }
 
   join: post_checkout_data {
     view_label: "Post Checkout Surveys"
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_clean.confirmation_code} ;;
+    sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_clean.confirmationcode} ;;
   }
 
   join: post_checkout_v2 {
     view_label: "Post Checkout Surveys V2"
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${post_checkout_v2.confirmationcode} = ${reservations_clean.confirmation_code} ;;
+    sql_on:  ${post_checkout_v2.confirmationcode} = ${reservations_clean.confirmationcode} ;;
   }
 
   join: geo_location {
@@ -855,7 +871,7 @@ explore: kasa_kredit_reimbursement {
   join: reservations_clean {
     type: left_outer
     relationship: one_to_one
-    sql_on: ${reservations_clean.confirmation_code} = ${kasa_kredit_reimbursement.confirmation_code} ;;
+    sql_on: ${reservations_clean.confirmationcode} = ${kasa_kredit_reimbursement.confirmation_code} ;;
   }
 
   join: units {
@@ -921,6 +937,12 @@ explore: blocks {
 explore: security_deposits_kfc {
   group_label: "KFC Reporting"
   label: "Security Deposits"
+  hidden: yes
+}
+
+explore: adaptive_export_revamped {
+  group_label: "Finance"
+  label: "Adaptive Export"
   hidden: yes
 }
 

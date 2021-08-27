@@ -13,6 +13,8 @@ view: pom_information {
           FROM `bigquery-analytics-272822.Gsheets.pom_information` p
             LEFT JOIN ${pom_weighting_standards_final_transposed.SQL_TABLE_NAME} w
             ON p.WeightingCategory = w.WeightingCategory ;;
+
+    persist_for: "4 hours"
   }
 
   dimension: Prop_Code {
@@ -35,23 +37,42 @@ view: pom_information {
     sql: ${TABLE}.PropOwner ;;
   }
 
+  dimension: property_class {
+    view_label: "Building and Geographic Information"
+    description: "This data point is pulled from Col BP of the KPO Properties tab."
+    hidden: no
+    type: string
+    sql: ${TABLE}.PropertyClass ;;
+  }
+
 
   dimension: pom {
     label: "POM"
     type: string
     sql: ${TABLE}.POM ;;
   }
-  dimension: RevenueManager
- {
+  dimension: RevenueManager {
+    view_label: "Building and Geographic Information"
     label: "Revenue Manager"
+    description: "This data point is pulled from Col BM of the KPO Properties tab."
     type: string
     sql: ${TABLE}.RevenueManager ;;
   }
-  dimension: PortfolioManager
- {
+
+  dimension: PortfolioManager {
+    view_label: "Building and Geographic Information"
     label: "Portfolio Manager"
+    description: "This data point is pulled from Col BN of the KPO Properties tab."
     type: string
     sql: ${TABLE}.PortfolioManager ;;
+  }
+
+  dimension: wifi_type {
+    view_label: "Building and Geographic Information"
+    label: "Building WiFi (Distributed / In-Unit)"
+    description: "This data point is pulled from Col BO of the KPO Properties tab."
+    type: string
+    sql: ${TABLE}.WifiType ;;
   }
 
   dimension: city_multi_pom {

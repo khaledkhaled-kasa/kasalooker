@@ -33,7 +33,7 @@ view: reviewforce {
   dimension: primary_key {
     primary_key: yes
     hidden: yes
-    sql:  CONCAT(${reservations_clean.confirmation_code},${TABLE}.parent_category, ${TABLE}.clean_child_category) ;;
+    sql:  CONCAT(${reservations_clean.confirmationcode},${TABLE}.parent_category, ${TABLE}.clean_child_category) ;;
   }
 
 
@@ -54,6 +54,10 @@ view: reviewforce {
     sql: ${TABLE}.clean_child_category ;;
   }
 
+  dimension: feedback_type {
+    type: string
+    sql: ${TABLE}.Feedback_Type ;;
+  }
 
   dimension: parent_categories {
     label: "Parent Categories (Responsibility Mapping)"
