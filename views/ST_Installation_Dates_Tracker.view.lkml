@@ -94,5 +94,26 @@ view: ST_Installation_Dates_Tracker {
     drill_fields: [airbnb_reviews.reservation_code,airbnb_reviews.checkin_rating,sT_Installation_Status,airbnb_reviews.checkin_comments]
 
   }
+  # measure: avg_checkin_rating_before_realtime {
+  #   label: "Avg Real-time Review Rating(Before Installation)"
+  #   type: average
+  #   value_format: "0.00"
+  #   sql:  ${reviews.avg_rating};;
+  #   filters: [sT_Installation_Status: "Befor Installation"]
+  # }
+  # measure: avg_checkin_rating_after_realtime {
+  #   label: "Avg Real-time Review Rating(After Installation)"
+  #   type: average
+  #   value_format: "0.00"
+  #   sql:   ${reviews.avg_rating};;
+  #   filters: [sT_Installation_Status: "After Installation"]
+  # }
+  # measure: count_checkin_rating_after_realtime {
+  #   label: "#Real time Reviews (After Installation)"
+  #   type: count_distinct
+  #   sql:  ${reviews.count};;
+  #   filters: [sT_Installation_Status: "After Installation"]
+
+  # }
 
   }
