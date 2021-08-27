@@ -152,6 +152,23 @@ view: reservations_clean {
     sql: ${TABLE}.unit ;;
   }
 
+  dimension: initial_booking {
+    label: "Initial Booking (For Extensions Only)"
+    description: "This will inform us if it's the original / initial booking of an extended stay. Will only show as Yes for the initial booking of an extended reservation."
+    type: yesno
+    sql: ${TABLE}.initial_booking = 1 ;;
+  }
+
+  measure: number_of_checkouts {
+    label: "Number of Checkouts"
+    description: "Number of Check-outs EXCLUDING Initial Extended Booking Checkouts"
+    type: count_distinct
+    sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
+    filters: [ initial_booking: "no", status: "confirmed, checked_in"]
+    drill_fields: [reservation_details*]
+
+  }
+
 
   measure: num_reservations {
     label: "Num Reservations"
