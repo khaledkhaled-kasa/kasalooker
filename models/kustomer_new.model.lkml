@@ -31,6 +31,12 @@ explore: customer {
     sql_on: ${customer.id} = ${conversation.customer_id};;
     relationship: one_to_many
   }
+  join: kustomer_notes {
+    type: left_outer
+    sql_on: ${conversation.id}=${kustomer_notes.conversation_id};;
+    relationship: one_to_many
+  }
+
 
   join: conversation_channel {
     type: left_outer
