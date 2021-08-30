@@ -4,6 +4,11 @@ include: "/views/*.view.lkml"                 # include all views in the views/ 
 # include: "/**/*.view.lkml"                  # include all views in this project
 # include: "/dashboards/*.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
+datagroup: kustomer_default_datagroup {
+  sql_trigger: SELECT MAX(_fivetran_synced) FROM kustomer.conversation;;
+  max_cache_age: "1 hours"
+}
+
 
 
 datagroup: default_datagroup {
@@ -172,6 +177,13 @@ explore: breezeway_export {
     type:  left_outer
     relationship: one_to_one
     sql_on:  ${post_checkout_v2.confirmationcode} = ${reservations_clean.confirmationcode} ;;
+  }
+
+  join: csat_review {
+    view_label: "CSAT Review"
+    type:  left_outer
+    relationship: one_to_one
+    sql_on:  ${csat_review.confirmationcode} = ${reservations_clean.confirmationcode} ;;
   }
 
   join: geo_location {
@@ -378,6 +390,13 @@ explore: reservations_clean {
     sql_on:  ${post_checkout_v2.confirmationcode} = ${reservations_clean.confirmationcode} ;;
   }
 
+  join: csat_review {
+    view_label: "CSAT Review"
+    type:  full_outer
+    relationship: one_to_one
+    sql_on:  ${csat_review.confirmationcode} = ${reservations_clean.confirmationcode} ;;
+  }
+
   join: reviewforce {
     view_label: "Review Force"
     type:  full_outer
@@ -467,21 +486,11 @@ explore: reservations_audit {
 }
 
 explore: capacities_v3 {
-  # aggregate_table: capacities_by_month_and_metrics {
-  #   query: {
-  #     dimensions: [capacities_v3.night_month,  complexes.title]
-  #     measures: [capacities_v3.capacity,financials_v3.adr, financials_v3.revpar, financials_v3.amount, reservations_v3.occupancy, reservations_v3.num_reservations, reservations_v3.reservation_night, reservations_v3.number_of_checkins]
-  #     timezone: America/Los_Angeles
-  #   }
 
-    # materialization: {
-    #   sql_trigger_value: SELECT MAX(createdat) from reservations ;;
-    # }
 
   group_label: "Kasa Metrics"
   label: "Reservations"
   description: "The mother of all explores. This houses all our capacities, reservations, units, buildings, guests and financials data."
-  persist_with: kasametrics_reservations_datagroup
   from: capacities_v3
   join: units {
     type:  inner

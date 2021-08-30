@@ -1098,6 +1098,13 @@ view: conversation {
         sql: ${TABLE}.satisfaction_level_created_at ;;
       }
 
+    dimension: satisfaction_level_answer {
+      type: string
+      hidden: no
+      sql: ${TABLE}.satisfaction_level_first_answer ;;
+  }
+
+
       dimension: satisfaction_level_form {
         type: string
         hidden: yes
