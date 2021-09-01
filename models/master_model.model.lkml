@@ -329,6 +329,13 @@ explore: reservations_clean {
     relationship: one_to_one
     sql_on: ${units._id} = ${reservations_clean.unit};;
   }
+
+  join: guests {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${reservations_clean.guest} = ${guests._id};;
+  }
+
   join: ST_Installation_Dates_Tracker{
     type:  left_outer
     relationship: one_to_one

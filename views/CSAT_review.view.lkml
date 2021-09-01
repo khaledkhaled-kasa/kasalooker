@@ -21,8 +21,6 @@ view: csat_review {
   GROUP BY 1 ;;
 
 
-
-
       }
 
 

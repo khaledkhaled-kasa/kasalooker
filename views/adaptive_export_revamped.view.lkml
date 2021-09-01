@@ -163,6 +163,19 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
     sql: ${TABLE}.Month;;
   }
 
+  # dimension: review_date {
+  #   label: "Review"
+  #   description: "If Airbnb Review Present, this date will reflect the Airbnb Review. Otherwise, date is grabbed from Post-Checkout Data"
+  #   type: date_month
+  #   datatype: date
+  #   sql:  case
+  #   when ${TABLE}.Month is not NULL then ${TABLE}.Month
+  #   when ${financials_audit.raw} is not NULL AND ${TABLE}.Month IS NULL then ${financials_audit.raw}
+  #   else NULL
+  #   end;;
+  #   #sql: coalesce(${airbnb_reviews.review_raw},CAST(${post_checkout_data.review_raw} as DATE),${booking_reviews.review_raw}) ;;
+  # }
+
   dimension: forecast_month {
     label: "Month (Audited / Forecast)?"
     description: "A month is considered 'Audited' if we have surpassed 15 days into the subsequent month (i.e. July-2021 month is automatically classified as audited on 15-Aug-2021)"

@@ -294,8 +294,9 @@ view: conversation {
       }
 
       dimension: custom_escalation_tree {
+        label: "Escalation Type"
         type: string
-        hidden: yes
+        hidden: no
         sql: ${TABLE}.custom_escalation_tree ;;
       }
 

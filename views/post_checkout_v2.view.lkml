@@ -68,8 +68,6 @@ union all
   }
 
 
-
-
   dimension: overall__how_would_you_rate_your_kasa_stay_ {
     label: "Overall Rating"
     group_label: "Ratings"
