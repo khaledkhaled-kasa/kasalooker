@@ -548,12 +548,14 @@ explore: capacities_v3 {
       and ${capacities_v3.night_date} = ${financials_v3.night_date};;
   }
 
-  join: str_index {
+  join: costar_data {
     type:  left_outer
     relationship: one_to_one
-    sql_on: ${str_index.market} = ${complexes.city}
-      and ${capacities_v3.night_date} = ${str_index.str_night_date};;
+    sql_on: ${costar_data.metro_area} = ${units.address_city}
+      and ${costar_data.state} = ${units.address_state}
+      and ${capacities_v3.night_month} = ${costar_data.month};;
   }
+
 
   join: seasonality_chart {
     type:  left_outer
