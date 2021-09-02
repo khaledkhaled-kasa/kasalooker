@@ -156,6 +156,7 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
   }
 
   dimension: month {
+    hidden: no
     label: "Financial Month (Adaptive)"
     description: "This date should be used instead of 'Night Available Month' in cases where units retrieve income outside of their active dates."
     type: date_month
@@ -163,18 +164,20 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
     sql: ${TABLE}.Month;;
   }
 
-  # dimension: review_date {
-  #   label: "Review"
-  #   description: "If Airbnb Review Present, this date will reflect the Airbnb Review. Otherwise, date is grabbed from Post-Checkout Data"
-  #   type: date_month
-  #   datatype: date
-  #   sql:  case
-  #   when ${TABLE}.Month is not NULL then ${TABLE}.Month
-  #   when ${financials_audit.raw} is not NULL AND ${TABLE}.Month IS NULL then ${financials_audit.raw}
-  #   else NULL
-  #   end;;
-  #   #sql: coalesce(${airbnb_reviews.review_raw},CAST(${post_checkout_data.review_raw} as DATE),${booking_reviews.review_raw}) ;;
-  # }
+
+  dimension: month_finance_audit {
+    label: "Financial Month (Adaptive) / Night Available Month"
+    description: "This date will select from 'Night Available Month' or 'Financial Month (Adaptive)', whichever of them is available."
+    type: date_month
+    datatype: date
+    sql:  case
+    when ${TABLE}.Month is not NULL then ${TABLE}.Month
+    when date(${financials_audit.night_date}) is not null and date(${TABLE}.Month) is null then date(${financials_audit.night_date})
+    else NULL
+    end;;
+  }
+
+
 
   dimension: forecast_month {
     label: "Month (Audited / Forecast)?"

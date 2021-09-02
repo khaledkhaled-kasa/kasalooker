@@ -120,6 +120,7 @@ view: financials_audit {
   }
 
 
+
   dimension: weekend {
     view_label: "Date Dimensions"
     type:  yesno
