@@ -61,12 +61,21 @@ view: security_deposits_kfc {
   }
 
   dimension: checkindate {
+    label: "Checkin Date"
     type: date
     datatype: timestamp
     sql: SAFE.TIMESTAMP(${TABLE}.checkindate) ;;
   }
 
+  dimension: checkinmonth {
+    label: "Checkin Month"
+    type: date_month
+    datatype: timestamp
+    sql: SAFE.TIMESTAMP(${TABLE}.checkindate) ;;
+  }
+
   dimension: checkoutdate {
+    label: "Checkout Date"
     type: date
     datatype: timestamp
     sql: SAFE.TIMESTAMP(${TABLE}.checkoutdate) ;;
@@ -110,6 +119,22 @@ view: security_deposits_kfc {
   dimension: trust_risk_level {
     type: string
     sql: ${TABLE}.trust_risklevel ;;
+  }
+
+  measure: count_success {
+    label: "Success Transaction Count"
+    description: "Security deposit status holdAuthorized or released"
+    type: count_distinct
+    sql: ${TABLE}.confirmationcode ;;
+    filters: [security_deposit_status: "holdAuthorized, released"]
+  }
+
+  measure: count_failure {
+    label: "Failed Transaction Count"
+    description: "Security deposit status holdFailed"
+    type: count_distinct
+    sql: ${TABLE}.confirmationcode ;;
+    filters: [security_deposit_status: "holdFailed"]
   }
 
 }
