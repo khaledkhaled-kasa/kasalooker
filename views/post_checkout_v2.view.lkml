@@ -499,6 +499,73 @@ union all
     filters: [_value___was_your_stay_a_good_value_for_the_price_: "5"]
   }
 
+
+
+  measure: overall_count_4_star {
+    label: "Count 4 Star (Overall)"
+    group_label: "Other Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [overall__how_would_you_rate_your_kasa_stay_: "4"]
+  }
+
+  measure: cleanliness_4_star {
+    label: "Count 4 Star (Cleanliness)"
+    group_label: "Other Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [_cleanliness___how_clean_was_the_kasa_when_you_arrived_: "4"]
+  }
+
+  measure: accuracy_4_star {
+    label: "Count 4 Star (Accuracy)"
+    group_label: "Other Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [_accuracy___how_did_the_kasa_compare_to_what_you_expected_: "4"]
+  }
+
+  measure: communication_4_star {
+    label: "Count 4 Star (Communication)"
+    group_label: "Other Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [_communications___how_were_your_interactions_with_the_kasa_team_: "4"]
+  }
+
+  measure: location_4_star {
+    label: "Count 4 Star (Location)"
+    group_label: "Other Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [_location___how_would_you_rate_the_surrounding_neighborhood_and_nearby_offerings_: "4"]
+  }
+
+  measure: checkin_4_star {
+    label: "Count 4 Star (Checkin)"
+    group_label: "Other Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [_check_in___how_smooth_was_your_check_in_and_arrival_process_: "4"]
+  }
+
+  measure: value_4_star {
+    label: "Count 4 Star (Value)"
+    group_label: "Other Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [_value___was_your_stay_a_good_value_for_the_price_: "4"]
+  }
+
+
+
   measure: overall_count_less_than_4_star {
     label: "Count Less Than 4 Star (Overall)"
     group_label: "Other Review Counts"
