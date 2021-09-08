@@ -232,6 +232,16 @@ union all
     type: string
     sql: ${TABLE}.platform ;;
   }
+  dimension: userid {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.userid ;;
+  }
+  dimension: source {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.source ;;
+  }
 
   dimension: nps {
     hidden: no

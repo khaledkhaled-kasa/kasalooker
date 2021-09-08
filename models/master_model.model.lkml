@@ -417,6 +417,16 @@ explore: reservations_clean {
     relationship: one_to_one
     sql_on: ${latest_listing_review_date.airbnb_reviews_listing_id} = ${airbnb_reviews.listing_id} ;;
   }
+  join: braze_email_link_clicked {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${post_checkout_v2.userid} = ${braze_email_link_clicked.userid} ;;
+  }
+  join: braze_email_sent {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${post_checkout_v2.userid} = ${braze_email_sent.user_id} ;;
+  }
 }
 
 explore: reservations_audit {
