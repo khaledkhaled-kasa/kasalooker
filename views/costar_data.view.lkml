@@ -21,7 +21,7 @@ view: costar_data {
   }
 
   dimension: metro_area {
-    label: "City"
+    label: "Metro"
     type: string
     sql: ${TABLE}.Metro_Area ;;
   }

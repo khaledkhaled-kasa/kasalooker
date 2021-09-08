@@ -563,8 +563,8 @@ explore: capacities_v3 {
   join: costar_data {
     type:  left_outer
     relationship: one_to_one
-    sql_on: ${costar_data.metro_area} = ${units.address_city}
-      and ${costar_data.state} = ${units.address_state}
+    sql_on: ${costar_data.metro_area} = ${geo_location.metro}
+      and ${costar_data.state} = ${geo_location.state}
       and ${capacities_v3.night_month} = ${costar_data.month};;
   }
 
