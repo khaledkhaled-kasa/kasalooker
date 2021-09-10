@@ -129,8 +129,19 @@ view: disputes_tracker {
     sql: ${TABLE}.Win_Likelihood_in_Stripe ;;
   }
 
-  dimension: Date_of_Resolution {
-    type: date
+  dimension_group: Date_of_Resolution {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      week_of_year,
+      month,
+      month_name,
+      quarter,
+      year
+    ]
     datatype: date
     sql: ${TABLE}.Date_of_Resolution ;;
     convert_tz: no
