@@ -154,7 +154,7 @@ explore: breezeway_export {
     type: full_outer
     relationship: one_to_one
     sql_on: (DATE(${pom_qa_walkthrough_survey.submitdate_date}) BETWEEN DATE(${breezeway_export.completed_date_date}) AND DATE(${reservations_clean.checkindate_date}))
-    AND ${units.internaltitle} = ${pom_qa_walkthrough_survey.Unit}
+        AND left(${units.internaltitle},3) = left(${pom_qa_walkthrough_survey.Unit},3) AND right(${units.internaltitle},3) = right(${pom_qa_walkthrough_survey.Unit},3)
     AND ${reservations_clean.status} IN ("confirmed","checked_in")
     ;;
   }
@@ -227,8 +227,8 @@ explore: units_buildings_information {
     view_label: "QA Walkthrough Survey Data"
     type: left_outer
     relationship: one_to_many
-    sql_on: ${units_buildings_information.internaltitle} = ${pom_qa_walkthrough_survey_agg.unit} ;;
-  }
+    sql_on: right(${units_buildings_information.internaltitle},3) = right(${pom_qa_walkthrough_survey_agg.unit},3) and left(${units_buildings_information.internaltitle},3) = left(${pom_qa_walkthrough_survey_agg.unit},3) ;;
+    }
 
 
   join: geo_location {
@@ -262,7 +262,7 @@ explore: units_buildings_information {
     view_label: "POM Visit Information"
     type: left_outer
     relationship: one_to_many
-    sql_on: ${units_buildings_information.internaltitle} = ${unit_submission_data_final.buildingunit} ;;
+    sql_on: left(${units_buildings_information.internaltitle},3) = left(${unit_submission_data_final.buildingunit},3) and right(${units_buildings_information.internaltitle},3) = right(${unit_submission_data_final.buildingunit},3) ;;
   }
 
 
@@ -355,7 +355,11 @@ explore: reservations_clean {
     relationship: one_to_one
     sql_on: ${complexes._id} = ${units.complex} ;;
   }
-
+  join: google_review_tracker {
+    type:  left_outer
+    relationship: one_to_many
+    sql_on: ${complexes__address.propcode_revised} = ${google_review_tracker.property} ;;
+  }
 
   join: complexes__address {
     from: complexes__address
@@ -417,6 +421,22 @@ explore: reservations_clean {
     relationship: one_to_one
     sql_on: ${latest_listing_review_date.airbnb_reviews_listing_id} = ${airbnb_reviews.listing_id} ;;
   }
+  join: braze_email_link_clicked {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${post_checkout_v2.userid} = ${braze_email_link_clicked.userid} ;;
+  }
+  join: braze_email_sent {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${post_checkout_v2.userid} = ${braze_email_sent.user_id} ;;
+  }
+  join: braze_webhook_sent {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${post_checkout_v2.userid} = ${braze_webhook_sent.user_id};;
+  }
+
 }
 
 explore: reservations_audit {
