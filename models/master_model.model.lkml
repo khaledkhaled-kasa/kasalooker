@@ -227,7 +227,7 @@ explore: units_buildings_information {
     view_label: "QA Walkthrough Survey Data"
     type: left_outer
     relationship: one_to_many
-    sql_on: ${units_buildings_information.internaltitle} = ${pom_qa_walkthrough_survey_agg.unit} ;;
+    sql_on: right(${units_buildings_information.internaltitle},3) = right(${pom_qa_walkthrough_survey_agg.unit},3) and left(${units_buildings_information.internaltitle},3) = left(${pom_qa_walkthrough_survey_agg.unit},3) ;;
     }
 
 
@@ -262,7 +262,7 @@ explore: units_buildings_information {
     view_label: "POM Visit Information"
     type: left_outer
     relationship: one_to_many
-    sql_on: ${units_buildings_information.internaltitle} = ${unit_submission_data_final.buildingunit};;
+    sql_on: left(${units_buildings_information.internaltitle},3) = left(${unit_submission_data_final.buildingunit},3) and right(${units_buildings_information.internaltitle},3) = right(${unit_submission_data_final.buildingunit},3) ;;
   }
 
 
