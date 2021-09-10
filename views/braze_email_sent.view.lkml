@@ -1,15 +1,5 @@
 view: braze_email_sent {
-  derived_table: {
-    sql: SELECT
-      id,
-      canvas_step_name,
-      canvas_name,
-context_traits_email,
-user_Id,
-      timestamp
-      from `bigquery-analytics-272822.braze_currents_live.email_sent`
- ;;
-  }
+  sql_table_name:`bigquery-analytics-272822.braze_currents_live.email_sent` ;;
 
   measure: count {
     type: count

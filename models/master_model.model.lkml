@@ -228,7 +228,7 @@ explore: units_buildings_information {
     type: left_outer
     relationship: one_to_many
     sql_on: ${units_buildings_information.internaltitle} = ${pom_qa_walkthrough_survey_agg.unit} ;;
-  }
+    }
 
 
   join: geo_location {
@@ -262,7 +262,7 @@ explore: units_buildings_information {
     view_label: "POM Visit Information"
     type: left_outer
     relationship: one_to_many
-    sql_on: ${units_buildings_information.internaltitle} = ${unit_submission_data_final.buildingunit} ;;
+    sql_on: ${units_buildings_information.internaltitle} = ${unit_submission_data_final.buildingunit};;
   }
 
 
@@ -355,7 +355,11 @@ explore: reservations_clean {
     relationship: one_to_one
     sql_on: ${complexes._id} = ${units.complex} ;;
   }
-
+  join: google_review_tracker {
+    type:  left_outer
+    relationship: one_to_many
+    sql_on: ${complexes__address.propcode_revised} = ${google_review_tracker.property} ;;
+  }
 
   join: complexes__address {
     from: complexes__address
@@ -427,6 +431,12 @@ explore: reservations_clean {
     relationship: one_to_many
     sql_on: ${post_checkout_v2.userid} = ${braze_email_sent.user_id} ;;
   }
+  join: braze_webhook_sent {
+    type: left_outer
+    relationship: one_to_many
+    sql_on: ${post_checkout_v2.userid} = ${braze_webhook_sent.user_id};;
+  }
+
 }
 
 explore: reservations_audit {
