@@ -615,6 +615,14 @@ view: reservations_v3 {
     filters: [capacity_night_part_of_res: "yes", status: "confirmed, checked_in", bringingpets: "yes"]
 
   }
+  measure: num_unique_guest {
+    label: "Num Unique guests"
+    hidden: no
+    type: count_distinct
+    sql: ${guest} ;;
+    filters: [ status: "confirmed, checked_in", guest: "-60dc47b356b7bb0009fd82e9,-NULL,-604a1163f17ca400088be57f"]
+
+  }
 
   measure: percent_reservations_pets {
     label: "% Reservations (Pets)"
