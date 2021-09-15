@@ -28,8 +28,8 @@ GROUP BY
 t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
             LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH) Month,
             FORMAT_TIMESTAMP('%Y-%m', CAST(LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH) as TIMESTAMP)) Month_Year,
-            CASE WHEN LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH) < '2021-06-30' THEN 'Audited Month' -- This is where to adjust audited month
-            WHEN LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH) = '2021-06-30' THEN 'Audited Month (Latest)' -- This is where to adjust audited month latest
+            CASE WHEN LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH) < '2021-07-31' THEN 'Audited Month' -- This is where to adjust audited month
+            WHEN LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH) = '2021-07-31' THEN 'Audited Month (Latest)' -- This is where to adjust audited month latest
             ELSE 'Forecast Month' END Forecast_Month,
             value, SAFE_CAST(value as FLOAT64) value_float
               FROM (
@@ -55,11 +55,15 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
       ANY_VALUE(if(Metric = 'Income',value_float,null)) AS Income,
       ANY_VALUE(if(Metric = 'Owner Remittance (NetSuite)',value_float,null)) AS Owner_Remittance,
       ANY_VALUE(if(Metric = 'Owner Profitability',value_float,null)) AS Owner_Profitability,
+      ANY_VALUE(if(Metric = 'Kasa Profitability',value_float,null)) AS Kasa_Profitability,
       ANY_VALUE(if(Metric = 'BHAG Margin',value_float,null)) AS BHAG_Margin,
       ANY_VALUE(if(Metric = 'Market Rent',value_float,null)) AS Market_Rent,
       ANY_VALUE(if(Metric = 'Lease Rent',value_float,null)) AS Lease_Rent,
       ANY_VALUE(if(Metric = 'Housekeeping',value_float,null)) AS Housekeeping,
       ANY_VALUE(if(Metric = 'Supplies',value_float,null)) AS Supplies,
+      ANY_VALUE(if(Metric = '4002 - Cancellation Fee',value_float,null)) AS Cancellation_Fees,
+      ANY_VALUE(if(Metric = '4003 - Cleaning Fee',value_float,null)) AS Cleaning_Fees,
+      ANY_VALUE(if(Metric = '4009 - Other Fees',value_float,null)) AS Other_Fees,
       ANY_VALUE(if(Metric = '5108 - Channel Fees',value_float,null)) AS Channel_Fees,
       ANY_VALUE(if(Metric = '5103 - Maintenance Providers',value_float,null)) AS Maintenance_Providers,
       ANY_VALUE(if(Metric = '5105 - Electric/Gas/Water/ Parking/Others',value_float,null)) AS Electric_Gas_Water_Parking_Others,
@@ -416,12 +420,28 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
     sql: ${TABLE}.Owner_Profitability ;;
   }
 
+  measure: monthly_kasa_profitability {
+    label: "Kasa Profitability (Monthly)"
+    description: "This data is pulled from an Adaptive export"
+    type: sum_distinct
+    value_format: "$#,##0"
+    sql: ${TABLE}.Kasa_Profitability ;;
+  }
+
   measure: owner_profitability_percent {
     description: "This data is pulled from an Adaptive export"
     label: "Owner Profitability % (Monthly)"
     value_format: "0%"
     type: number
     sql: ${monthly_owner_profitability} / nullif(${income_measure},0) ;;
+  }
+
+  measure: kasa_profitability_percent {
+    description: "This data is pulled from an Adaptive export"
+    label: "Kasa Profitability % (Monthly)"
+    value_format: "0%"
+    type: number
+    sql: ${monthly_kasa_profitability} / nullif(${income_measure},0) ;;
   }
 
   measure: monthly_bhag_margin {
@@ -539,11 +559,37 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
   }
 
   measure: monthly_payment_processing_fees {
+    group_label: "Fees (Monthly)"
     label: "Payment Processing Fees (Monthly)"
     value_format: "$#,##0"
     type: sum_distinct
     sql: ${TABLE}.Payment_Processing_Fees ;;
   }
+
+  measure: cancellation_fees {
+    group_label: "Fees (Monthly)"
+    label: "Cancellation Fees (Monthly)"
+    value_format: "$#,##0"
+    type: sum_distinct
+    sql: ${TABLE}.Cancellation_Fees ;;
+  }
+
+  measure: cleaning_fees {
+    group_label: "Fees (Monthly)"
+    label: "Cleaning Fees (Monthly)"
+    value_format: "$#,##0"
+    type: sum_distinct
+    sql: ${TABLE}.Cleaning_Fees ;;
+  }
+
+  measure: other_fees {
+    group_label: "Fees (Monthly)"
+    label: "Other Fees (Monthly)"
+    value_format: "$#,##0"
+    type: sum_distinct
+    sql: ${TABLE}.Other_Fees ;;
+  }
+
 
   measure: str_operating_cash_flow {
     label: "STR Operating Cash Flow Est. (Monthly)"
