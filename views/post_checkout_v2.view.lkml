@@ -356,6 +356,15 @@ union all
     sql: ${confirmationcode} ;;
   }
 
+  measure: count_clean {
+    type: count_distinct
+    label: "Review Count (Subcategories)"
+    sql: ${confirmationcode} ;;
+    filters: [
+      _cleanliness___how_clean_was_the_kasa_when_you_arrived_: "1,2,3,4,5"
+    ]
+  }
+
   measure: overall_measure {
     label: "Average Overall Rating"
     group_label: "Ratings (Aggregated)"
@@ -642,7 +651,7 @@ union all
     label: "Percent 5 Star (Cleanliness)"
     type: number
     value_format: "0.0%"
-    sql: ${cleanliness_5_star} / nullif(${count},0) ;;
+    sql: ${cleanliness_5_star} / nullif(${count_clean},0) ;;
   }
 
   measure: percent_5_star_accuracy {
@@ -650,7 +659,7 @@ union all
     label: "Percent 5 Star (Accuracy)"
     type: number
     value_format: "0.0%"
-    sql: ${accuracy_5_star} / nullif(${count},0) ;;
+    sql: ${accuracy_5_star} / nullif(${count_clean},0) ;;
   }
 
   measure: percent_5_star_checkin {
@@ -658,7 +667,7 @@ union all
     label: "Percent 5 Star (Checkin)"
     type: number
     value_format: "0.0%"
-    sql: ${checkin_5_star} / nullif(${count},0) ;;
+    sql: ${checkin_5_star} / nullif(${count_clean},0) ;;
   }
 
   measure: percent_5_star_communication {
@@ -666,7 +675,7 @@ union all
     label: "Percent 5 Star (Communication)"
     type: number
     value_format: "0.0%"
-    sql: ${communication_5_star} / nullif(${count},0) ;;
+    sql: ${communication_5_star} / nullif(${count_clean},0) ;;
   }
 
   measure: percent_5_star_location {
@@ -674,7 +683,7 @@ union all
     label: "Percent 5 Star (Location)"
     type: number
     value_format: "0.0%"
-    sql: ${location_5_star} / nullif(${count},0) ;;
+    sql: ${location_5_star} / nullif(${count_clean},0) ;;
   }
 
   measure: percent_5_star_value {
@@ -682,7 +691,7 @@ union all
     label: "Percent 5 Star (Value)"
     type: number
     value_format: "0.0%"
-    sql: ${value_5_star} / nullif(${count},0) ;;
+    sql: ${value_5_star} / nullif(${count_clean},0) ;;
   }
 
   measure: percent_less_than_4_star_overall {
@@ -698,7 +707,7 @@ union all
     label: "Percent Less Than 4 Star (Cleanliness)"
     type: number
     value_format: "0.0%"
-    sql: ${cleanliness_less_than_4_star} / nullif(${count},0) ;;
+    sql: ${cleanliness_less_than_4_star} / nullif(${count_clean},0) ;;
   }
 
   measure: percent_less_than_4_star_accuracy {
@@ -706,7 +715,7 @@ union all
     label: "Percent Less Than 4 Star (Accuracy)"
     type: number
     value_format: "0.0%"
-    sql: ${accuracy_less_than_4_star} / nullif(${count},0) ;;
+    sql: ${accuracy_less_than_4_star} / nullif(${count_clean},0) ;;
   }
 
   measure: percent_less_than_4_star_checkin {
@@ -714,7 +723,7 @@ union all
     label: "Percent Less Than 4 Star (Checkin)"
     type: number
     value_format: "0.0%"
-    sql: ${checkin_less_than_4_star} / nullif(${count},0) ;;
+    sql: ${checkin_less_than_4_star} / nullif(${count_clean},0) ;;
   }
 
   measure: percent_less_than_4_star_communication {
@@ -722,7 +731,7 @@ union all
     label: "Percent Less Than 4 Star (Communication)"
     type: number
     value_format: "0.0%"
-    sql: ${communication_less_than_4_star} / nullif(${count},0) ;;
+    sql: ${communication_less_than_4_star} / nullif(${count_clean},0) ;;
   }
 
   measure: percent_less_than_4_star_location {
@@ -730,7 +739,7 @@ union all
     label: "Percent Less Than 4 Star (Location)"
     type: number
     value_format: "0.0%"
-    sql: ${location_less_than_4_star} / nullif(${count},0) ;;
+    sql: ${location_less_than_4_star} / nullif(${count_clean},0) ;;
   }
 
   measure: percent_less_than_4_star_value {
@@ -738,7 +747,7 @@ union all
     label: "Percent Less Than 4 Star (Value)"
     type: number
     value_format: "0.0%"
-    sql: ${value_less_than_4_star} / nullif(${count},0) ;;
+    sql: ${value_less_than_4_star} / nullif(${count_clean},0) ;;
   }
 
   measure: net_quality_score_overall {
