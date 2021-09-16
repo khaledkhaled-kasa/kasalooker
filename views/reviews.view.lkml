@@ -24,6 +24,9 @@
       select t4.*, t5.privatereviewtext privatereviewtext2
       from t4 join t4 t5
       on (t4.reservation = t5.reservation and t4.target != t5.target);;
+
+      persist_for: "1 hours"
+
     }
 
 

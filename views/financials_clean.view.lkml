@@ -2,7 +2,7 @@ view: financials_clean {
   label: "Financials"
   derived_table: {
     sql: SELECT financials.*
-        FROM financials
+          FROM financials
           WHERE isvalid is null or isvalid = true
       ;;
 

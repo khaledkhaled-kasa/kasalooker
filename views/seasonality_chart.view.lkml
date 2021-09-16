@@ -10,6 +10,8 @@ view: seasonality_chart {
         )
         WHERE NOT LOWER(Month) IN ('metro_area', 'seasonality_type')
        ;;
+
+  persist_for: "24 hours"
   }
 
 
