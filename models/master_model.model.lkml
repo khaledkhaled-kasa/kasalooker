@@ -302,7 +302,7 @@ explore: units_buildings_information {
 
 
 explore: reservations_clean {
-  aggregate_table: reviews_by_week_and_metrics {
+  aggregate_table: reviews_by_month_and_metrics {
     query: {
       dimensions: [complexes__address.title, reservations_clean.checkoutdate_month]
       measures: [airbnb_reviews.count, airbnb_reviews.net_quality_score, airbnb_reviews.avg_overall_rating, airbnb_reviews.avg_cleanliness_rating,
@@ -513,7 +513,18 @@ explore: reservations_audit {
 }
 
 explore: capacities_v3 {
+  aggregate_table: capacities_by_month_and_metrics {
+    query: {
+      dimensions: [complexes.title, capacities_v3.night_month]
+      measures: [financials_v3.adr, financials_v3.revpar,reservations_v3.occupancy,financials_v3.amount,reservations_v3.num_reservations,
+        reservations_v3.reservation_night,reservations_v3.number_of_checkins,capacities_v3.capacity]
+      timezone: America/Los_Angeles
+    }
 
+    materialization: {
+      sql_trigger_value: SELECT MAX(createdat) from `bigquery-analytics-272822.dbt.reservations_v3`;;
+    }
+  }
 
   group_label: "Kasa Metrics"
   label: "Reservations"
@@ -522,7 +533,7 @@ explore: capacities_v3 {
   fields: [ALL_FIELDS*, -adaptive_export_revamped.month_finance_audit]
   join: units {
     type:  inner
-    relationship: one_to_one
+    relationship: many_to_one
     sql_on: ${capacities_v3._id} = ${units._id} ;;
   }
 
