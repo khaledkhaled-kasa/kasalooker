@@ -147,6 +147,7 @@ view: financials_audit {
     type: time
     timeframes: [
       raw,
+      time,
       date,
       day_of_month,
       week,
@@ -171,6 +172,7 @@ view: financials_audit {
     timeframes: [
       raw,
       date,
+      time,
       day_of_month,
       week,
       month,

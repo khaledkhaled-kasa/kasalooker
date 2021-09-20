@@ -408,7 +408,7 @@ view: reservations_audit {
     description: "Number of unique reservations (confirmed / checked in bookings)"
     type: count_distinct
     sql: ${confirmationcode} ;;
-    filters: [financial_night_part_of_res: "yes", status: "confirmed, checked_in"]
+    filters: [status: "confirmed, checked_in"]
     drill_fields: [reservation_details*]
   }
 
