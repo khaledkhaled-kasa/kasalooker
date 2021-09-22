@@ -44,6 +44,13 @@ view: pom_information {
     type: string
     sql: ${TABLE}.PropertyClass ;;
   }
+  dimension: BuildingAccessSystemSummary {
+    view_label: "Building and Geographic Information"
+    label: "Building Access System Summary"
+    type: string
+    sql: ${TABLE}.BuildingAccessSystemSummary;;
+  }
+
 
 
   dimension: pom {
