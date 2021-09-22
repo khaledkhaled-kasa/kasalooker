@@ -3,7 +3,7 @@
       sql:   SELECT *
           FROM `bigquery-analytics-272822.overall_quality_score.Post_Checkout_Data`
        ;;
-      persist_for: "6 hours"
+      persist_for: "24 hours"
     }
 
 

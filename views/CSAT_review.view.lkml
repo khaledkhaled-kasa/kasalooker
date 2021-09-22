@@ -20,6 +20,11 @@ view: csat_review {
   FROM grouped_confirmation_code
   GROUP BY 1 ;;
 
+      datagroup_trigger: kustomer_default_datagroup
+      # indexes: ["night","transaction"]
+      publish_as_db_view: yes
+      # partition_keys: ["partition_date"]
+
 
       }
 

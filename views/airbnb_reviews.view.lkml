@@ -9,8 +9,7 @@ view: airbnb_reviews {
           # SELECT * -- OLD
           # FROM `bigquery-analytics-272822.airbnb_review_master.Master`;;
 
-  #datagroup_trigger: reviews_default_datagroup
-      persist_for: "6 hours"
+      persist_for: "4 hours"
     }
 
     dimension: review_order {
@@ -75,6 +74,7 @@ view: airbnb_reviews {
 
     dimension_group: reservation_checkin {
       type: time
+      hidden: yes
       timeframes: [raw, time, date, week, month, year, quarter]
       label: "Reservation Check-In"
       sql: timestamp(${reservations_clean.checkindate_time}) ;;
@@ -84,6 +84,7 @@ view: airbnb_reviews {
     dimension_group: reservation_checkout {
       label: "Reservation Check-Out"
       type: time
+      hidden: yes
       timeframes: [raw, time, date, week, month, year, quarter]
       sql: timestamp(${reservations_clean.checkoutdate_time}) ;;
       convert_tz: no

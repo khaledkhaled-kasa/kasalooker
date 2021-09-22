@@ -2,6 +2,7 @@ view: disputes_tracker {
   derived_table: {
     sql: SELECT * FROM `bigquery-analytics-272822.Gsheets.disputes`
       ;;
+
   }
 
   dimension: reservation_id {

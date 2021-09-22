@@ -33,6 +33,8 @@ view: unit_submission_data_final {
         LEFT JOIN MostRecentRoutine rout
         ON c.Building = rout.Building and c.Unit = rout.Unit
  ;;
+
+    persist_for: "4 hours"
   }
 
 

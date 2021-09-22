@@ -1,7 +1,7 @@
 view: financials_audit {
   derived_table: {
     sql: SELECT financials.*, DATE(financials.night) as partition_date
-        FROM financials
+          FROM financials
           WHERE isvalid is null or isvalid = true
       ;;
 
@@ -147,6 +147,7 @@ view: financials_audit {
     type: time
     timeframes: [
       raw,
+      time,
       date,
       day_of_month,
       week,
@@ -171,6 +172,7 @@ view: financials_audit {
     timeframes: [
       raw,
       date,
+      time,
       day_of_month,
       week,
       month,

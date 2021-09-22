@@ -2,6 +2,9 @@ view: costar_data {
   derived_table: {
     sql: SELECT * FROM `bigquery-analytics-272822.Gsheets.costar_data`
       ;;
+
+    persist_for: "24 hours"
+
   }
 
   dimension: primary_key {
