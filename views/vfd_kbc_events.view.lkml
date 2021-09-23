@@ -317,6 +317,7 @@ view: vfd_kbc_events {
   }
 
   measure: RTF_skiped{
+    label: "RTF skipped"
     type: count_distinct
     group_label: "VFD Metrics"
     sql: ${confirmation_code};;
@@ -394,7 +395,7 @@ view: vfd_kbc_events {
     drill_fields: [detail*]
   }
   measure: identity_check_failed{
-    label: "Identity Check Faild"
+    label: "Identity Check Failed"
     description: "Total Guests failed to be verified"
     group_label: "KBC Metrics"
     type: count_distinct
