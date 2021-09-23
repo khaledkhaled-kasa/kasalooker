@@ -240,6 +240,7 @@ view: vfd_kbc_events {
     type: number
     sql: ${lcoConfirmed}/${lco_requested}  ;;
     drill_fields: [detail*]
+    hidden: yes
   }
   measure: early_check_in_requested {
     label: "Early Checkin Requested "
