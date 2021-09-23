@@ -33,6 +33,10 @@ view: vfd_kbc_events {
     type: string
     sql: ${TABLE}.confirmation_code ;;
   }
+  dimension: cotime {
+    type: string
+    sql: ${TABLE}.cotime ;;
+  }
 
   dimension_group: session_timestamp {
     type: time
@@ -54,14 +58,16 @@ view: vfd_kbc_events {
   }
 
   dimension: earlycheckinStatus {
+    label: "early checkin Status "
     type: string
     sql: ${TABLE}.earlycheckinStatus ;;
     hidden: yes
   }
   dimension: latecheckoutStatus {
+    label: "late checkout Status"
     type: string
     sql: ${TABLE}.latecheckoutStatus ;;
-    hidden: yes
+
   }
 
   dimension: event_name {
@@ -161,12 +167,12 @@ view: vfd_kbc_events {
     hidden: yes
   }
   dimension: checkVFDinadvanceCII {
-    type: string
+    type: yesno
     sql: ${TABLE}.checkVFDinadvanceCII ;;
     hidden: yes
   }
   dimension: checkVFDinadvancCOI {
-    type: string
+    type: yesno
     sql: ${TABLE}.checkVFDinadvancCOI ;;
     hidden: yes
   }
@@ -182,7 +188,7 @@ view: vfd_kbc_events {
   }
 
   measure: num_cii_viwes {
-    label: "Num CII Views"
+    label: "CII Views"
     group_label: "VFD Metrics"
     description: "Total number of Views on Check-in instructions page"
     type: count_distinct
@@ -190,8 +196,9 @@ view: vfd_kbc_events {
     filters: [event_name: "check_in_step_viewed"]
     drill_fields: [detail*]
   }
+
   measure: num_coi_viwes {
-    label: "Num COI Views"
+    label: "COI Views"
     group_label: "VFD Metrics"
     description: "Total number of Views on Check-out instructions page"
     type: count_distinct
@@ -200,7 +207,7 @@ view: vfd_kbc_events {
     drill_fields: [detail*]
   }
   measure: num_amenity_viwes {
-    label: "Num COI Views"
+    label: "Amenity Guide Views"
     group_label: "VFD Metrics"
     description: "Total number of Views on amenity page"
     type: count_distinct
@@ -209,25 +216,26 @@ view: vfd_kbc_events {
     drill_fields: [detail*]
   }
   measure: lco_requested {
-    label: "LCO Requested "
-    group_label: "KBC Metrics"
+    label: "LCO Requests "
+    group_label: "VFD Metrics"
     description: "Total reservations requested LCO"
     type: count_distinct
     sql: ${confirmation_code};;
-    filters: [event_name: "lco_requested"]
+    filters: [event_name: "lco_requested", cotime: "-11:00"]
     drill_fields: [detail*]
   }
   measure: lcoConfirmed{
     label: "LCO Confirmed"
     type: count_distinct
-    group_label: "KBC Metrics"
+    group_label: "VFD Metrics"
     sql: ${confirmation_code} ;;
     filters: [latecheckoutStatus: "approved"]
     drill_fields: [detail*]
+    hidden: yes
   }
   measure: lco_completion_rate{
     label: "LCO Completion Rate"
-    group_label: "KBC Metrics"
+    group_label: "VFD Metrics"
     value_format_name: percent_1
     type: number
     sql: ${lcoConfirmed}/${lco_requested}  ;;
@@ -299,10 +307,11 @@ view: vfd_kbc_events {
     drill_fields: [detail*]
   }
   measure: extension_payment_successed_rate{
+    label: "Extension Payment Success Rate"
     group_label: "VFD Metrics"
     value_format_name: percent_1
     type: number
-    sql:${extension_payment_successed}/(${extension_payment_successed}+${extension_payment_failed})  ;;
+    sql:${extension_payment_successed}/(${extension_startrs})  ;;
     drill_fields: [detail*]
   }
 
@@ -447,15 +456,13 @@ view: vfd_kbc_events {
     drill_fields: [detail*]
   }
   measure: VFDCompletioninAdvance{
-    label: "VFD Uused in Advance of Checkin"
+    label: "VFD Used in Advance of Checkin"
     description: "Num of Guests Used VFD 24hrs in Advance of Checkin"
     group_label: "VFD Metrics"
     type: count_distinct
-    sql: ${confirmation_code} ;;
-    filters: [checkVFDinadvanceCII: "Yes",checkVFDinadvancCOI: "Yes"]
+    sql: case when ${checkVFDinadvanceCII} = true OR ${checkVFDinadvancCOI}=true then ${confirmation_code} else null end ;;
     drill_fields: [detail*]
   }
-
 
 
   set: detail {
