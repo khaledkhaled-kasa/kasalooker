@@ -1,12 +1,12 @@
 view: vfd_kbc_events {
   label: "KBC/VFD Events"
   derived_table: {
-    sql: SELECT concat(s.session_id,confirmation_code,eventId)as pK, *
+    sql: SELECT concat(s.sessionId,confirmation_code,eventId)as pK, *
       FROM `bigquery-analytics-272822.dbt_bizops.vfd_kbc_sessions` s
       left join
       `bigquery-analytics-272822.dbt_bizops.vfd_kbc_all_events`a
       on
-      s.session_id= a.session_id
+      s.sessionId= a.session_id
        ;;
   }
 
@@ -24,9 +24,9 @@ view: vfd_kbc_events {
     sql: ${TABLE}.anonymous_id ;;
   }
 
-  dimension: session_id {
+  dimension: session_id1 {
     type: number
-    sql: ${TABLE}.session_id ;;
+    sql: ${TABLE}.sessionId ;;
   }
 
   dimension: confirmation_code {
@@ -188,30 +188,30 @@ view: vfd_kbc_events {
   }
 
   measure: num_cii_viwes {
-    label: "CII Views"
+    label: "CII Views (Sessions)"
     group_label: "VFD Metrics"
     description: "Total number of Views on Check-in instructions page"
     type: count_distinct
-    sql: ${p_k} ;;
+    sql: ${session_id1} ;;
     filters: [event_name: "check_in_step_viewed"]
     drill_fields: [detail*]
   }
 
   measure: num_coi_viwes {
-    label: "COI Views"
+    label: "COI Views (Sessions)"
     group_label: "VFD Metrics"
     description: "Total number of Views on Check-out instructions page"
     type: count_distinct
-    sql: ${p_k} ;;
+    sql: ${session_id1} ;;
     filters: [event_name: "check_out_instructions_viewed"]
     drill_fields: [detail*]
   }
   measure: num_amenity_viwes {
-    label: "Amenity Guide Views"
+    label: "Amenity Guide Views (Sessions)"
     group_label: "VFD Metrics"
     description: "Total number of Views on amenity page"
     type: count_distinct
-    sql: ${p_k} ;;
+    sql: ${session_id1} ;;
     filters: [event_name: "amenity_guide_viewed"]
     drill_fields: [detail*]
   }
@@ -471,7 +471,7 @@ view: vfd_kbc_events {
     fields: [
       p_k,
       anonymous_id,
-      session_id,
+     session_id1,
       confirmation_code,
       session_timestamp_time,
       device,
