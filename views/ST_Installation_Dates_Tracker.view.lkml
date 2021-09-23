@@ -19,6 +19,7 @@ view: ST_Installation_Dates_Tracker {
       type: string
       sql: ${TABLE}.UnitInternalTitle ;;
       primary_key: yes
+      hidden: yes
     }
 
     dimension: smart_things_installation {
