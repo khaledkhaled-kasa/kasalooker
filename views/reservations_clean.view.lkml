@@ -157,6 +157,11 @@ view: reservations_clean {
     type: string
     sql: ${TABLE}.unit ;;
   }
+  dimension: extended_booking {
+    description: "An extended booking is defined as two consecutive bookings by the same guest (e-mail id) within the same building (i.e. a unit swap would still be considered an extension). An extended booking will only return Yes for the extended reservation."
+    type: yesno
+    sql: ${TABLE}.extended_booking = 1 ;;
+  }
 
   dimension: initial_booking {
     label: "Initial Booking (For Extensions Only)"
@@ -171,6 +176,15 @@ view: reservations_clean {
     type: count_distinct
     sql: CONCAT(${units.internaltitle},${confirmationcode}) ;;
     filters: [ initial_booking: "no", status: "confirmed, checked_in"]
+    drill_fields: [reservation_details*]
+
+  }
+  measure: number_of_checkins {
+    label: "Number of Checkins"
+    description: "Number of Check-ins EXCLUDING Extensions"
+    type: count_distinct
+    sql: CONCAT(${_id},${confirmationcode}) ;;
+    filters: [ extended_booking: "no", status: "confirmed, checked_in"]
     drill_fields: [reservation_details*]
 
   }
