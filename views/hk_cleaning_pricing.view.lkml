@@ -1,6 +1,10 @@
 view: hk_cleaning_pricing {
-  sql_table_name: `bigquery-analytics-272822.Gsheets.hk_cleaning_pricing`
-    ;;
+  derived_table: {
+    sql:   SELECT *
+          FROM `bigquery-analytics-272822.Gsheets.hk_cleaning_pricing`
+       ;;
+    persist_for: "1 hours"
+  }
 
   dimension: br {
     hidden: yes

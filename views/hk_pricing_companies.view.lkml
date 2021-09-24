@@ -1,6 +1,10 @@
 view: hk_pricing_companies {
-  sql_table_name: `bigquery-analytics-272822.Gsheets.hk_pricing_companies`
-    ;;
+  derived_table: {
+    sql:   SELECT *
+          FROM `bigquery-analytics-272822.Gsheets.hk_pricing_companies`
+       ;;
+    persist_for: "1 hours"
+  }
 
   dimension: property_code {
     hidden: yes

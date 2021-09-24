@@ -13,6 +13,7 @@ datagroup: default_datagroup {
   sql_trigger: SELECT CURRENT_DATE() ;;
   max_cache_age: "24 hours"
 }
+
 datagroup: ST_Installation_Dates_Tracker_datagroup {
   sql_trigger: SELECT COUNT(*) FROM `bigquery-analytics-272822.Gsheets.ST_Installation_Dates_Tracker`
   where  UnitInternalTitle is not null ;;
@@ -307,7 +308,9 @@ explore: reservations_clean {
       dimensions: [complexes__address.title, reservations_clean.checkoutdate_month]
       measures: [airbnb_reviews.count, airbnb_reviews.net_quality_score, airbnb_reviews.avg_overall_rating, airbnb_reviews.avg_cleanliness_rating,
         airbnb_reviews.count_clean, airbnb_reviews.avg_accuracy_rating, airbnb_reviews.net_quality_score_clean, airbnb_reviews.avg_checkin_rating,
-        airbnb_reviews.avg_communication_rating, airbnb_reviews.net_quality_score_accuracy, airbnb_reviews.net_quality_score_checkin, airbnb_reviews.net_quality_score_communication]
+        airbnb_reviews.avg_communication_rating, airbnb_reviews.net_quality_score_accuracy, airbnb_reviews.net_quality_score_checkin, airbnb_reviews.net_quality_score_communication,
+        post_checkout_v2.net_quality_score_accuracy, post_checkout_v2.net_quality_score_checkin, post_checkout_v2.net_quality_score_cleanliness, post_checkout_v2.net_quality_score_communication,
+        post_checkout_v2.net_quality_score_location, post_checkout_v2.net_quality_score_overall, post_checkout_v2.net_quality_score_value, post_checkout_v2.count, post_checkout_v2.count_clean]
       timezone: America/Los_Angeles
     }
 
@@ -581,7 +584,7 @@ explore: capacities_v3 {
   }
 
   join: costar_data {
-    type:  left_outer
+    type:  full_outer
     relationship: one_to_one
     sql_on: ${costar_data.metro_area} = ${geo_location.metro}
       and ${costar_data.state} = ${geo_location.state}
