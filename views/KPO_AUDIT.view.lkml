@@ -14,7 +14,7 @@ view: KPO_AUDIT {
                   WHERE ContractType != 'Distribution Agreement'
        ;;
 
-      persist_for: "4 hours"
+      persist_for: "1 hours"
   }
 
 

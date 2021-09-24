@@ -11,7 +11,7 @@ union all
 
       ;;
 
-    persist_for: "1 hours"
+    persist_for: "4 hours"
   }
 
   # Over Communication Analysis

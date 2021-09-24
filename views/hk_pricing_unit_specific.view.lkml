@@ -1,6 +1,10 @@
 view: hk_pricing_unit_specific {
-  sql_table_name: `bigquery-analytics-272822.Gsheets.hk_pricing_unit_specific`
-    ;;
+  derived_table: {
+    sql:   SELECT *
+          FROM `bigquery-analytics-272822.Gsheets.hk_pricing_unit_specific`
+       ;;
+    persist_for: "1 hours"
+  }
 
   dimension: building_title {
     type: string
