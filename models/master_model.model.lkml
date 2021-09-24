@@ -249,6 +249,11 @@ explore: units_buildings_information {
     relationship: one_to_one
     sql_on: ${units_buildings_information.propcode} = ${pom_information.Prop_Code} ;;
   }
+  join: building_ci_complexity__score{
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units_buildings_information.propcode} = ${building_ci_complexity__score.building_code} ;;
+  }
 
   join: pom_meeting_attendance {
     view_label: "POM Meeting Data"
