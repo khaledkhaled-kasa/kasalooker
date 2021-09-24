@@ -18,6 +18,7 @@ view: braze_email_link_clicked {
     type: string
     sql: ${TABLE}.id ;;
     primary_key: yes
+    hidden: yes
   }
   dimension: canvas_step_name {
     type: string
@@ -32,6 +33,7 @@ view: braze_email_link_clicked {
   dimension: link_url {
     type: string
     sql: ${TABLE}.link_url ;;
+    hidden: yes
   }
 
   dimension: rating {
@@ -40,6 +42,7 @@ view: braze_email_link_clicked {
   }
 
   dimension: userid {
+    label: "User ID"
     type: string
     sql: ${TABLE}.userid ;;
   }
@@ -57,7 +60,8 @@ view: braze_email_link_clicked {
   }
 
   measure: count {
-    type: count
+    type: count_distinct
+    sql: ${confirmationcode} ;;
     drill_fields: [detail*]
   }
 
