@@ -7,6 +7,7 @@ sql_table_name: `bigquery-analytics-272822.braze_currents_live.webhook_sent`;;
     type: string
     sql: ${TABLE}.id ;;
     primary_key: yes
+    hidden: yes
   }
 
   dimension: canvas_name {

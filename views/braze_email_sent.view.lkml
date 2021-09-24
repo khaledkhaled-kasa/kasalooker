@@ -10,6 +10,7 @@ view: braze_email_sent {
     type: string
     sql: ${TABLE}.id ;;
     primary_key: yes
+    hidden:yes
   }
 
   dimension: canvas_step_name {

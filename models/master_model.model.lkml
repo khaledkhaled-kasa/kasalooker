@@ -427,16 +427,16 @@ explore: reservations_clean {
   }
   join: braze_email_link_clicked {
     type: left_outer
-    relationship: one_to_many
-    sql_on: ${post_checkout_v2.userid} = ${braze_email_link_clicked.userid} ;;
+    relationship: one_to_one
+    sql_on:  ${braze_email_link_clicked.confirmationcode} = ${reservations_clean.confirmationcode} ;;
   }
   join: braze_email_sent {
-    type: left_outer
+    type: full_outer
     relationship: one_to_many
     sql_on: ${post_checkout_v2.userid} = ${braze_email_sent.user_id} ;;
   }
   join: braze_webhook_sent {
-    type: left_outer
+    type: full_outer
     relationship: one_to_many
     sql_on: ${post_checkout_v2.userid} = ${braze_webhook_sent.user_id};;
   }
