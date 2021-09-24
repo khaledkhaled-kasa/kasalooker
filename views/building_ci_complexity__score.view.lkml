@@ -21,7 +21,7 @@ view: building_ci_complexity__score {
     label: "CI Complexity Score"
     view_label: "Building and Geographic Information"
     type: number
-    value_format: "00.00"
+    value_format: "0.00"
     sql: ${TABLE}.ComplexityScore ;;
   }
 
