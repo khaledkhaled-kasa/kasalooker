@@ -328,7 +328,7 @@ explore: reservations_clean {
   persist_with: reviews_default_datagroup
   group_label: "Kasa Metrics"
   label: "Reviews"
-  description: "This pulls review data from different platforms including Airbnb, Post-checkout surveys, Real-time checkin surveys (VFD)"
+  description: "This pulls review data from different platforms including Airbnb, Post-checkout surveys, Real-time checkin surveys (VFD) and Braze data(Marketing)"
   from: reservations_clean
 
   join: units {
