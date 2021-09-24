@@ -18,6 +18,7 @@ view: building_ci_complexity__score {
   }
 
   dimension: complexity_score {
+    label: "CI Complexity Score"
     view_label: "Building and Geographic Information"
     type: number
     value_format: "00.00"
