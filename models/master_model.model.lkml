@@ -284,7 +284,8 @@ explore: units_buildings_information {
     type: left_outer
     relationship: one_to_many
     sql_on: ${units_buildings_information._id} = ${lock_data.unit}
-      AND lower(${lock_data.devicetype}) LIKE '%lock%';;
+      AND ${lock_data.devicetype} NOT IN ("Minut_v1", "Nexia_v1", "Nexia_lock", "FreshAir", "Smartthings_v1") ;;
+
   }
 
   join: hub_devices {
