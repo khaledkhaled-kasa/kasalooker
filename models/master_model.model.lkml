@@ -284,7 +284,7 @@ explore: units_buildings_information {
     type: left_outer
     relationship: one_to_many
     sql_on: ${units_buildings_information._id} = ${lock_data.unit}
-      AND ${lock_data.devicetype} NOT IN ("Minut_v1", "Nexia_v1", "Nexia_lock", "FreshAir", "Smartthings_v1") ;;
+      AND ${lock_data.devicetype} NOT IN ("Minut_v1", "Nexia_v1", "Nexia_lock", "FreshAir_v1", "Netatmo", "Smartthings_v1") ;;
 
   }
 
