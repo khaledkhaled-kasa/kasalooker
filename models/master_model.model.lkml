@@ -284,7 +284,8 @@ explore: units_buildings_information {
     type: left_outer
     relationship: one_to_many
     sql_on: ${units_buildings_information._id} = ${lock_data.unit}
-      AND lower(${lock_data.devicetype}) LIKE '%lock%';;
+      AND ${lock_data.devicetype} NOT IN ("Minut_v1", "Nexia_v1", "Nexia_lock", "FreshAir_v1", "Netatmo", "Smartthings_v1") ;;
+
   }
 
   join: hub_devices {
@@ -320,7 +321,7 @@ explore: reservations_clean {
     }
 
     materialization: {
-      sql_trigger_value: SELECT MAX(createdat) from `bigquery-analytics-272822.dbt.reservations_v3`;;
+      persist_for: "1 hours"
     }
   }
   fields: [ALL_FIELDS*, -airbnb_reviews.clean_count_5_star_first90, -airbnb_reviews.clean_count_less_than_4_star_first90, -airbnb_reviews.count_clean_first90, -airbnb_reviews.net_quality_score_clean_first90, -airbnb_reviews.percent_5_star_clean_first90, -airbnb_reviews.percent_less_than_4_star_clean_first90, -complexes.title, -units.propcode, -geo_location.marketing_property_dash_transition]
@@ -533,7 +534,7 @@ explore: capacities_v3 {
     }
 
     materialization: {
-      sql_trigger_value: SELECT MAX(createdat) from `bigquery-analytics-272822.dbt.reservations_v3`;;
+      persist_for: "1 hours"
     }
   }
 
