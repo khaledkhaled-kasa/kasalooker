@@ -58,15 +58,16 @@ view: vfd_kbc_events {
   }
 
   dimension: earlycheckinStatus {
-    label: "early checkin Status "
+    label: "Early checkin Status "
     type: string
     sql: ${TABLE}.earlycheckinStatus ;;
     hidden: yes
   }
   dimension: latecheckoutStatus {
-    label: "late checkout Status"
+    label: "Late checkout Status"
     type: string
     sql: ${TABLE}.latecheckoutStatus ;;
+
 
   }
 
@@ -378,7 +379,7 @@ view: vfd_kbc_events {
     drill_fields: [detail*]
   }
   measure: kbc_Completions_rate{
-    label: "KBC Completed"
+    label: "KBC Completion Rate"
     group_label: "KBC Metrics"
     value_format_name: percent_1
     type: number
@@ -440,10 +441,10 @@ view: vfd_kbc_events {
     drill_fields: [detail*]
   }
   measure: avg_complete_kbc{
-    label: "Avg Time to Complete KBC"
+    label: "Avg Time to Complete KBC (Minutes)"
     description: "Avg Time to Complete KBC full funnel(Minutes)"
     type: average
-    value_format: "00.00"
+    value_format: "0.00"
     group_label: "KBC Metrics"
     sql: ${kbc_flow_completion_in_sec}/60;;
     drill_fields: [detail*]
@@ -452,11 +453,12 @@ view: vfd_kbc_events {
     label: "Avg Time to Complete Identity Check"
     description: "Avg Time Guest takes to complete Verification (Minutes)"
     type: average
-    value_format: "00.00"
+    value_format: "0.00"
     group_label: "KBC Metrics"
     sql: ${idenCheckCompletionInSec}/60;;
     drill_fields: [detail*]
   }
+
   measure: VFDCompletioninAdvance{
     label: "VFD Used in Advance of Checkin"
     description: "Num of Guests Used VFD 24hrs in Advance of Checkin"
@@ -465,7 +467,6 @@ view: vfd_kbc_events {
     sql: case when ${checkVFDinadvanceCII} = true OR ${checkVFDinadvancCOI}=true then ${confirmation_code} else null end ;;
     drill_fields: [detail*]
   }
-
 
   set: detail {
     fields: [
