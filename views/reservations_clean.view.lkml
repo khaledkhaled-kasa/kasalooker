@@ -152,6 +152,13 @@ view: reservations_clean {
     sql: ${TABLE}.timezone ;;
   }
 
+  dimension: guesty_id {
+    hidden: no
+    label: "Guesty ID"
+    type: string
+    sql: ${TABLE}.externalrefs.guesty_id ;;
+  }
+
   dimension: unit {
     hidden: yes
     type: string

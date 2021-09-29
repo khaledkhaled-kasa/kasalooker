@@ -231,6 +231,15 @@ GROUP BY
     sql: ${airbnb_reviews.reservation_checkout_date} is not null AND ${pom_qa_walkthrough_survey.submitdate_date} is not null ;;
   }
 
+  dimension: airbnb_reviews_POM_Walkthrough_buckets {
+    label: "Airbnb Review Received POM Walkthrough (Shiftsmart/Kasa/None)"
+    type: string
+    sql: CASE WHEN ${airbnb_reviews.reservation_checkout_date} is not null AND ${pom_qa_walkthrough_survey.submitdate_date} is not null AND ${POM_Name} = 'Shiftsmart' THEN 'Shiftsmart'
+    WHEN ${airbnb_reviews.reservation_checkout_date} is not null AND ${pom_qa_walkthrough_survey.submitdate_date} is not null THEN "POM QA"
+    ELSE "NO QA"
+    END;;
+  }
+
 
   measure: passed_QAs {
     label: "# of QAs Passed"

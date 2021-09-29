@@ -189,8 +189,8 @@ explore: breezeway_export {
   join: geo_location {
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${units.address_city} = ${geo_location.city}
-      and ${units.address_state} = ${geo_location.state};;
+    sql_on:  ${units.address_city} = TRIM(${geo_location.city})
+      and ${units.address_state} = TRIM(${geo_location.state});;
   }
 
   join: reviews {
@@ -234,8 +234,8 @@ explore: units_buildings_information {
   join: geo_location {
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${units_buildings_information.address_city} = ${geo_location.city}
-      and ${units_buildings_information.address_state} = ${geo_location.state};;
+    sql_on:  ${units_buildings_information.address_city} = TRIM(${geo_location.city})
+      and ${units_buildings_information.address_state} = TRIM(${geo_location.state});;
   }
 
   join: complexes {
@@ -385,8 +385,8 @@ explore: reservations_clean {
   join: geo_location {
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${complexes__address.address_city_revised} = ${geo_location.city}
-      and ${complexes__address.address_state_revised} = ${geo_location.state};;
+    sql_on:  ${complexes__address.address_city_revised} = TRIM(${geo_location.city})
+      and ${complexes__address.address_state_revised} = TRIM(${geo_location.state});;
   }
 
   join: reviews {
@@ -509,8 +509,8 @@ explore: reservations_audit {
   join: geo_location {
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${units.address_city} = ${geo_location.city}
-      and ${units.address_state} = ${geo_location.state};;
+    sql_on:  ${units.address_city} = TRIM(${geo_location.city})
+      and ${units.address_state} = TRIM(${geo_location.state});;
   }
 
   join: gv_form_ts {
@@ -593,7 +593,7 @@ explore: capacities_v3 {
     type:  full_outer
     relationship: one_to_one
     sql_on: ${costar_data.metro_area} = ${geo_location.metro}
-      and ${costar_data.state} = ${geo_location.state}
+      and ${costar_data.state} = TRIM(${geo_location.state})
       and ${capacities_v3.night_month} = ${costar_data.month};;
   }
 
@@ -614,8 +614,8 @@ explore: capacities_v3 {
   join: geo_location {
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${units.address_city} = ${geo_location.city}
-      and ${units.address_state} = ${geo_location.state};;
+    sql_on:  ${units.address_city} = TRIM(${geo_location.city})
+      and ${units.address_state} = TRIM(${geo_location.state});;
   }
 
   join: adaptive_export_revamped {
@@ -662,8 +662,8 @@ explore: devices {
   join: geo_location {
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${units.address_city} = ${geo_location.city}
-      and ${units.address_state} = ${geo_location.state};;
+    sql_on:  ${units.address_city} = TRIM(${geo_location.city})
+      and ${units.address_state} = TRIM(${geo_location.state});;
   }
 
 }
@@ -729,7 +729,7 @@ explore: pom_qa_walkthrough_survey {
     -units*,
     -hk_partners.first_3_months,
     -pom_qa_walkthrough_survey.total_qas_completed_percentage, -units*,-hk_partners.first_3_months,
-    -pom_qa_walkthrough_survey.airbnb_reviews_POM_Walkthrough, -pom_qa_walkthrough_survey.real_time_POM_Walkthrough, -pom_information.live_partners
+    -pom_qa_walkthrough_survey.airbnb_reviews_POM_Walkthrough, -pom_qa_walkthrough_survey.real_time_POM_Walkthrough,-pom_qa_walkthrough_survey.airbnb_reviews_POM_Walkthrough_buckets, -pom_information.live_partners
   ]
   persist_with: pom_checklist_default_datagroup
   group_label: "PropOps"
@@ -765,8 +765,8 @@ explore: pom_qa_walkthrough_survey {
   join: geo_location {
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${units.address_city} = ${geo_location.city}
-      and ${units.address_state} = ${geo_location.state};;
+    sql_on:  ${units.address_city} = TRIM(${geo_location.city})
+      and ${units.address_state} = TRIM(${geo_location.state});;
   }
 
 }
@@ -904,8 +904,8 @@ explore: slack_bugs_tech {
   join: geo_location {
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${units.address_city} = ${geo_location.city}
-      and ${units.address_state} = ${geo_location.state};;
+    sql_on:  ${units.address_city} = TRIM(${geo_location.city})
+      and ${units.address_state} = TRIM(${geo_location.state});;
   }
 
 }
@@ -950,8 +950,8 @@ explore: kasa_kredit_reimbursement {
   join: geo_location {
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${units.address_city} = ${geo_location.city}
-      and ${units.address_state} = ${geo_location.state};;
+    sql_on:  ${units.address_city} = TRIM(${geo_location.city})
+      and ${units.address_state} = TRIM(${geo_location.state});;
   }
 }
 
@@ -981,8 +981,8 @@ explore: blocks {
   join: geo_location {
     type:  left_outer
     relationship: one_to_one
-    sql_on:  ${units.address_city} = ${geo_location.city}
-      and ${units.address_state} = ${geo_location.state};;
+    sql_on:  ${units.address_city} = TRIM(${geo_location.city})
+      and ${units.address_state} = TRIM(${geo_location.state});;
   }
 }
 
