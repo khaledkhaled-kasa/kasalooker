@@ -41,6 +41,11 @@ datagroup: breezeway_default_datagroup {
   max_cache_age: "1 hours"
 }
 
+datagroup: looker_historicals {
+  sql_trigger: SELECT count(*) FROM `bigquery-analytics-272822.Gsheets.looker_historicals` WHERE User is NOT NULL ;;
+  max_cache_age: "1 hours"
+}
+
 datagroup: pom_checklist_default_datagroup {
   sql_trigger: SELECT extract(hour FROM current_timestamp) ;;
   max_cache_age: "1 hours"
@@ -1013,6 +1018,12 @@ explore: ximble_master {
   description: "This explore is based on a Ximble export updated every Monday which provides scheduled hours by GX teams to power metrics such as messages sent / hour."
   group_label: "Software"
   label: "Ximble"
+}
+
+explore: looker_historicals {
+  group_label: "System Activity"
+  description: "This explore will retrieve historical data beyond ones saved in Looker"
+  label: "Looker (History)"
 }
 
 
