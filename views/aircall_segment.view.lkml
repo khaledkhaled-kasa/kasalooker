@@ -128,6 +128,7 @@ view: aircall_segment {
     WHEN ${user_name} = 'Suzanne Hill' THEN 'Suzie Hill'
     WHEN ${user_name} = "Infiniti " THEN "Infiniti"
     WHEN ${user_name} = 'Katherine Chappell' THEN "Kate Chappell"
+    WHEN ${user_name} = 'Pat Tamayo' THEN "Patricia Tamayo"
     ELSE ${user_name}
     END
     ;;

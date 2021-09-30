@@ -478,7 +478,7 @@ view: airbnb_reviews {
       type: number
       value_format: "0.0"
       sql: 100*(${percent_5_star_clean} - ${percent_less_than_4_star_clean});;
-      drill_fields: [airbnb_details*, review_date, cleanliness_comments, value_comments, overall_comments]
+      drill_fields: [airbnb_details*, reservation_code ,review_date, cleanliness_comments, value_comments, overall_comments]
     }
 
     measure: net_quality_score_communication {
