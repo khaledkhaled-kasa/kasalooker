@@ -1,15 +1,21 @@
 view: post_checkout_v2 {
   derived_table: {
-    sql:Select *
- from
- `bigquery-analytics-272822.Gsheets.post_checkout_v2`
+    sql:select *
+from
+(
+Select
+    *, dense_rank() over(partition by confirmationcode order by submitted_at desc ) as latest_submission
+from
+`bigquery-analytics-272822.Gsheets.post_checkout_v2`
+ where confirmationcode not like '%test%' and  confirmationcode not like '%xxxxx%' and confirmationcode is not null
+
 union all
-    SELECT
-*
- FROM `bigquery-analytics-272822.Gsheets.post_checkout_v2_FIVE_STAR_VARIANT`
-
-
-      ;;
+SELECT
+*,dense_rank() over(partition by confirmationcode order by submitted_at desc ) as latest_submission
+FROM `bigquery-analytics-272822.Gsheets.post_checkout_v2_FIVE_STAR_VARIANT`
+where  confirmationcode not like '%test%' and confirmationcode not like '%xxxxx%'
+)
+where latest_submission=1 ;;
 
     persist_for: "4 hours"
   }
