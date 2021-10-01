@@ -20,7 +20,7 @@ view: pom_walkthrough_with_reservations {
             ON LEFT(u.internaltitle,3) = po.propcode
          ;;
 
-    datagroup_trigger: pom_checklist_default_datagroup
+    persist_for: "4 hours"
 
   }
 
