@@ -134,6 +134,8 @@ where latest_submission=1 ;;
     group_label: "Ratings"
     type: number
     sql: ${TABLE}._Location___How_would_you_rate_the_surrounding_neighborhood_and_nearby_offerings_ ;;
+    # sql:CASE when ${TABLE}._Location___How_would_you_rate_the_surrounding_neighborhood_and_nearby_offerings_ is null and ${overall__how_would_you_rate_your_kasa_stay_}=5 then 5 else ${TABLE}._Location___How_would_you_rate_the_surrounding_neighborhood_and_nearby_offerings_ end ;;
+
   }
 
   dimension: how_did_the_property_location_fall_short_ {

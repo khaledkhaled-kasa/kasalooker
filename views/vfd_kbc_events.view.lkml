@@ -18,7 +18,34 @@ view: vfd_kbc_events {
     primary_key: yes
     hidden: yes
   }
-
+  dimension_group: bookingdate {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.bookingdate ;;
+    hidden: yes
+  }
+  dimension_group: timeauthorizationStarted {
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.timeauthorizationStarted ;;
+    hidden: yes
+  }
   dimension: anonymous_id {
     type: string
     sql: ${TABLE}.anonymous_id ;;
@@ -27,6 +54,7 @@ view: vfd_kbc_events {
   dimension: session_id1 {
     type: number
     sql: ${TABLE}.sessionId ;;
+    hidden: yes
   }
 
   dimension: confirmation_code {
@@ -48,6 +76,14 @@ view: vfd_kbc_events {
     type: string
     sql: ${TABLE}.device ;;
   }
+  dimension: KBC_completedPostBooking {
+    type: yesno
+    sql:
+    date(${TABLE}.bookingdate)=
+   date( ${TABLE}.timeauthorizationStarted );;
+    hidden: yes
+  }
+
 
   dimension_group:bookingcheckinDate{
     type: time
@@ -164,8 +200,9 @@ view: vfd_kbc_events {
 
   dimension: kbc_flow_completion_in_sec {
     type: number
-    sql: ${TABLE}.kbcFlowCompletionInSec ;;
-    hidden: yes
+    label: "KBC Completion Lead Time (Minutes)"
+    sql: ${TABLE}.kbcFlowCompletionInSec/60 ;;
+    hidden: no
   }
   dimension: checkVFDinadvanceCII {
     type: yesno
@@ -178,9 +215,10 @@ view: vfd_kbc_events {
     hidden: yes
   }
   dimension:idenCheckCompletionInSec {
+    label: "Guest Verification Lead Time (Minutes)"
     type: number
-    sql: ${TABLE}.idenCheckCompletionInSec ;;
-    hidden: yes
+    sql: ${TABLE}.idenCheckCompletionInSec/60 ;;
+
   }
   dimension:kbcCompletedinOneSeesion {
     type: string
@@ -358,6 +396,7 @@ view: vfd_kbc_events {
     sql: ${confirmation_code} ;;
     filters: [kbcCompletedinOneSeesion: "Yes"]
     drill_fields: [detail*]
+    hidden: yes
   }
   measure: strat_Kbc{
     label: "KBC Started"
@@ -437,7 +476,7 @@ view: vfd_kbc_events {
     group_label: "KBC Metrics"
     type: count_distinct
     sql: ${confirmation_code};;
-    filters: [event_name: "who_is_traveling_number_defined,reason_for_stay_submitted"]
+    filters: [event_name: "who_is_traveling_number_defined,reason_for_stay_submitted,parking_requested"]
     drill_fields: [detail*]
   }
   measure: avg_complete_kbc{
@@ -446,7 +485,7 @@ view: vfd_kbc_events {
     type: average
     value_format: "0.00"
     group_label: "KBC Metrics"
-    sql: ${kbc_flow_completion_in_sec}/60;;
+    sql: ${kbc_flow_completion_in_sec};;
     drill_fields: [detail*]
   }
   measure: avg_complete_verification{
@@ -455,7 +494,7 @@ view: vfd_kbc_events {
     type: average
     value_format: "0.00"
     group_label: "KBC Metrics"
-    sql: ${idenCheckCompletionInSec}/60;;
+    sql: ${idenCheckCompletionInSec};;
     drill_fields: [detail*]
   }
 
@@ -465,6 +504,15 @@ view: vfd_kbc_events {
     group_label: "VFD Metrics"
     type: count_distinct
     sql: case when ${checkVFDinadvanceCII} = true OR ${checkVFDinadvancCOI}=true then ${confirmation_code} else null end ;;
+    drill_fields: [detail*]
+  }
+  measure: kbc_completed_postBooking{
+    label: "# KBC Competed Post Booking Date"
+    description: "# KBC Competed at the same day of booking"
+    type: count_distinct
+    group_label: "KBC Metrics"
+    sql: ${confirmation_code};;
+    filters: [KBC_completedPostBooking: "yes"]
     drill_fields: [detail*]
   }
 

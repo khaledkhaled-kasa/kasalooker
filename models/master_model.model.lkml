@@ -1036,6 +1036,8 @@ explore: KPO_AUDIT{
 
 explore: vfd_kbc_events{
     group_label: "Product & Tech"
+  description: "This explore will pull the events that happened during the KBC and VFD journey from the front end side"
+
     label: "KBC/VFD"
   join: reservations_clean {
 
