@@ -326,7 +326,7 @@ explore: reservations_clean {
     }
   }
   fields: [ALL_FIELDS*, -airbnb_reviews.clean_count_5_star_first90, -airbnb_reviews.clean_count_less_than_4_star_first90, -airbnb_reviews.count_clean_first90, -airbnb_reviews.net_quality_score_clean_first90, -airbnb_reviews.percent_5_star_clean_first90, -airbnb_reviews.percent_less_than_4_star_clean_first90, -complexes.title, -units.propcode, -geo_location.marketing_property_dash_transition]
-  # sql_always_where: ${units.availability_enddate} <> 'Invalid date' ;;
+  # sql_always_where: ${units._id} IS NOT NULL ;;
   persist_with: reviews_default_datagroup
   group_label: "Kasa Metrics"
   label: "Reviews"
@@ -357,7 +357,6 @@ explore: reservations_clean {
     relationship: one_to_one
     sql_on: ${complexes__address.propcode_revised} = ${pom_information.Prop_Code} ;;
   }
-
 
   join: complexes {
     type:  left_outer
@@ -502,6 +501,12 @@ explore: reservations_audit {
     END);;
     }
 
+  join: pom_information {
+    view_label: "POM Information"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units.propcode} = ${pom_information.Prop_Code} ;;
+  }
 
   join: complexes {
     type:  left_outer

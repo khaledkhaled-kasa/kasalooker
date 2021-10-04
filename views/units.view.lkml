@@ -322,6 +322,7 @@ view: units {
 
     measure: unit_count {
       label: "Total Unique Units"
+      description: "This includes all units we've had irrespective on whether or not they are currently active."
       type: count_distinct
       sql: CASE WHEN ((${TABLE}.internaltitle LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%XXX") OR (${TABLE}.internaltitle LIKE "%-RES") OR (${TABLE}.internaltitle LIKE "%-S")) THEN NULL
           ELSE ${TABLE}._id
@@ -333,6 +334,7 @@ view: units {
   measure: active_unit_count {
     label: "Total Active Unique Units"
     type: count_distinct
+    description: "This includes all units which have a unit status of Active or Expiring based on Col AK of the KPO"
     sql: CASE WHEN ((${internaltitle} LIKE "%-XX") OR (${internaltitle} LIKE "%XXX") OR (${internaltitle} LIKE "%-S") OR (${internaltitle} LIKE "%-RES")) THEN NULL
           ELSE ${TABLE}._id
           END ;;
@@ -342,6 +344,7 @@ view: units {
 
   measure: active_property_count {
     label: "Total Active Unique Properties"
+    description: "This includes all properties which have any unit status of Active or Expiring based on Col AK of the KPO"
     view_label: "Building and Geographic Information"
     type: count_distinct
     sql: CASE WHEN ((${internaltitle} LIKE "%-XX") OR (${internaltitle} LIKE "%XXX") OR (${internaltitle} LIKE "%-S") OR (${internaltitle} LIKE "%-RES")) THEN NULL
@@ -355,6 +358,7 @@ view: units {
 
     measure: property_count {
       label: "Total Unique Properties"
+      description: "This includes all properties we've had irrespective on whether or not they are currently active."
       view_label: "Building and Geographic Information"
       type: count_distinct
       sql: ${TABLE}.complex ;;

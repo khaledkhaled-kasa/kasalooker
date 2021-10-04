@@ -72,6 +72,7 @@
     WHEN ${name} = "Sheila Marie Cruz" THEN "Sheila Cruz"
     WHEN ${name} = "Rommel Doroteo" THEN "Mel Doroteo"
     WHEN ${name} = "Katherine Chappell" THEN "Kate Chappell"
+    WHEN ${name} = "Patricia Tamayo" THEN "Pat Tamayo"
     ELSE ${name}
     END
     ;;
