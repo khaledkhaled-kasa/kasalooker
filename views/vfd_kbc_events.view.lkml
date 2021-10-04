@@ -2,9 +2,9 @@ view: vfd_kbc_events {
   label: "KBC/VFD Events"
   derived_table: {
     sql: SELECT concat(s.sessionId,confirmation_code,eventId)as pK, *
-      FROM `bigquery-analytics-272822.dbt_bizops.vfd_kbc_sessions` s
+      FROM `bigquery-analytics-272822.dbt.vfd_kbc_sessions` s
       left join
-      `bigquery-analytics-272822.dbt_bizops.vfd_kbc_all_events`a
+      `bigquery-analytics-272822.dbt.vfd_kbc_all_events`a
       on
       s.sessionId= a.session_id
        ;;
