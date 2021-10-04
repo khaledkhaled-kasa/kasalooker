@@ -46,10 +46,6 @@ datagroup: looker_historicals {
   max_cache_age: "1 hours"
 }
 
-datagroup: pom_checklist_default_datagroup {
-  sql_trigger: SELECT extract(hour FROM current_timestamp) ;;
-  max_cache_age: "1 hours"
-}
 
 datagroup: reviewforce_default_datagroup {
   sql_trigger: SELECT count(*) FROM `bigquery-analytics-272822.Gsheets.reviewforce_categorization_clean` WHERE ConfirmationCode IS NOT NULL ;;
@@ -232,7 +228,7 @@ explore: units_buildings_information {
     view_label: "QA Walkthrough Survey Data"
     type: left_outer
     relationship: one_to_many
-    sql_on: right(${units_buildings_information.internaltitle},3) = right(${pom_qa_walkthrough_survey_agg.unit},3) and left(${units_buildings_information.internaltitle},3) = left(${pom_qa_walkthrough_survey_agg.unit},3) ;;
+    sql_on: ${units_buildings_information.internaltitle} = ${pom_qa_walkthrough_survey_agg.unit} ;;
     }
 
 
@@ -272,7 +268,7 @@ explore: units_buildings_information {
     view_label: "POM Visit Information"
     type: left_outer
     relationship: one_to_many
-    sql_on: left(${units_buildings_information.internaltitle},3) = left(${unit_submission_data_final.buildingunit},3) and right(${units_buildings_information.internaltitle},3) = right(${unit_submission_data_final.buildingunit},3) ;;
+    sql_on: ${units_buildings_information.internaltitle} = ${unit_submission_data_final.buildingunit} ;;
   }
 
 
@@ -739,7 +735,6 @@ explore: pom_qa_walkthrough_survey {
     -pom_qa_walkthrough_survey.total_qas_completed_percentage, -units*,-hk_partners.first_3_months,
     -pom_qa_walkthrough_survey.airbnb_reviews_POM_Walkthrough, -pom_qa_walkthrough_survey.real_time_POM_Walkthrough,-pom_qa_walkthrough_survey.airbnb_reviews_POM_Walkthrough_buckets, -pom_information.live_partners
   ]
-  persist_with: pom_checklist_default_datagroup
   group_label: "PropOps"
   label: "POM QA Walkthrough Checklist"
   hidden: yes

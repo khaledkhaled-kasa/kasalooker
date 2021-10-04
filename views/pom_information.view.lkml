@@ -14,7 +14,7 @@ view: pom_information {
             LEFT JOIN ${pom_weighting_standards_final_transposed.SQL_TABLE_NAME} w
             ON p.WeightingCategory = w.WeightingCategory ;;
 
-    persist_for: "4 hours"
+    persist_for: "24 hours"
   }
 
   dimension: Prop_Code {

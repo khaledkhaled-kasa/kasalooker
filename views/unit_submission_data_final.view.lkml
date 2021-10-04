@@ -34,7 +34,7 @@ view: unit_submission_data_final {
         ON c.Building = rout.Building and c.Unit = rout.Unit
  ;;
 
-    persist_for: "4 hours"
+    persist_for: "6 hours"
   }
 
 

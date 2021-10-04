@@ -80,9 +80,7 @@ GROUP BY
 
     ;;
 
-    datagroup_trigger: pom_checklist_default_datagroup
-    # indexes: ["night","transaction"]
-    publish_as_db_view: yes
+    persist_for: "4 hours"
   }
 
   dimension: primary_key {
