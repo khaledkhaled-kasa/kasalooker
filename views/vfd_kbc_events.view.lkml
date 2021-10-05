@@ -94,13 +94,13 @@ view: vfd_kbc_events {
   }
 
   dimension: earlycheckinStatus {
-    label: "Early checkin Status "
+    label: "Early checkin Requested Status "
     type: string
     sql: ${TABLE}.earlycheckinStatus ;;
-    hidden: yes
+    hidden: no
   }
   dimension: latecheckoutStatus {
-    label: "Late checkout Status"
+    label: "Late checkout Requested Status"
     type: string
     sql: ${TABLE}.latecheckoutStatus ;;
 
