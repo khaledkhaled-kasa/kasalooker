@@ -1,24 +1,25 @@
 view: post_checkout_v2 {
-  derived_table: {
-    sql:select *
-from
-(
-Select
-    *, dense_rank() over(partition by confirmationcode order by submitted_at desc ) as latest_submission
-from
-`bigquery-analytics-272822.Gsheets.post_checkout_v2`
- where confirmationcode not like '%test%' and  confirmationcode not like '%xxxxx%' and confirmationcode is not null
+  sql_table_name: `bigquery-analytics-272822.dbt.postcheckout_SMS_EmailClick` ;;
+#   derived_table: {
+#     sql:select *
+# from
+# (
+# Select
+#     *, dense_rank() over(partition by confirmationcode order by submitted_at desc ) as latest_submission
+# from
+# `bigquery-analytics-272822.Gsheets.post_checkout_v2`
+# where confirmationcode not like '%test%' and  confirmationcode not like '%xxxxx%' and confirmationcode is not null
 
-union all
-SELECT
-*,dense_rank() over(partition by confirmationcode order by submitted_at desc ) as latest_submission
-FROM `bigquery-analytics-272822.Gsheets.post_checkout_v2_FIVE_STAR_VARIANT`
-where  confirmationcode not like '%test%' and confirmationcode not like '%xxxxx%'
-)
-where latest_submission=1 ;;
+# union all
+# SELECT
+# *,dense_rank() over(partition by confirmationcode order by submitted_at desc ) as latest_submission
+# FROM `bigquery-analytics-272822.Gsheets.post_checkout_v2_FIVE_STAR_VARIANT`
+# where  confirmationcode not like '%test%' and confirmationcode not like '%xxxxx%'
+# )
+# where latest_submission=1 ;;
 
-    persist_for: "4 hours"
-  }
+  #   persist_for: "4 hours"
+  # }
 
   # Over Communication Analysis
   dimension: aggregated_comments {
@@ -72,15 +73,15 @@ where latest_submission=1 ;;
           regexp_replace(regexp_replace(regexp_replace(regexp_replace(${aggregated_comments_all_unclean},"Overall Comments: N/A~N/A~N/A---",""),"Checkin Comments: N/A~N/A~N/A---",""),"Cleaning Comments: N/A~N/A~N/A---",""),"Communication Comments: N/A~N/A---",""),"Accuracy Comments: N/A~N/A---",""),"Value Comments: N/A~N/A---",""),"Location Comments: N/A~N/A---",""),"Why: N/A---",""),"Favorite: N/A---",""),"Suggestions: N/A~N/A---",""),"Kustomer CSAT Comments: N/A",""),"~N/A",""),"---"),"N/A~",""),"~","|"),"---")
               ;;
   }
-
-
   dimension: overall__how_would_you_rate_your_kasa_stay_ {
     label: "Overall Rating"
     group_label: "Ratings"
     type: number
     sql:
     CASE
-    WHEN ${TABLE}.Overall__how_would_you_rate_your_Kasa_stay_ is NULL THEN  ${TABLE}.Overall__how_would_you_rate_your_Kasa_stay__V2_
+    WHEN (${TABLE}.TypoFormsubmission is NOT NULL and ${TABLE}.Overall__how_would_you_rate_your_Kasa_stay_ is NULL) THEN  ${TABLE}.Overall__how_would_you_rate_your_Kasa_stay__V2_
+    WHEN (${TABLE}.TypoFormsubmission is NULL and ${TABLE}.SMSRelpy is not null) THEN ${TABLE}.overAllRatingSMS
+    WHEN (${TABLE}.TypoFormsubmission is NULL and ${TABLE}.SMSRelpy is  NULL and ${TABLE}.EmailClick is not null) THEN cast(${TABLE}.overAllRatingEmailClick as int)
     ELSE ${TABLE}.Overall__how_would_you_rate_your_Kasa_stay_
     END;;
   }
@@ -266,8 +267,13 @@ where latest_submission=1 ;;
     label: "PSS_v2 Confirmation Code"
     hidden: no
     type: string
-    sql: ${TABLE}.confirmationcode ;;
-  }
+    sql:CASE
+WHEN ${TABLE}.TypoFormsubmission is not null then ${TABLE}.confirmationcode
+WHEN ${TABLE}.TypoFormsubmission is NULL and ${TABLE}.SMSRelpy is not null THEN ${TABLE}.confirmationcodeSMS
+WHEN ${TABLE}.TypoFormsubmission is NULL and ${TABLE}.SMSRelpy is Null and ${TABLE}.EmailClick is not null THEN  ${TABLE}.confirmationcodeEmailClick
+END;;
+}
+
 
   dimension: unitinternaltitle {
     hidden: yes
@@ -331,7 +337,11 @@ where latest_submission=1 ;;
       quarter,
       year
     ]
-    sql: ${TABLE}.Submitted_At ;;
+    sql:CASE
+WHEN ${TABLE}.TypoFormsubmission is not null then ${TABLE}.Submitted_At
+WHEN ${TABLE}.TypoFormsubmission is NULL and ${TABLE}.SMSRelpy is not null THEN ${TABLE}.timestampSMS
+WHEN ${TABLE}.TypoFormsubmission is NULL and ${TABLE}.SMSRelpy is Null and ${TABLE}.EmailClick is not null THEN ${TABLE}.timestampEmailClick
+END;;
     convert_tz: no
   }
 
