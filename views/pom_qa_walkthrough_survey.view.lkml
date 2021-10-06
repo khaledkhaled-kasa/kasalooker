@@ -219,21 +219,24 @@ GROUP BY
 
   dimension: real_time_POM_Walkthrough {
     label: "Real-time Checkin Survey Received POM Walkthrough"
+    hidden: yes
     type: yesno
     sql: ${reviews.submitdate_date} is not null AND ${pom_qa_walkthrough_survey.submitdate_date} is not null ;;
   }
 
   dimension: airbnb_reviews_POM_Walkthrough {
     label: "Airbnb Review Received POM Walkthrough"
+    hidden: yes
     type: yesno
     sql: ${airbnb_reviews.reservation_checkout_date} is not null AND ${pom_qa_walkthrough_survey.submitdate_date} is not null ;;
   }
 
   dimension: airbnb_reviews_POM_Walkthrough_buckets {
-    label: "Airbnb Review Received POM Walkthrough (Shiftsmart/Kasa/None)"
+    label: "Review Received POM Walkthrough (Shiftsmart/Kasa POM/None)"
+    description: "This will pull any POM Walkthroughs which have received a review on either Airbnb, Postcheckout Survey or Real-time checkin (VFD)"
     type: string
-    sql: CASE WHEN ${airbnb_reviews.reservation_checkout_date} is not null AND ${pom_qa_walkthrough_survey.submitdate_date} is not null AND ${POM_Name} = 'Shiftsmart' THEN 'Shiftsmart'
-    WHEN ${airbnb_reviews.reservation_checkout_date} is not null AND ${pom_qa_walkthrough_survey.submitdate_date} is not null THEN "POM QA"
+    sql: CASE WHEN (${airbnb_reviews.reservation_checkout_date} is not null OR ${reviews.submitdate_date} is not null OR ${post_checkout_v2.submitted_at_date} is not null) AND ${pom_qa_walkthrough_survey.submitdate_date} is not null AND ${POM_Name} = 'Shiftsmart' THEN 'Shiftsmart'
+    WHEN (${airbnb_reviews.reservation_checkout_date} is not null OR ${reviews.submitdate_date} is not null OR ${post_checkout_v2.submitted_at_date} is not null) AND ${pom_qa_walkthrough_survey.submitdate_date} is not null THEN "POM QA"
     ELSE "NO QA"
     END;;
   }
