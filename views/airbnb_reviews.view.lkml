@@ -427,7 +427,7 @@ view: airbnb_reviews {
     measure: net_quality_score {
       #view_label: "Metrics"
       group_label: "NQS Metrics"
-      label: "Net Quality Score (NQS)"
+      label: "NQS (Overall)"
       type: number
       value_format: "0.0"
       sql: 100*(${percent_perfect_stay} - ${percent_bad_stay});;

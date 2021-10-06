@@ -776,6 +776,97 @@ END;;
     sql: 100*(${percent_5_star_overall} - ${percent_less_than_4_star_overall});;
   }
 
+  measure: combined_nqs_overall {
+    description: "This measure will include the combined weighted NQS from Airbnb and Postcheckout"
+    group_label: "Combined NQS Metrics"
+    label: "Combined NQS (Overall)"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0.0"
+    sql: ((${net_quality_score_overall}*${count})+(${airbnb_reviews.net_quality_score}*${airbnb_reviews.count}))/nullif((${count}+${airbnb_reviews.count}),0) ;;
+  }
+
+  measure: combined_nqs_clean {
+    group_label: "Combined NQS Metrics"
+    description: "This measure will include the combined weighted NQS from Airbnb and Postcheckout"
+    label: "Combined NQS (Clean)"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0.0"
+    sql: ((${net_quality_score_cleanliness}*${count_clean})+(${airbnb_reviews.net_quality_score_clean}*${airbnb_reviews.count_clean}))/nullif((${count_clean}+${airbnb_reviews.count_clean}),0) ;;
+  }
+
+  measure: combined_nqs_accuracy {
+    group_label: "Combined NQS Metrics"
+    description: "This measure will include the combined weighted NQS from Airbnb and Postcheckout"
+    label: "Combined NQS (Accuracy)"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0.0"
+    sql: ((${net_quality_score_accuracy}*${count_clean})+(${airbnb_reviews.net_quality_score_accuracy}*${airbnb_reviews.count_clean}))/nullif((${count_clean}+${airbnb_reviews.count_clean}),0) ;;
+  }
+
+  measure: combined_nqs_checkin {
+    group_label: "Combined NQS Metrics"
+    description: "This measure will include the combined weighted NQS from Airbnb and Postcheckout"
+    label: "Combined NQS (Checkin)"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0.0"
+    sql: ((${net_quality_score_checkin}*${count_clean})+(${airbnb_reviews.net_quality_score_checkin}*${airbnb_reviews.count_clean}))/nullif((${count_clean}+${airbnb_reviews.count_clean}),0) ;;
+  }
+
+  measure: combined_nqs_communication {
+    group_label: "Combined NQS Metrics"
+    description: "This measure will include the combined weighted NQS from Airbnb and Postcheckout"
+    label: "Combined NQS (Communication)"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0.0"
+    sql: ((${net_quality_score_communication}*${count_clean})+(${airbnb_reviews.net_quality_score_communication}*${airbnb_reviews.count_clean}))/nullif((${count_clean}+${airbnb_reviews.count_clean}),0) ;;
+  }
+
+  measure: combined_nqs_location {
+    group_label: "Combined NQS Metrics"
+    description: "This measure will include the combined weighted NQS from Airbnb and Postcheckout"
+    label: "Combined NQS (Location)"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0.0"
+    sql: ((${net_quality_score_location}*${count_clean})+(${airbnb_reviews.net_quality_score_location}*${airbnb_reviews.count_clean}))/nullif((${count_clean}+${airbnb_reviews.count_clean}),0) ;;
+  }
+
+  measure: combined_nqs_value {
+    group_label: "Combined NQS Metrics"
+    description: "This measure will include the combined weighted NQS from Airbnb and Postcheckout"
+    label: "Combined NQS (Value)"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0.0"
+    sql: ((${net_quality_score_value}*${count_clean})+(${airbnb_reviews.net_quality_score_value}*${airbnb_reviews.count_clean}))/nullif((${count_clean}+${airbnb_reviews.count_clean}),0) ;;
+  }
+
+
+  measure: combined_count_overall {
+    group_label: "Combined Review Count Metrics"
+    label: "Combined Review Count (Overall)"
+    description: "This measure calculates the sum of the airbnb and postcheckout reviews"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: (${count}+${airbnb_reviews.count}) ;;
+  }
+
+  measure: combined_count_clean {
+    group_label: "Combined Review Count Metrics"
+    label: "Combined Review Count (Subcategories)"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: (${count_clean}+${airbnb_reviews.count_clean}) ;;
+  }
+
+
   measure: net_quality_score_accuracy {
     group_label: "NQS Metrics"
     label: "NQS (Accuracy)"
