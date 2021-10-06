@@ -679,7 +679,7 @@ explore: devices {
 
 explore: bw_cleaning {
   fields: [bw_cleaning.title,bw_cleaning.propcode, bw_cleaning.id, bw_cleaning.property_internal_id, bw_cleaning.tags, bw_cleaning.name, bw_cleaning.name_revised,
-    bw_cleaning.assigned_date, bw_cleaning.completed_date_date, bw_cleaning.unit, bw_cleaning.type ,
+    bw_cleaning.assigned_date, bw_cleaning.completed_date_date,bw_cleaning.completed_date_month, bw_cleaning.unit, bw_cleaning.type ,
     hk_cleaning_pricing.pricing, hk_cleaning_pricing.total_pricing, hk_pricing_companies.company, units.bedrooms
   ]
   group_label: "PropOps"
