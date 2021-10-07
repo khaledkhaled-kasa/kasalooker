@@ -39,6 +39,19 @@ view: reservations_v3 {
       }
 
 
+  dimension: unit_stay_count {
+    description: "This will pull the unit stay count sorted by earliest checkin date"
+    type: number
+    sql: ${TABLE}.unit_stay_count ;;
+  }
+
+  dimension: building_stay_count {
+    description: "This will pull the building stay count sorted by earliest checkin date first, then looking at earlier booking date for reservations with the same checkindate"
+    type: number
+    sql: ${TABLE}.building_stay_count ;;
+  }
+
+
     dimension: extended_booking {
       description: "An extended booking is defined as two consecutive bookings by the same guest (e-mail id) within the same building (i.e. a unit swap would still be considered an extension). An extended booking will only return Yes for the extended reservation."
       type: yesno
