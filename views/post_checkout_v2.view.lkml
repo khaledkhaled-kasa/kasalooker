@@ -526,7 +526,404 @@ END;;
     filters: [_value___was_your_stay_a_good_value_for_the_price_: "5"]
   }
 
+  measure: overall_combined_count_5_star {
+    label: "Count 5 Star (Overall)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${overall_count_5_star} + ${airbnb_reviews.count_5_star};;
+  }
 
+  measure: overall_combined_count_4_star {
+    label: "Count 4 Star (Overall)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${overall_count_4_star} + ${airbnb_reviews.count_4_star} ;;
+  }
+
+  measure: overall_combined_count_3_star_less {
+    label: "Count 3 Star or Less (Overall)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${overall_count_less_than_4_star} + ${airbnb_reviews.count_less_than_4_star} ;;
+  }
+
+  measure: combined_percent_5_star_overall {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    label: "Percent Good Stays (Overall)"
+    description: "% of 5 star reviews"
+    type: number
+    value_format: "0.0%"
+    sql: ${overall_combined_count_5_star} / nullif(${combined_count_overall},0) ;;
+  }
+
+  measure: combined_percent_4_star_overall {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    label: "Percent Neutral Stays (Overall)"
+    description: "% of 4 star reviews"
+    type: number
+    value_format: "0.0%"
+    sql: ${overall_combined_count_4_star} / nullif(${combined_count_overall},0) ;;
+  }
+
+  measure: combined_percent_3_star_less_overall {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    description: "% of 3 star reviews or less"
+    label: "Percent Bad Stays (Overall)"
+    type: number
+    value_format: "0.0%"
+    sql: ${overall_combined_count_3_star_less} / nullif(${combined_count_overall},0) ;;
+  }
+
+  measure: accuracy_combined_count_5_star {
+    label: "Count 5 Star (Accuracy)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${accuracy_5_star} + ${airbnb_reviews.accuracy_count_5_star};;
+  }
+
+  measure: accuracy_combined_count_4_star {
+    label: "Count 4 Star (Accuracy)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${accuracy_4_star} + ${airbnb_reviews.accuracy_count_4_star} ;;
+  }
+
+  measure: accuracy_combined_count_3_star_less {
+    label: "Count 3 Star or Less (Accuracy)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${accuracy_less_than_4_star} + ${airbnb_reviews.accuracy_count_less_than_4_star} ;;
+  }
+
+  measure: combined_percent_5_star_accuracy {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    label: "Percent Good Stays (Accuracy)"
+    description: "% of 5 star reviews"
+    type: number
+    value_format: "0.0%"
+    sql: ${accuracy_combined_count_5_star} / nullif(${combined_count_clean},0) ;;
+  }
+
+  measure: combined_percent_4_star_accuracy {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    label: "Percent Neutral Stays (Accuracy)"
+    description: "% of 4 star reviews"
+    type: number
+    value_format: "0.0%"
+    sql: ${accuracy_combined_count_4_star} / nullif(${combined_count_clean},0) ;;
+  }
+
+  measure: combined_percent_3_star_less_accuracy {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    description: "% of 3 star reviews or less"
+    label: "Percent Bad Stays (Accuracy)"
+    type: number
+    value_format: "0.0%"
+    sql: ${accuracy_combined_count_3_star_less} / nullif(${combined_count_clean},0) ;;
+  }
+
+  measure: checkin_combined_count_5_star {
+    label: "Count 5 Star (Checkin)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${checkin_5_star} + ${airbnb_reviews.checkin_count_5_star};;
+  }
+
+  measure: checkin_combined_count_4_star {
+    label: "Count 4 Star (Checkin)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${checkin_4_star} + ${airbnb_reviews.count_4_star_checkin} ;;
+  }
+
+  measure: checkin_combined_count_3_star_less {
+    label: "Count 3 Star or Less (Checkin)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${checkin_less_than_4_star} + ${airbnb_reviews.checkin_count_less_than_4_star} ;;
+  }
+
+  measure: combined_percent_5_star_checkin {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    label: "Percent Good Stays (Checkin)"
+    description: "% of 5 star reviews"
+    type: number
+    value_format: "0.0%"
+    sql: ${checkin_combined_count_5_star} / nullif(${combined_count_clean},0) ;;
+  }
+
+  measure: combined_percent_4_star_checkin {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    label: "Percent Neutral Stays (Checkin)"
+    description: "% of 4 star reviews"
+    type: number
+    value_format: "0.0%"
+    sql: ${checkin_combined_count_4_star} / nullif(${combined_count_clean},0) ;;
+  }
+
+  measure: combined_percent_3_star_less_checkin {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    description: "% of 3 star reviews or less"
+    label: "Percent Bad Stays (Checkin)"
+    type: number
+    value_format: "0.0%"
+    sql: ${checkin_combined_count_3_star_less} / nullif(${combined_count_clean},0) ;;
+  }
+
+  measure: clean_combined_count_5_star {
+    label: "Count 5 Star (Clean)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${cleanliness_5_star} + ${airbnb_reviews.clean_count_5_star};;
+  }
+
+  measure: clean_combined_count_4_star {
+    label: "Count 4 Star (Clean)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${cleanliness_4_star} + ${airbnb_reviews.count_4_star_clean} ;;
+  }
+
+  measure: clean_combined_count_3_star_less {
+    label: "Count 3 Star or Less (Clean)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${cleanliness_less_than_4_star} + ${airbnb_reviews.clean_count_less_than_4_star} ;;
+  }
+
+  measure: combined_percent_5_star_clean {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    label: "Percent Good Stays (Clean)"
+    description: "% of 5 star reviews"
+    type: number
+    value_format: "0.0%"
+    sql: ${clean_combined_count_5_star} / nullif(${combined_count_clean},0) ;;
+  }
+
+  measure: combined_percent_4_star_clean {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    label: "Percent Neutral Stays (Clean)"
+    description: "% of 4 star reviews"
+    type: number
+    value_format: "0.0%"
+    sql: ${clean_combined_count_4_star} / nullif(${combined_count_clean},0) ;;
+  }
+
+  measure: combined_percent_3_star_less_clean {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    description: "% of 3 star reviews or less"
+    label: "Percent Bad Stays (Clean)"
+    type: number
+    value_format: "0.0%"
+    sql: ${clean_combined_count_3_star_less} / nullif(${combined_count_clean},0) ;;
+  }
+
+  measure: communication_combined_count_5_star {
+    label: "Count 5 Star (Communication)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${communication_5_star} + ${airbnb_reviews.communication_count_5_star};;
+  }
+
+  measure: communication_combined_count_4_star {
+    label: "Count 4 Star (Communication)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${communication_4_star} + ${airbnb_reviews.count_4_star_communication} ;;
+  }
+
+  measure: communication_combined_count_3_star_less {
+    label: "Count 3 Star or Less (Communication)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${communication_less_than_4_star} + ${airbnb_reviews.communication_count_less_than_4_star} ;;
+  }
+
+  measure: combined_percent_5_star_communication {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    label: "Percent Good Stays (Communication)"
+    description: "% of 5 star reviews"
+    type: number
+    value_format: "0.0%"
+    sql: ${communication_combined_count_5_star} / nullif(${combined_count_clean},0) ;;
+  }
+
+  measure: combined_percent_4_star_communication {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    label: "Percent Neutral Stays (Communication)"
+    description: "% of 4 star reviews"
+    type: number
+    value_format: "0.0%"
+    sql: ${communication_combined_count_4_star} / nullif(${combined_count_clean},0) ;;
+  }
+
+  measure: combined_percent_3_star_less_communication {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    description: "% of 3 star reviews or less"
+    label: "Percent Bad Stays (Communication)"
+    type: number
+    value_format: "0.0%"
+    sql: ${communication_combined_count_3_star_less} / nullif(${combined_count_clean},0) ;;
+  }
+
+  measure: location_combined_count_5_star {
+    label: "Count 5 Star (Location)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${location_5_star} + ${airbnb_reviews.location_count_5_star};;
+  }
+
+  measure: location_combined_count_4_star {
+    label: "Count 4 Star (Location)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${location_4_star} + ${airbnb_reviews.count_4_star_location} ;;
+  }
+
+  measure: location_combined_count_3_star_less {
+    label: "Count 3 Star or Less (Location)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${location_less_than_4_star} + ${airbnb_reviews.location_count_less_than_4_star} ;;
+  }
+
+  measure: combined_percent_5_star_location {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    label: "Percent Good Stays (Location)"
+    description: "% of 5 star reviews"
+    type: number
+    value_format: "0.0%"
+    sql: ${location_combined_count_5_star} / nullif(${combined_count_clean},0) ;;
+  }
+
+  measure: combined_percent_4_star_location {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    label: "Percent Neutral Stays (Location)"
+    description: "% of 4 star reviews"
+    type: number
+    value_format: "0.0%"
+    sql: ${location_combined_count_4_star} / nullif(${combined_count_clean},0) ;;
+  }
+
+  measure: combined_percent_3_star_less_location {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    description: "% of 3 star reviews or less"
+    label: "Percent Bad Stays (Location)"
+    type: number
+    value_format: "0.0%"
+    sql: ${location_combined_count_3_star_less} / nullif(${combined_count_clean},0) ;;
+  }
+
+  measure: value_combined_count_5_star {
+    label: "Count 5 Star (Value)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${value_5_star} + ${airbnb_reviews.value_count_5_star};;
+  }
+
+  measure: value_combined_count_4_star {
+    label: "Count 4 Star (Value)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${value_4_star} + ${airbnb_reviews.count_4_star_value} ;;
+  }
+
+  measure: value_combined_count_3_star_less {
+    label: "Count 3 Star or Less (Value)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${value_less_than_4_star} + ${airbnb_reviews.value_count_less_than_4_star} ;;
+  }
+
+  measure: combined_percent_5_star_value {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    label: "Percent Good Stays (Value)"
+    description: "% of 5 star reviews"
+    type: number
+    value_format: "0.0%"
+    sql: ${value_combined_count_5_star} / nullif(${combined_count_clean},0) ;;
+  }
+
+  measure: combined_percent_4_star_value {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    label: "Percent Neutral Stays (Value)"
+    description: "% of 4 star reviews"
+    type: number
+    value_format: "0.0%"
+    sql: ${value_combined_count_4_star} / nullif(${combined_count_clean},0) ;;
+  }
+
+  measure: combined_percent_3_star_less_value {
+    group_label: "% Good / Neutral / Bad Stays"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    description: "% of 3 star reviews or less"
+    label: "Percent Bad Stays (Value)"
+    type: number
+    value_format: "0.0%"
+    sql: ${value_combined_count_3_star_less} / nullif(${combined_count_clean},0) ;;
+  }
 
   measure: overall_count_4_star {
     label: "Count 4 Star (Overall)"
