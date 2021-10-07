@@ -12,6 +12,7 @@ view: guests {
     type: string
     hidden: yes
     sql: ${TABLE}._id ;;
+    primary_key: yes
   }
 
 
