@@ -5,7 +5,7 @@ view: hub_devices {
         from
         (
           SELECT *, dense_rank() over (partition by devicetype , unit order by laststatusupdate desc) as lastupdate FROM `bigquery-analytics-272822.mongo.devices`
-          where devicetype IN ('Nexia_v1', 'Smartthings_v1') and active=true
+          where devicetype IN ('Smartthings_v1') and active=true
         )where lastupdate=1;;
           persist_for: "1 hours"
         }
