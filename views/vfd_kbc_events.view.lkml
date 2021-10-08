@@ -307,7 +307,7 @@ view: vfd_kbc_events {
     drill_fields: [detail*]
   }
   measure: extension_startrs {
-    label: "Extension Startrs"
+    label: "Extension Started"
     description: "Total Guests who started the extension process"
     group_label: "VFD Metrics"
     type: count_distinct
