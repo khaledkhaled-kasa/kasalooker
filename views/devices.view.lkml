@@ -44,6 +44,7 @@ view: devices {
   }
 
   dimension_group: install {
+    label: "Minut device Installition Date"
     type: time
     timeframes: [date, week, month, year]
     sql: CAST(LEFT(${TABLE}.metadata.first_seen_at,10) as TIMESTAMP) ;;
