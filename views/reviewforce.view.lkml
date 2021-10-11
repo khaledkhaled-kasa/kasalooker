@@ -11,7 +11,7 @@ view: reviewforce {
               FROM `bigquery-analytics-272822.Gsheets.reviewforce_categorization_clean` t1,
               UNNEST(SPLIT(REGEXP_REPLACE(to_json_string(t1), r'{|}', ''))) pair)
 
-              WHERE NOT LOWER(parent_category) IN ('confirmationcode')
+              WHERE NOT LOWER(parent_category) IN ('confirmationcode','assigned_categorizer', 'categorization_status', 'action_needed', 'issues_to_investigate')
               and child_category != "null" -- Filters out all null category records
               )
 
