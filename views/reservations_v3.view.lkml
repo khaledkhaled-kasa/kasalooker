@@ -13,7 +13,7 @@ view: reservations_v3 {
       hidden: no
       view_label: "Guests"
       type: string
-      description: "Multibooker is classified as someone making more than one UNIQUE reservation (extensions are excluded)"
+      description: "Multibooker is classified as someone making more than one UNIQUE reservation (extensions are excluded). Null records are returned for bookings made by guest with no email."
       sql: CASE
       WHEN ${TABLE}.guest_type = "Multi Booker" and ${TABLE}.number_of_unique_reservations = 1 THEN "Single Booker"
       ELSE ${TABLE}.guest_type
