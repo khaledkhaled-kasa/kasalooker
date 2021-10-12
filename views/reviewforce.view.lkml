@@ -2,7 +2,7 @@ view: reviewforce {
   derived_table: {
     sql: -- Table t2 will populate a new record for child categories with multiple records per reservation
       WITH t3 AS (
-      WITH t2 AS (
+        WITH t2 AS (
               SELECT ConfirmationCode, parent_category, child_category
               FROM (
                 SELECT ConfirmationCode,
@@ -11,7 +11,7 @@ view: reviewforce {
               FROM `bigquery-analytics-272822.Gsheets.reviewforce_categorization_clean` t1,
               UNNEST(SPLIT(REGEXP_REPLACE(to_json_string(t1), r'{|}', ''))) pair)
 
-              WHERE NOT LOWER(parent_category) IN ('confirmationcode')
+              WHERE NOT LOWER(parent_category) IN ('confirmationcode','assigned_categorizer', 'categorization_status', 'action_needed', 'issues_to_investigate')
               and child_category != "null" -- Filters out all null category records
               )
 
@@ -20,9 +20,11 @@ view: reviewforce {
       UNNEST(SPLIT(child_category, "|")) c
               )
 
-      SELECT *, TRIM(child_category) clean_child_category -- trimming child category will ensure all white spaces are removed, especially in cases of multiple child category selections
+      SELECT t3.*, t4.*, TRIM(child_category) clean_child_category, -- trimming child category will ensure all white spaces are removed, especially in cases of multiple child category selections
+      t5.Assigned_Categorizer, t5.Categorization_Status, t5.Action_Needed, t5.Issues_to_Investigate
       FROM t3 LEFT JOIN `bigquery-analytics-272822.Gsheets.reviewforce_responsibility_mapping` t4
-      ON TRIM(t3.child_category) = t4.child_categories
+      ON TRIM(t3.child_category) = t4.child_categories LEFT JOIN `bigquery-analytics-272822.Gsheets.reviewforce_categorization_clean` t5
+      ON t3.ConfirmationCode = t5.ConfirmationCode
        ;;
 
     datagroup_trigger: reviewforce_default_datagroup
@@ -86,6 +88,26 @@ view: reviewforce {
   dimension: kasa_controlled {
     type: yesno
     sql: ${TABLE}.Kasa_Controlled ;;
+  }
+
+  dimension: assigned_categorizer {
+    type: string
+    sql: ${TABLE}.Assigned_Categorizer ;;
+  }
+
+  dimension: categorization_status {
+    type: string
+    sql: ${TABLE}.Categorization_Status ;;
+  }
+
+  dimension: action_needed {
+    type: string
+    sql: ${TABLE}.Action_Needed ;;
+  }
+
+  dimension: issues_to_investigate {
+    type: string
+    sql: ${TABLE}.Issues_to_Investigate ;;
   }
 
 

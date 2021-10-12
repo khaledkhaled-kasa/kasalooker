@@ -473,6 +473,36 @@ END;;
     filters: [overall__how_would_you_rate_your_kasa_stay_: "5"]
   }
 
+  measure: overall_count_3_star {
+    label: "Count 3 Star (Overall)"
+    hidden: yes
+    group_label: "Other Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [overall__how_would_you_rate_your_kasa_stay_: "3"]
+  }
+
+  measure: overall_count_2_star {
+    label: "Count 2 Star (Overall)"
+    hidden: yes
+    group_label: "Other Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [overall__how_would_you_rate_your_kasa_stay_: "2"]
+  }
+
+  measure: overall_count_1_star {
+    label: "Count 1 Star (Overall)"
+    hidden: yes
+    group_label: "Other Review Counts"
+    type: count_distinct
+    value_format: "0"
+    sql: ${confirmationcode} ;;
+    filters: [overall__how_would_you_rate_your_kasa_stay_: "1"]
+  }
+
   measure: cleanliness_5_star {
     label: "Count 5 Star (Cleanliness)"
     group_label: "Other Review Counts"
@@ -552,6 +582,33 @@ END;;
     type: number
     value_format: "0"
     sql: ${overall_count_less_than_4_star} + ${airbnb_reviews.count_less_than_4_star} ;;
+  }
+
+  measure: overall_combined_count_3_star {
+    label: "Count 3 Star (Overall)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${overall_count_3_star} + ${airbnb_reviews.count_3_star} ;;
+  }
+
+  measure: overall_combined_count_2_star {
+    label: "Count 2 Star (Overall)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${overall_count_2_star} + ${airbnb_reviews.count_2_star} ;;
+  }
+
+  measure: overall_combined_count_1_star {
+    label: "Count 1 Star (Overall)"
+    group_label: "Combined Review Count Metrics"
+    view_label: "Combined Scores (Airbnb & Postcheckout)"
+    type: number
+    value_format: "0"
+    sql: ${overall_count_1_star} + ${airbnb_reviews.count_1_star} ;;
   }
 
   measure: combined_percent_5_star_overall {
