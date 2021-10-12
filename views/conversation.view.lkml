@@ -134,6 +134,7 @@ view: conversation {
 
     dimension_group: created {
       type: time
+      description: " is a timestamp of when the object was created within the Kustomer org. Available for Customer, Conversation, and Message."
       group_label: "Conversation Created Date"
       label: ""
       timeframes: [
@@ -179,7 +180,47 @@ view: conversation {
       value_format_name: id
       sql: ${TABLE}.custom_air_bnb_thread_id_num ;;
     }
+  dimension_group: last_done {
+    label: "Last Mark Done Time"
+    description: " is a date/timestamp of the most recent time a conversation was marked Done. Available for Conversation."
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql:safe_cast(JSON_EXTRACT_SCALAR(${TABLE}.last_done, "$['createdAt']")as timestamp) ;;
+  }
 
+  dimension_group: first_done {
+    label: "First Mark Done Time"
+   description: " is a date/timestamp of the first time a conversation was marked Done. This can be the same timestamp as Last Done Created At if it is the only time it has been marked Done. Available for Conversation."
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql:safe_cast(JSON_EXTRACT_SCALAR(${TABLE}.first_done, "$['createdAt']")as timestamp) ;;
+
+  }
+
+  ###### Resolution Time
+
+  dimension: resolution_Time {
+    label: "Resolution Time (hrs)"
+    description: "Duration of the time between the conversation being created and the conversation being marked done. “First done” is specifically the time until it was marked done the very first time."
+    type: number
+    sql:  date_diff(safe_cast(JSON_EXTRACT_SCALAR(${TABLE}.first_done, "$['createdAt']") as timestamp)  ,timestamp(${TABLE}.created_at),hour);;
+  }
     dimension: custom_airbnb_link_str {
       type: string
       hidden: yes
@@ -954,6 +995,7 @@ view: conversation {
       }
 
       dimension_group: last_message {
+        description: " is a date/timestamp of the most recent time a conversation was marked Done. Available for Conversation."
         type: time
         hidden: no
         timeframes: [
@@ -1290,6 +1332,8 @@ view: conversation {
 
 
 ######## Team Metrics - THESE MEASURES ONLY APPLY TO KUSTOMETRICS
+
+
 
         ###### Messages Sent
 
