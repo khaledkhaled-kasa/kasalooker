@@ -437,7 +437,7 @@ view: breezeway_export {
     label: "% of BW Task Count (Allocated)"
     hidden: no
     type: number
-    sql: ${count_filter_count} / ${count} ;;
+    sql: ${count_filter_count} / nullif(${count},0) ;;
     value_format: "0.0%"
   }
 
