@@ -98,7 +98,7 @@ view: post_checkout_v2 {
     group_label: "Comments"
     label: "Cleanliness Comments"
     type: string
-    sql:CASE when ${TABLE}.How_did_we_miss_the_mark_on_cleanliness_  ;;
+    sql: ${TABLE}.How_did_we_miss_the_mark_on_cleanliness_  ;;
       }
 
   dimension: _accuracy___how_did_the_kasa_compare_to_what_you_expected_ {
