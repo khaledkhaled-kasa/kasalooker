@@ -49,7 +49,7 @@ view: post_checkout_v2 {
     view_label: "Review Force"
     description: "This will aggregate all review comments from different review channels (airbnb, Postcheckout, Postcheckout V2) into one block."
     type: string
-    hidden: yes
+    hidden: no
     sql: CONCAT("Overall Comments: ", COALESCE(${airbnb_reviews.overall_comments},"N/A"),"~", COALESCE(${airbnb_reviews.private_feedback},"N/A"),"~", COALESCE(${post_checkout_data.overall_feedback},"N/A"),"---",
         "Accuracy Comments: ", COALESCE(${airbnb_reviews.accuracy_comments},"N/A"),"~",COALESCE(${what_aspects_were_different_from_you_expected_},"N/A"),"---",
         "Checkin Comments: ", COALESCE(${airbnb_reviews.checkin_comments},"N/A"),"~", COALESCE(${how_did_the_the_check_in_experience_miss_the_mark_},"N/A"),"~",COALESCE(${reviews.checkin_text},"N/A"),"---",
@@ -67,6 +67,7 @@ view: post_checkout_v2 {
   dimension: aggregated_comments_all_clean {
     label: "Aggregated Comments (All)"
     view_label: "Review Force"
+    hidden: yes
     description: "This will aggregate all review comments from different review channels (airbnb, Postcheckout, Postcheckout V2) into one block."
     type: string
     sql: LTRIM(regexp_replace(regexp_replace(RTRIM(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(
