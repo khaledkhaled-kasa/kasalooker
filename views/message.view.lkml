@@ -249,7 +249,7 @@ view: message {
     type: count_distinct
     label: "Message Count (GX Cost Allocation)"
     description: "This metric is utilized for the GX Cost Allocation in order to deduce the outbound messages sent along with the inbound calls."
-    hidden: no
+    hidden: yes
     sql: ${id} ;;
     drill_fields: [detail*]
   }
