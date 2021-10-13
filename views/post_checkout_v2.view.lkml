@@ -314,6 +314,14 @@ END;;
     type: number
     sql: ${TABLE}.score ;;
   }
+  dimension: review_Source {
+    description: "Review Source (Typeform,SMS, Email Click)"
+    type: string
+    sql: CASE WHEN ${TABLE}.TypoFormsubmission is not null THEN "Typeform"
+              WHEN ${TABLE}.SMSRelpy is not null THEN "SMS"
+              WHEN ${TABLE}.EmailClick is not null THEN "Email Click"
+              END;;
+  }
 
   dimension: winning_outcome_id {
     hidden: yes
