@@ -49,6 +49,43 @@ view: reservations_clean {
           END ;;
   }
 
+  dimension_group: submittedat {
+    label: "KBC submitted"
+    description: "Date Guest completed KBC"
+    group_label: "KBC"
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.kbc.submittedat;;
+    convert_tz: no
+
+  }
+
+  dimension: kbc_completed_inadvance {
+    label: "KBC Completed 24 hrs pre Checkin (Yes/No)"
+    group_label: "KBC"
+    description: "Is KBC completed 24 hrs in Advance of Checkin"
+    hidden: no
+    type: string
+    sql:CASE WHEN date_diff(timestamp(${submittedat_time}),timestamp(${checkindate_time}),hour)<=24 THEN "Yes" ELSE "No" END;;
+
+  }
+  dimension: kbc_completed_postBooking {
+    label: "KBC Completed 24 hrs post Booking(Yes/No)"
+    group_label: "KBC"
+    description: "Is KBC completed within 24 hrs after Booking Date"
+    hidden: no
+    type: string
+    sql:CASE WHEN date_diff(timestamp(${submittedat_time}),timestamp(${bookingdate_time}),hour)<=24 THEN "Yes" ELSE "No" END;;
+
+  }
 
   dimension_group: bookingdate {
     label: "Booking"
@@ -63,6 +100,7 @@ view: reservations_clean {
       year
     ]
     sql: ${TABLE}.bookingdate ;;
+    convert_tz: no
   }
 
   dimension: preceding_cleaning_task {
@@ -215,7 +253,38 @@ view: reservations_clean {
     filters: [status: "confirmed, checked_in",units._id: "-null"]
     drill_fields: [reservation_details*]
   }
-
+  measure: kbc_completed {
+    label: "Num of Guests Completed KBC"
+    group_label: "KBC"
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    filters: [submittedat_date:  "-null"]
+    drill_fields: [reservation_details*]
+  }
+  measure: kbc_Notompleted {
+    label: "Num of Guests did Not Completed KBC"
+    group_label: "KBC"
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    filters: [submittedat_date: "NULL"]
+    drill_fields: [reservation_details*]
+  }
+  measure: kbc_ompletedInAdvance{
+    label: "Num of Guests Completed KBC 24 hrs pre Checkin"
+    group_label: "KBC"
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    filters: [kbc_completed_inadvance: "Yes"]
+    drill_fields: [reservation_details*]
+  }
+  measure: kbc_ompletedPost{
+    label: "Num of Guests Completed KBC 24 hrs post Booking"
+    group_label: "KBC"
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    filters: [kbc_completed_postBooking: "Yes"]
+    drill_fields: [reservation_details*]
+  }
 
 
   set:reservation_details {
