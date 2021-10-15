@@ -1,12 +1,33 @@
 view: vfd_kbc_events {
   label: "KBC/VFD Events"
   derived_table: {
-    sql: SELECT concat(s.sessionId,confirmation_code,eventId)as pK, *
+    sql:SELECT
+ concat(s.sessionId,confirmation_code,eventId)as pK, *
       FROM `bigquery-analytics-272822.dbt.vfd_kbc_sessions` s
       left join
       `bigquery-analytics-272822.dbt.vfd_kbc_all_events`a
       on
       s.sessionId= a.session_id
+      left join
+
+ (
+ select STRING_AGG(distinct eventName) as listOfEvent,confirmation_code as co
+ from
+
+ (
+ SELECT
+ concat(s.sessionId,confirmation_code,eventId)as pK, *
+      FROM `bigquery-analytics-272822.dbt.vfd_kbc_sessions` s
+      left join
+      `bigquery-analytics-272822.dbt.vfd_kbc_all_events`a
+      on
+      s.sessionId= a.session_id
+
+     )
+     group by confirmation_code
+   )b
+   on
+  confirmation_code=b.co
        ;;
   }
 
@@ -17,6 +38,13 @@ view: vfd_kbc_events {
     sql: ${TABLE}.pK ;;
     primary_key: yes
     hidden: yes
+  }
+  dimension: listOfEvent {
+    label: "List of Events"
+    description: "List of events that guest preformed during the session"
+    type: string
+    sql: ${TABLE}.listOfEvent ;;
+
   }
   dimension_group: bookingdate {
     type: time
@@ -30,8 +58,9 @@ view: vfd_kbc_events {
       year
     ]
     sql: ${TABLE}.bookingdate ;;
-    hidden: yes
+    convert_tz: no
   }
+
   dimension_group: timeauthorizationStarted {
     type: time
     timeframes: [
@@ -45,6 +74,7 @@ view: vfd_kbc_events {
     ]
     sql: ${TABLE}.timeauthorizationStarted ;;
     hidden: yes
+    convert_tz: no
   }
   dimension: anonymous_id {
     type: string
@@ -76,14 +106,6 @@ view: vfd_kbc_events {
     type: string
     sql: ${TABLE}.device ;;
   }
-  dimension: KBC_completedPostBooking {
-    type: yesno
-    sql:
-    date(${TABLE}.bookingdate)=
-   date( ${TABLE}.timeauthorizationStarted );;
-    hidden: yes
-  }
-
 
   dimension_group:bookingcheckinDate{
     type: time
@@ -178,6 +200,13 @@ view: vfd_kbc_events {
     sql: ${TABLE}.timeauthorizationSuccess ;;
     hidden: yes
   }
+  dimension_group: timeauthorization_started{
+    type: time
+    label: "Time Complete KBC Flow"
+    timeframes: [date,month,week,year,day_of_week,time]
+    sql: ${TABLE}.timeauthorizationStarted;;
+    hidden: yes
+  }
 
   dimension_group: time_cii_viewd {
     type: time
@@ -190,13 +219,50 @@ view: vfd_kbc_events {
     hidden: yes
     sql: ${TABLE}.timeCoiViewd ;;
   }
+  dimension: kbc_complete_o{
+    label: "Marked Done?"
+    description: "Yes/No"
+    group_label: "Is KBC Completion"
+    type: string
+    sql: case when ${listOfEvent} like '%authorization_started%' or ${listOfEvent} like '%authorization_success%' then "Yes" else "No"end;;
+    drill_fields: [detail*]
+  }
+  dimension: totalHours{
+    type: number
+    sql: case when ${timeauthorization_started_date} is null THEN date_diff(timestamp(${timeauthorization_success_time}),timestamp(${bookingcheckinDate_time}),hour)
+    else date_diff(timestamp(${timeauthorization_started_time}),timestamp(${bookingcheckinDate_time}),hour)
+    END;;
+    drill_fields: [detail*]
+  }
+  dimension: totalHoursPost{
+    type: number
+    sql: case when ${timeauthorization_started_date} is null THEN date_diff(timestamp(${timeauthorization_success_time}),timestamp(${bookingdate_time}),hour)
+    ElSE date_diff(timestamp(${timeauthorization_started_time}),timestamp(${bookingdate_time}),hour)
+    END;;
+    drill_fields: [detail*]
+  }
 
   dimension: kbccomplete_in_advance_of_checkin {
     type: string
-    label: "KBC Complete in Advance of Checkin"
-    sql: ${TABLE}.KBCCompleteInAdvanceOfCheckin;;
-    hidden: yes
+    label: "24 hrs in Advance of Checkin?"
+    group_label: "Is KBC Completion"
+    description:"Yes/No"
+    sql: case when ${kbc_complete_o}="Yes" and ${totalHours}<=24 Then "Yes" else "No" END;;
+    hidden:no
   }
+  dimension: KBC_completedPostBooking {
+    label: "within 24 hrs from Booking Date?"
+    group_label: "Is KBC Completion"
+    description:"Yes/No"
+    type: string
+    sql: case when ${kbc_complete_o}="Yes" and ${totalHoursPost}<=24 Then "Yes" else "No" END;;
+
+    #   sql:
+    #   date(${TABLE}.bookingdate)=
+    # date( ${TABLE}.timeauthorizationStarted );;
+
+  }
+
 
   dimension: kbc_flow_completion_in_sec {
     type: number
@@ -225,6 +291,7 @@ view: vfd_kbc_events {
     sql: ${TABLE}.kbcCompletedinOneSeesion ;;
     hidden: yes
   }
+
 
   measure: num_cii_viwes {
     label: "CII Views (Sessions)"
@@ -414,7 +481,7 @@ view: vfd_kbc_events {
     group_label: "KBC Metrics"
     type: count_distinct
     sql: ${confirmation_code};;
-    filters: [event_name: "authorization_started"]
+    filters: [kbc_complete_o: "Yes"]
     drill_fields: [detail*]
   }
   measure: kbc_Completions_rate{
@@ -512,7 +579,7 @@ view: vfd_kbc_events {
     type: count_distinct
     group_label: "KBC Metrics"
     sql: ${confirmation_code};;
-    filters: [KBC_completedPostBooking: "yes"]
+    filters: [KBC_completedPostBooking: "Yes"]
     drill_fields: [detail*]
   }
 
