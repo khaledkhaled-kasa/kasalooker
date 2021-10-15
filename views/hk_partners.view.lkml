@@ -30,7 +30,7 @@
   dimension: buildings {
     hidden: no
     type: string
-    sql: ${TABLE}.Buildings ;;
+    sql: ${TABLE}.Building_s_ ;;
   }
 
   dimension: comm_preferred {
