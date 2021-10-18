@@ -61,7 +61,7 @@ view: lock_device_events {
   }
 
   dimension: unitid {
-    hidden: no
+    hidden: yes
     type: string
     sql: ${TABLE}.unitid ;;
   }
