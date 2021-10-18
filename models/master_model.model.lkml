@@ -813,6 +813,11 @@ explore: disputes_tracker {
 explore: trs_prs {
   group_label: "T & S"
   label: "TRS / PRS Violations"
+  join: lock_device_events {
+    type: left_outer
+    relationship:one_to_many
+    sql_on: ${trs_prs.unitId}=${lock_device_events.unitid} ;;
+  }
 }
 
 explore: t_s_security_deployment {

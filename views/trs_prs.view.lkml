@@ -4,7 +4,7 @@ view: trs_prs {
       reservations.status,
       reservations.confirmationcode,
       reservations.checkindate, reservations.checkoutdate,
-      complexes.title, complexes.internaltitle, units.internaltitle, units.address.city, units.address.state,
+      complexes.title, complexes.internaltitle, units.internaltitle as internaltitleUnit , units.address.city, units.address.state,
       -- infinitystones.partyrisk.*,
       -- infinitystones.trustrisk.*,
       infinitystones.riskstatus,
@@ -24,6 +24,7 @@ view: trs_prs {
       WHEN rrs_trust.risklevel = 'high' AND rrs_trust.rawscore >= 4.9 THEN 1
       ELSE NULL
       END trustviolation,
+      units._id as unitId
       from reservations
       left join units on reservations.unit = units._id
       left join complexes on units.complex = complexes._id
@@ -37,7 +38,11 @@ view: trs_prs {
     type: string
     sql: ${TABLE}.status ;;
   }
-
+  dimension: unitId {
+    type: string
+    hidden: yes
+    sql: ${TABLE}.unitId ;;
+  }
   dimension: risk_status {
     view_label: "TRS/PRS"
     type: string
@@ -100,7 +105,7 @@ view: trs_prs {
   dimension: unit {
     view_label: "Unit"
     type: string
-    sql: ${TABLE}.internaltitle_1 ;;
+    sql: ${TABLE}.internaltitleUnit ;;
   }
 
   dimension: city {

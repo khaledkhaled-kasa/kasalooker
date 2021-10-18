@@ -79,12 +79,14 @@ view: vfd_kbc_events {
   dimension: anonymous_id {
     type: string
     sql: ${TABLE}.anonymous_id ;;
+    hidden: yes
   }
 
   dimension: session_id1 {
     type: number
     sql: ${TABLE}.sessionId ;;
-    hidden: yes
+    hidden: no
+    label: "Session ID"
   }
 
   dimension: confirmation_code {
@@ -93,7 +95,9 @@ view: vfd_kbc_events {
   }
   dimension: cotime {
     type: string
+    label: "LCO Requested time"
     sql: ${TABLE}.cotime ;;
+
   }
 
   dimension_group: session_timestamp {
@@ -158,7 +162,6 @@ view: vfd_kbc_events {
   }
 
   dimension_group: login_date {
-    label: "Check in Date(VFD)"
     type: time
     timeframes: [date,month,week,year,day_of_week,time]
     sql: ${TABLE}.checkinDate ;;
@@ -223,11 +226,13 @@ view: vfd_kbc_events {
     label: "Marked Done?"
     description: "Yes/No"
     group_label: "Is KBC Completion"
+    hidden: yes
     type: string
     sql: case when ${listOfEvent} like '%authorization_started%' or ${listOfEvent} like '%authorization_success%' then "Yes" else "No"end;;
     drill_fields: [detail*]
   }
   dimension: totalHours{
+    hidden: yes
     type: number
     sql: case when ${timeauthorization_started_date} is null THEN date_diff(timestamp(${timeauthorization_success_time}),timestamp(${bookingcheckinDate_time}),hour)
     else date_diff(timestamp(${timeauthorization_started_time}),timestamp(${bookingcheckinDate_time}),hour)
@@ -236,6 +241,7 @@ view: vfd_kbc_events {
   }
   dimension: totalHoursPost{
     type: number
+    hidden: yes
     sql: case when ${timeauthorization_started_date} is null THEN date_diff(timestamp(${timeauthorization_success_time}),timestamp(${bookingdate_time}),hour)
     ElSE date_diff(timestamp(${timeauthorization_started_time}),timestamp(${bookingdate_time}),hour)
     END;;
@@ -245,12 +251,14 @@ view: vfd_kbc_events {
   dimension: kbccomplete_in_advance_of_checkin {
     type: string
     label: "24 hrs in Advance of Checkin?"
+    hidden: yes
     group_label: "Is KBC Completion"
     description:"Yes/No"
     sql: case when ${kbc_complete_o}="Yes" and ${totalHours}<=24 Then "Yes" else "No" END;;
-    hidden:no
+
   }
   dimension: KBC_completedPostBooking {
+    hidden: yes
     label: "within 24 hrs from Booking Date?"
     group_label: "Is KBC Completion"
     description:"Yes/No"
@@ -267,6 +275,7 @@ view: vfd_kbc_events {
   dimension: kbc_flow_completion_in_sec {
     type: number
     label: "KBC Completion Lead Time (Minutes)"
+    group_label: "VFD"
     sql: ${TABLE}.kbcFlowCompletionInSec/60 ;;
     hidden: no
   }
@@ -282,6 +291,7 @@ view: vfd_kbc_events {
   }
   dimension:idenCheckCompletionInSec {
     label: "Guest Verification Lead Time (Minutes)"
+    group_label: "KBC"
     type: number
     sql: ${TABLE}.idenCheckCompletionInSec/60 ;;
 
