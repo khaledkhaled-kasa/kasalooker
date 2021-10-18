@@ -23,7 +23,7 @@ view: hk_pricing_unit_specific {
 
   dimension: task {
     type: string
-    sql: ${TABLE}.Task ;;
+    sql: TRIM(${TABLE}.Task) ;;
   }
 
   dimension: door {

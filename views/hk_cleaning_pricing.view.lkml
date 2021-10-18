@@ -36,7 +36,7 @@ view: hk_cleaning_pricing {
   dimension: task {
     hidden: yes
     type: string
-    sql: ${TABLE}.Task ;;
+    sql: TRIM(${TABLE}.Task) ;;
   }
 
   measure: total_pricing {

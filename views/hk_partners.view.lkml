@@ -14,7 +14,7 @@
 
     dimension: end_date {
       type: date
-      sql: ${TABLE}.End_Date ;;
+      sql: ${TABLE}.date_field_15 ;;
       convert_tz: no
     }
 
