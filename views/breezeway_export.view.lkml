@@ -239,7 +239,7 @@ view: breezeway_export {
     WHEN lower(${TABLE}.Name) LIKE "%carpet/upholstery: full unit%" THEN "Carpet/Upholstery Full Room"
     WHEN lower(${TABLE}.Name) LIKE "%cleanliness review feedback%" THEN "Cleanliness Review Feedback"
     WHEN lower(${TABLE}.Name) LIKE "%hk touch up or vip prep%" THEN "HK Touch Up - VIP Prep"
-    ELSE ${TABLE}.Name
+    ELSE TRIM(${TABLE}.Name)
     END;;
   }
 
