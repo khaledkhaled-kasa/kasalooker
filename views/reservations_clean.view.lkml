@@ -199,6 +199,11 @@ view: reservations_clean {
     type: string
     sql: ${TABLE}.timezone ;;
   }
+  dimension: guestisverifiedyesno {
+    hidden: yes
+    type: yesno
+    sql: ${TABLE}.infinitystones.guestisverified;;
+  }
 
   dimension: guesty_id {
     hidden: no
@@ -269,6 +274,15 @@ view: reservations_clean {
     filters: [submittedat_date: "NULL"]
     drill_fields: [reservation_details*]
   }
+  measure: guestisverified {
+    label: "Num of Guests verified"
+    group_label: "KBC"
+    type: count_distinct
+    sql: ${confirmationcode};;
+    filters: [guestisverifiedyesno: "yes"]
+    drill_fields: [reservation_details*]
+  }
+
   measure: kbc_ompletedInAdvance{
     label: "Num of Guests Completed KBC 24 hrs pre Checkin"
     group_label: "KBC"

@@ -275,7 +275,6 @@ view: vfd_kbc_events {
   dimension: kbc_flow_completion_in_sec {
     type: number
     label: "KBC Completion Lead Time (Minutes)"
-    group_label: "VFD"
     sql: ${TABLE}.kbcFlowCompletionInSec/60 ;;
     hidden: no
   }
@@ -291,7 +290,6 @@ view: vfd_kbc_events {
   }
   dimension:idenCheckCompletionInSec {
     label: "Guest Verification Lead Time (Minutes)"
-    group_label: "KBC"
     type: number
     sql: ${TABLE}.idenCheckCompletionInSec/60 ;;
 
@@ -380,6 +378,7 @@ view: vfd_kbc_events {
     group_label: "KBC Metrics"
     value_format_name: percent_1
     type: number
+    hidden: yes
     sql: ${early_check_in_requestedApproved}/${early_check_in_requested}  ;;
     drill_fields: [detail*]
   }
@@ -434,6 +433,7 @@ view: vfd_kbc_events {
 
   measure: RTF_skiped{
     label: "RTF skipped"
+    description: "Real Time Feedback"
     type: count_distinct
     group_label: "VFD Metrics"
     sql: ${confirmation_code};;
@@ -442,6 +442,7 @@ view: vfd_kbc_events {
   }
   measure: RTF_Submissions{
     description: "Real Time Feedback (RTF) Submissions"
+    label: "RTF Submitted"
     type: count_distinct
     group_label: "VFD Metrics"
     sql: ${confirmation_code};;
@@ -460,6 +461,7 @@ view: vfd_kbc_events {
     label: "KBC Complete in Advance of Checkin"
     description: "Num of Reservations Completed KBC 24hrs in Advance of Checkin"
     group_label: "KBC Metrics"
+    hidden: yes
     type: count_distinct
     sql: ${confirmation_code} ;;
     filters: [kbccomplete_in_advance_of_checkin: "Yes"]
@@ -491,7 +493,7 @@ view: vfd_kbc_events {
     group_label: "KBC Metrics"
     type: count_distinct
     sql: ${confirmation_code};;
-    filters: [kbc_complete_o: "Yes"]
+    filters: [event_name: "authorization_started"]
     drill_fields: [detail*]
   }
   measure: kbc_Completions_rate{
@@ -547,19 +549,46 @@ view: vfd_kbc_events {
     filters: [event_name: "terms_agreed"]
     drill_fields: [detail*]
   }
-  measure: optl_info{
-    label: "Optional Info entered"
-    description: "Total Guests who submitted additional info (reason for stay,Num of guests)"
+  measure: extra_add_on{
+    label: "Extra And Add-ons"
+    description: "Total Guests who submitted (special_requests,animal_companion_requested,early_check_in_requested,parking_requested)"
     group_label: "KBC Metrics"
     type: count_distinct
     sql: ${confirmation_code};;
-    filters: [event_name: "who_is_traveling_number_defined,reason_for_stay_submitted,parking_requested"]
+    filters: [event_name: "special_requests_requested,animal_companion_requested,early_check_in_requested,parking_requested"]
+    drill_fields: [detail*]
+  }
+  measure: guestInfoentred{
+    label: "Guest Info Added"
+    description: "Total Guests who endtred their Address (Address_entered)"
+    group_label: "KBC Metrics"
+    type: count_distinct
+    sql: ${confirmation_code};;
+    filters: [event_name: "address_entered"]
+    drill_fields: [detail*]
+  }
+  measure: optionalInfo{
+    label: "Optional Info Submitted"
+    description: "Total Guests who submitted (reason_for_stay, travelers info , # of travelers  )"
+    group_label: "KBC Metrics"
+    type: count_distinct
+    sql: ${confirmation_code};;
+    filters: [event_name: "reason_for_stay_submitted"]
     drill_fields: [detail*]
   }
   measure: avg_complete_kbc{
     label: "Avg Time to Complete KBC (Minutes)"
     description: "Avg Time to Complete KBC full funnel(Minutes)"
     type: average
+    value_format: "0.00"
+    group_label: "KBC Metrics"
+    sql: ${kbc_flow_completion_in_sec};;
+    drill_fields: [detail*]
+  }
+  measure: median_complete_kbc{
+    label: "Median Time to Complete KBC (Minutes)"
+    description: "Median Time to Complete KBC full funnel(Minutes)"
+    type: median
     value_format: "0.00"
     group_label: "KBC Metrics"
     sql: ${kbc_flow_completion_in_sec};;
@@ -589,6 +618,7 @@ view: vfd_kbc_events {
     type: count_distinct
     group_label: "KBC Metrics"
     sql: ${confirmation_code};;
+    hidden: yes
     filters: [KBC_completedPostBooking: "Yes"]
     drill_fields: [detail*]
   }
