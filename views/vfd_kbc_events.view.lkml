@@ -541,7 +541,7 @@ view: vfd_kbc_events {
   }
 
   measure: terms_agreed{
-    label: "Terms agreed"
+    label: "Terms Agreed"
     description: "Total Guests agreed on House Rules"
     group_label: "KBC Metrics"
     type: count_distinct
@@ -550,7 +550,7 @@ view: vfd_kbc_events {
     drill_fields: [detail*]
   }
   measure: extra_add_on{
-    label: "Extra And Add-ons"
+    label: "Extra and Add-ons Requested"
     description: "Total Guests who submitted (special_requests,animal_companion_requested,early_check_in_requested,parking_requested)"
     group_label: "KBC Metrics"
     type: count_distinct
@@ -559,14 +559,24 @@ view: vfd_kbc_events {
     drill_fields: [detail*]
   }
   measure: guestInfoentred{
-    label: "Guest Info Added"
-    description: "Total Guests who endtred their Address (Address_entered)"
+    label: "Guest Info Edited"
+    description: "Total Guests who endtred their Address (Email Address_entered)"
     group_label: "KBC Metrics"
     type: count_distinct
     sql: ${confirmation_code};;
     filters: [event_name: "address_entered"]
     drill_fields: [detail*]
   }
+  measure: credit_card_added{
+    label: "Credit Card Added"
+    description: "Total Guests who endtred their Credit Card (credit_card_added)"
+    group_label: "KBC Metrics"
+    type: count_distinct
+    sql: ${confirmation_code};;
+    filters: [event_name: "credit_card_added"]
+    drill_fields: [detail*]
+  }
+
   measure: optionalInfo{
     label: "Optional Info Submitted"
     description: "Total Guests who submitted (reason_for_stay, travelers info , # of travelers  )"
@@ -589,7 +599,7 @@ view: vfd_kbc_events {
     label: "Median Time to Complete KBC (Minutes)"
     description: "Median Time to Complete KBC full funnel(Minutes)"
     type: median
-    value_format: "0.00"
+    value_format: "0"
     group_label: "KBC Metrics"
     sql: ${kbc_flow_completion_in_sec};;
     drill_fields: [detail*]
