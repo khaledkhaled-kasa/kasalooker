@@ -3,6 +3,7 @@ view: trs_prs {
     sql: select
       reservations.status,
       reservations.confirmationcode,
+      reservations._id,
       reservations.checkindate, reservations.checkoutdate,
       complexes.title, complexes.internaltitle, units.internaltitle as internaltitleUnit , units.address.city, units.address.state,
       -- infinitystones.partyrisk.*,
@@ -37,6 +38,12 @@ view: trs_prs {
     view_label: "Reservations"
     type: string
     sql: ${TABLE}.status ;;
+  }
+  dimension: res_id {
+    view_label: "Reservations ID"
+    type: string
+    hidden: yes
+    sql: ${TABLE}._id ;;
   }
   dimension: unitId {
     type: string

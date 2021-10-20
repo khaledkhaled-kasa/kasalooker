@@ -818,6 +818,11 @@ explore: trs_prs {
     relationship:one_to_many
     sql_on: ${trs_prs.unitId}=${lock_device_events.unitid} ;;
   }
+  join: kontrol_incidents_reports {
+    type: left_outer
+    relationship: one_to_many
+    sql_on:${kontrol_incidents_reports.reservation}=${trs_prs.res_id};;
+  }
 }
 
 explore: t_s_security_deployment {
