@@ -1377,6 +1377,35 @@ view: conversation {
           value_format: "0.0"
           sql: ${messages_sent_allocated} / ${reservations_count} ;;
         }
+        ###### First Contact Resolution Rate
+
+        measure: first_contact_resolution_rate1 {
+          type: count_distinct
+          sql: ${id} ;;
+          hidden: yes
+          value_format: "###"
+          filters: [ conversation.direction: "in",status: "done",reopen_count: "0,Null",message_count: ">0"]
+        }
+        measure: first_contact_resolution_rate2 {
+          type: count_distinct
+          hidden: yes
+          sql: ${id} ;;
+          value_format: "###"
+          filters: [ conversation.direction: "in",first_done_date: "-Null",message_count: ">0"]
+        }
+        measure: first_contact_resolution_rate {
+          view_label: "Metrics"
+          label: "First Contact Resolution Rate"
+          description: "Inbound conversations that contain at least one message, are currently done, and have never been snoozed, reopened or merged."
+          type: number
+          hidden: no
+          value_format_name: percent_0
+          sql:if(${first_contact_resolution_rate1}<>0, ${first_contact_resolution_rate1}/${first_contact_resolution_rate2},0) ;;
+
+        }
+
+
+
 
 ###### Unique Conversations Messaged
 
