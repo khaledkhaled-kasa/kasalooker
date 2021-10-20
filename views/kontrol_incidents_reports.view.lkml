@@ -67,7 +67,7 @@ view: kontrol_incidents_reports {
   }
   measure: count {
     type: count_distinct
-    sql: -${_id} ;;
+    sql: ${_id} ;;
     drill_fields: [detail*]
   }
 
