@@ -74,6 +74,7 @@ view: post_checkout_v2 {
           regexp_replace(regexp_replace(regexp_replace(regexp_replace(${aggregated_comments_all_unclean},"Overall Comments: N/A~N/A~N/A---",""),"Checkin Comments: N/A~N/A~N/A---",""),"Cleaning Comments: N/A~N/A~N/A---",""),"Communication Comments: N/A~N/A---",""),"Accuracy Comments: N/A~N/A---",""),"Value Comments: N/A~N/A---",""),"Location Comments: N/A~N/A---",""),"Why: N/A---",""),"Favorite: N/A---",""),"Suggestions: N/A~N/A---",""),"Kustomer CSAT Comments: N/A",""),"~N/A",""),"---"),"N/A~",""),"~","|"),"---")
               ;;
   }
+
   dimension: overall__how_would_you_rate_your_kasa_stay_ {
     label: "Overall Rating"
     group_label: "Ratings"

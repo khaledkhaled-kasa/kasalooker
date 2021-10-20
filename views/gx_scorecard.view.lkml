@@ -36,7 +36,7 @@ view: gx_scorecard {
 
                   Hours AS
                   (SELECT CONCAT(ximble_master.First_Name," ",ximble_master.Last_Name) AS ximble_names,
-                  ROUND(COALESCE(CAST( ( SUM(DISTINCT (CAST(ROUND(COALESCE(CASE WHEN  ximble_master.Shift_Label IS NULL OR
+                  ROUND(COALESCE(CAST((SUM(DISTINCT (CAST(ROUND(COALESCE(CASE WHEN  ximble_master.Shift_Label IS NULL OR
                   ((LOWER(ximble_master.Shift_Label) NOT LIKE "%project time%")
                   AND (LOWER(ximble_master.Shift_Label) NOT LIKE '%training class%')
                   AND (LOWER(ximble_master.Shift_Label) NOT LIKE "%culture amp%"))
@@ -72,6 +72,7 @@ view: gx_scorecard {
                   Messages_sent AS
                   (SELECT user.name  AS user_name, team.name  AS team_name,
                   COUNT(DISTINCT CASE WHEN (message.auto = false) AND (message.direction = 'out') THEN message.id  ELSE NULL END) AS conversation_messages_sent,
+                  COUNT(DISTINCT CASE WHEN (message.auto = false) AND (message.direction = 'out') THEN message.conversation_id  ELSE NULL END) AS unique_conversations_messaged
                   FROM `kustomer.customer` AS customer
                   INNER JOIN `kustomer.conversation` AS conversation ON customer.id = conversation.customer_id
                   LEFT JOIN `kustomer.message` AS message ON conversation.id = message.conversation_id
@@ -129,8 +130,8 @@ view: gx_scorecard {
                       GROUP BY 1,2)
 
                       SELECT messages_sent.user_name, messages_sent.team_name,
-                      conversation_messages_sent, inbound_calls, outbound_calls, ximble_master_hours,
-                      round(conversation_messages_sent/nullif(ximble_master_hours,0),2) as messages_sent_per_hour,
+                      unique_conversations_messaged, inbound_calls, outbound_calls, ximble_master_hours,
+                      round(unique_conversations_messaged/nullif(ximble_master_hours,0),2) as unique_conversations_messaged_per_hour,
                       round(inbound_calls/nullif(ximble_master_hours,0),2) as inbound_calls_per_hour,
                       round(outbound_calls/nullif(ximble_master_hours,0),2) as outbound_calls_per_hour,
                       NULL AS interactions_per_hour,
@@ -183,12 +184,16 @@ view: gx_scorecard {
                       from SKINNY_ALL_METRICS
                       LEFT JOIN Gsheets.weights_targets ON weights_targets.metric_looker = SKINNY_ALL_METRICS.metric)
 
-                      SELECT percentile_table.*, percentile_table.target preset_target,
-                      CASE WHEN percentile_table.target is null THEN top_25_percentile
-                      ELSE percentile_table.target
+                      SELECT percentile_table.*, percentile_table.target preset_target, percentile_table.target_sgxs preset_target_sgxs,
+                      CASE
+                      WHEN (percentile_table.team_name = 'Guest Experience' AND percentile_table.target is not null) THEN percentile_table.target
+                      WHEN (percentile_table.team_name = 'SGXS' AND percentile_table.target_sgxs is not null) THEN percentile_table.target_sgxs
+                      ELSE top_25_percentile
                       END top_25_percentile_or_preset,
-                      CASE WHEN percentile_table.target is null THEN round(AVG(top_25_percentile_candidate) OVER (PARTITION BY percentile_Table.skinny_metric),3)
-                      ELSE percentile_table.target
+                      CASE
+                      WHEN (percentile_table.team_name = 'Guest Experience' AND percentile_table.target is not null) THEN percentile_table.target
+                      WHEN (percentile_table.team_name = 'SGXS' AND percentile_table.target_sgxs is not null) THEN percentile_table.target_sgxs
+                      ELSE round(AVG(top_25_percentile_candidate) OVER (PARTITION BY percentile_Table.skinny_metric),3)
                       END AVG_top_25_percentile
                       from percentile_table)
 
@@ -305,6 +310,7 @@ view: gx_scorecard {
     dimension: percentile75 {
       type: number
       sql: ${TABLE}.percentile75 ;;
+      hidden: yes
       # html: {% if  weight_from_metric._value >= 1 %}
       # <p style="color: black; background-color: #819AC9; font-size:110%"><b>{{ rendered_value }}</b></p>
       # {% else %}
@@ -314,6 +320,7 @@ view: gx_scorecard {
 
     dimension: percentile25 {
       type: number
+      hidden: yes
       sql: ${TABLE}.percentile25 ;;
       # html: {% if  weight_from_metric._value >= 1 %}
       # <p style="color: black; background-color: #819AC9; font-size:110%"><b>{{ rendered_value }}</b></p>
@@ -327,11 +334,7 @@ view: gx_scorecard {
       label: "Target (Top / Preset)"
       description: "This will show the target for individual metrics by either pulling the top 25% or 75% percentile (depending on the category) or pulling from the manual preset values on the GSheet."
       sql:
-          CASE
-          WHEN ${preset_targets} IS NOT NULL THEN ${preset_targets}
-          WHEN ${TABLE}.Category = "Efficiency" THEN ${percentile25}
-          ELSE ${percentile75}
-          END ;;
+          ${TABLE}.top_25_percentile_or_preset ;;
           # html: {% if  weight_from_metric._value >= 1 %}
           # <p style="color: black; background-color: #819AC9; font-size:110%"><b>{{ rendered_value }}</b></p>
           # {% else %}
@@ -418,16 +421,16 @@ view: gx_scorecard {
 
       dimension: preset_targets {
         type: number
-        hidden: no
+        hidden: yes
         sql: ${TABLE}.preset_target ;;
       }
-
 
 
       dimension: top_25_percentile {
         label: "Target (Top 25 Percentile)"
         description: "This will show the target for individual metrics by either pulling the top 25% or 75% percentile (depending on the category) or pulling from the manual preset values on the GSheet."
         type: number
+        hidden: yes
         value_format: "0.00"
         sql: ${TABLE}.top_25_percentile ;;
         html: {% if  weight_from_metric._value >= 1 %}
@@ -441,6 +444,7 @@ view: gx_scorecard {
         label: "Target (Avg. Top 25 Percentile)"
         description: "This will show the target for individual metrics by either calculating the average of the top 25% or 75% percentile (depending on the category) or pulling from the manual preset values on the GSheet."
         type: number
+        hidden: yes
         value_format: "0.00"
         sql: ${TABLE}.AVG_top_25_percentile ;;
         html: {% if  weight_from_metric._value >= 1 %}
