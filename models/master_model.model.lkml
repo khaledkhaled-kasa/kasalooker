@@ -1046,7 +1046,7 @@ explore: KPO_AUDIT{
 
 explore: vfd_kbc_events{
     group_label: "Product & Tech"
-  description: "This explore will pull the events that happened during the KBC and VFD journey from the front end side"
+  description: "This explore contains events and data from Kasa Booking Confirmation and Virtual Front desk Application"
 
     label: "KBC/VFD"
   join: reservations_clean {
@@ -1065,4 +1065,50 @@ explore: vfd_kbc_events{
       relationship: one_to_one #one_to_one
       sql_on: ${units.complex} = ${complexes._id} ;;
     }
+  }
+explore: kontrol_sessions{
+  group_label: "Product & Tech"
+  description: "This explore contains events and data from Kontrol Applications using Segments"
+  label: "Kontrol"
+
+  join: kontrol_giga_search_query {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${kontrol_sessions.event_id}=${kontrol_giga_search_query.id} ;;
+  }
+  join: kontrol_giga_search_hit {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${kontrol_sessions.event_id}=${kontrol_giga_search_hit.id} ;;
+  }
+  join: kontrol_retry_bg_check {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${kontrol_sessions.event_id}=${kontrol_retry_bg_check.id};;
+  }
+  join: kontrol_override_bg_check {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${kontrol_sessions.event_id}=${kontrol_override_bg_check.id};;
+  }
+  join: kontrol_override_id_check {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${kontrol_sessions.event_id}=${kontrol_override_id_check.id};;
+  }
+  join: kontrol_open_door_remotely {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${kontrol_sessions.event_id}=${kontrol_open_door_remotely.id};;
+  }
+  join: kontrol_risk_status_manual_changes {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${kontrol_sessions.event_id}=${kontrol_risk_status_manual_changes.id};;
+  }
+  join: kontrol_switch_to_backup_code_door {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${kontrol_sessions.event_id}=${kontrol_switch_to_backup_code_door.id};;
+  }
   }

@@ -86,6 +86,12 @@ view: reservations_clean {
     sql:CASE WHEN date_diff(timestamp(${submittedat_time}),timestamp(${bookingdate_time}),hour)<=24 THEN "Yes" ELSE "No" END;;
 
   }
+  dimension: riskstatus {
+    label: "Risk Status"
+    type: string
+    sql: ${TABLE}.infinitystones.riskstatus ;;
+  }
+
 
   dimension_group: bookingdate {
     label: "Booking"
@@ -200,7 +206,7 @@ view: reservations_clean {
     sql: ${TABLE}.timezone ;;
   }
   dimension: guestisverifiedyesno {
-    hidden: yes
+    label: "Is Guest verified "
     type: yesno
     sql: ${TABLE}.infinitystones.guestisverified;;
   }

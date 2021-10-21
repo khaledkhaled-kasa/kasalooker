@@ -326,6 +326,16 @@ view: reservations_v3 {
       sql: ${capacities_v3.night_date} < ${checkoutdate_date} and
         ${capacities_v3.night_date} >= ${checkindate_date};;
     }
+  dimension: riskstatus {
+    label: "Risk Status"
+    type: string
+    sql: ${TABLE}.infinitystones.riskstatus ;;
+  }
+  dimension: guestisverified {
+    label: "Is Guest verified"
+    type: yesno
+    sql: ${TABLE}.infinitystones.guestisverified;;
+  }
 
   dimension: capacity_night_part_of_checkin {
     type:  yesno

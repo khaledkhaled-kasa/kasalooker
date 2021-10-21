@@ -13,7 +13,7 @@ view: kontrol_incidents_reports {
       FROM `bigquery-analytics-272822.mongo.incidentreports` LEFT JOIN UNNEST(incidents) as incidents
       where description not  like '%Adam test%' and description not  like '%incident test%' and description <> "TEST"
        ;;
-
+    persist_for: "1 hours"
   }
 
 
