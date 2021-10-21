@@ -435,19 +435,19 @@ explore: reservations_clean {
     sql_on:  ${braze_email_link_clicked.confirmationcode} = ${reservations_clean.confirmationcode} ;;
   }
 
-   join: braze_webhook_sent {
+  join: braze_webhook_sent {
     type: left_outer
     relationship: one_to_many
     sql_on: ${reservations_clean.guest} = ${braze_webhook_sent.user_id} and (${braze_webhook_sent.timestamp_date} between ${reservations_clean.checkindate_date} and ${reservations_clean.checkoutdate_date}) and (${reservations_clean.status} not
-    in ("canceled","inquiry") ) ;;
+      in ("canceled","inquiry") ) ;;
   }
 
   join: braze_email_sent {
     type: left_outer
     relationship: one_to_many
     sql_on: (${reservations_clean.guest} = ${braze_email_sent.user_id} ) and
-    (${reservations_clean.status} not in ("canceled","inquiry") ) and ( date_diff(${braze_email_sent.timestamp_date},${reservations_clean.checkindate_date},day) =1 or date_diff(${braze_email_sent.timestamp_date},${reservations_clean.checkindate_date},day) =2);;
-    }
+      (${reservations_clean.status} not in ("canceled","inquiry") ) and ( date_diff(${braze_email_sent.timestamp_date},${reservations_clean.checkindate_date},day) =1 or date_diff(${braze_email_sent.timestamp_date},${reservations_clean.checkindate_date},day) =2);;
+  }
 }
 
 explore: reservations_audit {
