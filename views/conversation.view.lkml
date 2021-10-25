@@ -146,7 +146,7 @@ view: conversation {
         month,
         quarter,
         year,
-        time_of_day
+        hour_of_day
       ]
       sql: ${TABLE}.created_at ;;
     }
