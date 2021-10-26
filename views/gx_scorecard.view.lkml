@@ -26,6 +26,7 @@ view: gx_scorecard {
                   WHEN aircall_segment.properties.user.name = "Infiniti " THEN "Infiniti"
                   WHEN aircall_segment.properties.user.name = 'Katherine Chappell' THEN "Kate Chappell"
                   WHEN aircall_segment.properties.user.name = 'Patricia Tamayo' THEN "Pat Tamayo"
+                  WHEN aircall_segment.properties.user.name = 'Aujel Hudson' THEN "Aujel Newman"
                   ELSE aircall_segment.properties.user.name
                   END  aircall_names,
                   COUNT(DISTINCT CASE WHEN (aircall_segment.properties.direction = 'inbound') AND (aircall_segment.event = 'call.hungup') THEN concat( aircall_segment.properties.id , aircall_segment.event  )  ELSE NULL END) AS inbound_calls,

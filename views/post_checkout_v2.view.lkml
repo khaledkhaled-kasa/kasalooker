@@ -419,6 +419,7 @@ END;;
     type: average
     value_format: "0.00"
     sql: ${TABLE}._Cleanliness___How_clean_was_the_Kasa_when_you_arrived_ ;;
+    drill_fields: [submitted_at_date, reservations_clean.checkindate_date, reservations_clean.checkoutdate_date , units.internaltitle, _cleanliness___how_clean_was_the_kasa_when_you_arrived_, how_did_we_miss_the_mark_on_cleanliness_, what_would_have_made_your_stay_feel_like_a_better_value_]
   }
 
   measure: accuracy_measure {
@@ -1259,7 +1260,7 @@ END;;
     view_label: "Combined Scores (Airbnb & Postcheckout)"
     type: number
     value_format: "0.0"
-    sql: ((${net_quality_score_overall}*${count})+(${airbnb_reviews.net_quality_score}*${airbnb_reviews.count}))/nullif((${count}+${airbnb_reviews.count}),0) ;;
+    sql: ((COALESCE(${net_quality_score_overall}*${count},0))+(COALESCE(${airbnb_reviews.net_quality_score}*${airbnb_reviews.count},0)))/nullif((${count}+${airbnb_reviews.count}),0) ;;
   }
 
   measure: combined_nqs_clean {
@@ -1269,7 +1270,7 @@ END;;
     view_label: "Combined Scores (Airbnb & Postcheckout)"
     type: number
     value_format: "0.0"
-    sql: ((${net_quality_score_cleanliness}*${count_clean})+(${airbnb_reviews.net_quality_score_clean}*${airbnb_reviews.count_clean}))/nullif((${count_clean}+${airbnb_reviews.count_clean}),0) ;;
+    sql: ((COALESCE(${net_quality_score_cleanliness}*${count_clean},0))+(COALESCE(${airbnb_reviews.net_quality_score_clean}*${airbnb_reviews.count_clean},0)))/nullif((${count_clean}+${airbnb_reviews.count_clean}),0) ;;
   }
 
   measure: combined_nqs_accuracy {
@@ -1279,7 +1280,7 @@ END;;
     view_label: "Combined Scores (Airbnb & Postcheckout)"
     type: number
     value_format: "0.0"
-    sql: ((${net_quality_score_accuracy}*${count_clean})+(${airbnb_reviews.net_quality_score_accuracy}*${airbnb_reviews.count_clean}))/nullif((${count_clean}+${airbnb_reviews.count_clean}),0) ;;
+    sql: ((COALESCE(${net_quality_score_accuracy}*${count_clean},0))+(COALESCE(${airbnb_reviews.net_quality_score_accuracy}*${airbnb_reviews.count_clean},0)))/nullif((${count_clean}+${airbnb_reviews.count_clean}),0) ;;
   }
 
   measure: combined_nqs_checkin {
@@ -1289,7 +1290,7 @@ END;;
     view_label: "Combined Scores (Airbnb & Postcheckout)"
     type: number
     value_format: "0.0"
-    sql: ((${net_quality_score_checkin}*${count_clean})+(${airbnb_reviews.net_quality_score_checkin}*${airbnb_reviews.count_clean}))/nullif((${count_clean}+${airbnb_reviews.count_clean}),0) ;;
+    sql: ((COALESCE(${net_quality_score_checkin}*${count_clean},0))+(COALESCE(${airbnb_reviews.net_quality_score_checkin}*${airbnb_reviews.count_clean},0)))/nullif((${count_clean}+${airbnb_reviews.count_clean}),0) ;;
   }
 
   measure: combined_nqs_communication {
@@ -1299,7 +1300,7 @@ END;;
     view_label: "Combined Scores (Airbnb & Postcheckout)"
     type: number
     value_format: "0.0"
-    sql: ((${net_quality_score_communication}*${count_clean})+(${airbnb_reviews.net_quality_score_communication}*${airbnb_reviews.count_clean}))/nullif((${count_clean}+${airbnb_reviews.count_clean}),0) ;;
+    sql: ((COALESCE(${net_quality_score_communication}*${count_clean},0))+(COALESCE(${airbnb_reviews.net_quality_score_communication}*${airbnb_reviews.count_clean},0)))/nullif((${count_clean}+${airbnb_reviews.count_clean}),0) ;;
   }
 
   measure: combined_nqs_location {
@@ -1309,7 +1310,7 @@ END;;
     view_label: "Combined Scores (Airbnb & Postcheckout)"
     type: number
     value_format: "0.0"
-    sql: ((${net_quality_score_location}*${count_clean})+(${airbnb_reviews.net_quality_score_location}*${airbnb_reviews.count_clean}))/nullif((${count_clean}+${airbnb_reviews.count_clean}),0) ;;
+    sql: ((COALESCE(${net_quality_score_location}*${count_clean},0))+(COALESCE(${airbnb_reviews.net_quality_score_location}*${airbnb_reviews.count_clean},0)))/nullif((${count_clean}+${airbnb_reviews.count_clean}),0) ;;
   }
 
   measure: combined_nqs_value {
@@ -1319,7 +1320,7 @@ END;;
     view_label: "Combined Scores (Airbnb & Postcheckout)"
     type: number
     value_format: "0.0"
-    sql: ((${net_quality_score_value}*${count_clean})+(${airbnb_reviews.net_quality_score_value}*${airbnb_reviews.count_clean}))/nullif((${count_clean}+${airbnb_reviews.count_clean}),0) ;;
+    sql: ((COALESCE(${net_quality_score_value}*${count_clean},0))+(COALESCE(${airbnb_reviews.net_quality_score_value}*${airbnb_reviews.count_clean},0)))/nullif((${count_clean}+${airbnb_reviews.count_clean}),0) ;;
   }
 
 
@@ -1330,7 +1331,7 @@ END;;
     view_label: "Combined Scores (Airbnb & Postcheckout)"
     type: number
     value_format: "0"
-    sql: (${count}+${airbnb_reviews.count}) ;;
+    sql: COALESCE(${count}+${airbnb_reviews.count},0) ;;
   }
 
   measure: combined_count_clean {
@@ -1339,7 +1340,7 @@ END;;
     view_label: "Combined Scores (Airbnb & Postcheckout)"
     type: number
     value_format: "0"
-    sql: (${count_clean}+${airbnb_reviews.count_clean}) ;;
+    sql: COALESCE(${count_clean}+${airbnb_reviews.count_clean},0) ;;
   }
 
 

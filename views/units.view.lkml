@@ -324,7 +324,7 @@ view: units {
       label: "Total Unique Units"
       description: "This includes all units we've had irrespective on whether or not they are currently active."
       type: count_distinct
-      sql: CASE WHEN ((${TABLE}.internaltitle LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%XXX") OR (${TABLE}.internaltitle LIKE "%-RES") OR (${TABLE}.internaltitle LIKE "%-S")) THEN NULL
+      sql: CASE WHEN ((${TABLE}.internaltitle LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%XXX") OR (${TABLE}.internaltitle LIKE "%-RES") OR (${TABLE}.internaltitle LIKE "%-S") OR (${TABLE}.internaltitle LIKE "%GXO%")) THEN NULL
           ELSE ${TABLE}._id
           END;;
           drill_fields: [internaltitle, Date_Contract_Signed_date, availability_startdate_date, availability_enddate_date, unit_status]
@@ -335,7 +335,7 @@ view: units {
     label: "Total Active Unique Units"
     type: count_distinct
     description: "This includes all units which have a unit status of Active or Expiring based on Col AK of the KPO"
-    sql: CASE WHEN ((${internaltitle} LIKE "%-XX") OR (${internaltitle} LIKE "%XXX") OR (${internaltitle} LIKE "%-S") OR (${internaltitle} LIKE "%-RES")) THEN NULL
+    sql: CASE WHEN ((${internaltitle} LIKE "%-XX") OR (${internaltitle} LIKE "%XXX") OR (${internaltitle} LIKE "%-S") OR (${internaltitle} LIKE "%-RES") OR (${TABLE}.internaltitle LIKE "%GXO%")) THEN NULL
           ELSE ${TABLE}._id
           END ;;
     filters: [unit_status: "Active, Expiring"]
@@ -347,7 +347,7 @@ view: units {
     description: "This includes all properties which have any unit status of Active or Expiring based on Col AK of the KPO"
     view_label: "Building and Geographic Information"
     type: count_distinct
-    sql: CASE WHEN ((${internaltitle} LIKE "%-XX") OR (${internaltitle} LIKE "%XXX") OR (${internaltitle} LIKE "%-S") OR (${internaltitle} LIKE "%-RES")) THEN NULL
+    sql: CASE WHEN ((${internaltitle} LIKE "%-XX") OR (${internaltitle} LIKE "%XXX") OR (${internaltitle} LIKE "%-S") OR (${internaltitle} LIKE "%-RES") OR (${TABLE}.internaltitle LIKE "%GXO%")) THEN NULL
           ELSE ${TABLE}.complex
           END ;;
     filters: [unit_status: "Active, Expiring"]

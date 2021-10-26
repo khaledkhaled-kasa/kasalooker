@@ -212,9 +212,17 @@ view: reservations_v3 {
 
 
     dimension: parking_space_needed {
+      description: "This will pull reservations where guests have requested for a parking spot during booking. This does not neccessarily equate to the guest using a parking spot."
       type: yesno
       sql: ${TABLE}.parkingspaceneeded ;;
     }
+
+  dimension: license_plate_provided {
+    type: yesno
+    description: "This will pull reservations where guests have provided us with their license plate information."
+    sql: ${TABLE}.licenseplate is NOT NULL AND (LENGTH(${TABLE}.licenseplate) != 0) ;;
+  }
+
 
     dimension: number_of_pets {
     type: number
