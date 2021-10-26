@@ -976,11 +976,11 @@ explore: kasa_kredit_reimbursement {
 
 explore: blocks {
   group_label: "Reservations"
-  hidden: yes
+  hidden: no
   label: "Guesty Calendar Blocks"
   fields: [geo_location.city, geo_location.state, geo_location.metro, complexes.title, units.propcode, units.internaltitle,
             blocks.startdatelocal, blocks.enddatelocal, blocks.createdat_date, blocks.createdat_month, blocks.createdat_quarter,
-            blocks.createdby, blocks.category, blocks.notes, blocks.status]
+            blocks.createdby, blocks.category, blocks.notes, blocks.status,blocks.count, blocks.source]
 
   join: units {
     type:  left_outer

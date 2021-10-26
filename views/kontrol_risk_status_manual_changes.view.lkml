@@ -6,6 +6,8 @@ view: kontrol_risk_status_manual_changes{
           ris.id,
           ris.reservation_id,
           ris.original_timestamp,
+          ris.changed_from ,
+          ris.changed_to
           from
           `bigquery-analytics-272822.website_kontrol.risk_status_manual_changes` ris
           left join

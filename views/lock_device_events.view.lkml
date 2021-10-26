@@ -57,7 +57,7 @@ view: lock_device_events {
   dimension: eventValue {
     type: string
     label: "Event Name"
-    sql: ${TABLE}.events.originalpayload.eventvaluedetails.eventname ;;
+    sql: ${TABLE}.originalpayload.eventvaluedetails.eventname ;;
   }
 
   dimension: unitid {

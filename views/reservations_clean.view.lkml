@@ -236,6 +236,70 @@ view: reservations_clean {
     sql: ${TABLE}.initial_booking = 1 ;;
   }
 
+  dimension: LCOrequestedtime {
+    label: "LCO Requested Time"
+    description: "Late check out requested Time"
+    type: number
+    sql: ${TABLE}.latecheckout.requestedtime ;;
+    hidden: no
+  }
+  dimension: ECIrequestedtime {
+    label: "ECI Requested Time"
+    description: "early check in requested Time"
+    type: string
+    sql: ${TABLE}.earlycheckin.requestedtime/60
+    ;;
+    hidden: no
+  }
+  dimension: ECIrequestedststus {
+    label: "ECI Status"
+    type: string
+    sql: ${TABLE}.earlycheckin.status ;;
+    hidden: no
+  }
+  dimension: LCOrequestedststus {
+    label: "LCO Status"
+    type: string
+    sql: ${TABLE}.latecheckout.status ;;
+    hidden: no
+  }
+
+  measure: numLcoRequested {
+    label: "Number of LCO Requested"
+    description: "Number of Late Check out Requsted"
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    filters: [ LCOrequestedststus: "denied,approved,requested"]
+    drill_fields: [confirmationcode,LCOrequestedststus,LCOrequestedtime,status]
+
+  }
+  measure: numECIRequested{
+    label: "Number of ECI Requested"
+    description: "Number of Early Check in Requsted"
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    filters: [ ECIrequestedststus: "denied,approved,requested"]
+    drill_fields: [confirmationcode,ECIrequestedststus,ECIrequestedtime,status]
+
+  }
+  measure: numLcoRequestedApproved {
+    label: "Number of LCO Approved "
+    description: "Number of Late Check out Approved"
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    filters: [ LCOrequestedststus: "approved"]
+    drill_fields: [confirmationcode,LCOrequestedststus,LCOrequestedtime,status]
+
+  }
+  measure: numECIApproved{
+    label: "Number of ECI Approved"
+    description: "Number of Early Check in Approved"
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    filters: [ ECIrequestedststus: "approved"]
+    drill_fields: [confirmationcode,ECIrequestedststus,ECIrequestedtime,status]
+  }
+
   measure: number_of_checkouts {
     label: "Number of Checkouts"
     description: "Number of Check-outs EXCLUDING Initial Extended Booking Checkouts"

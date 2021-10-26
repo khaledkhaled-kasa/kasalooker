@@ -8,7 +8,7 @@ view: kontrol_open_door_remotely {
           dr.reservation_id,
           dr.original_timestamp,
           from
-          `bigquery-analytics-272822.website_kontrol_open_door_remotely` dr
+          `bigquery-analytics-272822.website_kontrol.open_door_remotely` dr
           left join
           mongo.reservations re
           on

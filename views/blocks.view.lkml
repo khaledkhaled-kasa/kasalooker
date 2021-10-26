@@ -74,6 +74,28 @@ view: blocks {
     type: string
     sql: ${TABLE}.unit ;;
   }
+  dimension: _id {
+    type: string
+    sql: ${TABLE}._id ;;
+    primary_key: yes
+  }
+  dimension: source {
+    description: "Kontrol vs Guesty"
+    type: string
+    sql: ${TABLE}.source ;;
+  }
+  dimension: starttimelocal {
+    label: "Start Time"
+    type: string
+    sql: ${TABLE}.starttimelocal ;;
+  }
+
+measure: count {
+  type: count_distinct
+  sql: ${_id} ;;
+
+
+}
 
 
 }
