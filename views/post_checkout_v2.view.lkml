@@ -418,7 +418,7 @@ END;;
     group_label: "Ratings (Aggregated)"
     type: average
     value_format: "0.00"
-    sql: ${TABLE}._Cleanliness___How_clean_was_the_Kasa_when_you_arrived_ ;;
+    sql: ${_cleanliness___how_clean_was_the_kasa_when_you_arrived_} ;;
     drill_fields: [submitted_at_date, reservations_clean.checkindate_date, reservations_clean.checkoutdate_date , units.internaltitle, _cleanliness___how_clean_was_the_kasa_when_you_arrived_, how_did_we_miss_the_mark_on_cleanliness_, what_would_have_made_your_stay_feel_like_a_better_value_]
   }
 
@@ -427,7 +427,7 @@ END;;
     group_label: "Ratings (Aggregated)"
     type: average
     value_format: "0.00"
-    sql: ${TABLE}._Accuracy___How_did_the_Kasa_compare_to_what_you_expected_ ;;
+    sql: ${_accuracy___how_did_the_kasa_compare_to_what_you_expected_} ;;
   }
 
   measure: communication_measure {
@@ -435,7 +435,7 @@ END;;
     group_label: "Ratings (Aggregated)"
     type: average
     value_format: "0.00"
-    sql: ${TABLE}._Communications___How_were_your_interactions_with_the_Kasa_team_ ;;
+    sql: ${_communications___how_were_your_interactions_with_the_kasa_team_} ;;
   }
 
   measure: location_measure {
@@ -443,7 +443,7 @@ END;;
     group_label: "Ratings (Aggregated)"
     type: average
     value_format: "0.00"
-    sql: ${TABLE}._Location___How_would_you_rate_the_surrounding_neighborhood_and_nearby_offerings_ ;;
+    sql: ${_location___how_would_you_rate_the_surrounding_neighborhood_and_nearby_offerings_} ;;
   }
 
   measure: checkin_measure {
@@ -451,7 +451,7 @@ END;;
     group_label: "Ratings (Aggregated)"
     type: average
     value_format: "0.00"
-    sql: ${TABLE}._Check_in___How_smooth_was_your_check_in_and_arrival_process_ ;;
+    sql: ${_check_in___how_smooth_was_your_check_in_and_arrival_process_} ;;
   }
 
   measure: value_measure {
@@ -459,7 +459,7 @@ END;;
     group_label: "Ratings (Aggregated)"
     type: average
     value_format: "0.00"
-    sql: ${TABLE}._Value___Was_your_stay_a_good_value_for_the_price_ ;;
+    sql: ${_value___was_your_stay_a_good_value_for_the_price_} ;;
   }
 
 
@@ -1452,8 +1452,8 @@ END;;
     label: "Disappointed Score"
     type: number
     value_format: "0.0"
-    sql: 100*(sum(if(${TABLE}.how_would_you_feel_if_you_could_no_longer_stay_at_any_kasa_locations_ = "Very disappointed",1,0)) /
-      NULLIF(count(${TABLE}.how_would_you_feel_if_you_could_no_longer_stay_at_any_kasa_locations_),0));;
+    sql: 100*(sum(if(${how_would_you_feel_if_you_could_no_longer_stay_at_any_kasa_locations_} = "Very disappointed",1,0)) /
+      NULLIF(count(${how_would_you_feel_if_you_could_no_longer_stay_at_any_kasa_locations_}),0));;
   }
 
 

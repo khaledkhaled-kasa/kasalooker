@@ -160,7 +160,7 @@ view: financials_audit {
 
   dimension: transactiondate {
     type: string
-    hidden: no
+    hidden: yes
     sql: ${TABLE}.transactiondate;;
   }
 
