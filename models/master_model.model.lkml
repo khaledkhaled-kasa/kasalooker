@@ -980,7 +980,7 @@ explore: blocks {
   label: "Guesty Calendar Blocks"
   fields: [geo_location.city, geo_location.state, geo_location.metro, complexes.title, units.propcode, units.internaltitle,
             blocks.startdatelocal, blocks.enddatelocal, blocks.createdat_date, blocks.createdat_month, blocks.createdat_quarter,
-            blocks.createdby, blocks.category, blocks.notes, blocks.status,blocks.count, blocks.source]
+            blocks.createdby, blocks.category, blocks.notes, blocks.status,blocks.count, blocks.source,  blocks.createdat_week]
 
   join: units {
     type:  left_outer
