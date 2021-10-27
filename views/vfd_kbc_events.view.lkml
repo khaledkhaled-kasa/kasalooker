@@ -599,7 +599,7 @@ view: vfd_kbc_events {
     label: "Median Time to Complete KBC (Minutes)"
     description: "Median Time to Complete KBC full funnel(Minutes)"
     type: median
-    value_format: "0"
+    value_format: "0.00"
     group_label: "KBC Metrics"
     sql: ${kbc_flow_completion_in_sec};;
     drill_fields: [detail*]
