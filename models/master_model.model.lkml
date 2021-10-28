@@ -737,7 +737,7 @@ explore: pom_qa_walkthrough_survey {
     ALL_FIELDS*,
     -units*,
     -hk_partners.first_3_months,
-    -pom_qa_walkthrough_survey.total_qas_completed_percentage, -units*,-hk_partners.first_3_months,
+    -pom_qa_walkthrough_survey.total_qas_completed_percentage, -hk_partners.first_3_months,
     -pom_qa_walkthrough_survey.airbnb_reviews_POM_Walkthrough, -pom_qa_walkthrough_survey.real_time_POM_Walkthrough,-pom_qa_walkthrough_survey.airbnb_reviews_POM_Walkthrough_buckets, -pom_information.live_partners
   ]
   group_label: "PropOps"
