@@ -40,7 +40,7 @@ explore: customer {
 
   join: conversation_channel {
     type: left_outer
-    sql_on: ${conversation.id} = ${conversation_channel.conversation_id};;
+    sql_on: (${conversation.id} = ${conversation_channel.conversation_id}) AND ${conversation_channel.index} = 1;;
     relationship: one_to_one
   }
 
@@ -168,7 +168,7 @@ explore: gx_cost_allocation {
 
   join: conversation_channel {
     type: left_outer
-    sql_on: ${conversation.id} = ${conversation_channel.conversation_id};;
+    sql_on: (${conversation.id} = ${conversation_channel.conversation_id}) AND ${conversation_channel.index} = 1;;
     relationship: one_to_one
   }
 

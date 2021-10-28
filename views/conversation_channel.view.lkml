@@ -31,7 +31,10 @@ view: conversation_channel {
 
   dimension: name {
     type: string
-    hidden: yes
+    view_label: "Conversation"
+    label: "Conversation Channel (Inbound)"
+    description: "Note that this will pull the channel of the first inbound message in a conversation; however, a conversation thread may contain messages from different channels."
+    hidden: no
     sql: ${TABLE}.name ;;
   }
 
