@@ -547,6 +547,7 @@ view: airbnb_reviews {
       type: number
       value_format: "0.0%"
       sql: ${count_1_star} / nullif(${count},0);;
+      drill_fields: [reservation_code, overall_comments]
     }
 
     measure: count {
