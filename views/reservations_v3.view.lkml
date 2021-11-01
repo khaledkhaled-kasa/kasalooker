@@ -9,6 +9,12 @@ view: reservations_v3 {
     drill_fields: [reservation_details*]
   }
 
+  dimension: reason_for_stay {
+    description: "This will pull the reason for stay if provided by the guest."
+    type:  string
+    sql: ${TABLE}.reasonforstay  ;;
+  }
+
     dimension: guest_type {
       hidden: no
       view_label: "Guests"

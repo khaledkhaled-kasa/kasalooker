@@ -34,6 +34,12 @@ view: reservations_kustomer {
     sql:  date_diff(${checkin_date}, CAST(${TABLE}.bookingdate as DATE), DAY) ;;
   }
 
+  dimension: reason_for_stay {
+    description: "This will pull the reason for stay if provided by the guest."
+    type:  string
+    sql: ${TABLE}.reasonforstay  ;;
+  }
+
   dimension: length_of_stay {
     type:  number
     sql:  date_diff(${checkout_date}, ${checkin_date}, DAY) ;;

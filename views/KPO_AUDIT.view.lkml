@@ -78,6 +78,7 @@ view: KPO_AUDIT {
   dimension_group: ContractSignedDate
   {
     label: "Contract Signed Date"
+    description: "This will pull the contract signed date from Col BK of the Kasa Portfolio Overview"
     type: time
     timeframes: [date, week, month, year]
     sql: cast(PARSE_DATE('%m/%d/%Y',${TABLE}.ContractSignedDate) as TIMESTAMP);;
