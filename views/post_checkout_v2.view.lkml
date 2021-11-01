@@ -379,7 +379,12 @@ END;;
     type:  number
     sql:  date_diff(${submitted_at_date}, ${reservations_clean.checkoutdate_date}, DAY) ;;
   }
-
+  dimension:isAutopopulated{
+    label: "Is auto-populated"
+    type:string
+    sql: CASE when  ${TABLE}._Cleanliness___How_clean_was_the_Kasa_when_you_arrived_ is null and
+      (${TABLE}.TypoFormsubmission is NOT NULL or ${TABLE}.SMSRelpy is Not null ) and ${overall__how_would_you_rate_your_kasa_stay_}=5 then "Yes" else "No" end ;;
+  }
 
   measure: number_of_days_median {
     description: "Median number of days it took to complete Post-checkout Survey."
