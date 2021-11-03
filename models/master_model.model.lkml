@@ -832,7 +832,7 @@ explore: t_s_security_deployment {
 }
 
 explore: t_s_incident_report {
-  fields: [t_s_incident_report*,-complexes.externalrefs_stripepayoutaccountid, pom_information.RevenueManager, pom_information.PortfolioManager, complexes.title, pom_information.property_owner]
+  fields: [t_s_incident_report*,-complexes.externalrefs_stripepayoutaccountid, pom_information.RevenueManager, pom_information.PortfolioManager, complexes.title, pom_information.property_owner,pom_information.property_type]
   group_label: "T & S"
   label: "Security Incident Report"
   hidden: no

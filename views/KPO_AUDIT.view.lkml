@@ -94,7 +94,6 @@ view: KPO_AUDIT {
     filters: [status: "Active,Onboarding,Expiring"]
     drill_fields: [detail*]
   }
-
   measure: count_partners {
     type: count_distinct
     label: "Total Unique Property Owners"
