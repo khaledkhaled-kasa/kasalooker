@@ -89,20 +89,37 @@ view: KPO_AUDIT {
   measure: countt {
     type: count_distinct
     label: "Total Unique Units"
+    hidden: yes
     description: "Count # of Units with Active,Onboarding,Expiring status "
     sql:${TABLE}.UID ;;
     filters: [status: "Active,Onboarding,Expiring"]
     drill_fields: [detail*]
   }
-
   measure: count_partners {
     type: count_distinct
     label: "Total Unique Property Owners"
     description: "Count # of Partners with Active,Onboarding,Expiring status "
     sql:${TABLE}.PropOwner ;;
+    hidden: yes
     filters: [status: "Active,Onboarding,Expiring"]
     drill_fields: [detail*]
   }
+  measure: count {
+    type: count_distinct
+    label: "Total Unique Units"
+    sql:${TABLE}.UID ;;
+    drill_fields: [detail*]
+  }
+  measure: count_partners2 {
+    type: count_distinct
+    label: "Total Unique Property Owners"
+    sql:${TABLE}.PropOwner ;;
+    drill_fields: [detail*]
+  }
+
+
+
+
 
   measure: countMissigunitsFromUnitsMongo{
     type: count_distinct

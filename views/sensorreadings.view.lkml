@@ -30,6 +30,7 @@ view: sensorreadings {
       year
     ]
     sql: ${TABLE}._sdc_batched_at ;;
+    hidden: yes
   }
 
   dimension_group: _sdc_extracted {
@@ -44,6 +45,7 @@ view: sensorreadings {
       year
     ]
     sql: ${TABLE}._sdc_extracted_at ;;
+    hidden: yes
   }
 
   dimension_group: _sdc_received {
@@ -58,16 +60,19 @@ view: sensorreadings {
       year
     ]
     sql: ${TABLE}._sdc_received_at ;;
+    hidden: yes
   }
 
   dimension: _sdc_sequence {
     type: number
     sql: ${TABLE}._sdc_sequence ;;
+    hidden: yes
   }
 
   dimension: _sdc_table_version {
     type: number
     sql: ${TABLE}._sdc_table_version ;;
+    hidden: yes
   }
 
   dimension_group: endtime {

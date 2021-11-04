@@ -40,6 +40,11 @@ explore: units_and_devices {
     sql_on: (${sensors._id} = ${sensorreadings.sensor})
     and (${sensors.unit} = ${sensorreadings.unit});;
   }
+  join: sensorreadings__readings {
+    view_label: "Sensorreadings: Readings"
+    sql: LEFT JOIN UNNEST(${sensorreadings.readings}) as sensorreadings__readings ;;
+    relationship: one_to_many
+  }
 
   join: noisebreachlogs {
     type: full_outer
