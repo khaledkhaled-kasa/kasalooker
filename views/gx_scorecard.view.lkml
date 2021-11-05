@@ -131,7 +131,8 @@ view: gx_scorecard {
                       GROUP BY 1,2)
 
                       SELECT messages_sent.user_name, messages_sent.team_name,
-                      unique_conversations_messaged, inbound_calls, outbound_calls, ximble_master_hours,
+                      conversation_messages_sent, unique_conversations_messaged, inbound_calls, outbound_calls, ximble_master_hours,
+                      round(conversation_messages_sent/nullif(ximble_master_hours,0),2) as messages_sent_per_hour,
                       round(unique_conversations_messaged/nullif(ximble_master_hours,0),2) as unique_conversations_messaged_per_hour,
                       round(inbound_calls/nullif(ximble_master_hours,0),2) as inbound_calls_per_hour,
                       round(outbound_calls/nullif(ximble_master_hours,0),2) as outbound_calls_per_hour,
