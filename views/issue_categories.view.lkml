@@ -50,7 +50,10 @@ view: issue_categories {
     type: yesno
     sql: ${TABLE}.Kontrol_Influenced ;;
   }
-
+  dimension: Reservations_Influenced {
+    type: yesno
+    sql: ${TABLE}.Reservations_Influenced ;;
+  }
   dimension: parent_category {
     type: string
     sql: ${TABLE}.Parent ;;
@@ -125,6 +128,15 @@ view: issue_categories {
     value_format: "#,##0"
     drill_fields: [conversation.customer_id, conversation.id, conversation.created_date, message.created_date]
     filters: [tech_influenced: "yes",message.conversation_id: "-NULL"]
+  }
+  measure: unique_conversations_Res {
+    label: "Unique Conversations (Reservations Influenced)"
+    description: "Unique # of conversations (doesn't contain at least one message sent by that agent)"
+    type: count_distinct
+    sql: ${conversation.id} ;;
+    value_format: "#,##0"
+    drill_fields: [conversation.customer_id, conversation.id, conversation.created_date, message.created_date]
+    filters: [Reservations_Influenced: "yes",message.conversation_id: "-NULL"]
   }
 
 }
