@@ -85,6 +85,24 @@ view: reservations_v3 {
       sql: ${TABLE}._id ;;
     }
 
+  dimension_group: createdat {
+    label: "Created"
+    hidden: yes
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      week_of_year,
+      month,
+      month_name,
+      quarter,
+      year
+    ]
+    sql: ${TABLE}.createdat ;;
+  }
+
 
     dimension_group: bookingdate {
       label: "Booking"
