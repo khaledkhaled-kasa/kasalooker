@@ -176,13 +176,13 @@ view: pom_information {
 
   dimension: property_type_buckets {
     type: string
-    label: "Property Category (Special/Core)"
+    label: "Property Category (Multifamily / Full Building)"
     view_label: "Building and Geographic Information"
-    description: "Multifamily is classified as a core property; whereas hotel & student housings are classified as special properties"
+    description: "Apartment buildings are classified as a multifamily property; whereas hotels, apart-hotels and dorms are classified as a full building."
     sql: CASE
-    WHEN ${TABLE}.propertytype = "Multifamily" THEN "Core Properties"
-    WHEN ${TABLE}.propertytype IN ("Hotel/Apart-hotel", "Student Housing") THEN "Special Properties"
-    END ;;
+        WHEN ${TABLE}.propertytype = "Apartment" THEN "Multifamily"
+        WHEN ${TABLE}.propertytype IN ("Hotel", "Apart-Hotel", "Dorm") THEN "Full Building"
+        END ;;
   }
 
 
