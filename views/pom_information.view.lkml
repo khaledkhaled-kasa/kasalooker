@@ -178,10 +178,10 @@ view: pom_information {
     type: string
     label: "Property Category (Multifamily / Full Building)"
     view_label: "Building and Geographic Information"
-    description: "Apartment buildings are classified as a multifamily property; whereas hotels, apart-hotels and dorms are classified as a full building."
+    description: "Apartment buildings and dorms are classified as a multifamily property; whereas hotels and apart-hotels are classified as a full building."
     sql: CASE
-        WHEN ${TABLE}.propertytype = "Apartment" THEN "Multifamily"
-        WHEN ${TABLE}.propertytype IN ("Hotel", "Apart-Hotel", "Dorm") THEN "Full Building"
+        WHEN ${TABLE}.propertytype IN ("Apartment","Dorm") THEN "Multifamily"
+        WHEN ${TABLE}.propertytype IN ("Hotel", "Apart-Hotel") THEN "Full Building"
         END ;;
   }
 
