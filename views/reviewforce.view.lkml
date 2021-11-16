@@ -111,10 +111,6 @@ view: reviewforce {
     sql: ${TABLE}.Investigation_Notes ;;
   }
 
-  dimension: action_needed {
-    type: string
-    sql: ${TABLE}.Action_Needed ;;
-  }
 
   dimension: issues_to_investigate {
     type: string
