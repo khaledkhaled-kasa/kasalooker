@@ -50,6 +50,13 @@ view: pom_information {
     type: string
     sql: ${TABLE}.BuildingAccessSystemSummary;;
   }
+  dimension: Portfolio {
+    view_label: "Building and Geographic Information"
+    label: "Portfolio"
+    description: "This data point is pulled from Col BR of the KPO Properties tab."
+    type: string
+    sql: ${TABLE}.Portfolio;;
+  }
 
 
 
