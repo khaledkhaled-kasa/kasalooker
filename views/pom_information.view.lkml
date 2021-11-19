@@ -50,6 +50,13 @@ view: pom_information {
     type: string
     sql: ${TABLE}.BuildingAccessSystemSummary;;
   }
+  dimension: Portfolio {
+    view_label: "Building and Geographic Information"
+    label: "Portfolio"
+    description: "This data point is pulled from Col BR of the KPO Properties tab."
+    type: string
+    sql: ${TABLE}.Portfolio;;
+  }
 
 
 
@@ -176,13 +183,13 @@ view: pom_information {
 
   dimension: property_type_buckets {
     type: string
-    label: "Property Category (Special/Core)"
+    label: "Property Category (Multifamily / Full Building)"
     view_label: "Building and Geographic Information"
-    description: "Multifamily is classified as a core property; whereas hotel & student housings are classified as special properties"
+    description: "Apartment buildings and dorms are classified as a multifamily property; whereas hotels and apart-hotels are classified as a full building."
     sql: CASE
-    WHEN ${TABLE}.propertytype = "Multifamily" THEN "Core Properties"
-    WHEN ${TABLE}.propertytype IN ("Hotel/Apart-hotel", "Student Housing") THEN "Special Properties"
-    END ;;
+        WHEN ${TABLE}.propertytype IN ("Apartment","Dorm") THEN "Multifamily"
+        WHEN ${TABLE}.propertytype IN ("Hotel", "Apart-Hotel") THEN "Full Building"
+        END ;;
   }
 
 

@@ -16,6 +16,13 @@ view: units {
       sql: ${TABLE}.UID ;;
     }
 
+  dimension: room_type {
+    label: "Room Type (Kontrol)"
+    description: "This field is used by Marketing to segment different room types based on Guesty Listings"
+    type: string
+    sql: ${TABLE}.roomtype.internaltitle ;;
+  }
+
 # City, States and Region are getting pulled from Geo Location
     dimension: address_city {
       hidden: yes

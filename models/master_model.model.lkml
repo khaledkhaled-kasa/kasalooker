@@ -1044,6 +1044,7 @@ explore: KPO_AUDIT{
   label: "KPO (Audit)"
 }
 
+
 explore: vfd_kbc_events{
     group_label: "Product & Tech"
   description: "This explore contains events and data from Kasa Booking Confirmation and Virtual Front desk Application"

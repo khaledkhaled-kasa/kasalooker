@@ -9,6 +9,11 @@ datagroup: kustomer_default_datagroup {
   max_cache_age: "1 hours"
 }
 
+datagroup: kasametrics_reservations_datagroup {
+  sql_trigger: SELECT MAX(createdat) from `bigquery-analytics-272822.dbt.reservations_v3` ;;
+  max_cache_age: "1 hours"
+}
+
 
 persist_with: kustomer_default_datagroup
 label: "Software"
@@ -343,5 +348,28 @@ explore: customer_ps {
 explore: gx_scorecard {
   label: "GX Scorecard"
   hidden: yes
+}
 
+explore: refund_notes {
+  fields: [refund_notes*, financials_audit.amount, financials_audit.type, financials_audit.actualizedat_modified]
+  label: "Refund Notes"
+  hidden: no
+
+  join: reservations_clean {
+    type: left_outer
+    sql_on: ${reservations_clean.confirmationcode} = ${refund_notes.third_bracket} ;;
+    relationship: one_to_one
+  }
+
+  join: financials_audit {
+    type: left_outer
+    sql_on: ${reservations_clean._id} = ${financials_audit.reservation} ;;
+    relationship: one_to_many
+  }
+
+  join: units {
+    type: left_outer
+    sql_on: ${reservations_clean.unit} = ${units._id} ;;
+    relationship: one_to_one
+  }
 }

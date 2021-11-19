@@ -50,8 +50,8 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
       -- Pivoting the table! Any additional metrics need to be included here!
       SELECT PropShrt, PropCode, Month, Forecast_Month,
       ANY_VALUE(if(Metric = 'Guest Turns',value_float,null)) AS Guest_Turns, -- This is originally sourced from Looker (historicals)
-      ANY_VALUE(if(Metric = 'Occupied Nights' AND Forecast_Month = 'Forecast Month',value_float,null)) AS Occupied_Nights, -- This is originally sourced from Looker (historicals)
-      ANY_VALUE(if(Metric = 'Room Nights Available' AND Forecast_Month = 'Forecast Month',value_float,null)) AS Room_Nights_Available, -- This is originally sourced from Looker
+      ANY_VALUE(if(Metric = 'Occupied Nights',value_float,null)) AS Occupied_Nights, -- This is originally sourced from Looker (historicals)
+      ANY_VALUE(if(Metric = 'Room Nights Available',value_float,null)) AS Room_Nights_Available, -- This is originally sourced from Looker
       ANY_VALUE(if(Metric = 'Income',value_float,null)) AS Income,
       ANY_VALUE(if(Metric = 'Owner Remittance (NetSuite)',value_float,null)) AS Owner_Remittance,
       ANY_VALUE(if(Metric = 'Owner Profitability',value_float,null)) AS Owner_Profitability,
@@ -87,13 +87,13 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
       GROUP BY 1,2,3,4)
 
       SELECT all_tables.*,
-      CASE WHEN Forecast_Month IN ("Audited Month","Audited Month (Latest)") THEN num_checkouts
+      CASE WHEN Forecast_Month IN ("Audited Month","Audited Month (Latest)") THEN Guest_Turns
       ELSE Guest_Turns
       END Guest_Turns_Mod,
-      CASE WHEN Forecast_Month IN ("Audited Month","Audited Month (Latest)") THEN days_available
+      CASE WHEN Forecast_Month IN ("Audited Month","Audited Month (Latest)") THEN Room_Nights_Available
       ELSE Room_Nights_Available
       END Room_Nights_Available_Mod,
-      CASE WHEN Forecast_Month IN ("Audited Month","Audited Month (Latest)") THEN reservation_nights
+      CASE WHEN Forecast_Month IN ("Audited Month","Audited Month (Latest)") THEN Occupied_Nights
       ELSE Occupied_Nights
       END Occupied_Nights_Mod,
       p.PropOwner, p.POM, p.RevenueManager, p.PortfolioManager, DATE(Month) partition_date
@@ -185,7 +185,7 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
 
   dimension: forecast_month {
     label: "Month (Audited / Forecast)?"
-    description: "A month is considered 'Audited' if we have surpassed 15 days into the subsequent month (i.e. July-2021 month is automatically classified as audited on 15-Aug-2021)"
+    description: "A month is usually 'Audited' after we have surpassed 15-25 days into the subsequent month. This is updated on a monthly basis in coordination with the Finance team."
     type: string
     sql: ${TABLE}.Forecast_Month ;;
   }
@@ -233,10 +233,10 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
 
   measure: income_audited_exposed {
     label: "Audited Top Line Revenue (Monthly)"
-    description: "This will pull income statements from Adaptive for only audited months. This will essentially retrieve the 'Amount' measure under the Financials view after financial auditing."
+    description: "This will pull income statements from Adaptive for only audited months. This is a revised measure of the 'Amount' measure under the Financials view after financial auditing."
     type: number
     value_format: "$#,##0"
-    sql: CASE WHEN (${income_audited_hidden} = 0) THEN NULL ELSE ${income_audited_hidden} END;;
+    sql: NULLIF(${income_audited_hidden},0);;
   }
 
   measure: income_forecast_hidden {
@@ -258,7 +258,6 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
 
 
   measure: occupied_nights_forecast_hidden {
-    description: "This will pull the occupied nights from Adaptive. Live occupied nights can be retrieved from the 'NumReservationNights' measure under the Reservations view."
     hidden: yes
     label: "Forecast Occupied Nights (Monthly)"
     type: sum_distinct
@@ -267,7 +266,7 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
   }
 
   measure: occupied_nights_forecast_exposed {
-    description: "This will pull the occupied nights from Adaptive. Live occupied nights can be retrieved from the 'NumReservationNights' measure under the Reservations view."
+    description: "This will pull the occupied nights from Adaptive for only forecast months. Live occupied nights can be retrieved from the 'NumReservationNights' measure under the Reservations view."
     hidden: no
     label: "Forecast Occupied Nights (Monthly)"
     type: number
@@ -275,7 +274,6 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
   }
 
   measure: occupied_nights_audited_hidden {
-    description: "This will pull the occupied nights from the 'NumReservationNights' measure under the Reservations view."
     hidden: yes
     label: "Audited Occupied Nights (Monthly)"
     type: sum_distinct
@@ -284,7 +282,7 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
   }
 
   measure: occupied_nights_audited_exposed {
-    description: "This will pull the occupied nights from the 'NumReservationNights' measure under the Reservations view."
+    description: "This will pull the occupied nights from the time of entry in Adaptive, for only audited months. Live Occupied Nights can be retrieved from the 'NumReservationNights' measure under the Reservations view."
     hidden: no
     label: "Audited Occupied Nights (Monthly)"
     type: number
@@ -293,7 +291,7 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
 
 
   measure: room_nights_available_audited {
-    description: "This will pull the room nights available from Adaptive. Live room nights available can be retrieved from the 'Capacity' measure under the Capacities view."
+    description: "This will pull the room nights available from the time of entry in Adaptive, for only audited months. Live room nights available can be retrieved from the 'Capacity' measure under the Capacities view."
     hidden: no
     label: "Audited Room Nights Available (Adaptive)"
     type: sum_distinct
@@ -302,7 +300,6 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
   }
 
   measure: room_nights_available_forecast{
-    description: "This will pull the room nights available from Adaptive. Live room nights available can be retrieved from the 'Capacity' measure under the Capacities view."
     hidden: yes
     label: "Forecast Room Nights Available (Adaptive)"
     type: sum_distinct
@@ -313,14 +310,14 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
 
   measure: occupancy_forecast {
     label: "Forecast Occupancy (Monthly)"
-    description: "This will pull the monthly forecast occupied nights divided by the monthly forecast room nights available from adaptive. Live occupancy can be retrieved from the 'Occupancy' measure under the Reservations view."
+    description: "This will pull the monthly forecast occupied nights divided by the monthly forecast room nights available from adaptive, for only forecast months. Live occupancy can be retrieved from the 'Occupancy' measure under the Reservations view."
     type: number
     value_format: "0.0%"
     sql: ${occupied_nights_forecast_exposed} / nullif(${room_nights_available_forecast},0) ;;
   }
 
   measure: occupancy_audited {
-    description: "This will pull the occupied nights from the 'NumReservationNights' measure under the Reservations view."
+    description: "This will pull the monthly audited occupied nights divided by the monthly audited room nights available from the time of entry in Adaptive, for only audited months. Live occupancy can be retrieved from the 'Occupancy' measure under the Reservations view."
     hidden: no
     label: "Audited Occupancy (Monthly)"
     type: number
@@ -330,7 +327,6 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
   }
 
   measure: guest_turns_audited_hidden {
-    description: "This will pull the occupied nights from the 'NumReservationNights' measure under the Reservations view."
     hidden: yes
     label: "Audited Guest Turns (Monthly)"
     type: sum_distinct
@@ -339,7 +335,7 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
   }
 
   measure: guest_turns_audited_exposed {
-    description: "This will pull the occupied nights from the 'NumReservationNights' measure under the Reservations view."
+    description: "This will pull the monthly audited guest turns from the time of entry in Adaptive, for only audited months. Live Guest Turns can be retrieved from the 'Number of Checkouts' measure under the Reservations view."
     hidden: no
     label: "Audited Guest Turns (Monthly)"
     type: number
@@ -349,17 +345,15 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
 
   measure: guest_turns_forecast_hidden {
     label: "Forecast Guest Turns (Monthly)"
-    description: "This will pull the monthly forecast from Adaptive. Live Guest Turns can be retrieved from the 'Number of Checkouts' measure under the Reservations view."
     hidden: yes
     type: sum_distinct
     sql: ${TABLE}.Guest_Turns_Mod ;;
     filters: [forecast_month: "Forecast Month, Audited Month (Latest)"]
   }
 
-  # This field is meant to convert all coalesced 0s in guest_turns_hidden to nulls
   measure: guest_turns_forecast_exposed {
     label: "Forecast Guest Turns (Monthly)"
-    description: "This will pull the monthly forecast from Adaptive. Live Guest Turns can be retrieved from the 'Number of Checkouts' measure under the Reservations view."
+    description: "This will pull the monthly forecast guest turns from Adaptive, for only forecast months. Live Guest Turns can be retrieved from the 'Number of Checkouts' measure under the Reservations view."
     type: number
     sql: NULLIF(${guest_turns_forecast_hidden},0) ;;
   }
@@ -367,7 +361,7 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
 
   measure: adr_revamped {
     label: "Audited ADR (Monthly)"
-    description: "This will pull ADR based on finalized income statements from Adaptive, for audited months, divided by the total number of reservation nights from Looker. This will essentially retrieve the 'ADR' measure under the Financials view after financial auditing."
+    description: "This will pull ADR based on finalized income statements from Adaptive, for audited months, divided by the total number of occupied nights from Adaptive."
     type: number
     value_format: "$#,##0.00"
     sql: ${income_audited_exposed} / NULLIF(${occupied_nights_audited_exposed}, 0);;
@@ -377,7 +371,7 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
 
   measure: forecast_adr {
     label: "Forecast ADR (Monthly)"
-    description: "This will ADR based on the forecast income statements from adaptive divided by the forecast occupied room nights from adaptive. Live ADR can be retrieved from the 'ADR' measure under the Financials view."
+    description: "This will pull ADR based on the forecast income statements from adaptive, for forecast months, divided by the forecast occupied room nights from adaptive. Live ADR can be retrieved from the 'ADR' measure under the Financials view."
     value_format: "$#,##0.00"
     type: number
     sql: ${income_forecast_exposed} / NULLIF(${occupied_nights_forecast_exposed},0) ;;
@@ -386,7 +380,7 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
 
   measure: revpar_revamped {
     label: "Audited RevPAR (Monthly)"
-    description: "This will pull RevPAR based on finalized income statements from Adaptive, for audited months, divided by the total number of nights available from Looker. This will essentially retrieve the 'RevPAR' measure under the Financials view after financial auditing."
+    description: "This will pull RevPAR based on finalized income statements from Adaptive, for audited months, divided by the total number of nights available from Adaptive."
     type: number
     value_format: "$#,##0.00"
     sql: ${income_audited_exposed} / NULLIF(${room_nights_available_audited}, 0);;
@@ -397,7 +391,7 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
   measure: forecast_revpar {
     value_format: "$#,##0.00"
     label: "Forecast RevPAR (Monthly)"
-    description: "This will pull RevPAR based on forecast income statements from adaptive divided by the forecast room nights available from adaptive. Live RevPAR can be retrieved from the 'RevPAR' measure under the Financials view."
+    description: "This will pull RevPAR based on forecast income statements from Adaptive, for forecast months, divided by the forecast room nights available from Adaptive. Live RevPAR can be retrieved from the 'RevPAR' measure under the Financials view."
     type: number
     sql: ${income_forecast_exposed} / NULLIF(${room_nights_available_forecast},0) ;;
     drill_fields: [month, prop_code, occupied_nights, income, room_nights_available]
@@ -468,7 +462,7 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
   }
 
   measure: lease_rent {
-    description: "This data is pulled from adaptive based on the KPO (static per lease agreement)."
+    description: "This data is pulled from the time of entry in adaptive based on the KPO (static per lease agreement)."
     type: sum_distinct
     value_format: "$#,##0"
     sql: ${TABLE}.Lease_Rent ;;
