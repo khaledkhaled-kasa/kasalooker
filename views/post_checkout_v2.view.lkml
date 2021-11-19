@@ -79,10 +79,13 @@ view: post_checkout_v2 {
     label: "Overall Rating"
     group_label: "Ratings"
     type: number
-    sql:CASE WHEN ${TABLE}.Overall__how_would_you_rate_your_Kasa_stay_ is NULL
-    THEN  ${TABLE}.Overall__how_would_you_rate_your_Kasa_stay__V2_
-    ELSE ${TABLE}.Overall__how_would_you_rate_your_Kasa_stay_ END
-    ;;
+    sql:
+    CASE
+    WHEN (${TABLE}.TypoFormsubmission is NOT NULL and ${TABLE}.Overall__how_would_you_rate_your_Kasa_stay_ is NULL) THEN  ${TABLE}.Overall__how_would_you_rate_your_Kasa_stay__V2_
+    WHEN (${TABLE}.TypoFormsubmission is NULL and ${TABLE}.SMSRelpy is not null) THEN ${TABLE}.overAllRatingSMS
+    WHEN (${TABLE}.TypoFormsubmission is NULL and ${TABLE}.SMSRelpy is  NULL and ${TABLE}.EmailClick is not null) THEN cast(${TABLE}.overAllRatingEmailClick as int)
+    ELSE ${TABLE}.Overall__how_would_you_rate_your_Kasa_stay_
+    END;;
   }
 
   dimension: _cleanliness___how_clean_was_the_kasa_when_you_arrived_ {
