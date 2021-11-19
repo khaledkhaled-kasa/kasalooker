@@ -351,7 +351,7 @@ explore: gx_scorecard {
 }
 
 explore: refund_notes {
-  fields: [refund_notes*]
+  fields: [refund_notes*, financials_audit.amount, financials_audit.type, financials_audit.actualizedat_modified]
   label: "Refund Notes"
   hidden: no
 
