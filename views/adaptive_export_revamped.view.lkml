@@ -300,7 +300,7 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
   }
 
   measure: room_nights_available_forecast{
-    hidden: yes
+    hidden: no
     label: "Forecast Room Nights Available (Adaptive)"
     type: sum_distinct
     sql: ${TABLE}.Room_Nights_Available_Mod ;;
