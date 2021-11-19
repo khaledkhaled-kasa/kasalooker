@@ -241,21 +241,7 @@ view: reservations_clean {
     sql: ${TABLE}.initial_booking = 1 ;;
   }
 
-  dimension: LCOrequestedtime {
-    label: "LCO Requested Time"
-    description: "Late check out requested Time"
-    type: number
-    sql: ${TABLE}.latecheckout.requestedtime ;;
-    hidden: no
-  }
-  dimension: ECIrequestedtime {
-    label: "ECI Requested Time"
-    description: "early check in requested Time"
-    type: string
-    sql: ${TABLE}.earlycheckin.requestedtime/60
-    ;;
-    hidden: no
-  }
+
   dimension: ECIrequestedststus {
     label: "ECI Status"
     type: string
@@ -268,6 +254,32 @@ view: reservations_clean {
     sql: ${TABLE}.latecheckout.status ;;
     hidden: no
   }
+
+
+
+  dimension: LCOrequestedtime {
+    label: "LCO Requested Time"
+    description: "Late check out requested Time"
+    type: string
+    sql: CASE WHEN ${TABLE}.latecheckout.requestedtime/60 >24  then concat(cast(${TABLE}.latecheckout.requestedtime/60 - 24 as string),":00 AM +1" )
+      ELSE concat(cast(${TABLE}.latecheckout.requestedtime/60 as string),":00 PM") END;;
+
+    hidden: no
+  }
+  dimension: ECIrequestedtime {
+    label: "ECI Requested Time"
+    description: "early check in requested Time"
+    type: string
+    sql: case when ${TABLE}.earlycheckin.requestedtime__fl/60 >= 12 THEN
+          concat(cast(${TABLE}.earlycheckin.requestedtime__fl/60 as string) , ":00 PM")
+          ELSE concat(cast(${TABLE}.earlycheckin.requestedtime__fl/60 as string) , ":00 AM")
+          END
+            ;;
+    hidden: no
+  }
+
+
+
 
   measure: numLcoRequested {
     label: "Number of LCO Requested"
