@@ -92,8 +92,9 @@ view: post_checkout_v2 {
     label: "Cleanliness Rating"
     group_label: "Ratings"
     type: number
-    sql:CASE when  ${TABLE}._Cleanliness___How_clean_was_the_Kasa_when_you_arrived_ is null and
-    (${TABLE}.TypoFormsubmission is NOT NULL or ${TABLE}.SMSRelpy is Not null ) and ${overall__how_would_you_rate_your_kasa_stay_}=5 then 5 else  ${TABLE}._Cleanliness___How_clean_was_the_Kasa_when_you_arrived_ end ;;
+    sql: ${TABLE}._Cleanliness___How_clean_was_the_Kasa_when_you_arrived_  ;;
+    #sql:CASE when  ${TABLE}._Cleanliness___How_clean_was_the_Kasa_when_you_arrived_ is null and
+    #(${TABLE}.TypoFormsubmission is NOT NULL or ${TABLE}.SMSRelpy is Not null ) and ${overall__how_would_you_rate_your_kasa_stay_}=5 then 5 else  ${TABLE}._Cleanliness___How_clean_was_the_Kasa_when_you_arrived_ end ;;
   }
 
 
@@ -108,8 +109,9 @@ view: post_checkout_v2 {
     label: "Accuracy Rating"
     group_label: "Ratings"
     type: number
-    sql:CASE when ${TABLE}._Accuracy___How_did_the_Kasa_compare_to_what_you_expected_  is null and
-    (${TABLE}.TypoFormsubmission is NOT NULL or ${TABLE}.SMSRelpy is Not null ) and ${overall__how_would_you_rate_your_kasa_stay_}=5 then 5 else  ${TABLE}._Accuracy___How_did_the_Kasa_compare_to_what_you_expected_  end ;;
+    sql: ${TABLE}._Accuracy___How_did_the_Kasa_compare_to_what_you_expected_ ;;
+    #sql:CASE when ${TABLE}._Accuracy___How_did_the_Kasa_compare_to_what_you_expected_  is null and
+    #(${TABLE}.TypoFormsubmission is NOT NULL or ${TABLE}.SMSRelpy is Not null ) and ${overall__how_would_you_rate_your_kasa_stay_}=5 then 5 else  ${TABLE}._Accuracy___How_did_the_Kasa_compare_to_what_you_expected_  end ;;
   }
 
   dimension: what_aspects_were_different_from_you_expected_ {
@@ -123,8 +125,9 @@ view: post_checkout_v2 {
     label: "Communication Rating"
     group_label: "Ratings"
     type: number
-    sql:CASE when ${TABLE}._Communications___How_were_your_interactions_with_the_Kasa_team_ is null and
-    (${TABLE}.TypoFormsubmission is NOT NULL or ${TABLE}.SMSRelpy is Not null ) and ${overall__how_would_you_rate_your_kasa_stay_}=5 then 5 else ${TABLE}._Communications___How_were_your_interactions_with_the_Kasa_team_  end ;;
+    sql:${TABLE}._Communications___How_were_your_interactions_with_the_Kasa_team_  ;;
+    #sql:CASE when ${TABLE}._Communications___How_were_your_interactions_with_the_Kasa_team_ is null and
+    #(${TABLE}.TypoFormsubmission is NOT NULL or ${TABLE}.SMSRelpy is Not null ) and ${overall__how_would_you_rate_your_kasa_stay_}=5 then 5 else ${TABLE}._Communications___How_were_your_interactions_with_the_Kasa_team_  end ;;
       }
 
 
@@ -139,10 +142,10 @@ view: post_checkout_v2 {
     label: "Location Rating"
     group_label: "Ratings"
     type: number
-    #sql: ${TABLE}._Location___How_would_you_rate_the_surrounding_neighborhood_and_nearby_offerings_ ;;
-    sql:CASE when ${TABLE}._Location___How_would_you_rate_the_surrounding_neighborhood_and_nearby_offerings_ is null AND
-    (${TABLE}.TypoFormsubmission is NOT NULL or ${TABLE}.SMSRelpy is Not null )
-   and ${overall__how_would_you_rate_your_kasa_stay_}=5 then 5 else ${TABLE}._Location___How_would_you_rate_the_surrounding_neighborhood_and_nearby_offerings_ end ;;
+    sql: ${TABLE}._Location___How_would_you_rate_the_surrounding_neighborhood_and_nearby_offerings_ ;;
+    #sql:CASE when ${TABLE}._Location___How_would_you_rate_the_surrounding_neighborhood_and_nearby_offerings_ is null AND
+    #(${TABLE}.TypoFormsubmission is NOT NULL or ${TABLE}.SMSRelpy is Not null )
+   #and ${overall__how_would_you_rate_your_kasa_stay_}=5 then 5 else ${TABLE}._Location___How_would_you_rate_the_surrounding_neighborhood_and_nearby_offerings_ end ;;
 
   }
 
@@ -157,9 +160,10 @@ view: post_checkout_v2 {
     label: "Checkin Rating"
     group_label: "Ratings"
     type: number
-    sql:CASE when ${TABLE}._Check_in___How_smooth_was_your_check_in_and_arrival_process_ is null and
-    (${TABLE}.TypoFormsubmission is NOT NULL or ${TABLE}.SMSRelpy is Not null )and
-     ${overall__how_would_you_rate_your_kasa_stay_}=5 then 5 else ${TABLE}._Check_in___How_smooth_was_your_check_in_and_arrival_process_ end ;;
+    sql: ${TABLE}._Check_in___How_smooth_was_your_check_in_and_arrival_process_ ;;
+    #sql:CASE when ${TABLE}._Check_in___How_smooth_was_your_check_in_and_arrival_process_ is null and
+    #(${TABLE}.TypoFormsubmission is NOT NULL or ${TABLE}.SMSRelpy is Not null )and
+     #${overall__how_would_you_rate_your_kasa_stay_}=5 then 5 else ${TABLE}._Check_in___How_smooth_was_your_check_in_and_arrival_process_ end ;;
   }
 
   dimension: how_did_the_the_check_in_experience_miss_the_mark_ {
@@ -173,9 +177,10 @@ view: post_checkout_v2 {
     label: "Value Rating"
     group_label: "Ratings"
     type: number
-    sql:CASE when ${TABLE}._Value___Was_your_stay_a_good_value_for_the_price_ is null and
-    (${TABLE}.TypoFormsubmission is NOT NULL or ${TABLE}.SMSRelpy is Not null )
-    and ${overall__how_would_you_rate_your_kasa_stay_}=5 then 5 else  ${TABLE}._Value___Was_your_stay_a_good_value_for_the_price_ end ;;
+    sql: ${TABLE}._Value___Was_your_stay_a_good_value_for_the_price_ ;;
+   #sql:CASE when ${TABLE}._Value___Was_your_stay_a_good_value_for_the_price_ is null and
+    #(${TABLE}.TypoFormsubmission is NOT NULL or ${TABLE}.SMSRelpy is Not null )
+    #and ${overall__how_would_you_rate_your_kasa_stay_}=5 then 5 else  ${TABLE}._Value___Was_your_stay_a_good_value_for_the_price_ end ;;
   }
 
   dimension: what_would_have_made_your_stay_feel_like_a_better_value_ {
@@ -189,10 +194,11 @@ view: post_checkout_v2 {
     label: "NPS Rating"
     group_label: "Ratings"
     type: number
-    sql:CASE when ${TABLE}.How_likely_are_you_to_recommend_Kasa_to_someone_else_ is null and
-    (${TABLE}.TypoFormsubmission is NOT NULL or ${TABLE}.SMSRelpy is Not null )
-    and ${overall__how_would_you_rate_your_kasa_stay_}=5 then 5 else
-    ${TABLE}.How_likely_are_you_to_recommend_Kasa_to_someone_else_ end ;;
+    sql: ${TABLE}.How_likely_are_you_to_recommend_Kasa_to_someone_else_ ;;
+    #sql:CASE when ${TABLE}.How_likely_are_you_to_recommend_Kasa_to_someone_else_ is null and
+    #(${TABLE}.TypoFormsubmission is NOT NULL or ${TABLE}.SMSRelpy is Not null )
+    #and ${overall__how_would_you_rate_your_kasa_stay_}=5 then 5 else
+    #${TABLE}.How_likely_are_you_to_recommend_Kasa_to_someone_else_ end ;;
   }
 
   dimension: how_would_you_feel_if_you_could_no_longer_stay_at_any_kasa_locations_ {
