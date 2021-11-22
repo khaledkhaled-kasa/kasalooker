@@ -156,9 +156,13 @@ view: unit_submission_data_final {
     label: "Units Managed (Active)"
     hidden: no
     type: count_distinct
-    sql: CASE WHEN ((${units_buildings_information.internaltitle} LIKE "%-XX") OR (${units_buildings_information.internaltitle} LIKE "%XXX") OR (${units_buildings_information.internaltitle} LIKE "%-RES") OR (${units_buildings_information.internaltitle} LIKE "%-S") OR (${units_buildings_information.internaltitle} NOT LIKE "%-RES") OR (${units_buildings_information.internaltitle} LIKE "%GXO%")) THEN NULL
-          ELSE ${units_buildings_information.internaltitle}
-          END ;;
+   sql:CASE WHEN ((${units_buildings_information.internaltitle} LIKE "%-XX")
+  OR (${units_buildings_information.internaltitle} LIKE "%XXX")
+  OR (${units_buildings_information.internaltitle} LIKE "%-RES")
+  OR (${units_buildings_information.internaltitle} LIKE "%-S")
+  OR (${units_buildings_information.internaltitle} LIKE "%GXO%"))THEN NULL
+    ELSE ${units_buildings_information.internaltitle}
+    END ;;
     filters: [unit_refresh_status: "-N/A - Deactivated"]
     drill_fields: [units_buildings_information.internaltitle, units_buildings_information.availability_startdate_date, units_buildings_information.availability_enddate_date, routine_visit_status, unit_refresh_status]
   }
@@ -167,7 +171,12 @@ view: unit_submission_data_final {
     type: count_distinct
     description: "Counts all distinct ACTIVE units with a Routine Visit Status of All Good"
     sql: CASE WHEN ${routine_visit_status} = 'All Good' AND
-    ((${units_buildings_information.internaltitle} NOT LIKE "%-XX") OR (${units_buildings_information.internaltitle} NOT LIKE "%XXX") OR (${units_buildings_information.internaltitle} NOT LIKE "%-RES") OR (${units_buildings_information.internaltitle} NOT LIKE "%-S") OR (${units_buildings_information.internaltitle} NOT LIKE "%-RES") OR (${units_buildings_information.internaltitle} LIKE "%GXO%"))
+    ((${units_buildings_information.internaltitle} NOT LIKE "%-XX")
+    OR (${units_buildings_information.internaltitle} NOT LIKE "%XXX")
+    OR (${units_buildings_information.internaltitle} NOT LIKE "%-RES")
+    OR (${units_buildings_information.internaltitle} NOT LIKE "%-S")
+    OR (${units_buildings_information.internaltitle} NOT LIKE "%-RES")
+    OR (${units_buildings_information.internaltitle} LIKE "%GXO%"))
     Then ${units_buildings_information.internaltitle}
     ELSE NULL END;;
     filters: [unit_refresh_status: "-N/A - Deactivated"]

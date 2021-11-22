@@ -213,7 +213,8 @@ explore: units_buildings_information {
   fields: [ALL_FIELDS*, -geo_location.city_full_uid, -pom_information.live_partners]
   from: units
   view_label: "Unit Information"
-  sql_always_where: ${units_buildings_information.availability_enddate_string} <> 'Invalid date' OR ${units_buildings_information.availability_enddate_string} IS NULL ;;
+  sql_always_where: ${units_buildings_information.availability_enddate_string} <> 'Invalid date'
+  OR ${units_buildings_information.availability_enddate_string} IS NULL ;;
   label: "Units and Property Information"
   group_label: "Properties"
 
