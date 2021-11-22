@@ -175,8 +175,7 @@ view: unit_submission_data_final {
     OR (${units_buildings_information.internaltitle} NOT LIKE "%XXX")
     OR (${units_buildings_information.internaltitle} NOT LIKE "%-RES")
     OR (${units_buildings_information.internaltitle} NOT LIKE "%-S")
-    OR (${units_buildings_information.internaltitle} NOT LIKE "%-RES")
-    OR (${units_buildings_information.internaltitle} LIKE "%GXO%"))
+    OR (${units_buildings_information.internaltitle} NOT LIKE "%GXO%"))
     Then ${units_buildings_information.internaltitle}
     ELSE NULL END;;
     filters: [unit_refresh_status: "-N/A - Deactivated"]
@@ -186,7 +185,7 @@ view: unit_submission_data_final {
     type: count_distinct
     description: "Counts all the distinct ACTIVE units with a Refresh Status of All Good"
     sql: CASE WHEN ${unit_refresh_status} = 'All Good' AND
-    ((${units_buildings_information.internaltitle} NOT LIKE "%-XX") OR (${units_buildings_information.internaltitle} NOT LIKE "%XXX") OR (${units_buildings_information.internaltitle} NOT LIKE "%-RES") OR (${units_buildings_information.internaltitle} NOT LIKE "%-S") OR (${units_buildings_information.internaltitle} NOT LIKE "%-RES") OR (${units_buildings_information.internaltitle} LIKE "%GXO%"))
+    ((${units_buildings_information.internaltitle} NOT LIKE "%-XX") OR (${units_buildings_information.internaltitle} NOT LIKE "%XXX") OR (${units_buildings_information.internaltitle} NOT LIKE "%-RES") OR (${units_buildings_information.internaltitle} NOT LIKE "%-S") OR (${units_buildings_information.internaltitle} NOT LIKE "%-RES") OR (${units_buildings_information.internaltitle} NOT LIKE "%GXO%"))
     THEN ${units_buildings_information.internaltitle}
     ELSE NULL END ;;
     filters: [unit_refresh_status: "-N/A - Deactivated"]
