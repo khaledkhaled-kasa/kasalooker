@@ -1,5 +1,5 @@
 view: devices {
-  sql_table_name: `bigquery-analytics-272822.mongo.devices`
+  sql_table_name: `bigquery-analytics-272822.dbt.devices`
     ;;
   drill_fields: [deviceid]
 
