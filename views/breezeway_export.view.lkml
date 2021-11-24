@@ -130,7 +130,10 @@ view: breezeway_export {
   }
 
   dimension_group: created {
-    hidden: yes
+    hidden: no
+    view_label: "Date Dimensions"
+    group_label: "BW Created Date"
+    label: ""
     type: time
     timeframes: [
       raw,
