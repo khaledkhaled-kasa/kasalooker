@@ -57,7 +57,6 @@ view: post_checkout_v2 {
         "Communication Comments: ",COALESCE(${airbnb_reviews.communication_comments},"N/A"),"~",COALESCE(${what_aspects_of_communications_fell_short_},"N/A"),"---",
         "Location Comments: ", COALESCE(${airbnb_reviews.location_comments},"N/A"),"~", COALESCE(${how_did_the_property_location_fall_short_},"N/A"),"---",
         "Value Comments: ", COALESCE(${airbnb_reviews.value_comments},"N/A"),"~",COALESCE(${what_would_have_made_your_stay_feel_like_a_better_value_},"N/A"),"---",
-        "Why: ", COALESCE(${why_did_you_choose_to_stay_at_this_particular_property_},"N/A"),"---",
         "Favorite: ", COALESCE(${what_was_your_favorite_aspect_of_the_kasa_experience_},"N/A"),"---",
         "Suggestions: ", COALESCE(${what_else_could_kasa_have_done_to_improve_your_stay_},"N/A"),"~",COALESCE(${post_checkout_data.suggestion},"N/A"),"---",
         "Kustomer CSAT Comments: ", COALESCE(${csat_review.csat_review},"N/A"));;
@@ -70,8 +69,8 @@ view: post_checkout_v2 {
     hidden: no
     description: "This will aggregate all review comments from different review channels (airbnb, Postcheckout, Postcheckout V2) into one block."
     type: string
-    sql: LTRIM(regexp_replace(regexp_replace(RTRIM(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(
-          regexp_replace(regexp_replace(regexp_replace(regexp_replace(${aggregated_comments_all_unclean},"Overall Comments: N/A~N/A~N/A---",""),"Checkin Comments: N/A~N/A~N/A---",""),"Cleaning Comments: N/A~N/A~N/A---",""),"Communication Comments: N/A~N/A---",""),"Accuracy Comments: N/A~N/A---",""),"Value Comments: N/A~N/A---",""),"Location Comments: N/A~N/A---",""),"Why: N/A---",""),"Favorite: N/A---",""),"Suggestions: N/A~N/A---",""),"Kustomer CSAT Comments: N/A",""),"~N/A",""),"---"),"N/A~",""),"~","|"),"---")
+    sql: LTRIM(regexp_replace(regexp_replace(RTRIM(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(regexp_replace(
+          regexp_replace(regexp_replace(regexp_replace(regexp_replace(${aggregated_comments_all_unclean},"Overall Comments: N/A~N/A~N/A---",""),"Checkin Comments: N/A~N/A~N/A---",""),"Cleaning Comments: N/A~N/A~N/A---",""),"Communication Comments: N/A~N/A---",""),"Accuracy Comments: N/A~N/A---",""),"Value Comments: N/A~N/A---",""),"Location Comments: N/A~N/A---",""),"Favorite: N/A---",""),"Suggestions: N/A~N/A---",""),"Kustomer CSAT Comments: N/A",""),"~N/A",""),"---"),"N/A~",""),"~","|"),"---")
               ;;
   }
 
