@@ -316,6 +316,14 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
     sql: ${occupied_nights_forecast_exposed} / nullif(${room_nights_available_forecast},0) ;;
   }
 
+  measure: los_forecast {
+    label: "Forecast Length of Stay (Monthly)"
+    description: "This will pull the monthly forecast occupied nights divided by the monthly guest turns available from adaptive, for only forecast months. Live LOS can be retrieved from the 'Average Length of Stay' measure under the Reservations view."
+    type: number
+    value_format: "0.0"
+    sql: ${occupied_nights_forecast_exposed} / nullif(${guest_turns_forecast_exposed},0) ;;
+  }
+
   measure: occupancy_audited {
     description: "This will pull the monthly audited occupied nights divided by the monthly audited room nights available from the time of entry in Adaptive, for only audited months. Live occupancy can be retrieved from the 'Occupancy' measure under the Reservations view."
     hidden: no
