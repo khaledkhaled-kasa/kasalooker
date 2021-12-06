@@ -117,7 +117,7 @@ view: issue_categories {
     sql: ${conversation.id} ;;
     value_format: "###"
     drill_fields: [conversation.customer_id, conversation.id, conversation.created_date, message.created_date]
-    filters: [kontrol_influenced: "yes",message.conversation_id: "-NULL"]
+    filters: [kontrol_influenced: "yes"]
   }
 
   measure: unique_conversations_tech {

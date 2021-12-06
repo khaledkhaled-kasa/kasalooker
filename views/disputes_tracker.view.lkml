@@ -58,7 +58,7 @@ view: disputes_tracker {
       month,
       day_of_week
     ]
-    sql: ${TABLE}.Dispute_Created ;;
+    sql: safe_cast(${TABLE}.Dispute_Created as timestamp);;
     convert_tz: no
   }
 
