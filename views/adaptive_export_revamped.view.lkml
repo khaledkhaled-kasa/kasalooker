@@ -28,8 +28,8 @@ GROUP BY
 t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
             LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH) Month,
             FORMAT_TIMESTAMP('%Y-%m', CAST(LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH) as TIMESTAMP)) Month_Year,
-            CASE WHEN LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH) < '2021-09-30' THEN 'Audited Month' -- This is where to adjust audited month
-            WHEN LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH) = '2021-09-30' THEN 'Audited Month (Latest)' -- This is where to adjust audited month latest
+            CASE WHEN LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH) < '2021-10-31' THEN 'Audited Month' -- This is where to adjust audited month
+            WHEN LAST_DAY(PARSE_DATE('%Y %b %d', CONCAT(RIGHT(column_name,4),LEFT(column_name,3),"01")),MONTH) = '2021-10-31' THEN 'Audited Month (Latest)' -- This is where to adjust audited month latest
             ELSE 'Forecast Month' END Forecast_Month,
             value, SAFE_CAST(value as FLOAT64) value_float
               FROM (
@@ -314,6 +314,14 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
     type: number
     value_format: "0.0%"
     sql: ${occupied_nights_forecast_exposed} / nullif(${room_nights_available_forecast},0) ;;
+  }
+
+  measure: los_forecast {
+    label: "Forecast Length of Stay (Monthly)"
+    description: "This will pull the monthly forecast occupied nights divided by the monthly guest turns available from adaptive, for only forecast months. Live LOS can be retrieved from the 'Average Length of Stay' measure under the Reservations view."
+    type: number
+    value_format: "0.0"
+    sql: ${occupied_nights_forecast_exposed} / nullif(${guest_turns_forecast_exposed},0) ;;
   }
 
   measure: occupancy_audited {

@@ -10,6 +10,15 @@ view: customer {
     sql: ${TABLE}.id ;;
   }
 
+  dimension: customer_url {
+    type: string
+    sql: CONCAT("https://kasa.kustomerapp.com/app/customers/",${TABLE}.id) ;;
+    link: {
+      label: "Navigate to Kustomer"
+      url: "{{ value }}"
+    }
+  }
+
   dimension_group: _fivetran_synced {
     type: time
     hidden: yes
