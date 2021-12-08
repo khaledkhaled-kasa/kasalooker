@@ -104,6 +104,30 @@ view: gx_scorecard {
                       WHERE {% condition review_month %} TIMESTAMP(kustomer_metrics.date) {% endcondition %}
                       GROUP BY 1),
 
+                      QA AS
+                      (WITH FULL_QA AS (WITH users AS (SELECT email,concat(name," ",last_name) full_name,id  FROM `bigquery-analytics-272822.playvox.users`)
+
+                      SELECT sequence, u1.full_name agent_name, u2.full_name evaluated_by, created_at, evaluation_time evaluation_time_mins, score, schedule_date, score_avg, evaluations.scorecard_id, status,
+                      total_errors, u1.email agent_email, u2.email evaluated_by_email, scorecard_name_looker, scorecard_name
+                      FROM `bigquery-analytics-272822.playvox.evaluations` evaluations
+                      LEFT JOIN users u1 ON u1.id = evaluations.agent_id
+                      LEFT JOIN users u2 ON u2.id = evaluations.monitor_id
+                      LEFT JOIN `bigquery-analytics-272822.playvox.playvox_scorecard_names_final` scorecard_names ON evaluations.scorecard_id = scorecard_names.scorecard_id
+                      where status = 'active'
+                      AND {% condition review_month %} TIMESTAMP(FORMAT_TIMESTAMP('%F %H:%M:%E*S', evaluations.created_at , 'America/Los_Angeles')) {% endcondition %}
+                      group by 1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+                      ORDER BY evaluations.sequence desc)
+
+
+                      SELECT DISTINCT agent_name,
+                      AVG(CASE WHEN (scorecard_name_looker = 'Phone') THEN CAST((score_avg/100) AS FLOAT64) ELSE NULL END) AS QA_phone,
+                      AVG(CASE WHEN (scorecard_name_looker = 'Email') THEN CAST((score_avg/100) AS FLOAT64) ELSE NULL END) AS QA_email,
+                      AVG(CASE WHEN (scorecard_name_looker = 'Text_SMS_WhatsApp') THEN CAST((score_avg/100) AS FLOAT64) ELSE NULL END) AS QA_sms,
+                      AVG(CASE WHEN (scorecard_name_looker = 'Chat') THEN CAST((score_avg/100) AS FLOAT64) ELSE NULL END) AS QA_chat
+                      FROM FULL_QA
+                      WHERE scorecard_name_looker is NOT NULL
+                      GROUP BY 1),
+
 
                       CSAT AS (WITH CAU AS (WITH CAU_MODIFIED AS (SELECT conversation_id, max(_fivetran_synced) _fivetran_synced
                       FROM kustomer.conversation_assigned_user
@@ -144,13 +168,18 @@ view: gx_scorecard {
                       NULL as weighted_response_time,
                       round((FCRR.value),2) AS FCRR,
                       round(CSAT.CSAT,2) AS CSAT,
+                      round(QA_phone,2) QA_phone,
+                      round(QA_sms,2) QA_sms,
+                      round(QA_email,2) QA_email,
+                      round(QA_chat,2) QA_chat,
                       NULL as comms_quality_score,
                       NULL as total_score
                       from messages_sent LEFT JOIN Calls ON ((messages_sent.user_name = Calls.aircall_names))
                       LEFT JOIN Hours on ((messages_sent.user_name = Hours.ximble_names))
                       LEFT JOIN MFRT ON ((messages_sent.user_name = MFRT.user_name) AND (messages_sent.team_name = MFRT.team_name))
-                      LEFT JOIN FCRR ON ((messages_sent.user_name = FCRR.NAME) )
+                      LEFT JOIN FCRR ON ((messages_sent.user_name = FCRR.NAME))
                       LEFT JOIN CSAT ON ((messages_sent.user_name = CSAT.user_name) AND (messages_sent.team_name = CSAT.team_name))
+                      LEFT JOIN QA ON ((messages_sent.user_name = QA.agent_name))
 
                       WHERE {% condition team_name %} messages_sent.team_name {% endcondition %}
                       AND {% condition user_name_exclude %} messages_sent.user_name {% endcondition %}
@@ -187,14 +216,14 @@ view: gx_scorecard {
                       from SKINNY_ALL_METRICS
                       LEFT JOIN Gsheets.weights_targets ON weights_targets.metric_looker = SKINNY_ALL_METRICS.metric)
 
-                      SELECT percentile_table.*, percentile_table.target preset_target, percentile_table.target_sgxs preset_target_sgxs,
+                      SELECT percentile_table.*, percentile_table.target_gxs preset_target_gxs, percentile_table.target_sgxs preset_target_sgxs,
                       CASE
-                      WHEN (percentile_table.team_name = 'Guest Experience' AND percentile_table.target is not null) THEN percentile_table.target
+                      WHEN (percentile_table.team_name = 'Guest Experience' AND percentile_table.target_gxs is not null) THEN percentile_table.target_gxs
                       WHEN (percentile_table.team_name = 'SGXS' AND percentile_table.target_sgxs is not null) THEN percentile_table.target_sgxs
                       ELSE top_25_percentile
                       END top_25_percentile_or_preset,
                       CASE
-                      WHEN (percentile_table.team_name = 'Guest Experience' AND percentile_table.target is not null) THEN percentile_table.target
+                      WHEN (percentile_table.team_name = 'Guest Experience' AND percentile_table.target_gxs is not null) THEN percentile_table.target_gxs
                       WHEN (percentile_table.team_name = 'SGXS' AND percentile_table.target_sgxs is not null) THEN percentile_table.target_sgxs
                       ELSE round(AVG(top_25_percentile_candidate) OVER (PARTITION BY percentile_Table.skinny_metric),3)
                       END AVG_top_25_percentile
@@ -213,11 +242,14 @@ view: gx_scorecard {
                       FROM latest_table)
 
                       SELECT latest_table2.*,
-                      CASE WHEN (GX_DIFF_Target is null and skinny_metric IN ("interactions_per_hour","comms_quality_score","weighted_response_time")) THEN ROUND(Sum(gx_diff_target*metric_weight) OVER (partition by user_name, Category),3)
+                      CASE WHEN (latest_table2.team_name = 'Guest Experience' and GX_DIFF_Target is null and skinny_metric IN ("interactions_per_hour","comms_quality_score","weighted_response_time")) THEN ROUND(Sum(gx_diff_target*metric_weight_gxs) OVER (partition by user_name, Category),3)
+                      WHEN (latest_table2.team_name = 'SGXS' and GX_DIFF_Target is null and skinny_metric IN ("interactions_per_hour","comms_quality_score","weighted_response_time")) THEN ROUND(Sum(gx_diff_target*metric_weight_sgxs) OVER (partition by user_name, Category),3)
                       ELSE NULL
                       END gx_diff_target_high_level_unweighted,
-                      CASE WHEN (GX_DIFF_Target is null and Category = 'All') THEN ROUND(Sum(gx_diff_target*simplified_rate) OVER (partition by user_name),3)
-                      WHEN (GX_DIFF_Target is null and skinny_metric IN ("interactions_per_hour","comms_quality_score","weighted_response_time","total_score")) THEN ROUND(Sum(gx_diff_target*simplified_rate) OVER (partition by user_name, Category),3)
+                      CASE WHEN (latest_table2.team_name = 'Guest Experience' and GX_DIFF_Target is null and Category = 'All') THEN ROUND(Sum(gx_diff_target*simplified_rate_gxs) OVER (partition by user_name),3)
+                      WHEN (latest_table2.team_name = 'SGXS' and GX_DIFF_Target is null and Category = 'All') THEN ROUND(Sum(gx_diff_target*simplified_rate_sgxs) OVER (partition by user_name),3)
+                      WHEN (latest_table2.team_name = 'Guest Experience' and GX_DIFF_Target is null and skinny_metric IN ("interactions_per_hour","comms_quality_score","weighted_response_time","total_score")) THEN ROUND(Sum(gx_diff_target*simplified_rate_gxs) OVER (partition by user_name, Category),3)
+                      WHEN (latest_table2.team_name = 'SGXS' and GX_DIFF_Target is null and skinny_metric IN ("interactions_per_hour","comms_quality_score","weighted_response_time","total_score")) THEN ROUND(Sum(gx_diff_target*simplified_rate_sgxs) OVER (partition by user_name, Category),3)
                       ELSE NULL
                       END gx_diff_target_high_level
                       from latest_table2)
@@ -255,7 +287,7 @@ view: gx_scorecard {
     dimension: user_name {
       type: string
       sql: ${TABLE}.user_name ;;
-      html: {% if  weight_from_metric._value >= 1 %}
+      html: {% if  weight_from_metric_gxs._value >= 1 %}
             <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>
             {% else %}
             <p style="color: black; font-size:100%">{{ rendered_value }}</p>
@@ -279,7 +311,7 @@ view: gx_scorecard {
       type: number
       value_format: "0.00"
       sql: ${TABLE}.value ;;
-      html: {% if  weight_from_metric._value >= 1 %}
+      html: {% if  weight_from_metric_gxs._value >= 1 %}
             <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>
             {% else %}
             <p style="color: black; font-size:100%">{{ rendered_value }}</p>
@@ -291,7 +323,7 @@ view: gx_scorecard {
       label: "Individual Metric Rank"
       type: number
       sql: ${TABLE}.rank ;;
-      html: {% if  weight_from_metric._value >= 1 %}
+      html: {% if  weight_from_metric_gxs._value >= 1 %}
             <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>
             {% else %}
             <p style="color: black; font-size:100%">{{ rendered_value }}</p>
@@ -303,7 +335,7 @@ view: gx_scorecard {
       type: number
       value_format: "0.00"
       sql: ${TABLE}.avg_skin ;;
-      html: {% if  weight_from_metric._value >= 1 %}
+      html: {% if  weight_from_metric_gxs._value >= 1 %}
             <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>
             {% else %}
             <p style="color: black; font-size:100%">{{ rendered_value }}</p>
@@ -314,22 +346,12 @@ view: gx_scorecard {
       type: number
       sql: ${TABLE}.percentile75 ;;
       hidden: yes
-      # html: {% if  weight_from_metric._value >= 1 %}
-      # <p style="color: black; background-color: #819AC9; font-size:110%"><b>{{ rendered_value }}</b></p>
-      # {% else %}
-      # <p style="color: black; font-size:100%">{{ rendered_value }}</p>
-      # {% endif %} ;;
     }
 
     dimension: percentile25 {
       type: number
       hidden: yes
       sql: ${TABLE}.percentile25 ;;
-      # html: {% if  weight_from_metric._value >= 1 %}
-      # <p style="color: black; background-color: #819AC9; font-size:110%"><b>{{ rendered_value }}</b></p>
-      # {% else %}
-      # <p style="color: black; font-size:100%">{{ rendered_value }}</p>
-      # {% endif %} ;;
     }
 
     dimension: top_percentile {
@@ -338,17 +360,12 @@ view: gx_scorecard {
       description: "This will show the target for individual metrics by either pulling the top 25% or 75% percentile (depending on the category) or pulling from the manual preset values on the GSheet."
       sql:
           ${TABLE}.top_25_percentile_or_preset ;;
-          # html: {% if  weight_from_metric._value >= 1 %}
-          # <p style="color: black; background-color: #819AC9; font-size:110%"><b>{{ rendered_value }}</b></p>
-          # {% else %}
-          # <p style="color: black; font-size:100%">{{ rendered_value }}</p>
-          # {% endif %} ;;
       }
 
       dimension: metric {
         type: string
         sql: ${TABLE}.Metric ;;
-        html: {% if  weight_from_metric._value >= 1 %}
+        html: {% if  weight_from_metric_gxs._value >= 1 %}
               <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>
               {% else %}
               <p style="color: black; font-size:100%">{{ rendered_value }}</p>
@@ -359,73 +376,91 @@ view: gx_scorecard {
         hidden: yes
         type: string
         sql: ${TABLE}.Metric_Looker ;;
-        html: {% if  weight_from_metric._value >= 1 %}
-              <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>
-              {% else %}
-              <p style="color: black; font-size:100%">{{ rendered_value }}</p>
-              {% endif %} ;;
       }
 
       dimension: category {
         type: string
         sql: ${TABLE}.Category ;;
-        html: {% if  weight_from_metric._value >= 1 %}
+        html: {% if  weight_from_metric_gxs._value >= 1 %}
               <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>
               {% else %}
               <p style="color: black; font-size:100%">{{ rendered_value }}</p>
               {% endif %} ;;
       }
 
-      dimension: weight_category {
-        label: "Category Weight"
+      dimension: weight_category_gxs {
+        label: "Category Weight (GXS)"
         type: number
         value_format: "0%"
-        sql: ${TABLE}.Category_Weight ;;
-        html: {% if  weight_from_metric._value >= 1 %}
+        sql: ${TABLE}.Category_Weight_GXS ;;
+        html: {% if  weight_from_metric_gxs._value >= 1 %}
               <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>
               {% else %}
               <p style="color: black; font-size:100%">{{ rendered_value }}</p>
               {% endif %} ;;
       }
 
-      dimension: weight_from_metric {
-        label: "Metric Weight"
+     dimension: weight_category_sgxs {
+      label: "Category Weight (SGXS)"
+      type: number
+      value_format: "0%"
+      sql: ${TABLE}.Category_Weight_SGXS ;;
+      html: {% if  weight_from_metric_sgxs._value >= 1 %}
+              <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>
+              {% else %}
+              <p style="color: black; font-size:100%">{{ rendered_value }}</p>
+              {% endif %} ;;
+     }
+
+      dimension: weight_from_metric_gxs {
+        label: "Metric Weight (GXS)"
         type: number
         value_format: "0%"
-        sql: ${TABLE}.Metric_Weight ;;
-        html: {% if  weight_from_metric._value >= 1 %}
+        sql: ${TABLE}.Metric_Weight_GXS  ;;
+        html: {% if  weight_from_metric_gxs._value >= 1 %}
               <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>
               {% else %}
               <p style="color: black; font-size:100%">{{ rendered_value }}</p>
               {% endif %} ;;
       }
 
-      dimension: weight_from_total {
+
+    dimension: weight_from_metric_sgxs {
+      label: "Metric Weight (SGXS)"
+      type: number
+      value_format: "0%"
+      sql: ${TABLE}.Metric_Weight_SGXS   ;;
+      html: {% if  weight_from_metric_sgxs._value >= 1 %}
+              <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>
+              {% else %}
+              <p style="color: black; font-size:100%">{{ rendered_value }}</p>
+              {% endif %} ;;
+      }
+
+
+
+      dimension: weight_from_total_gxs {
+        label: "Weight from Total (GXS)"
         type: number
         value_format: "0%"
-        sql: ${TABLE}.Simplified_Rate ;;
-        html: {% if  weight_from_metric._value >= 1 %}
+        sql: ${TABLE}.Simplified_Rate_GXS ;;
+        html: {% if  weight_from_metric_gxs._value >= 1 %}
               <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>
               {% else %}
               <p style="color: black; font-size:100%">{{ rendered_value }}</p>
               {% endif %} ;;
       }
 
-      dimension: target_from_gsheet {
-        type: number
-        hidden: yes
-        sql: ${TABLE}.Target ;;
-        html: {% if  weight_from_metric._value >= 1 %}
+    dimension: weight_from_total_sgxs {
+      label: "Weight from Total (SGXS)"
+      type: number
+      value_format: "0%"
+      sql: ${TABLE}.Simplified_Rate_SGXS ;;
+      html: {% if  weight_from_metric_sgxs._value >= 1 %}
               <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>
               {% else %}
               <p style="color: black; font-size:100%">{{ rendered_value }}</p>
               {% endif %} ;;
-      }
-
-      dimension: preset_targets {
-        type: number
-        hidden: yes
-        sql: ${TABLE}.preset_target ;;
       }
 
 
@@ -436,11 +471,6 @@ view: gx_scorecard {
         hidden: yes
         value_format: "0.00"
         sql: ${TABLE}.top_25_percentile ;;
-        html: {% if  weight_from_metric._value >= 1 %}
-          <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>
-          {% else %}
-          <p style="color: black; font-size:100%">{{ rendered_value }}</p>
-          {% endif %} ;;
       }
 
       dimension: top_percentile_avg {
@@ -450,11 +480,6 @@ view: gx_scorecard {
         hidden: yes
         value_format: "0.00"
         sql: ${TABLE}.AVG_top_25_percentile ;;
-        html: {% if  weight_from_metric._value >= 1 %}
-              <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>
-              {% else %}
-              <p style="color: black; font-size:100%">{{ rendered_value }}</p>
-              {% endif %} ;;
       }
 
       dimension: GX_diff_target {
@@ -463,7 +488,7 @@ view: gx_scorecard {
         value_format: "0.0%"
         hidden: no
         sql: ${TABLE}.GX_Diff_Target ;;
-        html: {% if  weight_from_metric._value >= 1 %}
+        html: {% if  weight_from_metric_gxs._value >= 1 %}
               <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>
               {% else %}
               <p style="color: black; font-size:100%">{{ rendered_value }}</p>
@@ -476,7 +501,7 @@ view: gx_scorecard {
         value_format: "0.0%"
         hidden: no
         sql: ${TABLE}.GX_Diff_Avg ;;
-        html: {% if  weight_from_metric._value >= 1 %}
+        html: {% if  weight_from_metric_gxs._value >= 1 %}
               <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>
               {% else %}
               <p style="color: black; font-size:100%">{{ rendered_value }}</p>
@@ -489,7 +514,7 @@ view: gx_scorecard {
         value_format: "0.0%"
         hidden: no
         sql: ${TABLE}.gx_diff_target_high_level_unweighted ;;
-        html: {% if  weight_from_metric._value >= 1 %}
+        html: {% if  weight_from_metric_gxs._value >= 1 %}
           <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>
           {% else %}
           <p style="color: black; font-size:100%">{{ rendered_value }}</p>
@@ -503,7 +528,7 @@ view: gx_scorecard {
         value_format: "0.0%"
         hidden: no
         sql: ${TABLE}.gx_diff_target_high_level ;;
-        html: {% if  weight_from_metric._value >= 1 %}
+        html: {% if  weight_from_metric_gxs._value >= 1 %}
               <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>
               {% else %}
               <p style="color: black; font-size:100%">{{ rendered_value }}</p>
@@ -514,13 +539,12 @@ view: gx_scorecard {
         label: "Rank"
         type: number
         sql: ${TABLE}.final_rank ;;
-        html: {% if  weight_from_metric._value >= 1 %}
+        html: {% if  weight_from_metric_gxs._value >= 1 %}
                  <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>
                  {% else %}
                    <p style="color: black; font-size:100%">{{ rendered_value }}</p>
                  {% endif %} ;;
       }
-
 
 
       measure: GX_category_score_measure {

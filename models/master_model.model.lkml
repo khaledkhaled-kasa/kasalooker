@@ -1028,7 +1028,14 @@ explore: security_deposits_kfc {
 explore: ximble_master {
   description: "This explore is based on a Ximble export updated every Monday which provides scheduled hours by GX teams to power metrics such as messages sent / hour."
   group_label: "Software"
+  hidden: yes
   label: "Ximble"
+}
+
+explore: playvox {
+  hidden: yes
+  group_label: "Software"
+  label: "Playvox"
 }
 
 explore: looker_historicals {
