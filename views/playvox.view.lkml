@@ -89,4 +89,11 @@ view: playvox {
     sql: ${TABLE}.evaluated_by_email ;;
   }
 
+  measure: score_avg_measure {
+    label: "Average Score"
+    type: average
+    value_format: "00.0%"
+    sql: ${score_avg} ;;
+  }
+
 }
