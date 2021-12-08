@@ -118,9 +118,8 @@ view: financials_clean {
     }
 
     dimension_group: transaction {
-      view_label: "Date Dimensions"
       group_label: "Transaction Date"
-      label: ""
+      label: "Transaction"
       description: "Date of a given financial transaction"
       type: time
       timeframes: [

@@ -36,9 +36,8 @@ view: breezeway_export {
   }
 
   dimension_group: assigned_date {
-    view_label: "Date Dimensions"
     group_label: "BW Assigned Date"
-    label: ""
+    label: "BW Assigned"
     type: time
     timeframes: [
       raw,
@@ -55,9 +54,8 @@ view: breezeway_export {
   }
 
   dimension_group: completed_date {
-    view_label: "Date Dimensions"
     group_label: "BW Completed Date"
-    label: ""
+    label: "BW Completed"
     type: time
     timeframes: [
       raw,
@@ -131,9 +129,8 @@ view: breezeway_export {
 
   dimension_group: created {
     hidden: no
-    view_label: "Date Dimensions"
     group_label: "BW Created Date"
-    label: ""
+    label: "BW Created"
     type: time
     timeframes: [
       raw,
