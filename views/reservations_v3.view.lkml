@@ -59,6 +59,7 @@ view: reservations_v3 {
 
 
     dimension: extended_booking {
+      label: "Booking Extension"
       description: "An extended booking is defined as two consecutive bookings by the same guest (e-mail id) within the same building (i.e. a unit swap would still be considered an extension). An extended booking will only return Yes for the extended reservation."
       type: yesno
       sql: ${TABLE}.extended_booking = 1 ;;
