@@ -170,8 +170,8 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
 
 
   dimension: month_finance_audit {
-    label: "Financial Month (Adaptive) / Night Available Month"
-    description: "This date will select from 'Night Available Month' or 'Financial Month (Adaptive)', whichever of them is available."
+    label: "Financial Month (Adaptive) / Financial Month"
+    description: "This date will select from 'Financial Month' or 'Financial Month (Adaptive)', whichever of them is available."
     type: date_month
     datatype: date
     sql:  case
@@ -179,6 +179,18 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
     when date(${financials_audit.night_date}) is not null and date(${TABLE}.Month) is null then date(${financials_audit.night_date})
     else NULL
     end;;
+  }
+
+  dimension: month_capacities_audit {
+    label: "Financial Month (Adaptive) / Night Available Month"
+    description: "This date will select from 'Night Available Month' or 'Financial Month (Adaptive)', whichever of them is available."
+    type: date_month
+    datatype: date
+    sql:  case
+          when ${TABLE}.Month is not NULL then ${TABLE}.Month
+          when date(${capacities_v3.night_date}) is not null and date(${TABLE}.Month) is null then date(${capacities_v3.night_date})
+          else NULL
+          end;;
   }
 
 
