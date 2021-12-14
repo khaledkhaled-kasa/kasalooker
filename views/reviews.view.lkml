@@ -139,6 +139,7 @@ view_label: "Check-In Survey Data"
     timeframes: [
       raw,
       time,
+      hour_of_day,
       date,
       week,
       month,

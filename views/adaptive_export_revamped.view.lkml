@@ -96,12 +96,12 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
       CASE WHEN Forecast_Month IN ("Audited Month","Audited Month (Latest)") THEN Occupied_Nights
       ELSE Occupied_Nights
       END Occupied_Nights_Mod,
-      p.PropOwner, p.POM, p.RevenueManager, p.PortfolioManager, DATE(Month) partition_date
+      p.PropOwner, p.POM, p.RevenueManager, p.PortfolioManager, p.Portfolio, DATE(Month) partition_date
       FROM all_tables
       LEFT JOIN -- JOIN UNIQUE POM BUILDINGS
-      (SELECT PropCode, PropOwner, POM, RevenueManager, PortfolioManager
+      (SELECT PropCode, PropOwner, POM, RevenueManager, PortfolioManager, Portfolio
       FROM `bigquery-analytics-272822.Gsheets.pom_information` p
-      GROUP BY 1,2,3,4,5) p
+      GROUP BY 1,2,3,4,5,6) p
       ON all_tables.PropCode = p.PropCode
        ;;
 
@@ -143,6 +143,13 @@ t as (WITH skinny_table AS (SELECT PropShrt, PropCode, Building, Metric,
     description: "This data point is pulled from Col BN of the KPO Properties tab."
     type: string
     sql: ${TABLE}.PortfolioManager ;;
+  }
+
+  dimension: Portfolio {
+    label: "Portfolio"
+    description: "This data point is pulled from Col BR of the KPO Properties tab."
+    type: string
+    sql: ${TABLE}.Portfolio ;;
   }
 
   dimension: prop_shrt {
