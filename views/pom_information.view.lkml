@@ -9,13 +9,23 @@ view: pom_information {
                   w.UnitsVisitedWeight,
                   w. CleaningScoreWeight,
                   w.MeetingAttendanceWeight,
-                  w.QACompletedWeight
+                  w.QACompletedWeight,
+                  gm_thresholds.*
           FROM `bigquery-analytics-272822.Gsheets.pom_information` p
             LEFT JOIN ${pom_weighting_standards_final_transposed.SQL_TABLE_NAME} w
-            ON p.WeightingCategory = w.WeightingCategory ;;
+            ON p.WeightingCategory = w.WeightingCategory
+            LEFT JOIN `bigquery-analytics-272822.Gsheets.gm_portfolio_thresholds` gm_thresholds
+            ON gm_thresholds.PropertyCode = p.PropCode;;
 
     persist_for: "24 hours"
   }
+
+  # dimension: Property {
+  #   hidden: yes
+  #   primary_key: yes
+  #   type: string
+  #   sql: ${TABLE}.Property ;;
+  # }
 
   dimension: Prop_Code {
     label: "Property Code"
@@ -71,6 +81,14 @@ view: pom_information {
     description: "This data point is pulled from Col BM of the KPO Properties tab."
     type: string
     sql: ${TABLE}.RevenueManager ;;
+  }
+
+  dimension: AccountManager {
+    view_label: "Building and Geographic Information"
+    label: "Account Manager"
+    description: "This data point is pulled from Col AC of the KPO Properties tab."
+    type: string
+    sql: ${TABLE}.AccountManager ;;
   }
 
   dimension: PortfolioManager {
@@ -192,6 +210,7 @@ view: pom_information {
         END ;;
   }
 
+## FIELDS FROM pom_weighting_standards_final_transposed
 
 
   dimension: CleaningScoreWeight {
@@ -319,6 +338,170 @@ view: pom_information {
     filters: [units.unit_status: "Active, Expiring"]
     drill_fields: [property_owner, live_partners]
   }
+
+  ## FIELDS FROM `bigquery-analytics-272822.Gsheets.gm_portfolio_thresholds`
+
+
+  measure: refreshes {
+    label: "% Refreshes up to Date"
+    view_label: "GM Portfolio Ops/Reviews Thresholds"
+    hidden: yes
+    type:average_distinct
+    sql_distinct_key: ${Prop_Code} ;;
+    value_format: "0%"
+    sql: ${TABLE}.__Refreshes ;;
+  }
+
+  measure: __fresh_air {
+    label: "% Online Fresh Air Devices"
+    view_label: "GM Portfolio Ops/Reviews Thresholds"
+    hidden: yes
+    type:average_distinct
+    sql_distinct_key: ${Prop_Code} ;;
+    value_format: "0%"
+    sql: ${TABLE}.__Fresh_Air ;;
+  }
+
+  measure: __battery {
+    label: "% Battery"
+    view_label: "GM Portfolio Ops/Reviews Thresholds"
+    hidden: yes
+    type:average_distinct
+    sql_distinct_key: ${Prop_Code} ;;
+    value_format: "0%"
+    sql: ${TABLE}.__Battery ;;
+  }
+
+  measure: __tasks_on_time {
+    label: "% Tasks on Time (Maint. / Inspection)"
+    hidden: yes
+    view_label: "GM Portfolio Ops/Reviews Thresholds"
+    type:average_distinct
+    sql_distinct_key: ${Prop_Code} ;;
+    value_format: "0%"
+    sql: ${TABLE}.__Tasks_on_Time ;;
+  }
+
+  measure: __qa_walkthroughs {
+    label: "% QA Walkthroughs"
+    hidden: yes
+    view_label: "GM Portfolio Ops/Reviews Thresholds"
+    type:average_distinct
+    sql_distinct_key: ${Prop_Code} ;;
+    value_format: "0%"
+    sql: ${TABLE}.__QA_Walkthroughs ;;
+  }
+
+  measure: heavy_checkins {
+    label: "Heavy Checkins"
+    hidden: yes
+    view_label: "GM Portfolio Ops/Reviews Thresholds"
+    type:average_distinct
+    sql_distinct_key: ${Prop_Code} ;;
+    value_format: "0"
+    sql: ${TABLE}.Heavy_Checkins ;;
+  }
+
+  measure: heavy_checkouts {
+    label: "Heavy Checkouts"
+    hidden: yes
+    view_label: "GM Portfolio Ops/Reviews Thresholds"
+    type:average_distinct
+    sql_distinct_key: ${Prop_Code} ;;
+    value_format: "0"
+    sql: ${TABLE}.Heavy_Checkouts ;;
+  }
+
+  measure: safety_incidents {
+    label: "Safety Incidents"
+    hidden: yes
+    view_label: "GM Portfolio Ops/Reviews Thresholds"
+    type:average_distinct
+    sql_distinct_key: ${Prop_Code} ;;
+    value_format: "0"
+    sql: ${TABLE}.Safety_Incidents ;;
+  }
+
+  measure: blocked_rooms {
+    label: "Blocks Rooms"
+    hidden: yes
+    view_label: "GM Portfolio Ops/Reviews Thresholds"
+    type:average_distinct
+    sql_distinct_key: ${Prop_Code} ;;
+    value_format: "0"
+    sql: ${TABLE}.Blocked_Rooms ;;
+  }
+
+  measure: __bad_cleans__vfd_ {
+    label: "% Bad Cleans (VFD)"
+    hidden: yes
+    view_label: "GM Portfolio Ops/Reviews Thresholds"
+    type:average_distinct
+    sql_distinct_key: ${Prop_Code} ;;
+    value_format: "0%"
+    sql: ${TABLE}.__Bad_Cleans__VFD_ ;;
+  }
+
+  measure: __bad_cleans__airbnb_kasa_ {
+    label: "% Bad Cleans (Airbnb/Kasa)"
+    hidden: yes
+    view_label: "GM Portfolio Ops/Reviews Thresholds"
+    type:average_distinct
+    sql_distinct_key: ${Prop_Code} ;;
+    value_format: "0%"
+    sql: ${TABLE}.__Bad_Cleans__Airbnb_Kasa_ ;;
+  }
+
+  measure: __clean_refunded {
+    label: "% Cleans Refunded"
+    hidden: yes
+    view_label: "GM Portfolio Ops/Reviews Thresholds"
+    type:average_distinct
+    sql_distinct_key: ${Prop_Code} ;;
+    value_format: "0%"
+    sql: ${TABLE}.__Clean_Refunded ;;
+  }
+
+  measure: __Tasks_on_Time__Cleaning_  {
+    label: "% Tasks on Time (Cleaning)"
+    hidden: yes
+    view_label: "GM Portfolio Ops/Reviews Thresholds"
+    type:average_distinct
+    sql_distinct_key: ${Prop_Code} ;;
+    value_format: "0%"
+    sql: ${TABLE}.__Tasks_on_Time__Cleaning_   ;;
+  }
+
+  measure: __special_cleans {
+    label: "% Special Cleans Permitted"
+    hidden: yes
+    view_label: "GM Portfolio Ops/Reviews Thresholds"
+    type:average_distinct
+    sql_distinct_key: ${Prop_Code} ;;
+    value_format: "0%"
+    sql: ${TABLE}.__Special_Cleans ;;
+  }
+
+  measure: real_time_rating {
+    label: "Real-time Rating Threshold"
+    hidden: yes
+    view_label: "GM Portfolio Ops/Reviews Thresholds"
+    type:average_distinct
+    sql_distinct_key: ${Prop_Code} ;;
+    value_format: "0.0"
+    sql: ${TABLE}.Real_Time_Rating ;;
+  }
+
+  measure: nqs__overall_ {
+    label: "NQS Overall Threshold"
+    hidden: yes
+    view_label: "GM Portfolio Ops/Reviews Thresholds"
+    type:average_distinct
+    sql_distinct_key: ${Prop_Code} ;;
+    value_format: "0"
+    sql: ${TABLE}.NQS__Overall_ ;;
+  }
+
 
 
 }
