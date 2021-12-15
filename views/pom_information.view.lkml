@@ -345,7 +345,7 @@ view: pom_information {
   measure: refreshes {
     label: "% Refreshes up to Date"
     view_label: "GM Portfolio Ops/Reviews Thresholds"
-    hidden: yes
+    hidden: no
     type:average_distinct
     sql_distinct_key: ${Prop_Code} ;;
     value_format: "0%"
@@ -355,7 +355,7 @@ view: pom_information {
   measure: __fresh_air {
     label: "% Online Fresh Air Devices"
     view_label: "GM Portfolio Ops/Reviews Thresholds"
-    hidden: yes
+    hidden: no
     type:average_distinct
     sql_distinct_key: ${Prop_Code} ;;
     value_format: "0%"
@@ -365,7 +365,7 @@ view: pom_information {
   measure: __battery {
     label: "% Battery"
     view_label: "GM Portfolio Ops/Reviews Thresholds"
-    hidden: yes
+    hidden: no
     type:average_distinct
     sql_distinct_key: ${Prop_Code} ;;
     value_format: "0%"
@@ -374,7 +374,7 @@ view: pom_information {
 
   measure: __tasks_on_time {
     label: "% Tasks on Time (Maint. / Inspection)"
-    hidden: yes
+    hidden: no
     view_label: "GM Portfolio Ops/Reviews Thresholds"
     type:average_distinct
     sql_distinct_key: ${Prop_Code} ;;
@@ -384,7 +384,7 @@ view: pom_information {
 
   measure: __qa_walkthroughs {
     label: "% QA Walkthroughs"
-    hidden: yes
+    hidden: no
     view_label: "GM Portfolio Ops/Reviews Thresholds"
     type:average_distinct
     sql_distinct_key: ${Prop_Code} ;;
@@ -394,7 +394,7 @@ view: pom_information {
 
   measure: heavy_checkins {
     label: "Heavy Checkins"
-    hidden: yes
+    hidden: no
     view_label: "GM Portfolio Ops/Reviews Thresholds"
     type:average_distinct
     sql_distinct_key: ${Prop_Code} ;;
@@ -404,7 +404,7 @@ view: pom_information {
 
   measure: heavy_checkouts {
     label: "Heavy Checkouts"
-    hidden: yes
+    hidden: no
     view_label: "GM Portfolio Ops/Reviews Thresholds"
     type:average_distinct
     sql_distinct_key: ${Prop_Code} ;;
@@ -414,7 +414,7 @@ view: pom_information {
 
   measure: safety_incidents {
     label: "Safety Incidents"
-    hidden: yes
+    hidden: no
     view_label: "GM Portfolio Ops/Reviews Thresholds"
     type:average_distinct
     sql_distinct_key: ${Prop_Code} ;;
@@ -424,7 +424,7 @@ view: pom_information {
 
   measure: blocked_rooms {
     label: "Blocks Rooms"
-    hidden: yes
+    hidden: no
     view_label: "GM Portfolio Ops/Reviews Thresholds"
     type:average_distinct
     sql_distinct_key: ${Prop_Code} ;;
@@ -434,7 +434,7 @@ view: pom_information {
 
   measure: __bad_cleans__vfd_ {
     label: "% Bad Cleans (VFD)"
-    hidden: yes
+    hidden: no
     view_label: "GM Portfolio Ops/Reviews Thresholds"
     type:average_distinct
     sql_distinct_key: ${Prop_Code} ;;
@@ -444,7 +444,7 @@ view: pom_information {
 
   measure: __bad_cleans__airbnb_kasa_ {
     label: "% Bad Cleans (Airbnb/Kasa)"
-    hidden: yes
+    hidden: no
     view_label: "GM Portfolio Ops/Reviews Thresholds"
     type:average_distinct
     sql_distinct_key: ${Prop_Code} ;;
@@ -454,7 +454,7 @@ view: pom_information {
 
   measure: __clean_refunded {
     label: "% Cleans Refunded"
-    hidden: yes
+    hidden: no
     view_label: "GM Portfolio Ops/Reviews Thresholds"
     type:average_distinct
     sql_distinct_key: ${Prop_Code} ;;
@@ -464,7 +464,7 @@ view: pom_information {
 
   measure: __Tasks_on_Time__Cleaning_  {
     label: "% Tasks on Time (Cleaning)"
-    hidden: yes
+    hidden: no
     view_label: "GM Portfolio Ops/Reviews Thresholds"
     type:average_distinct
     sql_distinct_key: ${Prop_Code} ;;
@@ -474,7 +474,7 @@ view: pom_information {
 
   measure: __special_cleans {
     label: "% Special Cleans Permitted"
-    hidden: yes
+    hidden: no
     view_label: "GM Portfolio Ops/Reviews Thresholds"
     type:average_distinct
     sql_distinct_key: ${Prop_Code} ;;
@@ -484,7 +484,7 @@ view: pom_information {
 
   measure: real_time_rating {
     label: "Real-time Rating Threshold"
-    hidden: yes
+    hidden: no
     view_label: "GM Portfolio Ops/Reviews Thresholds"
     type:average_distinct
     sql_distinct_key: ${Prop_Code} ;;
@@ -494,7 +494,7 @@ view: pom_information {
 
   measure: nqs__overall_ {
     label: "NQS Overall Threshold"
-    hidden: yes
+    hidden: no
     view_label: "GM Portfolio Ops/Reviews Thresholds"
     type:average_distinct
     sql_distinct_key: ${Prop_Code} ;;
