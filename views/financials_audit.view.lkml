@@ -40,7 +40,7 @@ view: financials_audit {
     value_format: "$#,##0.00"
     sql: ${amount_revised} ;;
     filters: [actualizedat_modified: "-Nonactualized (Historic)"]
-    drill_fields: [reservations_v3.confirmationcode,reservations_v3.booking_date, reservations_v3.checkindate_date, reservations_v3.checkoutdate_date, reservations_v3.status, reservations_v3.reservation_night, reservations_v3.num_reservations, transaction_date,type,amount]
+    drill_fields: [reservations_audit.confirmationcode,reservations_audit.booking_date, reservations_audit.checkindate_date, reservations_audit.checkoutdate_date, reservations_audit.status, transaction_date,type,amount]
   }
 
 
