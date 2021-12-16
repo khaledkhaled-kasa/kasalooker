@@ -129,11 +129,13 @@ view: airbnb_reviews {
     dimension: host_id {
       type: number
       sql: ${TABLE}.Host_ID ;;
+      hidden: yes
     }
 
     dimension: listing_id {
       type: number
       sql: ${TABLE}.Listing_ID ;;
+      hidden: yes
     }
 
     dimension: overall_rating {
