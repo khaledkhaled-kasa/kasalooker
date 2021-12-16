@@ -68,6 +68,13 @@ explore: customer {
     sql_on: ${reservations_kustomer.unit} = ${units._id};;
   }
 
+  join: pom_information {
+    view_label: "POM Information"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units.propcode} = ${pom_information.Prop_Code} ;;
+  }
+
   join: complexes {
     type:  left_outer
     relationship: one_to_one
