@@ -354,7 +354,7 @@ explore: customer_ps {
 
 explore: gx_scorecard {
   label: "GX Scorecard"
-  hidden: yes
+  hidden: no
 }
 
 explore: refund_notes {
