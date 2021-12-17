@@ -85,6 +85,8 @@ view: post_checkout_v2 {
     WHEN (${TABLE}.TypoFormsubmission is NULL and ${TABLE}.SMSRelpy is  NULL and ${TABLE}.EmailClick is not null) THEN cast(${TABLE}.overAllRatingEmailClick as int)
     ELSE ${TABLE}.Overall__how_would_you_rate_your_Kasa_stay_
     END;;
+    drill_fields: [submitted_at_date, reservations_clean.checkindate_date, reservations_clean.checkoutdate_date , units.internaltitle, _cleanliness___how_clean_was_the_kasa_when_you_arrived_, how_did_we_miss_the_mark_on_cleanliness_, what_would_have_made_your_stay_feel_like_a_better_value_,overall__how_would_you_rate_your_kasa_stay_,aggregated_comments]
+
   }
 
   dimension: _cleanliness___how_clean_was_the_kasa_when_you_arrived_ {
