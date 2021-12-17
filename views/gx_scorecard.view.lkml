@@ -239,14 +239,14 @@ view: gx_scorecard {
                       from percentile_table)
 
                       SELECT latest_table.*,
-                      CASE WHEN category = 'Efficiency' THEN round(((top_25_percentile_or_preset - value) / top_25_percentile_or_preset),3)
-                      WHEN category IN ('Productivity', 'Quality (External) - Hospitality / Brand') THEN round(((value - top_25_percentile_or_preset) / top_25_percentile_or_preset),3)
+                      CASE WHEN category = 'Efficiency' THEN round(((top_25_percentile_or_preset - value) / nullif(top_25_percentile_or_preset,0)),3)
+                      WHEN category IN ('Productivity', 'Quality (External) - Hospitality / Brand') THEN round(((value - top_25_percentile_or_preset) / nullif(top_25_percentile_or_preset,0)),3)
                       END GX_Diff_Target,
-                      CASE WHEN category = 'Efficiency' THEN round(((AVG_top_25_percentile - value) / AVG_top_25_percentile),3)
-                      WHEN category IN ('Productivity', 'Quality (External) - Hospitality / Brand') THEN round(((value - AVG_top_25_percentile) / AVG_top_25_percentile),3)
+                      CASE WHEN category = 'Efficiency' THEN round(((AVG_top_25_percentile - value) / nullif(AVG_top_25_percentile,0)),3)
+                      WHEN category IN ('Productivity', 'Quality (External) - Hospitality / Brand') THEN round(((value - AVG_top_25_percentile) / nullif(AVG_top_25_percentile,0)),3)
                       END GX_Diff_Target_avg_percentile,
-                      CASE WHEN category = 'Efficiency' THEN round(((latest_table.avg_skin - value) / latest_table.avg_skin),3)
-                      WHEN category IN ('Productivity', 'Quality (External) - Hospitality / Brand') THEN round(((value - latest_table.avg_skin) / latest_table.avg_skin),3)
+                      CASE WHEN category = 'Efficiency' THEN round(((latest_table.avg_skin - value) / nullif(latest_table.avg_skin,0)),3)
+                      WHEN category IN ('Productivity', 'Quality (External) - Hospitality / Brand') THEN round(((value - latest_table.avg_skin) / nullif(latest_table.avg_skin,0)),3)
                       END GX_Diff_Avg
                       FROM latest_table)
 

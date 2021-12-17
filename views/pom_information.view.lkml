@@ -379,7 +379,7 @@ view: pom_information {
     type:average_distinct
     sql_distinct_key: ${Prop_Code} ;;
     value_format: "0%"
-    sql: ${TABLE}.__Tasks_on_Time ;;
+    sql: ${TABLE}.__Tasks_on_Time__Maint____Inspection_ ;;
   }
 
   measure: __qa_walkthroughs {
@@ -439,7 +439,7 @@ view: pom_information {
     type:average_distinct
     sql_distinct_key: ${Prop_Code} ;;
     value_format: "0%"
-    sql: ${TABLE}.__Bad_Cleans__VFD_ ;;
+    sql: ${TABLE}.__Bad_Cleans___Checkins__VFD_  ;;
   }
 
   measure: __bad_cleans__airbnb_kasa_ {
@@ -492,14 +492,36 @@ view: pom_information {
     sql: ${TABLE}.Real_Time_Rating ;;
   }
 
-  measure: nqs__overall_ {
-    label: "NQS Overall Threshold"
+
+  measure: combined_nqs__overall_ {
+    label: "Combined NQS Overall Threshold"
     hidden: no
     view_label: "GM Portfolio Ops/Reviews Thresholds"
     type:average_distinct
     sql_distinct_key: ${Prop_Code} ;;
     value_format: "0"
-    sql: ${TABLE}.NQS__Overall_ ;;
+    sql: ${TABLE}.Combined_NQS__Overall_   ;;
+  }
+
+  measure: airbnb_nqs__overall_ {
+    label: "Airbnb NQS Overall Threshold"
+    hidden: no
+    view_label: "GM Portfolio Ops/Reviews Thresholds"
+    type:average_distinct
+    sql_distinct_key: ${Prop_Code} ;;
+    value_format: "0"
+    sql: ${TABLE}.Airbnb_NQS__Overall_   ;;
+  }
+
+
+  measure: postcheckout_nqs__overall_ {
+    label: "Postcheckout NQS Overall Threshold"
+    hidden: no
+    view_label: "GM Portfolio Ops/Reviews Thresholds"
+    type:average_distinct
+    sql_distinct_key: ${Prop_Code} ;;
+    value_format: "0"
+    sql: ${TABLE}.Postcheckout_NQS__Overall_   ;;
   }
 
 
