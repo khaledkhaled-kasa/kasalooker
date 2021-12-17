@@ -408,6 +408,8 @@ END;;
     label: "Review Count"
     type: count_distinct
     sql: ${confirmationcode} ;;
+    drill_fields: [submitted_at_date, reservations_clean.checkindate_date, reservations_clean.checkoutdate_date , units.internaltitle, _cleanliness___how_clean_was_the_kasa_when_you_arrived_, how_did_we_miss_the_mark_on_cleanliness_, what_would_have_made_your_stay_feel_like_a_better_value_,overall__how_would_you_rate_your_kasa_stay_,aggregated_comments]
+
   }
 
   measure: count_clean {
@@ -1473,6 +1475,13 @@ END;;
 
   set: detail {
     fields: [
+    submitted_at_date,
+    reservations_clean.checkindate_date,
+    reservations_clean.checkoutdate_date ,
+    units.internaltitle,
+    _cleanliness___how_clean_was_the_kasa_when_you_arrived_,
+    how_did_we_miss_the_mark_on_cleanliness_,
+    what_would_have_made_your_stay_feel_like_a_better_value_
 
     ]
   }
