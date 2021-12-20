@@ -240,11 +240,7 @@ view: gx_scorecard {
 
                       SELECT latest_table.*,
                       CASE WHEN category = 'Efficiency' THEN round(((top_25_percentile_or_preset - value) / nullif(top_25_percentile_or_preset,0)),3)
-<<<<<<< HEAD
                       WHEN category IN ('Productivity', 'Quality (External) - Hospitality / Brand') THEN round(((value - top_25_percentile_or_preset) / nullif(top_25_percentile_or_preset,0)),3)
-=======
-                      WHEN category IN ('Productivity', 'Quality (External) - Hospitality / Brand') THEN round(((value - top_25_percentile_or_preset) /nullif(top_25_percentile_or_preset,0)),3)
->>>>>>> branch 'master' of https://github.com/kkhaled92/kasalooker
                       END GX_Diff_Target,
                       CASE WHEN category = 'Efficiency' THEN round(((AVG_top_25_percentile - value) / nullif(AVG_top_25_percentile,0)),3)
                       WHEN category IN ('Productivity', 'Quality (External) - Hospitality / Brand') THEN round(((value - AVG_top_25_percentile) / nullif(AVG_top_25_percentile,0)),3)
