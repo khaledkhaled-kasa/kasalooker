@@ -68,7 +68,8 @@ view: CI_feedback_sms_kustomer {
   }
 
   dimension: ci_score_sms {
-    label: "CI Score SMS"
+    label: "CI Score(SMS)"
+    description: "This feedback Score pulled from Kustomer conversation"
     type: string
     sql: CASE WHEN ${TABLE}.CI_score_SMS IN ('Great!','great!','great','Great') THEN "3"
     WHEN ${TABLE}.CI_score_SMS IN ("Fine","fine", "Fine, could be better","Could be better") THEN "2"
@@ -78,7 +79,8 @@ view: CI_feedback_sms_kustomer {
   }
 
   dimension: feedback_sms {
-    label: "CI Feedback SMS"
+    label: "Text Feedback (SMS)"
+    description: "This feedback pulled from Kustomer conversation"
     type: string
     sql: ${TABLE}.feedback_Text_sms;;
   }
@@ -88,7 +90,7 @@ view: CI_feedback_sms_kustomer {
     sql: ${TABLE}.name ;;
     hidden: yes
   }
-  measure: count {
+  measure: count_CI_SMS_Feedback {
     type: count_distinct
     drill_fields: [detail*]
   }
