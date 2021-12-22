@@ -36,6 +36,11 @@ explore: customer {
     sql_on: ${customer.id} = ${conversation.customer_id};;
     relationship: one_to_many
   }
+  join: CI_feedback_sms_kustomer {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${conversation.id}=${CI_feedback_sms_kustomer.conversation_id} ;;
+  }
   join: kustomer_notes {
     type: left_outer
     sql_on: ${conversation.id}=${kustomer_notes.conversation_id};;
