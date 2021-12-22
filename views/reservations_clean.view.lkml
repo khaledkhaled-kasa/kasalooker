@@ -344,7 +344,7 @@ view: reservations_clean {
     type: count_distinct
     sql: ${confirmationcode} ;;
     filters: [status: "confirmed, checked_in",units._id: "-null"]
-    drill_fields: [reservation_details*]
+    drill_fields: [reservation_details*,complexes__address.title]
   }
   measure: kbc_completed {
     label: "Num of Guests Completed KBC"

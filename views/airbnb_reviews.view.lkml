@@ -557,6 +557,7 @@ view: airbnb_reviews {
       description: "This will take the count of all reviews which had an overall rating (Higher than subcategory review count)"
       type: count_distinct
       sql: ${reservation_code} ;;
+      drill_fields: [airbnb_details*, reservation_code ,review_date, cleanliness_comments, value_comments, overall_comments,overall_rating]
     }
 
     measure: clean_count_5_star {
