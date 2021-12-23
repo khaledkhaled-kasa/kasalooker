@@ -7,12 +7,14 @@ view: CI_feedback_sms_kustomer {
           , m.preview, m.direction,m.created_at, rank() over (partition by c.name  order by
           safe_cast(
           m.created_at as timestamp)
-          ) as rank
+          ) as rank,
+          m.created_at AS Score_received_at
+
           FROM `bigquery-analytics-272822.kustomer.conversation`c
           LEFT JOIN    `bigquery-analytics-272822.kustomer.message` m
           on
           c.id=m.conversation_id
-          WHERE ( c.name LIKE '%Auto CI Feedback:%' OR  c.name LIKE '%Auto CI Feedback Expanded:%' OR c.name LIKE '%Auto CI Feedback Standard%') and m.direction="in"
+          WHERE ( c.name LIKE '%Auto CI Feedback:%' OR  c.name LIKE '%Auto CI Feedback Expanded:%' OR c.name LIKE '%Auto CI Feedback Standard%')
           ) ,
            feedback as
           (
@@ -22,33 +24,36 @@ view: CI_feedback_sms_kustomer {
           message_id,
           preview,
           RANK,
-          CASE WHEN RANK=1 AND
+          Score_received_at,
+          CASE WHEN RANK=2 AND
           LEFT(preview,1) IN ('1','2','3','4','5')
           then left(preview,1)
-          WHEN RANK=1 AND preview IN
-          ('Great!','Fine','Could be better') THEN preview
+          WHEN RANK=2 AND preview IN
+          ('Great!','Fine','Could be better',"=3") THEN preview
           ELSE NULL END AS
           CI_score_SMS
           from CI_feedback_Kustomer
-          where rank=1
+          where rank=2
           ),
           string_feedback AS
           (SELECT
           id,
-          STRING_AGG(preview  ORDER BY name) AS feedback_Text_sms,
+           STRING_AGG(preview  ORDER BY name)  AS feedback_Text_sms,
           from
           CI_feedback_Kustomer
-          where rank =2 or rank=3
+          where (rank =4  or rank =2) and direction="in"
           GROUP BY id
           )
           SELECT
-          LTRIM(split(a.name,":")[OFFSET (1)]) AS confirmationcode, a.id as conversation_id,a.CI_score_SMS, b.feedback_Text_sms,
+          LTRIM(split(a.name,":")[OFFSET (1)]) AS confirmationcode, a.id as conversation_id,a.CI_score_SMS, Trim(REGEXP_REPLACE(b.feedback_Text_sms,'[0-9,=!.]',"")) As feedback_Text_sms,a.Score_received_at
           FROM
           feedback a
           LEFT join
           string_feedback  b
           ON
           a.id=b.id
+           WHERE  feedback_Text_sms NOT LIKE "Liked%"
+
        ;;
       persist_for: "2 hours"
   }
@@ -71,9 +76,9 @@ view: CI_feedback_sms_kustomer {
     label: "CI Score(SMS)"
     description: "This feedback Score pulled from Kustomer conversation"
     type: string
-    sql: CASE WHEN ${TABLE}.CI_score_SMS IN ('Great!','great!','great','Great') THEN "3"
-    WHEN ${TABLE}.CI_score_SMS IN ("Fine","fine", "Fine, could be better","Could be better") THEN "2"
-    WHEN ${TABLE}.CI_score_SMS IN ("Not going well","NOT going well","not going well") THEN "1"
+    sql: CASE WHEN ${TABLE}.CI_score_SMS IN ('Great!','great!','great','Great','=3') THEN "3"
+    WHEN ${TABLE}.CI_score_SMS IN ("Fine","fine", "Fine, could be better","Could be better",'=2') THEN "2"
+    WHEN ${TABLE}.CI_score_SMS IN ("Not going well","NOT going well","not going well","=1") THEN "1"
   Else ${TABLE}.CI_score_SMS END;;
 
   }
@@ -93,6 +98,11 @@ view: CI_feedback_sms_kustomer {
   measure: count_CI_SMS_Feedback {
     type: count_distinct
     drill_fields: [detail*]
+  }
+  dimension_group: Score_received_at {
+    sql: Score_received_at ;;
+    type: time
+    timeframes: [week,day_of_week,time,date,month,year]
   }
 
   set: detail {
