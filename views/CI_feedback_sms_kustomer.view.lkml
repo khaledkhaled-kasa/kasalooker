@@ -87,7 +87,7 @@ view: CI_feedback_sms_kustomer {
     label: "Text Feedback (SMS)"
     description: "This feedback pulled from Kustomer conversation"
     type: string
-    sql: ${TABLE}.feedback_Text_sms;;
+    sql: CASE WHEN ${TABLE}.feedback_Text_sms ="" THEN NULL ELSE ${TABLE}.feedback_Text_sms END ;;
   }
 
   dimension: name {
