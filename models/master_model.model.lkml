@@ -681,7 +681,7 @@ explore: devices {
 explore: bw_cleaning {
   fields: [bw_cleaning.title,bw_cleaning.propcode, bw_cleaning.id, bw_cleaning.property_internal_id, bw_cleaning.tags, bw_cleaning.name, bw_cleaning.name_revised,
     bw_cleaning.assigned_date, bw_cleaning.completed_date_date,bw_cleaning.completed_date_month, bw_cleaning.unit, bw_cleaning.type ,
-    hk_cleaning_pricing.pricing, hk_cleaning_pricing.total_pricing, hk_pricing_companies.company, units.bedrooms, pom_information.Portfolio, pom_information.__special_cleans
+    hk_cleaning_pricing.pricing, hk_cleaning_pricing.total_pricing, hk_pricing_companies.company, units.bedrooms,units.unit_status, pom_information.Portfolio, pom_information.__special_cleans
   ]
   group_label: "PropOps"
   label: "BW Cleaning Pricing Schedule"
@@ -840,7 +840,7 @@ explore: t_s_security_deployment {
 }
 
 explore: t_s_incident_report {
-  fields: [t_s_incident_report*,-complexes.externalrefs_stripepayoutaccountid, pom_information.RevenueManager, pom_information.PortfolioManager, pom_information.Portfolio , complexes.title, pom_information.property_owner,pom_information.property_type]
+  fields: [t_s_incident_report*,-complexes.externalrefs_stripepayoutaccountid, pom_information.RevenueManager, pom_information.PortfolioManager, pom_information.Portfolio , complexes.title, pom_information.property_owner,pom_information.property_type, units.unit_status]
   group_label: "T & S"
   label: "Security Incident Report"
   hidden: no
@@ -856,6 +856,12 @@ explore: t_s_incident_report {
     type:  left_outer
     relationship: one_to_one
     sql_on: ${complexes.internaltitle} = ${t_s_incident_report.incident_location}  ;;
+  }
+
+  join: units {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${units.internaltitle} = CONCAT(${t_s_incident_report.incident_location},"-",${t_s_incident_report.incident_room_number})  ;;
   }
 }
 
@@ -986,7 +992,7 @@ explore: blocks {
   group_label: "Reservations"
   hidden: no
   label: "Guesty Calendar Blocks"
-  fields: [geo_location.city, geo_location.state, geo_location.metro, complexes.title, units.propcode, units.internaltitle,
+  fields: [geo_location.city, geo_location.state, geo_location.metro, complexes.title, units.propcode, units.internaltitle, units.unit_status,
             blocks.startdatelocal, blocks.enddatelocal, blocks.createdat_date, blocks.createdat_month, blocks.createdat_quarter,
             blocks.createdby, blocks.category, blocks.notes, blocks.status,blocks.count, blocks.source,  blocks.createdat_week, pom_information.Portfolio, pom_information.blocked_rooms]
 
