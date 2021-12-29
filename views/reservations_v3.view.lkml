@@ -57,6 +57,12 @@ view: reservations_v3 {
     sql: ${TABLE}.building_stay_count ;;
   }
 
+  dimension: first_booking {
+    label: "First Booking"
+    description: "This will identify whether a respective reservation is the guest's first confirmed booking based on the guest's history of bookings. Unique guests are identified by the e-mail used at booking."
+    type: yesno
+    sql: ${TABLE}.guest_stay_count = 1 ;;
+  }
 
     dimension: extended_booking {
       label: "Booking Extension"
