@@ -34,7 +34,12 @@ view: kobject_reservation {
       ]
       sql: ${TABLE}._fivetran_synced ;;
     }
-
+  dimension: custom_portfolio_str {
+    type: string
+    label: "Portfolio"
+    hidden: no
+    sql: ${TABLE}.custom_portfolio_str ;;
+  }
     dimension_group: created {
       hidden: yes
       type: time
