@@ -341,6 +341,27 @@ view: conversation {
         sql: ${TABLE}.custom_escalation_tree ;;
       }
 
+      dimension: custom_property_issue_tree {
+        label: "Portfolios - Maintenance"
+        type: string
+        hidden: no
+        sql: ${TABLE}.custom_property_issue_tree ;;
+     }
+
+      dimension: custom_partner_comms_tree {
+        label: "Portfolios - Partner Comms"
+        type: string
+        hidden: no
+        sql: ${TABLE}.custom_partner_comms_tree ;;
+     }
+
+      dimension: custom_housekeeping_new_tree {
+        label: "Portfolios - Housekeeping"
+        type: string
+        hidden: no
+        sql: ${TABLE}.custom_housekeeping_new_tree ;;
+      }
+
       dimension: custom_finance_tree {
         type: string
         hidden: yes
@@ -365,11 +386,6 @@ view: conversation {
         sql: ${TABLE}.custom_hk_operations_bool ;;
       }
 
-      dimension: custom_housekeeping_new_tree {
-        type: string
-        hidden: yes
-        sql: ${TABLE}.custom_housekeeping_new_tree ;;
-      }
 
       dimension: custom_is_verified_bool {
         type: yesno
@@ -746,11 +762,6 @@ view: conversation {
         sql: ${TABLE}.custom_property_issue_str ;;
       }
 
-      dimension: custom_property_issue_tree {
-        type: string
-        hidden: yes
-        sql: ${TABLE}.custom_property_issue_tree ;;
-      }
 
       dimension: custom_reservations_tree {
         type: string
