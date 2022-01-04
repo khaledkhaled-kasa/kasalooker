@@ -245,12 +245,14 @@ view: reservations_clean {
 
   dimension: ECIrequestedststus {
     label: "ECI Status"
+    description: "Returns whether a  Early Check-in was approved or not. If Early Check-in wasn't requested, this returns notRequested."
     type: string
     sql: ${TABLE}.earlycheckin.status ;;
     hidden: no
   }
   dimension: LCOrequestedststus {
     label: "LCO Status"
+    description: "Returns whether a late checkout was approved or not. If late checkout wasn't requested, this returns notRequested."
     type: string
     sql: ${TABLE}.latecheckout.status ;;
     hidden: no
@@ -271,10 +273,17 @@ view: reservations_clean {
     label: "ECI Requested Time"
     description: "early check in requested Time"
     type: string
-    sql: case when ${TABLE}.earlycheckin.requestedtime__fl/60 >= 12 THEN
-          concat(cast(${TABLE}.earlycheckin.requestedtime__fl/60 as string) , ":00 PM")
-          ELSE concat(cast(${TABLE}.earlycheckin.requestedtime__fl/60 as string) , ":00 AM")
-          END
+    sql: case WHEN ${TABLE}.earlycheckin.requestedtime is null THEN
+    (CASE WHEN ${TABLE}.earlycheckin.requestedtime__fl/60 >= 12 THEN
+    concat(cast(${TABLE}.earlycheckin.requestedtime__fl/60 as string) , ":00 PM")
+    ELSE concat(cast(${TABLE}.earlycheckin.requestedtime__fl/60 as string) , ":00 AM")
+    END)
+    ELSE
+    (CASE WHEN ${TABLE}.earlycheckin.requestedtime/60 >= 12 THEN
+    concat(cast(${TABLE}.earlycheckin.requestedtime/60 as string) , ":00 PM")
+    ELSE concat(cast(${TABLE}.earlycheckin.requestedtime/60 as string) , ":00 AM")
+    END)
+    END
             ;;
     hidden: no
   }
