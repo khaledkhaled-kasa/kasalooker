@@ -100,8 +100,8 @@ explore: customer {
 
   join: message_created_by_team {
     type: left_outer
-    sql_on: ${message_created_by_team.message_id} = ${message.id};;
-    relationship: one_to_one
+    sql_on:  ${message.id} = ${message_created_by_team.message_id};;
+    relationship: one_to_many
   }
 
   join: team {
