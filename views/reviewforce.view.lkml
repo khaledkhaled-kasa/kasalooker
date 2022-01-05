@@ -11,7 +11,7 @@ view: reviewforce {
               FROM `bigquery-analytics-272822.Gsheets.reviewforce_categorization_clean` t1,
               UNNEST(SPLIT(REGEXP_REPLACE(to_json_string(t1), r'{|}', ''))) pair)
 
-              WHERE NOT LOWER(parent_category) IN ('confirmationcode','assigned_categorizer','investigation_notes', 'investigation_status', 'issues_to_investigate', 'parent_category_issues_to_investigate')
+              WHERE NOT LOWER(parent_category) IN ('confirmationcode','assigned_categorizer','investigation_notes', 'investigation_status', 'issues_to_investigate', 'parent_category_issues_to_investigate','categorization_next_steps')
               and child_category != "null" -- Filters out all null category records
               )
 
@@ -21,7 +21,7 @@ view: reviewforce {
               )
 
       SELECT t3.*, t4.*, TRIM(child_category) clean_child_category, -- trimming child category will ensure all white spaces are removed, especially in cases of multiple child category selections
-      t5.Assigned_Categorizer, t5.Investigation_Status, t5.Issues_to_Investigate, t5.Parent_Category_Issues_to_Investigate, t5.Investigation_Notes
+      t5.Assigned_Categorizer, t5.Investigation_Status, t5.Issues_to_Investigate, t5.Parent_Category_Issues_to_Investigate, t5.Investigation_Notes, t5.Categorization_Next_Steps
       FROM t3 LEFT JOIN `bigquery-analytics-272822.Gsheets.reviewforce_responsibility_mapping` t4
       ON TRIM(t3.child_category) = t4.child_categories LEFT JOIN `bigquery-analytics-272822.Gsheets.reviewforce_categorization_clean` t5
       ON t3.ConfirmationCode = t5.ConfirmationCode
@@ -117,6 +117,10 @@ view: reviewforce {
     sql: ${TABLE}.Parent_Category_Issues_to_Investigate ;;
   }
 
+  dimension: categorization_next_steps {
+    type: string
+    sql: ${TABLE}.Categorization_Next_Steps ;;
+  }
 
   measure: count {
     label: "Count"
