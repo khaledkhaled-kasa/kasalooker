@@ -160,11 +160,12 @@ view: reservations_v3 {
     WHEN ${length_of_stay} >= 28 THEN "Long-term stay"
     END ;;
   }
-
+                ##########################################ECI AND LCO TIMES #####################################
   dimension: late_checkout_status {
     label: "LCO Status"
     description: "Returns whether a late checkout was approved or not. If late checkout wasn't requested, this returns notRequested."
     sql: ${TABLE}.latecheckout.status ;;
+    hidden: yes
   }
 
   dimension: LCOrequestedtime {
@@ -173,8 +174,7 @@ view: reservations_v3 {
     type: string
     sql: CASE WHEN ${TABLE}.latecheckout.requestedtime/60 >24  then concat(cast(${TABLE}.latecheckout.requestedtime/60 - 24 as string),":00 AM +1" )
     ELSE concat(cast(${TABLE}.latecheckout.requestedtime/60 as string),":00 PM") END;;
-
-    hidden: no
+    hidden: yes
   }
   dimension: ECIrequestedtime {
     label: "ECI Requested Time"
@@ -192,17 +192,28 @@ view: reservations_v3 {
     END)
     END
       ;;
-    hidden: no
+    hidden: yes
   }
+
   dimension: ECIrequestedststus {
     label: "ECI Status"
     description: "Returns whether a  Early Check-in was approved or not. If Early Check-in wasn't requested, this returns notRequested."
     type: string
     sql: ${TABLE}.earlycheckin.status ;;
-    hidden: no
+    hidden: yes
   }
-
-
+dimension: checkin_time {
+  label: "Checkin Time"
+  type: string
+  sql: CASE WHEN  ${TABLE}.earlycheckin.status="approved" THEN  ${ECIrequestedtime}
+    ELSE "16:00 PM" END;;
+  }
+  dimension: checkout_time {
+    label: "Checkout Time"
+    type: string
+    sql: CASE WHEN ${TABLE}.latecheckout.status ="approved" THEN  ${LCOrequestedtime}
+      ELSE "11:00 AM" END;;
+  }
 
   dimension: bringingpets {
     type: yesno
