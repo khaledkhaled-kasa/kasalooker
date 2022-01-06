@@ -433,7 +433,7 @@ view: airbnb_reviews {
       type: number
       value_format: "0.0"
       sql: 100*(${percent_perfect_stay} - ${percent_bad_stay});;
-      drill_fields: [airbnb_details*]
+      drill_fields: [airbnb_details*, complexes__address.title]
     }
 
     measure: net_quality_score_accuracy {
