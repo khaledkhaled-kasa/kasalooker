@@ -1277,6 +1277,7 @@ END;;
     type: number
     value_format: "0.0"
     sql: ((COALESCE(${net_quality_score_overall}*${count},0))+(COALESCE(${airbnb_reviews.net_quality_score}*${airbnb_reviews.count},0)))/nullif((${count}+${airbnb_reviews.count}),0) ;;
+    drill_fields: [complexes__address.title,complexes__address.propcode_revised,combined_nqs_overall]
   }
 
   measure: combined_nqs_clean {
