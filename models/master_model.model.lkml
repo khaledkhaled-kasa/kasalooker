@@ -95,6 +95,12 @@ explore: aircall_segment {
   label: "Aircall"
 }
 
+explore: breezeway_daily {
+  group_label: "PropOps"
+  from: tasks
+  label: "Daily Breezeway"
+}
+
 explore: breezeway_export {
   fields: [
     ALL_FIELDS*,
