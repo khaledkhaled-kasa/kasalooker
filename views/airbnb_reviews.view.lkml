@@ -443,7 +443,7 @@ view: airbnb_reviews {
       type: number
       value_format: "0.0"
       sql: 100*(${percent_5_star_accuracy} - ${percent_less_than_4_star_accuracy});;
-      drill_fields: [airbnb_details*]
+      drill_fields: [airbnb_details*,complexes__address.title,complexes__address.propcode_revised,accuracy_comments]
     }
 
     measure: net_quality_score_value{
@@ -480,7 +480,7 @@ view: airbnb_reviews {
       type: number
       value_format: "0.0"
       sql: 100*(${percent_5_star_clean} - ${percent_less_than_4_star_clean});;
-      drill_fields: [airbnb_details*, reservation_code ,review_date, cleanliness_comments, value_comments, overall_comments]
+      drill_fields: [airbnb_details*, reservation_code ,complexes__address.title,complexes__address.propcode_revised,review_date, cleanliness_comments, value_comments, overall_comments]
     }
 
     measure: net_quality_score_communication {
