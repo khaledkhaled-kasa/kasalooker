@@ -53,9 +53,20 @@ view: guests {
     sql: ${TABLE}.dateofbirth ;;
   }
 
+
   dimension: email {
     type: string
+    # label: "{% if _user_attributes['group']  == 'no %} Email
+    # {% else %} User Email (Redacted due to insufficient permissions)
+    # {% endif %}"
     sql: ${TABLE}.email ;;
+    # required_access_grants: [personal_user_information]
+    # sql:
+    # {% if _user_attributes['group']  == 'no' %}
+    # ${TABLE}.email
+    # {% else %}
+    # MD5( ${TABLE}.email)
+    # {% endif %}   ;;
   }
 
   dimension: emailmarketingaccepted {

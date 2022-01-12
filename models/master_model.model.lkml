@@ -4,6 +4,11 @@ include: "/views/*.view.lkml"                 # include all views in the views/ 
 # include: "/**/*.view.lkml"                  # include all views in this project
 # include: "/dashboards/*.dashboard.lookml"   # include a LookML dashboard called my_dashboard
 
+# access_grant: personal_user_information {
+#   user_attribute: group
+#   allowed_values: ["no"]
+# }
+
 datagroup: kustomer_default_datagroup {
   sql_trigger: SELECT MAX(_fivetran_synced) FROM kustomer.conversation;;
   max_cache_age: "1 hours"
@@ -917,68 +922,6 @@ explore: channel_cost_marketing {
 
 }
 
-explore: slack_bugs_tech {
-  hidden: yes
-  fields: [
-    ALL_FIELDS*,
-    -pom_information*,
-    -airbnb_reviews.cleaning_rating_score, -airbnb_reviews.cleaning_rating_score_weighted,
-    -airbnb_reviews.clean_count_5_star_first90,
-    -airbnb_reviews.clean_count_less_than_4_star_first90,
-    -airbnb_reviews.count_clean_first90,
-    -airbnb_reviews.net_quality_score_clean_first90,
-    -airbnb_reviews.percent_5_star_clean_first90,
-    -airbnb_reviews.percent_less_than_4_star_clean_first90,
-    -post_checkout_v2.aggregated_comments_all_unclean]
-  group_label: "Product & Tech"
-  label: "Slack Bugs"
-
-  join: reservations_clean {
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${reservations_clean.confirmationcode} = ${slack_bugs_tech.confirmation_code};;
-  }
-
-  join: units {
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${reservations_clean.unit} = ${units._id};;
-  }
-
-  join: complexes {
-    type:  left_outer
-    relationship: one_to_one
-    sql_on: ${complexes._id} = ${units.complex};;
-  }
-
-  join: airbnb_reviews {
-    type: left_outer
-    relationship:  one_to_one
-    sql_on: ${reservations_clean.confirmationcode} = ${airbnb_reviews.reservation_code} ;;
-  }
-
-  join: post_checkout_data {
-    view_label: "Post Checkout Surveys"
-    type:  left_outer
-    relationship: one_to_one
-    sql_on:  ${post_checkout_data.confirmationcode} = ${reservations_clean.confirmationcode} ;;
-  }
-
-  join: post_checkout_v2 {
-    view_label: "Post Checkout Surveys V2"
-    type:  left_outer
-    relationship: one_to_one
-    sql_on:  ${post_checkout_v2.confirmationcode} = ${reservations_clean.confirmationcode} ;;
-  }
-
-  join: geo_location {
-    type:  left_outer
-    relationship: one_to_one
-    sql_on:  ${units.address_city} = TRIM(${geo_location.city})
-      and ${units.address_state} = TRIM(${geo_location.state});;
-  }
-
-}
 
 explore: kasa_kredit_reimbursement {
   group_label: "People Ops"
