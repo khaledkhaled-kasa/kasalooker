@@ -156,6 +156,7 @@ view: reservations_kustomer {
   }
 
   dimension: guest {
+    hidden: yes
     type: string
     sql: ${TABLE}.guest ;;
   }

@@ -158,6 +158,7 @@ view: reservations_audit {
   }
 
   dimension: guest {
+    hidden: yes
     type: string
     sql: ${TABLE}.guest ;;
   }
