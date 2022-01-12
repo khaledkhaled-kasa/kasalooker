@@ -11,7 +11,6 @@ view: capacities_v3 {
 
     dimension: _id {
       type: string
-      # primary_key: yes
       hidden: yes
       sql: ${TABLE}._id;;
     }
@@ -108,11 +107,50 @@ view: capacities_v3 {
       hidden: yes
       sql: DATE_TRUNC(DATE_ADD(DATE(TIMESTAMP(${TABLE}.unit_availability_startdate)), INTERVAL 1 MONTH), MONTH);;
     }
+  dimension: category {
+    label: "Block Category"
+    type: string
+    sql:
+    CASE WHEN ${TABLE}.category="buildingMaintenance" THEN "Building Maintenance"
+    WHEN  ${TABLE}.category="carpetClean" THEN "Carpet Clean"
+    WHEN  ${TABLE}.category="deepClean" THEN "Deep Clean"
+    WHEN  ${TABLE}.category="deferredClean" THEN "deferred Clean"
+    WHEN  ${TABLE}.category="extension" THEN "Extension"
+    WHEN  ${TABLE}.category="furnitureReplacement" THEN "Furniture Replacement"
+    WHEN  ${TABLE}.category="initialBuild" THEN "Initial Build"
+    WHEN  ${TABLE}.category="ispIssues" THEN "ISP Issues"
+    WHEN  ${TABLE}.category="kasaMaintenance" THEN "kasa Maintenance"
+    WHEN  ${TABLE}.category="m" THEN "m"
+    WHEN  ${TABLE}.category="missingAccessItemBrokenLocks" THEN "Missing Access Item Broken Locks"
+    WHEN  ${TABLE}.category="moveOut" THEN "Move Out"
+    WHEN  ${TABLE}.category="partnerRequestedBlocks" THEN "Partner Requested Blocks"
+    WHEN  ${TABLE}.category="unitHold" THEN "Unit Hold"
+    WHEN  ${TABLE}.category="unitSwap" THEN "Unit Swap"
+    WHEN  ${TABLE}.category="a" THEN "a"
+    WHEN  ${TABLE}.category="an" THEN "an"
+    WHEN  ${TABLE}.category="bw" THEN "bw"
+    WHEN  ${TABLE}.category="bd" THEN "bd"
+    WHEN  ${TABLE}.category="badActorRemediation" THEN "Bad Actor Remediation"
+    ELSE NULL
+    END;;
 
+  }
+  dimension: IsBlocked {
+    label: "Is Night Blocked"
+    type: yesno
+    sql:${TABLE}.IsBlocked ="Blocked" ;;
+  }
 
-    measure: capacity {
+  dimension: status {
+    label: "Block Status"
+    description: "Active/Deleted"
+    type: string
+    sql:${TABLE}.status ;;
+  }
+
+   measure: capacity {
       label: "Total Capacity"
-      description: "Number of available room nights bookable"
+      description: "Number of available room nights bookable, Apply Is Night Blocked? to filter out the blocked nights"
       type: count_distinct
       sql: CASE WHEN ((${TABLE}.internaltitle LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%XXX") OR (${TABLE}.internaltitle LIKE "%-RES") OR (${TABLE}.internaltitle LIKE "%-S") OR (${TABLE}.internaltitle LIKE "%GXO%")) THEN NULL
           ELSE CONCAT(${TABLE}.internaltitle, '-', ${night_date})
@@ -122,12 +160,22 @@ view: capacities_v3 {
 # This is the same as capacity - REQUEST MADE BY TAFT LANDLORD
     measure: days_available {
       label: "Days Available"
-      description: "Number of available room nights bookable"
+      description: "Number of available room nights bookable,excluding blocked nights"
       type: count_distinct
       sql: CASE WHEN ((${TABLE}.internaltitle LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%XXX") OR (${TABLE}.internaltitle LIKE "%-RES") OR (${TABLE}.internaltitle LIKE "%-S") OR (${TABLE}.internaltitle LIKE "%GXO%")) THEN NULL
         ELSE CONCAT(${TABLE}.internaltitle, '-', ${night_date})
         END;;
+      filters: [IsBlocked: "no"]
     }
+  measure: days_Blockd {
+    label: "Days Blocked"
+    description: "Number of blocked room nights "
+    type: count_distinct
+    sql: CASE WHEN ((${TABLE}.internaltitle LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%XXX") OR (${TABLE}.internaltitle LIKE "%-RES") OR (${TABLE}.internaltitle LIKE "%-S") OR (${TABLE}.internaltitle LIKE "%GXO%")) THEN NULL
+        ELSE CONCAT(${TABLE}.internaltitle, '-', ${night_date})
+        END;;
+        filters: [IsBlocked: "yes"]
+  }
 
   measure: capacity_after_first_active_month {
     label: "Capacity after First Active Month"

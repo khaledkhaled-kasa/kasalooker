@@ -7,14 +7,17 @@ view: devices {
     primary_key: yes
     type: string
     sql: ${TABLE}.deviceid ;;
+    hidden: yes
   }
 
   dimension: _id {
     type: string
     sql: ${TABLE}._id ;;
+    hidden: yes
   }
 
   dimension: active {
+    label: "Is Device Active"
     type: yesno
     sql: ${TABLE}.active ;;
   }
@@ -25,16 +28,21 @@ view: devices {
   }
 
   dimension: devicetype {
+    label: "Device Type"
     type: string
     sql: ${TABLE}.devicetype ;;
   }
 
   dimension: rssi {
+    label: "RSSI"
+    description: "Received Signal Strength Indicator,is a measurement of how well your device can hear a signal from an access point or router. It's a value that is useful for determining if you have enough signal to get a good wireless connection.RSSI closer to 0 is stronger, and closer to –100 "
     type: number
     sql: ${TABLE}.rssi ;;
+
   }
 
   dimension: wifi_health {
+    description: "the health of WIFI is beased on RSSI:Received Signal Strength Indicator"
     type: string
     sql: CASE WHEN ${TABLE}.rssi <= -75 THEN "Poor"
     WHEN ${TABLE}.rssi >= -74 AND ${TABLE}.rssi <= -68 THEN "Ok"
@@ -49,14 +57,18 @@ view: devices {
     timeframes: [date, week, month, year]
     sql: CAST(LEFT(${TABLE}.metadata.first_seen_at,10) as TIMESTAMP) ;;
     convert_tz: no
+    hidden: yes
   }
 
   dimension: unit {
     type: string
     sql: ${TABLE}.unit ;;
+    hidden: yes
   }
 
   dimension: connectionstatus {
+    label: "Connection Status"
+    description: "Online/Offline"
     type: string
     sql: ${TABLE}.connectionstatus ;;
   }
@@ -65,6 +77,7 @@ view: devices {
     type: time
     timeframes: [time, date, month, year, quarter, week]
     sql: ${TABLE}.laststatusupdate ;;
+    hidden: yes
   }
 
   dimension: mount_status {
