@@ -76,7 +76,7 @@ view: accesses {
     description: "Returns the count of the total number of times a backup code was used."
     type: count_distinct
     sql: ${primary_key} ;;
-    filters: [value: "%Backup%", value: "%backup%"]
+    filters: [value: "%Backup%"]
     drill_fields: [value,confirmationcode]
   }
 
