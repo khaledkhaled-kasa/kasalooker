@@ -136,7 +136,7 @@ view: capacities_v3 {
 
   }
   dimension: IsBlocked {
-    label: "Night Blocked"
+    label: "Blocked night"
     type: yesno
     sql:${TABLE}.IsBlocked ="Blocked" ;;
   }
