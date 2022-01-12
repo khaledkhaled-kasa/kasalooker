@@ -95,6 +95,44 @@ explore: aircall_segment {
   label: "Aircall"
 }
 
+explore: breezeway_daily {
+  group_label: "PropOps"
+  from: tasks
+  label: "Daily Breezeway"
+
+  join: units {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${breezeway_daily.breezewayid} =  ${units.breezeway_id};;
+    }
+
+  join: pom_information {
+    view_label: "POM Information"
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${units.propcode} = ${pom_information.Prop_Code} ;;
+    }
+
+  join: complexes {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${complexes._id} = ${units.complex} ;;
+    }
+
+  join: complexes_general_building { ## This will pull building title for general buildings where there is no property internal ids
+    from: complexes
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${complexes_general_building.internaltitle} = ${breezeway_export.building};;
+    }
+
+  join: breezeway_export {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${breezeway_export.property_internal_id} =  ${units.breezeway_id} ;;
+  }
+}
+
 explore: breezeway_export {
   fields: [
     ALL_FIELDS*,

@@ -1349,6 +1349,7 @@ END;;
     type: number
     value_format: "0"
     sql: COALESCE(${count}+${airbnb_reviews.count},0) ;;
+    drill_fields: [post_checkout_v2.aggregated_comments_all_clean]
   }
 
   measure: combined_count_clean {
