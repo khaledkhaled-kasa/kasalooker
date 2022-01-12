@@ -160,12 +160,11 @@ view: capacities_v3 {
 # This is the same as capacity - REQUEST MADE BY TAFT LANDLORD
     measure: days_available {
       label: "Days Available"
-      description: "Number of available room nights bookable,excluding blocked nights"
+      description: "Number of available room nights bookable,NOT excluded blocked nights"
       type: count_distinct
       sql: CASE WHEN ((${TABLE}.internaltitle LIKE "%-XX") OR (${TABLE}.internaltitle LIKE "%XXX") OR (${TABLE}.internaltitle LIKE "%-RES") OR (${TABLE}.internaltitle LIKE "%-S") OR (${TABLE}.internaltitle LIKE "%GXO%")) THEN NULL
         ELSE CONCAT(${TABLE}.internaltitle, '-', ${night_date})
         END;;
-      filters: [IsBlocked: "no"]
     }
   measure: days_Blockd {
     label: "Days Blocked"
