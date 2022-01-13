@@ -320,6 +320,7 @@ explore: units_buildings_information {
     from: devices
     type: left_outer
     relationship: one_to_many
+    fields: [minut_data._id,minut_data.active,minut_data.battery,minut_data.connectionstatus,minut_data.wifi_health,minut_data.unit,minut_data.rssi,minut_data.all_devices,minut_data.avg_minut_health,minut_data.devicetype,minut_data.mount_status,minut_data.noise_sound_level_high_quiet_hours,minut_data.noise_sound_level_high,minut_data.pct_online_devices,minut_data.online_devices]
     sql_on: ${units_buildings_information._id} = ${minut_data.unit}
             AND ${minut_data.devicetype} LIKE '%Minut%';;
   }
@@ -328,6 +329,7 @@ explore: units_buildings_information {
     from: devices
     type: left_outer
     relationship: one_to_many
+    fields: [lock_data._id,lock_data.active,lock_data.battery,lock_data.connectionstatus,lock_data.devicetype,lock_data.unit,lock_data.wifi_health,lock_data.rssi,lock_data.all_devices,lock_data.pct_online_devices,lock_data.online_devices]
     sql_on: ${units_buildings_information._id} = ${lock_data.unit}
       AND ${lock_data.devicetype} NOT IN ("Minut_v1", "Nexia_v1", "Nexia_lock", "FreshAir_v1", "Netatmo", "Smartthings_v1") ;;
 
@@ -337,6 +339,7 @@ explore: units_buildings_information {
     from: devices
     type: left_outer
     relationship: one_to_many
+    fields: [hub_devices._id,hub_devices.all_devices,hub_devices.active,hub_devices.battery,hub_devices.rssi,hub_devices.unit,hub_devices.connectionstatus,hub_devices.devicetype,hub_devices.wifi_health,hub_devices.running_total_snartthings_devices,hub_devices.total_smartthings_devices,hub_devices.laststatusupdate_date,hub_devices.online_devices,hub_devices.pct_online_devices]
     sql_on: ${units_buildings_information._id} = ${hub_devices.unit}
     AND ${hub_devices.devicetype} IN ('Nexia_v1', 'Smartthings_v1') and ${hub_devices.active}=true;;
   }
@@ -345,6 +348,7 @@ explore: units_buildings_information {
     view_label: "Fresh Air Data"
     from: devices
     type: left_outer
+    fields: [fresh_air_data._id,fresh_air_data.all_devices,fresh_air_data.active,fresh_air_data.battery,fresh_air_data.unit,fresh_air_data.battery,fresh_air_data.connectionstatus,fresh_air_data.devicetype,fresh_air_data.fresh_air_score,fresh_air_data.fresh_air_score_weighted,fresh_air_data.rssi,fresh_air_data.running_total_frishaire_devices,fresh_air_data.total_freshAir_devices,fresh_air_data.wifi_health,fresh_air_data.smoke_requires_new_sensor,fresh_air_data.pct_online_devices,fresh_air_data.online_devices]
     relationship: one_to_many
     sql_on: ${units_buildings_information._id} = ${fresh_air_data.unit}
       AND ${fresh_air_data.devicetype} = "FreshAir_v1";;

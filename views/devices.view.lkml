@@ -1,19 +1,20 @@
 view: devices {
   sql_table_name: `bigquery-analytics-272822.dbt.devices`
     ;;
-  drill_fields: [deviceid]
+  drill_fields: [_id]
 
   dimension: deviceid {
-    primary_key: yes
     type: string
     sql: ${TABLE}.deviceid ;;
     hidden: yes
+    description: "This is not a unique Id"
   }
 
   dimension: _id {
     type: string
+    label: "Device ID"
     sql: ${TABLE}._id ;;
-    hidden: yes
+    primary_key: yes
   }
 
   dimension: active {
@@ -107,25 +108,27 @@ view: devices {
   }
 
   measure: count {
-    type: count
-    drill_fields: [deviceid]
+    type: count_distinct
+    sql: ${_id} ;;
+    drill_fields: [_id]
+    hidden: yes
   }
 
 
   measure: all_devices {
-    label: "# of Devices"
+    label: "Number of Devices"
     description: "Returns a count of all devices"
     type: count_distinct
-    sql: ${deviceid} ;;
-    filters: [connectionstatus: "-null"]
+    sql:${_id} ;;
+    filters: [unit: "-null"]
   }
 
   measure: online_devices {
-    label: "# of Online Devices"
+    label: "Number of Online Devices"
     description: "Returns a count of all devices that are 'online"
     type: count_distinct
-    sql: ${deviceid} ;;
-    filters: [connectionstatus: "online"]
+    sql: ${_id} ;;
+    filters: [connectionstatus: "online,ONLINE,Connected"]
   }
 
   measure: pct_online_devices {
@@ -141,7 +144,7 @@ view: devices {
     label: "Total SmartThings Devices"
     description: "Returns a count of all ACTIVE SmartThings devices."
     type: count_distinct
-    sql: ${deviceid} ;;
+    sql: ${_id} ;;
     filters: [devicetype: "Smartthings_v1",active: "yes, Yes"]
   }
 
@@ -149,7 +152,7 @@ view: devices {
     label: "Total Minut Devices"
     description: "Returns a count of all ACTIVE Minut devices."
     type: count_distinct
-    sql: ${deviceid} ;;
+    sql: ${_id} ;;
     filters: [devicetype: "%Minut%", active: "yes, Yes"]
   }
 
@@ -157,26 +160,26 @@ view: devices {
     label: "Total FreshAir Devices"
     description: "Returns a count of all ACTIVE FreshAir devices."
     type: count_distinct
-    sql: ${deviceid} ;;
+    sql: ${_id} ;;
     filters: [devicetype: "FreshAir_v1",  connectionstatus: "online"]
   }
 
   measure: running_total_minut_devices {
     label: "Running Total Minut Devices"
     type: running_total
-    sql: CASE WHEN ${devicetype} LIKE '%Minut%' THEN ${deviceid} ELSE NULL END ;;
+    sql: CASE WHEN ${devicetype} LIKE '%Minut%' THEN ${_id} ELSE NULL END ;;
     # filters: [devicetype: "%Minut%"]
   }
   measure: running_total_snartthings_devices {
     label: "Running Total SmartThings Devices"
     type: running_total
-    sql: CASE WHEN ${devicetype} LIKE "Schlage Door Lock" THEN ${deviceid} ELSE NULL END ;;
+    sql: CASE WHEN ${devicetype} LIKE "Schlage Door Lock" THEN ${_id} ELSE NULL END ;;
 
   }
   measure: running_total_frishaire_devices {
     label: "Running Total FreshAir Devices"
     type: running_total
-    sql: CASE WHEN ${devicetype} LIKE "FreshAir_v1" THEN ${deviceid} ELSE NULL END ;;
+    sql: CASE WHEN ${devicetype} LIKE "FreshAir_v1" THEN ${_id} ELSE NULL END ;;
 
   }
 
@@ -197,7 +200,5 @@ view: devices {
     sql: ${fresh_air_score} * ${pom_information.FreshAir_Weighting} ;;
     value_format: "0.00"
   }
-
-
 
 }
