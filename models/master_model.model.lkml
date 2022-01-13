@@ -482,7 +482,9 @@ explore: reservations_clean {
   join: braze_webhook_sent {
     type: left_outer
     relationship: one_to_many
-    sql_on: ${reservations_clean.guest} = ${braze_webhook_sent.user_id} and (${braze_webhook_sent.timestamp_date} between ${reservations_clean.checkindate_date} and ${reservations_clean.checkoutdate_date}) and (${reservations_clean.status} not
+    sql_on: ${reservations_clean.guest} = ${braze_webhook_sent.user_id}
+    and (${braze_webhook_sent.timestamp_date} between DATE(DATETIME(${reservations_clean.checkindate_date}))-1
+and ${reservations_clean.checkoutdate_date}) and (${reservations_clean.status} not
       in ("canceled","inquiry") ) ;;
   }
 
