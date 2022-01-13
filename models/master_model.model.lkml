@@ -108,7 +108,7 @@ explore: breezeway_daily {
   join: units {
     type:  left_outer
     relationship: one_to_one
-    sql_on: ${breezeway_daily.breezewayid} =  ${units.breezeway_id};;
+    sql_on: ${breezeway_daily.unit} =  ${units._id};;
     }
 
   join: pom_information {
@@ -124,18 +124,6 @@ explore: breezeway_daily {
     sql_on: ${complexes._id} = ${units.complex} ;;
     }
 
-  join: complexes_general_building { ## This will pull building title for general buildings where there is no property internal ids
-    from: complexes
-    type:  left_outer
-    relationship: one_to_one
-    sql_on: ${complexes_general_building.internaltitle} = ${breezeway_export.building};;
-    }
-
-  join: breezeway_export {
-    type: left_outer
-    relationship: one_to_one
-    sql_on: ${breezeway_export.property_internal_id} =  ${units.breezeway_id} ;;
-  }
 }
 
 explore: breezeway_export {
