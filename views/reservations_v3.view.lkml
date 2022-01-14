@@ -430,6 +430,13 @@ dimension: checkin_time {
     sql: ${capacities_v3.night_date} = ${checkindate_date};;
   }
 
+  dimension: discount {
+    hidden: yes
+    type:  string
+    sql: ${TABLE}.discounts[SAFE_OFFSET(0)].value.code ;;
+  }
+
+
   dimension: checkin_night {
     hidden: yes
     type:  yesno
