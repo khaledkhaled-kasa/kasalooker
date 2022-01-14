@@ -24,6 +24,11 @@ view: dm_airbnb_listing {
     sql: ${TABLE}.firstPageImpressionRt ;;
   }
 
+  dimension: reservation_source_channel {
+    label: "Reservation Source Channel"
+    type: string
+    sql: ${TABLE}.reservationSourceChannel ;;
+  }
   # dimension: first_page_search_impressions_ct {
   #   type: number
   #   sql: ${TABLE}.firstPageSearchImpressionsCt ;;
