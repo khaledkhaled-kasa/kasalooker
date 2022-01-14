@@ -33,9 +33,9 @@ view: dm_airbnb_listing {
   # measures for this dimension, but you can also add measures of many different aggregates.
   # Click on the type parameter to see all the options in the Quick Help panel on the right.
 
-  measure: total_first_page_search_impressions_ct {
+  dimension: total_first_page_search_impressions_ct {
     label: "First Page Search Impressions Count"
-    type: sum
+    type: number
     sql: ${TABLE}.firstPageSearchImpressionsCt ;;
   }
 
@@ -45,14 +45,14 @@ view: dm_airbnb_listing {
   # }
 
   measure: night_stay_ct {
-    label: "Night Stay Count"
+    label: "Num ReservationNights"
     type: sum
     sql: ${TABLE}.nightStayCt ;;
   }
 
-  measure: page_views_ct {
+  dimension: page_views_ct {
     label: "Page View Count"
-    type: sum
+    type: number
     sql: ${TABLE}.pageViewsCt ;;
   }
 
@@ -66,7 +66,7 @@ view: dm_airbnb_listing {
   # Looker converts dates and timestamps to the specified timeframes within the dimension group.
 
   dimension_group: record_dt {
-    label: "Date of Record"
+    label: "Airbnb Listing Visibility"
     type: time
     timeframes: [
       raw,
@@ -88,19 +88,20 @@ view: dm_airbnb_listing {
     sql: ${TABLE}.recordId ;;
   }
 
-  dimension: reservation_cancel_ct {
-    type: number
+  measure: reservation_cancel_ct {
+    label: "Num Reservations (Canceled)"
+    type: sum
     sql: ${TABLE}.reservationCancelCt ;;
   }
 
   measure: reservation_ct {
-    label: "Reservation Count"
+    label: "Num Reservations"
     type: sum
     sql: ${TABLE}.reservationCt ;;
   }
 
   measure: room_revenue {
-    label: "Room Revenue Amount"
+    label: "Amount"
     type: sum
     sql: ${TABLE}.roomRevenue ;;
   }
@@ -109,7 +110,7 @@ view: dm_airbnb_listing {
     label: "ADR"
     description: "Average Daily Rate"
     type: number
-    sql: ${room_revenue}/${night_stay_ct} ;;
+    sql: ${room_revenue} / NULLIF(${night_stay_ct}, 0) ;;
   }
 
   dimension: unit_id {
