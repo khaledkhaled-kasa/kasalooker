@@ -1115,3 +1115,19 @@ explore: kontrol_sessions{
     sql_on: ${kontrol_sessions.event_id}=${kontrol_switch_to_backup_code_door.id};;
   }
   }
+
+explore: airbnb_listing {
+  # fields: [
+  #   ALL_FIELDS*,
+  #   -complexes.title,
+  #   -complexes_general_building.title,
+  #   -complexes.externalrefs_stripepayoutaccountid,-complexes_general_building.externalrefs_stripepayoutaccountid,
+  #   -units.propcode,
+  #   -pom_qa_walkthrough_survey.total_qas_completed_percentage, -geo_location.marketing_property_dash_transition
+  # ]
+  group_label: "Marketing Analytics"
+  description: "This explore shows the Airbnb listing visibility data with financials and reservations subsets."
+  from: dm_airbnb_listing
+  label: "Airbnb Listing Visibility"
+  hidden: no
+}
