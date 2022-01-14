@@ -76,7 +76,16 @@ view: accesses {
     description: "Returns the count of the total number of times a backup code was used."
     type: count_distinct
     sql: ${primary_key} ;;
-    filters: [value: "%Backup%"]
+    filters: [value: "%Backup%, %backup%"]
+    drill_fields: [value,confirmationcode]
+  }
+
+  measure: resservations_with_backup_code_used {
+    label: "Reservations with Backup Code Used"
+    description: "Returns the count of the unique reservations backup code was used."
+    type: count_distinct
+    sql: ${confirmationcode} ;;
+    filters: [value: "%Backup%, %backup%"]
     drill_fields: [value,confirmationcode]
   }
 
