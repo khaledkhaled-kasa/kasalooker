@@ -28,6 +28,13 @@ view: guests {
     sql: ${TABLE}.tags[SAFE_OFFSET(0)].value ;;
   }
 
+  dimension: vip {
+    label: "VIP"
+    description: "This will pull tags associated with Potential Partners, Potential Investors, Partner Property Management, Partner Ownership Group, Partner Deal Signer or Investors."
+    type: yesno
+    sql: ${tag} IN ("vipPotentialPartner","vipPotentialInvestor","vipPartnerPropertyManagement","vipPartnerOwnershipGroup","vipPartnerDealSigner", "vipInvestor") ;;
+  }
+
 
   dimension: state {
     type: string
