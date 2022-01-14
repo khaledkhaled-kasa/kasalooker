@@ -62,6 +62,7 @@ view: dm_airbnb_listing {
   }
 
   dimension: prop_unit_cd {
+    hidden: yes
     label: "Unit"
     type: string
     sql: ${TABLE}.propUnitCd ;;
