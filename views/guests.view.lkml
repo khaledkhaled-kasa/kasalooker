@@ -22,6 +22,13 @@ view: guests {
     sql: ${TABLE}.address.country ;;
   }
 
+  dimension: tag {
+    description: "This field will pull any tags associated to a guest such as VIP status, Partner, KasaFullTime, etc."
+    type: string
+    sql: ${TABLE}.tags[SAFE_OFFSET(0)].value ;;
+  }
+
+
   dimension: state {
     type: string
     sql: ${TABLE}.address.state ;;
