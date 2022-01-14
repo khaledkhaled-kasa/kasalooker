@@ -1130,9 +1130,16 @@ explore: airbnb_listing {
   from: dm_airbnb_listing
   label: "Airbnb Listing Visibility"
   hidden: no
+
   join: units {
     type: left_outer
     relationship: many_to_one
     sql_on: ${airbnb_listing.unit_id} = ${units._id} ;;
+  }
+
+  join: complexes {
+    type:  left_outer
+    relationship: one_to_one
+    sql_on: ${complexes._id} = ${units.complex} ;;
   }
 }
