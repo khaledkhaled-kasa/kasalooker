@@ -119,6 +119,7 @@ view: reservations_v3 {
         time,
         date,
         week,
+        day_of_week,
         week_of_year,
         month,
         month_name,
@@ -244,6 +245,7 @@ dimension: checkin_time {
         time,
         date,
         week,
+        day_of_week,
         month,
         quarter,
         year
@@ -259,6 +261,7 @@ dimension: checkin_time {
         raw,
         time,
         date,
+        day_of_week,
         week,
         month,
         quarter,
