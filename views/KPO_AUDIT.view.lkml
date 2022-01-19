@@ -1,17 +1,22 @@
 view: KPO_AUDIT {
   derived_table: {
-    sql: select KPO_table.UID, KPO_table.PropCode, KPO_table.PropOwner, KPO_table.status,KPO_table.newpartner,
-    units.internaltitle,ContractType,FirstAvailableDate,ContractSignedDate, complexes.title, pom_information.PropertyClass
-      from
+    sql:
 
-               `bigquery-analytics-272822.Gsheets.kpo_overview_clean` KPO_table
-             LEFT JOIN `bigquery-analytics-272822.mongo.units` units
-              ON units.internaltitle =KPO_table.UID
-                LEFT JOIN `bigquery-analytics-272822.mongo.complexes` complexes
-                  ON units.complex = complexes._id
-                    LEFT JOIN `bigquery-analytics-272822.Gsheets.pom_information` pom_information
-                      ON pom_information.PropCode = KPO_table.PropCode
-                  WHERE ContractType != 'Distribution Agreement'
+    SELECT KPO_table.UID, KPO_table.PropCode, KPO_table.PropShrt, KPO_table.PropOwner, KPO_table.status,KPO_table.newpartner,
+      units.internaltitle, ContractType, FirstAvailableDate, ContractSignedDate, pom_information.PropertyClass,
+      CASE WHEN complexes.title IS NOT NULL THEN complexes.title
+      ELSE KPO_table.PropShrt
+      END title
+
+      FROM `bigquery-analytics-272822.Gsheets.kpo_overview_clean` KPO_table
+      LEFT JOIN `bigquery-analytics-272822.mongo.units` units
+        ON units.internaltitle =KPO_table.UID
+      LEFT JOIN `bigquery-analytics-272822.mongo.complexes` complexes
+        ON KPO_table.PropCode = complexes.internaltitle -- This join ensures that all units are tagged to building titles including newly signed ones (that haven't been onboarded on Guesty)
+      LEFT JOIN `bigquery-analytics-272822.Gsheets.pom_information` pom_information
+        ON pom_information.PropCode = KPO_table.PropCode
+
+      WHERE ContractType != 'Distribution Agreement'
        ;;
 
       persist_for: "1 hours"
