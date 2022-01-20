@@ -50,7 +50,7 @@ view: dm_repuso_review {
 
   dimension: property {
     type: string
-    label: "Property Name"
+    label: "Repuso Property Name"
     sql: ${TABLE}.property ;;
   }
 
@@ -114,5 +114,11 @@ view: dm_repuso_review {
     description: "Count of reviews"
     type: count
     drill_fields: []
+  }
+
+  dimension: prop_cd {
+    label: "Property Short"
+    type: string
+    sql: ${TABLE}.propCd ;;
   }
 }

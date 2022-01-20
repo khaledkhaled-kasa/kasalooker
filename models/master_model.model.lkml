@@ -1159,4 +1159,10 @@ explore: dm_repuso_review {
   from: dm_repuso_review
   label: "Repuso Reviews"
   hidden: no
+
+  join: complexes {
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${complexes.internaltitle} = ${dm_repuso_review.prop_cd} ;;
+  }
 }
