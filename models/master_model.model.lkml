@@ -1143,3 +1143,19 @@ explore: airbnb_listing {
     sql_on: ${complexes._id} = ${units.complex} ;;
   }
 }
+
+explore: dm_repuso_review {
+  # fields: [
+  #   ALL_FIELDS*,
+  #   -complexes.title,
+  #   -complexes_general_building.title,
+  #   -complexes.externalrefs_stripepayoutaccountid,-complexes_general_building.externalrefs_stripepayoutaccountid,
+  #   -units.propcode,
+  #   -pom_qa_walkthrough_survey.total_qas_completed_percentage, -geo_location.marketing_property_dash_transition
+  # ]
+  group_label: "Marketing Analytics"
+  description: "This explore shows the Repuso reviews data pull."
+  from: dm_repuso_review
+  label: "Repuso Reviews"
+  hidden: no
+}
