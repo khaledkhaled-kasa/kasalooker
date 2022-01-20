@@ -2,6 +2,7 @@
 view: dm_repuso_review {
   # The sql_table_name parameter indicates the underlying database table
   # to be used for all fields in this view.
+  label: "Repuso Reviews"
   sql_table_name: `data-warehouse-333815.Warehouse.dmRepusoReview`
     ;;
   # No primary key is defined for this view. In order to join this view in an Explore,
@@ -26,7 +27,8 @@ view: dm_repuso_review {
   }
 
   dimension: overall_rt {
-    hidden: yes
+    label: "Overall Rating"
+    description: "Dimension: guest rating"
     type: number
     sql: ${TABLE}.overallRt ;;
   }
@@ -36,14 +38,16 @@ view: dm_repuso_review {
   # Click on the type parameter to see all the options in the Quick Help panel on the right.
 
   measure: total_overall_rt {
-    label: "Overall Rating"
-    description: "Guest rating."
+    label: "Total Overall Rating"
+    hidden: yes
+    description: "Measure: guest rating."
     type: sum
     sql: ${overall_rt} ;;
   }
 
   measure: average_overall_rt {
-    hidden: yes
+    label: "Average Overall Rating"
+    description: "Average of guest ratings."
     type: average
     sql: ${overall_rt} ;;
   }
@@ -55,13 +59,15 @@ view: dm_repuso_review {
   }
 
   dimension: rating_scale {
-    hidden: yes
+    label: "Rating Scale"
+    description: "Base of the score, total points available"
     type: number
     sql: ${TABLE}.ratingScale ;;
   }
 
   measure: total_rating_scale {
     label: "Rating Scale"
+    hidden: yes
     description: "Base of the score, total points available"
     type: sum
     sql: ${TABLE}.ratingScale ;;

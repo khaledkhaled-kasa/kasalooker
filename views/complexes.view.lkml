@@ -77,6 +77,12 @@ view: complexes {
     sql:  ${TABLE}.address.city ;;
   }
 
+  dimension: state {
+    hidden: yes
+    type:  string
+    sql:  ${TABLE}.address.state ;;
+  }
+
   dimension: externalrefs_stripepayoutaccountid {
     view_label: "Building and Geographic Information"
     label: "Expected Stripe Account"

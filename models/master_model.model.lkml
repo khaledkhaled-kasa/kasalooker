@@ -1163,6 +1163,33 @@ explore: dm_repuso_review {
   join: complexes {
     type: left_outer
     relationship: one_to_one
+    fields: [complexes.title]
     sql_on: ${complexes.internaltitle} = ${dm_repuso_review.prop_cd} ;;
   }
+
+  join: geo_location {
+    type:  left_outer
+    fields: [
+      geo_location.city
+      ,geo_location.city_state
+      ,geo_location.metro
+      ,geo_location.region
+      ,geo_location.state
+    ]
+    relationship: one_to_one
+    sql_on:  ${complexes.city} = TRIM(${geo_location.city})
+      and ${complexes.state} = TRIM(${geo_location.state});;
+  }
+
+  join: pom_information {
+    view_label: "POM Information"
+    fields: [
+      pom_information.Portfolio
+    ]
+    type: left_outer
+    relationship: one_to_one
+    sql_on: ${complexes.internaltitle} = ${pom_information.Prop_Code} ;;
+  }
+
+
 }
