@@ -49,6 +49,7 @@ view: dm_repuso_review {
     label: "Average Overall Rating"
     description: "Average of guest ratings."
     type: average
+    value_format: "0.0"
     sql: ${overall_rt} ;;
   }
 
