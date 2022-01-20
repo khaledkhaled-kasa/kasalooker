@@ -298,6 +298,8 @@ view: gx_scorecard {
 
     dimension: user_name {
       type: string
+      suggest_explore: customer
+      suggest_dimension: user.name
       sql: ${TABLE}.user_name ;;
       html: {% if  weight_from_metric._value >= 1 %}
             <p style="color: black; font-size:110%"><b>{{ rendered_value }}</b></p>

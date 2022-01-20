@@ -21,6 +21,7 @@ label: "Software"
 
 # This excludes Voice Calls (message channels = 'voice')
 explore: customer {
+  persist_with: kustomer_default_datagroup
   description: "This explore houses the majority of our Kustomer metrics such as messages sent, unique customers messages, etc."
   label: "Kustomer Metrics"
   fields: [ALL_FIELDS*, -units.unit_count, -units.property_count,

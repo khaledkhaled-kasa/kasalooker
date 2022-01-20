@@ -327,6 +327,12 @@ view: units {
       sql: ${TABLE}.title ;;
     }
 
+  dimension: cleaning_status {
+    type: string
+    sql: ${TABLE}.cleaningstatus ;;
+  }
+
+
     measure: unit_count {
       label: "Total Unique Units"
       description: "This includes all units we've had irrespective on whether or not they are currently active."

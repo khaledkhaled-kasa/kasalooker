@@ -569,6 +569,7 @@ explore: reservations_audit {
 }
 
 explore: capacities_v3 {
+  persist_with: kasametrics_reservations_datagroup
   aggregate_table: capacities_by_month_and_metrics {
     query: {
       dimensions: [complexes.title, capacities_v3.night_month]

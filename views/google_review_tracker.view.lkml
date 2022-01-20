@@ -3,14 +3,29 @@ view: google_review_tracker {
       ;;
 
 
-  dimension: review_date {
-    type: date
+  dimension_group: review_date {
+    label: "Review"
+    type: time
+    timeframes: [
+      raw,
+      time,
+      date,
+      week,
+      day_of_week,
+      week_of_year,
+      month,
+      month_name,
+      quarter,
+      year
+    ]
     datatype: date
     sql: ${TABLE}.Review_Date ;;
+    convert_tz: no
   }
+
 dimension: id {
   type: string
-  sql: concat(${review_date},${name},${property})  ;;
+  sql: concat(${review_date_date},${name},${property})  ;;
   primary_key: yes
   hidden: yes
 }
@@ -41,6 +56,6 @@ measure: count {
 }
 
   set: detail {
-    fields: [review_date, property, name, score, type]
+    fields: [review_date_date, property, name, score, type]
   }
 }
