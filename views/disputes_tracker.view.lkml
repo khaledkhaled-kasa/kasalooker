@@ -2,7 +2,6 @@ view: disputes_tracker {
   derived_table: {
     sql: SELECT * FROM `bigquery-analytics-272822.Gsheets.disputes`
       ;;
-
   }
 
   dimension: reservation_id {
@@ -130,6 +129,14 @@ view: disputes_tracker {
     sql: ${TABLE}.Win_Likelihood_in_Stripe ;;
   }
 
+  dimension: dispute_bad_actor_accepted {
+    label: "Dispute Bad Actor / Accepted"
+    description: "This will return a yes when a dispute is either a bad actor or accepted (excludes pending disputes)"
+    type: yesno
+    hidden: no
+    sql: (${bad_actor} is true AND ${resolution} IS NOT NULL) OR (${resolution} IN ("Accepted dispute", "Accepted")) ;;
+  }
+
   dimension_group: Date_of_Resolution {
     type: time
     timeframes: [
@@ -164,29 +171,13 @@ view: disputes_tracker {
     drill_fields: [detail*]
   }
 
-  measure: dispute_accepted_bad_1 {
-    label: "Dispute (Bad Actor)"
-    type: sum
-    hidden: yes
-    value_format: "$#,##0"
-    sql: ${TABLE}.Dispute_Amount ;;
-    filters: [bad_actor: "yes", resolution: "-null"]
-  }
-
-  measure: dispute_accepted_bad_2 {
-    label: "Dispute (Accepted Dispute Actor)"
-    hidden: yes
-    type: sum
-    value_format: "$#,##0"
-    sql: ${TABLE}.Dispute_Amount ;;
-    filters: [resolution: "Accepted dispute, Accepted"]
-  }
 
   measure: dispute_accepted_bad {
     label: "Dispute $ of Accepted or Bad Actor"
-    type: number
+    type: sum
     value_format: "$#,##0"
-    sql: ${dispute_accepted_bad_1} + ${dispute_accepted_bad_2}  ;;
+    sql: ${TABLE}.Dispute_Amount ;;
+    filters: [dispute_bad_actor_accepted: "yes"]
     drill_fields: [detail*]
   }
 
@@ -200,10 +191,11 @@ view: disputes_tracker {
 
   measure: dispute_amount_won {
     label: "Dispute Amount Won"
+    description: "This will pull all disputes amount won that are NOT bad actors"
     type: sum
     value_format: "$#,##0"
     sql: ${TABLE}.Dispute_Amount ;;
-    filters: [resolution: "Won"]
+    filters: [resolution: "Won", bad_actor: "no"]
     drill_fields: [detail*]
   }
 
@@ -242,9 +234,10 @@ view: disputes_tracker {
 
   measure: dispute_count_won {
     label: "Total Won Disputes"
+    description: "This will pull all disputes won that are NOT bad actors"
     type: count
     hidden: no
-    filters: [resolution: "Won"]
+    filters: [resolution: "Won", bad_actor: "no"]
     drill_fields: [detail*]
   }
 
@@ -264,24 +257,11 @@ view: disputes_tracker {
     drill_fields: [detail*]
   }
 
-  measure: dispute_bad_1 {
-    label: "Dispute (Bad Actor)"
-    type: count
-    hidden: yes
-    filters: [bad_actor: "yes", resolution: "-null"]
-  }
-
-  measure: dispute_bad_2 {
-    label: "Dispute (Accepted Dispute Actor)"
-    type: count
-    hidden: yes
-    filters: [resolution: "Accepted dispute, Accepted"]
-  }
 
   measure: dispute_bad_actor {
     label: "Disputes from Bad Actors / Accepted"
-    type: number
-    sql: ${dispute_bad_1} + ${dispute_bad_2} ;;
+    type: count
+    filters: [dispute_bad_actor_accepted: "yes"]
     drill_fields: [detail*]
   }
 
@@ -297,7 +277,7 @@ view: disputes_tracker {
     label: "Win Ratio of Disputes Net of Pending / Bad Actor / Accepted"
     type: number
     value_format: "0.00%"
-    sql: ifnull(${dispute_count_won} / nullif(${dispute_count} - ${dispute_accepted_bad} - ${dispute_pending},0),0) ;;
+    sql: ifnull(${dispute_count_won} / nullif(${dispute_count} - ${dispute_bad_actor} - ${dispute_pending},0),0) ;;
     drill_fields: [detail*]
 
   }
@@ -331,7 +311,7 @@ view: disputes_tracker {
       reservation_id, booking_channel, name_on_guesty_reservation,
       name_on_cc, name_mismatch, property, city, bad_actor, charge_created_date,
       charge_created_date, dispute_amount, type_of_cc_used, reason_for_dispute,
-      dispute_due_to_unsatisfied_guest, dispute_accepted___reason, gv_completed_issues,
+      dispute_due_to_unsatisfied_guest, dispute_accepted___reason, gv_completed_issues,bad_actor,dispute_bad_actor_accepted,
       evidence_submitted, resolution, expedia_extenuating_circumstances_, action_taken
     ]
   }
