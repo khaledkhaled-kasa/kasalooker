@@ -297,7 +297,7 @@ view: disputes_tracker {
     label: "Win Ratio of Disputes Net of Pending / Bad Actor / Accepted"
     type: number
     value_format: "0.00%"
-    sql: ifnull(${dispute_count_won} / nullif(${dispute_count} - ${dispute_bad_actor} - ${dispute_pending},0),0) ;;
+    sql: ifnull(${dispute_count_won} / nullif(${dispute_count} - ${dispute_accepted_bad} - ${dispute_pending},0),0) ;;
     drill_fields: [detail*]
 
   }
