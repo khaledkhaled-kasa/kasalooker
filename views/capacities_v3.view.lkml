@@ -113,18 +113,20 @@ view: capacities_v3 {
     WHEN  ${TABLE}.category="initialBuild" THEN "Initial Build"
     WHEN  ${TABLE}.category="ispIssues" THEN "ISP Issues"
     WHEN  ${TABLE}.category="kasaMaintenance" THEN "kasa Maintenance"
-    WHEN  ${TABLE}.category="m" THEN "m"
+    WHEN  ${TABLE}.category="m" THEN "Manual"
     WHEN  ${TABLE}.category="missingAccessItemBrokenLocks" THEN "Missing Access Item Broken Locks"
     WHEN  ${TABLE}.category="moveOut" THEN "Move Out"
     WHEN  ${TABLE}.category="partnerRequestedBlocks" THEN "Partner Requested Blocks"
     WHEN  ${TABLE}.category="unitHold" THEN "Unit Hold"
     WHEN  ${TABLE}.category="unitSwap" THEN "Unit Swap"
-    WHEN  ${TABLE}.category="a" THEN "a"
-    WHEN  ${TABLE}.category="an" THEN "an"
-    WHEN  ${TABLE}.category="bw" THEN "bw"
-    WHEN  ${TABLE}.category="bd" THEN "bd"
+    WHEN  ${TABLE}.category="a" THEN "Allotment"
+    WHEN  ${TABLE}.category="an" THEN "Advance Notice"
+    WHEN  ${TABLE}.category="bw" THEN "Booking Window"
+    WHEN  ${TABLE}.category="bd" THEN "By Default"
     WHEN  ${TABLE}.category="badActorRemediation" THEN "Bad Actor Remediation"
-    ELSE NULL
+    WHEN  ${TABLE}.category="r" THEN "Resrved"
+    WHEN  ${TABLE}.category="b" THEN "Booked"
+    ELSE ${TABLE}.category
     END;;
 
   }
@@ -140,6 +142,14 @@ view: capacities_v3 {
     type: string
     sql:${TABLE}.status ;;
   }
+  dimension: block_id {
+    label: "block_ids"
+    description: "Active/Deleted"
+    type: string
+    sql:${TABLE}.block_id ;;
+    hidden: yes
+  }
+
 
    measure: capacity {
       label: "Total Capacity"
