@@ -89,6 +89,7 @@ view: units {
     }
 
   dimension_group: Date_Contract_Signed {
+    label: "Contract Signed"
     description: "This will pull the contract signed date from Col BK of the Kasa Portfolio Overview"
     type: time
     datatype: date

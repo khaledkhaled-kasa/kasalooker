@@ -19,8 +19,8 @@ view: all_guest_alerts {
     }
 
     dimension_group: createdat {
-      description: "This will return the timestamp at the property's timezone. If the timezone is invalid, then PST timezone would be applied."
       label: "Alert"
+      description: "This will return the timestamp at the property's timezone. If the timezone is invalid, then PST timezone would be applied."
       type: time
       timeframes: [
         raw,
@@ -92,6 +92,7 @@ view: all_guest_alerts {
 
     dimension: eventtype_smoke{
       # hidden: yes
+      label: "Is Event Type: Smoke"
       description: "This will filter all eventtypes corresponding to smoke alerts from the messages and textmessages table"
       type: yesno
       sql: ${TABLE}.eventtype IN ("kasa-automessages-production-smokeAlert", "smokeAlert");;
@@ -99,6 +100,7 @@ view: all_guest_alerts {
 
     dimension: eventtype_noise{
       # hidden:yes
+      label: "Is Event Type: Noise"
       description: "This will filter all eventtypes corresponding to noise alerts from the messages and textmessages table"
       type: yesno
       sql: ${TABLE}.eventtype LIKE ("%noise%");;
@@ -178,7 +180,7 @@ view: all_guest_alerts {
   }
 
     measure: num_monitored_units {
-    label: "Num of Monitored Units (Minut_v1)"
+    label: "# of Monitored Units (Minut_v1)"
     description: "This will # of Unique Units by internaltitle"
     type: count_distinct
     sql: ${devices._id}  ;;
