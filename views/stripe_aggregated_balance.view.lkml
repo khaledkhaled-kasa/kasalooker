@@ -6,7 +6,7 @@ view: stripe_aggregated_balance {
     round(sum(gross),0) gross, round(sum(fee),0) fee, round(sum(net),0) net
 
     FROM `bigquery-analytics-272822.Gsheets.strip_itemized_balance`
-    WHERE reporting_category = "charge"
+    WHERE reporting_category IN ("charge","refund")
     GROUP BY 1
     ;;
   }

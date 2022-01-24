@@ -94,7 +94,7 @@ view: accesses {
     description: "Returns the count of the total number of times a backup code was used for Nexia."
     type: count_distinct
     sql: ${primary_key} ;;
-    filters: [value: "%Backup%", value:"%was used for nexia%"]
+    filters: [value: "%Backup%, %backup%", value:"%was used for nexia%"]
     drill_fields: [value,confirmationcode]
   }
   measure: total_backup_code_used_smartthings {
@@ -102,7 +102,7 @@ view: accesses {
     description: "Returns the count of the total number of times a backup code was used for SmartThings."
     type: count_distinct
     sql: ${primary_key} ;;
-    filters: [value: "%Backup%", value:"%was used for smartthings%"]
+    filters: [value: "%Backup%, %backup%", value:"%was used for smartthings%"]
     drill_fields: [value,confirmationcode]
   }
 
@@ -150,7 +150,7 @@ view: accesses {
     type: count_distinct
     sql: ${primary_key} ;;
 
-    filters: [value:"%Backup%" , value:"%kasa.com%", ]
+    filters: [value: "%Backup%, %backup%" , value:"%kasa.com%", ]
     drill_fields: [value,confirmationcode]
       }
 
@@ -161,7 +161,7 @@ view: accesses {
     sql: ${primary_key} ;;
     # sql:Case WHEN ${TABLE}.value LIKE "%Backup%"  AND   ${TABLE}.value LIKE "%requested by CSS%" AND ${TABLE}.devicetype LIKE "%Nexia_v1%"
     #   Then ${primary_key} ELSE NULL END;;
-    filters: [value:"%Backup%" , value:"%requested by CSS%" ]
+    filters: [value: "%Backup%, %backup%" , value:"%requested by CSS%" ]
     drill_fields: [value,confirmationcode]
   }
 
